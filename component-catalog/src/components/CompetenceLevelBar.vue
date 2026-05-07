@@ -3,9 +3,10 @@ import { computed } from 'vue';
 
 const props = defineProps({
   /**
-   * rows: Array of { label: string, levels: Array<{ nameShort, pct, color }> }
-   * Each row is one entity (class / school / state).
+   * rows: Array of { label: string, levels: Array<{ nameShort, pct, color }>, total?, fair? }
+   * Each row is one entity (class / school / fair comparison / state).
    * pct values should sum to ~100.
+   * Set fair: true on a row to mark it as "Fairer Vergleich" (dashed border + ⚖ indicator).
    */
   rows: { type: Array, required: true },
   title: { type: String, default: '' },
@@ -68,17 +69,24 @@ const legendY = computed(() =>
         <!-- ── Bars ───────────────────────────────────────────────────────── -->
         <g v-for="(row, i) in rows" :key="i">
           <!-- Row label -->
-          <text :x="LABEL_W - 8" :y="barY(i) + BAR_H / 2"
+          <text :x="row.fair ? LABEL_W - 22 : LABEL_W - 8"
+                :y="barY(i) + BAR_H / 2"
                 text-anchor="end" dominant-baseline="middle"
-                font-size="12" fill="#374151" font-family="system-ui,sans-serif">
+                font-size="12" :fill="row.fair ? '#0f766e' : '#374151'"
+                font-family="system-ui,sans-serif">
             {{ row.label }}
           </text>
+          <!-- Fair comparison indicator icon -->
+          <text v-if="row.fair" :x="LABEL_W - 8" :y="barY(i) + BAR_H / 2"
+                text-anchor="end" dominant-baseline="middle"
+                font-size="11" font-family="system-ui,sans-serif">⚖</text>
 
           <!-- Segments -->
           <g v-for="seg in segments(row.levels)" :key="seg.nameShort">
             <rect :x="LABEL_W + seg.x" :y="barY(i)"
                   :width="seg.w" :height="BAR_H"
-                  :fill="seg.color" rx="0" />
+                  :fill="seg.color" rx="0"
+                  :opacity="row.fair ? 0.8 : 1" />
             <!-- Label inside segment if wide enough (>24px) -->
             <text v-if="seg.w > 24"
                   :x="LABEL_W + seg.x + seg.w / 2" :y="barY(i) + BAR_H / 2"
@@ -89,7 +97,14 @@ const legendY = computed(() =>
             </text>
           </g>
 
-          <!-- % annotations to the right -->
+          <!-- Dashed border overlay for fair comparison rows -->
+          <rect v-if="row.fair"
+                :x="LABEL_W" :y="barY(i)"
+                :width="BAR_W" :height="BAR_H"
+                fill="none" stroke="#0d9488" stroke-width="2"
+                stroke-dasharray="6,3" rx="0" />
+
+          <!-- n= annotation to the right -->
           <text :x="LABEL_W + BAR_W + 5" :y="barY(i) + BAR_H / 2"
                 dominant-baseline="middle" font-size="10" fill="#64748b"
                 font-family="system-ui,sans-serif">

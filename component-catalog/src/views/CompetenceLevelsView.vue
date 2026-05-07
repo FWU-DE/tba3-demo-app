@@ -6,6 +6,7 @@ import Card from 'primevue/card';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
+import ToggleSwitch from 'primevue/toggleswitch';
 import CompetenceLevelBar from '../components/CompetenceLevelBar.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 
@@ -106,10 +107,28 @@ const LEVEL_ORDER = ['I', 'II', 'III', 'IV', 'V'];
 const selectedGroup = ref(GROUPS[0]);
 const loading = ref(false);
 const error = ref(null);
+const showFairComparison = ref(false);
 
 const groupVGs  = ref([]);
 const schoolVGs = ref([]);
 const stateVGs  = ref([]);
+
+// Simulated "Fairer Vergleich" (Standorttyp) data derived from school VGs.
+// Represents the avg. competency distribution of schools with a similar social index.
+// Adjustment factors shift the distribution slightly towards lower levels to simulate
+// a school population with similar social composition (more students at risk).
+const FAIR_ADJUST = { I: 1.12, II: 1.06, III: 1.0, IV: 0.94, V: 0.88 };
+const fairVGs = computed(() =>
+  schoolVGs.value.map(vg => ({
+    domain: vg.domain,
+    competenceLevels: vg.competenceLevels?.map(cl => ({
+      ...cl,
+      descriptiveStatistics: {
+        frequency: Math.round((cl.descriptiveStatistics?.frequency ?? 0) * (FAIR_ADJUST[cl.nameShort] ?? 1)),
+      },
+    })) ?? [],
+  }))
+);
 
 const fetchAll = async () => {
   if (!selectedGroup.value) return;
@@ -161,18 +180,20 @@ const domains = computed(() => {
   return [...seen];
 });
 
-// Build chart rows per domain: [class, school, state]
+// Build chart rows per domain: [class, school, (fair comparison), state]
 const domainCharts = computed(() => {
   if (!domains.value.length) return [];
   return domains.value.map((domain) => {
     const gData  = extractLevels(groupVGs.value,  domain);
     const sData  = extractLevels(schoolVGs.value, domain);
+    const fData  = showFairComparison.value ? extractLevels(fairVGs.value, domain) : null;
     const stData = extractLevels(stateVGs.value,  domain);
 
     const rows = [
-      gData  && { label: selectedGroup.value.label,        ...gData  },
-      sData  && { label: 'Schule',                          ...sData  },
-      stData && { label: 'Bundesland',                      ...stData },
+      gData  && { label: selectedGroup.value.label, ...gData  },
+      sData  && { label: 'Schule',                   ...sData  },
+      fData  && { label: 'Fairer Vergleich',          ...fData,  fair: true },
+      stData && { label: 'Bundesland',                ...stData },
     ].filter(Boolean);
 
     return { domain, label: domainLabel(domain), rows };
@@ -191,9 +212,9 @@ const domainCharts = computed(() => {
               <Tag value="Neu" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Kompetenzstufenverteilung — Klasse · Schule · Bundesland</strong><br />
+              <strong>Kompetenzstufenverteilung — Klasse · Schule · Fairer Vergleich · Bundesland</strong><br />
               Horizontale Stapelbalken für jede Ebene: Anteile der Schüler*innen in den Kompetenzstufen I–V.
-              Alle drei Ebenen werden direkt aus der API bezogen und auf einen Blick vergleichbar gemacht.
+              Mit optionalem <strong>Fairen Vergleich</strong> (⚖ Standorttyp) — Referenz zu Schulen mit ähnlicher sozialer Zusammensetzung.
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -214,6 +235,17 @@ const domainCharts = computed(() => {
             <label class="ctrl-label">Lerngruppe</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
               placeholder="Gruppe wählen" class="ctrl-select" />
+          </div>
+          <div class="ctrl-field ctrl-fair">
+            <label class="ctrl-label">Fairer Vergleich</label>
+            <div class="fair-toggle-row">
+              <ToggleSwitch v-model="showFairComparison" input-id="fair-toggle" />
+              <label for="fair-toggle" class="fair-toggle-label">
+                <span class="fair-icon">⚖</span>
+                Standorttyp anzeigen
+              </label>
+            </div>
+            <span class="fair-hint">Schulen mit ähnlicher sozialer Zusammensetzung</span>
           </div>
         </div>
 
@@ -282,13 +314,18 @@ const domainCharts = computed(() => {
   font-family: ui-monospace, monospace;
 }
 
-.controls { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 20px; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-bottom: 20px; align-items: flex-start; }
 .ctrl-field { display: flex; flex-direction: column; gap: 5px; }
 .ctrl-label {
   font-size: 0.74rem; font-weight: 600; color: #64748b;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .ctrl-select { min-width: 210px; }
+.ctrl-fair { border-left: 2px solid #e2e8f0; padding-left: 16px; }
+.fair-toggle-row { display: flex; align-items: center; gap: 8px; }
+.fair-toggle-label { display: flex; align-items: center; gap: 4px; font-size: 0.87rem; color: #0f766e; font-weight: 500; cursor: pointer; }
+.fair-icon { font-size: 1rem; }
+.fair-hint { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
 
 .charts-grid { display: flex; flex-direction: column; gap: 32px; }
 .chart-wrap { overflow-x: auto; }

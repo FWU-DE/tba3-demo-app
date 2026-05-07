@@ -3,6 +3,21 @@ const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-cat
 
 const COMPONENTS = [
   {
+    name: 'MeanComparisonChart',
+    route: '/mean-comparison',
+    githubFile: 'MeanComparisonChart.vue',
+    tag: 'SVG',
+    tagSeverity: 'info',
+    desc: 'Mittlere Lösungsquote als Diamant-Marker auf einer horizontalen Skala. Vergleicht Klasse, Schule, Fairen Vergleich (⚖ Standorttyp) und Bundesland — inkl. optionaler Konfidenzintervalle.',
+    useCases: [
+      'Wo liegt meine Klasse im Vergleich zu ähnlichen Schulen?',
+      'Fairer Vergleich (Standorttyp) als Referenzlinie',
+      'Konfidenzintervalle für Lehrpersonen-Feedback',
+    ],
+    api: '/groups, /schools, /states (items)',
+    preview: 'mean-comparison',
+  },
+  {
     name: 'BistaDistributionChart',
     route: '/bista-distribution',
     githubFile: 'BistaDistributionChart.vue',
@@ -304,6 +319,52 @@ const COMPONENTS = [
             <!-- x-axis -->
             <line x1="4" y1="90" x2="196" y2="90" stroke="#94a3b8" stroke-width="0.8" />
             <text x="100" y="105" text-anchor="middle" font-size="7" fill="#64748b">BISTA Werte</text>
+          </svg>
+
+          <!-- Mean comparison preview -->
+          <svg v-else-if="comp.preview === 'mean-comparison'" viewBox="0 0 200 120" class="preview-svg">
+            <!-- Zone backgrounds -->
+            <rect x="50" y="0" width="42" height="120" fill="#fef2f2" />
+            <rect x="92" y="0" width="42" height="120" fill="#fefce8" />
+            <rect x="134" y="0" width="66" height="120" fill="#f0fdf4" />
+            <!-- Zone labels -->
+            <text x="71" y="9" text-anchor="middle" font-size="6" fill="#94a3b8">KS I–II</text>
+            <text x="113" y="9" text-anchor="middle" font-size="6" fill="#94a3b8">KS III</text>
+            <text x="167" y="9" text-anchor="middle" font-size="6" fill="#94a3b8">KS IV–V</text>
+            <!-- Tick lines -->
+            <line x1="50" y1="12" x2="50" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
+            <line x1="92" y1="12" x2="92" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
+            <line x1="134" y1="12" x2="134" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
+            <line x1="200" y1="12" x2="200" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
+            <!-- Row 1: Klasse -->
+            <text x="46" y="34" text-anchor="end" font-size="7" fill="#374151">Klasse</text>
+            <line x1="60" y1="30" x2="95" y2="30" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+            <line x1="60" y1="25" x2="60" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
+            <line x1="95" y1="25" x2="95" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
+            <polygon points="77,21 85,30 77,39 69,30" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+            <text x="77" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">55</text>
+            <!-- Row 2: Schule -->
+            <text x="46" y="56" text-anchor="end" font-size="7" fill="#374151">Schule</text>
+            <line x1="72" y1="52" x2="105" y2="52" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+            <line x1="72" y1="47" x2="72" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
+            <line x1="105" y1="47" x2="105" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
+            <polygon points="88,43 96,52 88,61 80,52" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+            <text x="88" y="54" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">62</text>
+            <!-- Row 3: Fairer Vergleich (teal) -->
+            <text x="40" y="78" text-anchor="end" font-size="7" fill="#0f766e">Fairer Vgl.</text>
+            <text x="46" y="78" text-anchor="end" font-size="9">⚖</text>
+            <line x1="68" y1="74" x2="103" y2="74" stroke="#0d9488" stroke-width="2" stroke-linecap="round"/>
+            <line x1="68" y1="69" x2="68" y2="79" stroke="#0d9488" stroke-width="1.5"/>
+            <line x1="103" y1="69" x2="103" y2="79" stroke="#0d9488" stroke-width="1.5"/>
+            <polygon points="85,65 93,74 85,83 77,74" fill="#0d9488" stroke="#0f766e" stroke-width="1"/>
+            <text x="85" y="76" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">60</text>
+            <!-- Row 4: Bundesland -->
+            <text x="46" y="100" text-anchor="end" font-size="7" fill="#374151">Bundesland</text>
+            <line x1="90" y1="96" x2="130" y2="96" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+            <line x1="90" y1="91" x2="90" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
+            <line x1="130" y1="91" x2="130" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
+            <polygon points="110,87 118,96 110,105 102,96" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
+            <text x="110" y="98" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">71</text>
           </svg>
 
           <!-- Stacked bar preview -->

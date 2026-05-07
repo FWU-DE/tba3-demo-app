@@ -7,6 +7,7 @@ import CompetencyOverviewView from '../views/CompetencyOverviewView.vue';
 import StudentScatterView from '../views/StudentScatterView.vue';
 import BistaDistributionView from '../views/BistaDistributionView.vue';
 import StudentSolutionTableView from '../views/StudentSolutionTableView.vue';
+import MeanComparisonView from '../views/MeanComparisonView.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -19,5 +20,6 @@ export default createRouter({
     { path: '/student-scatter', component: StudentScatterView },
     { path: '/bista-distribution', component: BistaDistributionView },
     { path: '/student-solution-table', component: StudentSolutionTableView },
+    { path: '/mean-comparison', component: MeanComparisonView },
   ],
 });
