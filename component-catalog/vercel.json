@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/groups/:path*",  "destination": "https://apps.indibit.eu/tba3-api/groups/:path*" },
+    { "source": "/schools/:path*", "destination": "https://apps.indibit.eu/tba3-api/schools/:path*" },
+    { "source": "/states/:path*",  "destination": "https://apps.indibit.eu/tba3-api/states/:path*" },
+    { "source": "/(.*)",           "destination": "/index.html" }
+  ]
+}
