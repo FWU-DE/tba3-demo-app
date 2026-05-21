@@ -3,6 +3,21 @@ const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-cat
 
 const COMPONENTS = [
   {
+    name: 'ItemExpectedActualChart',
+    route: '/item-expected-actual',
+    githubFile: 'ItemExpectedActualChart.vue',
+    tag: 'SVG',
+    tagSeverity: 'info',
+    desc: 'Tatsächliche vs. erwartete Lösungsquote pro Aufgabe. Der Erwartungswert kommt aus dem Rasch-Modell (BISTA-Parameter). Rot = unter Erwartung → direkter didaktischer Hinweis.',
+    useCases: [
+      'Welche Aufgaben hat die Klasse besser/schlechter als erwartet gelöst?',
+      'Didaktischer Handlungsbedarf auf Aufgabenebene erkennen',
+      'Rasch-Erwartungswert aus bistaPoints, kein neuer Endpunkt nötig',
+    ],
+    api: '/groups/{id}/items',
+    preview: 'item-expected',
+  },
+  {
     name: 'MeanComparisonChart',
     route: '/mean-comparison',
     githubFile: 'MeanComparisonChart.vue',
@@ -319,6 +334,50 @@ const COMPONENTS = [
             <!-- x-axis -->
             <line x1="4" y1="90" x2="196" y2="90" stroke="#94a3b8" stroke-width="0.8" />
             <text x="100" y="105" text-anchor="middle" font-size="7" fill="#64748b">BISTA Werte</text>
+          </svg>
+
+          <!-- Item expected vs actual preview -->
+          <svg v-else-if="comp.preview === 'item-expected'" viewBox="0 0 200 120" class="preview-svg">
+            <!-- Tick lines -->
+            <line v-for="(t,i) in [50,100,150,200]" :key="i" :x1="t" y1="10" :x2="t" y2="110" stroke="#e2e8f0" stroke-width="0.8"/>
+            <text x="50"  y="8" text-anchor="middle" font-size="6" fill="#94a3b8">25%</text>
+            <text x="100" y="8" text-anchor="middle" font-size="6" fill="#94a3b8">50%</text>
+            <text x="150" y="8" text-anchor="middle" font-size="6" fill="#94a3b8">75%</text>
+            <!-- Row 1: above expectation (green) -->
+            <text x="6" y="27" font-size="6.5" fill="#374151" font-family="monospace">LE-001</text>
+            <rect x="32" y="21" width="10" height="10" rx="2" fill="#22c55e"/>
+            <text x="37" y="29" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">II</text>
+            <rect x="44" y="22" width="118" height="8" fill="#f8fafc" rx="1"/>
+            <rect x="44" y="23" width="118" height="6" fill="#16a34a" rx="1" opacity="0.85"/>
+            <line x1="102" y1="20" x2="102" y2="32" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,1"/>
+            <!-- Row 2: within range (neutral) -->
+            <text x="6" y="45" font-size="6.5" fill="#374151" font-family="monospace">LE-002</text>
+            <rect x="32" y="39" width="10" height="10" rx="2" fill="#eab308"/>
+            <text x="37" y="47" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">III</text>
+            <rect x="44" y="40" width="118" height="8" fill="#f8fafc" rx="1"/>
+            <rect x="44" y="41" width="80" height="6" fill="#64748b" rx="1" opacity="0.85"/>
+            <line x1="88" y1="38" x2="88" y2="50" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,1"/>
+            <!-- Row 3: below expectation (red) -->
+            <text x="6" y="63" font-size="6.5" fill="#374151" font-family="monospace">LE-026</text>
+            <rect x="32" y="57" width="10" height="10" rx="2" fill="#f97316"/>
+            <text x="37" y="65" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">III</text>
+            <rect x="44" y="58" width="118" height="8" fill="#f8fafc" rx="1"/>
+            <rect x="44" y="59" width="52" height="6" fill="#dc2626" rx="1" opacity="0.85"/>
+            <line x1="106" y1="56" x2="106" y2="68" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,1"/>
+            <!-- Row 4: within range -->
+            <text x="6" y="81" font-size="6.5" fill="#374151" font-family="monospace">LE-027</text>
+            <rect x="32" y="75" width="10" height="10" rx="2" fill="#22c55e"/>
+            <text x="37" y="83" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">IV</text>
+            <rect x="44" y="76" width="118" height="8" fill="#f8fafc" rx="1"/>
+            <rect x="44" y="77" width="98" height="6" fill="#64748b" rx="1" opacity="0.85"/>
+            <line x1="96" y1="74" x2="96" y2="86" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,1"/>
+            <!-- Row 5: above expectation -->
+            <text x="6" y="99" font-size="6.5" fill="#374151" font-family="monospace">LE-028</text>
+            <rect x="32" y="93" width="10" height="10" rx="2" fill="#15803d"/>
+            <text x="37" y="101" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">V</text>
+            <rect x="44" y="94" width="118" height="8" fill="#f8fafc" rx="1"/>
+            <rect x="44" y="95" width="130" height="6" fill="#16a34a" rx="1" opacity="0.85"/>
+            <line x1="110" y1="92" x2="110" y2="104" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,1"/>
           </svg>
 
           <!-- Mean comparison preview -->
