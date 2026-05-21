@@ -16,6 +16,7 @@ import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import MundoSearchModal from './MundoSearchModal';
+import ApiMaterialsView from './ApiMaterialsView';
 
 // ── Storage ───────────────────────────────────────────────────────────────────
 
@@ -82,7 +83,7 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
 const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels = true }) => {
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
-  const isExternal = material.source === 'mundo';
+  const isExternal = material.source === 'mundo' || material.source === 'api-demo';
 
   return (
     <div
@@ -108,7 +109,9 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
       {/* Source label strip for external materials */}
       {isExternal && (
         <div className="flex items-center gap-1.5 mb-2 -mt-0.5">
-          <span className="text-xs font-bold tracking-wide text-blue-600 uppercase">🌍 MUNDO</span>
+          <span className="text-xs font-bold tracking-wide text-blue-600 uppercase">
+            {material.source === 'api-demo' ? '🔌 API' : '🌍 MUNDO'}
+          </span>
           <span className="flex-1 h-px bg-blue-200" />
         </div>
       )}
@@ -171,14 +174,14 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
 const AssignedRow = ({ material, onRemove }) => {
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
-  const isExternal = material.source === 'mundo';
+  const isExternal = material.source === 'mundo' || material.source === 'api-demo';
 
   return (
     <div className={`flex items-center justify-between gap-3 py-2 border-b last:border-0 ${isExternal ? 'border-blue-100' : 'border-gray-100'}`}>
       <div className="flex items-center gap-2 min-w-0">
         {isExternal ? (
           <span className="flex-shrink-0 text-xs font-bold text-blue-500 bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5 leading-none">
-            MUNDO
+            {material.source === 'api-demo' ? 'API' : 'MUNDO'}
           </span>
         ) : (
           <span className="flex-shrink-0">{type?.icon}</span>
@@ -582,6 +585,7 @@ const EducationalMaterialsPanel = () => {
         {[
           { key: 'level', label: 'Nach Kompetenzstufe', icon: '📊' },
           { key: 'group', label: 'Nach Gruppe',          icon: '👥' },
+          { key: 'api',   label: 'API-Materialien',      icon: '🔌' },
         ].map(({ key, label, icon }) => (
           <button
             key={key}
@@ -710,6 +714,13 @@ const EducationalMaterialsPanel = () => {
             />
           )}
         </>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* MODUS 3: API-Materialien                                             */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {mode === 'api' && (
+        <ApiMaterialsView data-testid="api-materials-tab" />
       )}
 
       {/* ── Export ── */}

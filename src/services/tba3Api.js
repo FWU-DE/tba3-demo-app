@@ -39,6 +39,10 @@ export const tba3Api = {
 
   getStateAggregations: (stateId, params = {}) =>
     api.get(`/states/${stateId}/aggregations`, { params }),
+
+  // Materials
+  getMaterials: (params = {}) =>
+    api.get('/materials', { params }),
 };
 
 export default tba3Api;
