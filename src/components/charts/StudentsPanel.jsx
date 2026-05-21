@@ -13,7 +13,7 @@ import { useFilters } from '../../context/FilterContext';
 
 import Card from '../common/Card';
 import AutoGroupingCard from './AutoGroupingCard';
-import StudentDetailModal from '../common/StudentDetailModal';
+import StudentMapCard from './StudentMapCard';
 
 // ── Small reusable pieces ─────────────────────────────────────────────────────
 
@@ -46,6 +46,7 @@ const SubjectTag = ({ subject }) => {
 
 const StudentRow = ({ student, selected, onToggle, onDetail }) => {
   const group = GROUPS.find((g) => g.id === student.classGroupId);
+  const { observerMode } = useFilters();
   return (
     <div className={`flex items-center gap-3 px-4 py-2.5 transition-colors rounded-md ${selected ? 'bg-blue-50' : 'hover:bg-gray-50'}`}>
       <input
@@ -55,7 +56,7 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
         className="w-4 h-4 accent-blue-600 flex-shrink-0 cursor-pointer"
       />
       <label className="flex-1 min-w-0 cursor-pointer" onClick={() => onToggle(student.id)}>
-        <span className="font-medium text-sm text-gray-900">
+        <span className={`font-medium text-sm text-gray-900 ${observerMode ? 'blur select-none' : ''}`}>
           {student.firstName} {student.lastName}
         </span>
         <span className="ml-2 text-xs text-gray-400">{group?.name}</span>
@@ -66,12 +67,13 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
         <LevelBadge level={student.competenceLevel} />
         <button
           onClick={() => onDetail(student)}
-          title="Detailergebnisse anzeigen"
-          className="ml-1 text-gray-400 hover:text-primary transition-colors"
+          title="Datenblatt anzeigen"
+          className="ml-1 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-primary transition-colors px-1.5 py-0.5 rounded hover:bg-blue-50"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
           </svg>
+          Datenblatt
         </button>
       </div>
     </div>
@@ -85,6 +87,7 @@ const LEVEL_KEYS = ['I', 'II', 'III', 'IV', 'V'];
 const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateMaterials, onDetail }) => {
   const [renamingName, setRenamingName] = useState(false);
   const [nameInput, setNameInput] = useState(group.name);
+  const { observerMode } = useFilters();
   const [editingMembers, setEditingMembers] = useState(false);
 
   // Draft state for the member editor (Set of student IDs)
@@ -200,15 +203,15 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
               {members.map((s) => (
                 <li key={s.id} className="flex items-center gap-2 px-3 py-1.5">
                   <LevelBadge level={s.competenceLevel} small />
-                  <span className="flex-1 text-xs text-gray-700">{s.firstName} {s.lastName}</span>
+                  <span className={`flex-1 text-xs text-gray-700 ${observerMode ? 'blur select-none' : ''}`}>{s.firstName} {s.lastName}</span>
                   <span className="text-xs text-gray-400">{GROUPS.find(g => g.id === s.classGroupId)?.name}</span>
                   <button
                     onClick={() => onDetail(s)}
-                    title="Detailergebnisse"
+                    title="Datenblatt anzeigen"
                     className="text-gray-300 hover:text-primary transition-colors"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                   </button>
                 </li>
@@ -276,7 +279,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
                   <input type="checkbox" checked={draft.has(s.id)} onChange={() => toggleDraft(s.id)}
                     className="w-3.5 h-3.5 accent-blue-600 flex-shrink-0" />
                   <LevelBadge level={s.competenceLevel} small />
-                  <span className="flex-1 text-xs text-gray-800">{s.firstName} {s.lastName}</span>
+                  <span className={`flex-1 text-xs text-gray-800 ${observerMode ? 'blur select-none' : ''}`}>{s.firstName} {s.lastName}</span>
                   <span className="text-xs text-gray-400">{GROUPS.find(g => g.id === s.classGroupId)?.name}</span>
                 </label>
               </li>
@@ -302,7 +305,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-const StudentsPanel = ({ onNavigateMaterials }) => {
+const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
   const { selectedLevel, selectedGroup: sidebarGroup, selectedSubject: sidebarSubject, selectedGrade: sidebarGrade } = useFilters();
 
   // ── Filter state (initialised from sidebar) ──
@@ -328,10 +331,18 @@ const StudentsPanel = ({ onNavigateMaterials }) => {
   // ── Selection state ──
   const [selectedIds, setSelectedIds] = useState(new Set());
 
-  // ── Detail modal ──
-  const [detailStudent, setDetailStudent] = useState(null);
+  // Navigate to student detail view
+  const navigateToStudent = (student) => {
+    if (onOpenStudent) {
+      onOpenStudent(student.id);
+    }
+  };
+
+  // ── Map view toggle ──
+  const [showMap, setShowMap] = useState(false);
 
   // ── Custom groups state ──
+
   const [customGroups, setCustomGroups] = useState(loadCustomGroups);
   const [newGroupName, setNewGroupName] = useState('');
   const [targetGroupId, setTargetGroupId] = useState('');
@@ -412,19 +423,48 @@ const StudentsPanel = ({ onNavigateMaterials }) => {
 
   return (
     <div className="space-y-6">
-      {detailStudent && (
-        <StudentDetailModal
-          student={detailStudent}
-          onClose={() => setDetailStudent(null)}
-          onGroupsChange={setCustomGroups}
-        />
-      )}
-
       {/* Auto-grouping */}
       <AutoGroupingCard
         customGroups={customGroups}
         onGroupsCreated={setCustomGroups}
       />
+
+      {/* ── Schüler-Karte (2D-Visualisierung) ── */}
+      <div className="border border-gray-200 rounded-xl overflow-hidden">
+        <button
+          onClick={() => setShowMap((v) => !v)}
+          className="w-full flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 transition-colors text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+              <svg className="h-4.5 w-4.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ width: 18, height: 18 }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <div>
+              <span className="font-semibold text-sm text-gray-900">Schüler-Karte</span>
+              <span className="ml-2 text-xs text-gray-500">Interaktive 2D-Visualisierung · Clustering · Gruppenbildung</span>
+            </div>
+          </div>
+          <svg
+            className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${showMap ? 'rotate-180' : ''}`}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        {showMap && (
+          <div className="p-5 bg-white">
+            <StudentMapCard
+              students={filtered}
+              customGroups={customGroups}
+              onGroupsChange={setCustomGroups}
+              onOpenStudent={navigateToStudent}
+            />
+          </div>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -514,7 +554,7 @@ const StudentsPanel = ({ onNavigateMaterials }) => {
                     student={s}
                     selected={selectedIds.has(s.id)}
                     onToggle={toggleStudent}
-                    onDetail={setDetailStudent}
+                    onDetail={navigateToStudent}
                   />
                 ))
               )}
@@ -623,7 +663,7 @@ const StudentsPanel = ({ onNavigateMaterials }) => {
                   onDelete={handleDeleteGroup}
                   onRename={handleRenameGroup}
                   onNavigateMaterials={onNavigateMaterials}
-                  onDetail={setDetailStudent}
+                  onDetail={navigateToStudent}
                 />
               ))}
             </div>

@@ -30,6 +30,8 @@ export const FilterProvider = ({ children }) => {
     languageAtHome: getUrlParam('languageAtHome', null), // null = all
   });
   const [comparisonEnabled, setComparisonEnabled] = useState(getUrlParam('comparison', 'false') === 'true');
+  const [districtComparison, setDistrictComparison] = useState(getUrlParam('districtComparison', 'false') === 'true');
+  const [observerMode, setObserverMode] = useState(false);
 
   // Update URL when filters change
   useEffect(() => {
@@ -47,10 +49,11 @@ export const FilterProvider = ({ children }) => {
     if (demographicFilters.gender) params.set('gender', demographicFilters.gender);
     if (demographicFilters.languageAtHome) params.set('languageAtHome', demographicFilters.languageAtHome);
     if (comparisonEnabled) params.set('comparison', 'true');
+    if (districtComparison) params.set('districtComparison', 'true');
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
-  }, [selectedLevel, selectedGroup, selectedSchool, selectedState, selectedSubject, selectedGrade, typeParam, demographicFilters, comparisonEnabled]);
+  }, [selectedLevel, selectedGroup, selectedSchool, selectedState, selectedSubject, selectedGrade, typeParam, demographicFilters, comparisonEnabled, districtComparison]);
 
   const getSelectedId = () => {
     switch (selectedLevel) {
@@ -66,9 +69,14 @@ export const FilterProvider = ({ children }) => {
   };
 
   const buildQueryParams = () => {
-    const params = {
-      type: typeParam,
-    };
+    // District comparison mode overrides the regular type param
+    if (selectedLevel === 'state' && districtComparison) {
+      return { type: 'state,district' };
+    }
+
+    // Map 'both' to the API-expected 'group,students' value
+    const apiType = typeParam === 'both' ? 'group,students' : typeParam;
+    const params = { type: apiType };
 
     if (demographicFilters.gender) {
       params.gender = demographicFilters.gender;
@@ -100,6 +108,10 @@ export const FilterProvider = ({ children }) => {
     setDemographicFilters,
     comparisonEnabled,
     setComparisonEnabled,
+    districtComparison,
+    setDistrictComparison,
+    observerMode,
+    setObserverMode,
     getSelectedId,
     buildQueryParams,
   };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES } from '../../utils/constants';
+import { useFilters } from '../../context/FilterContext';
 import { loadCustomGroups, addStudentsToGroup, removeStudentFromGroup } from '../../utils/customGroupsStore';
 
 const LEVEL_TO_NUM = { I: 1, II: 2, III: 3, IV: 4, V: 5 };
@@ -57,6 +58,7 @@ const LevelGauge = ({ level }) => (
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
 const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
+  const { observerMode } = useFilters();
   const group = GROUPS.find((g) => g.id === student.classGroupId);
   const subject = SUBJECTS[student.subject];
   const grade = GRADES[student.grade];
@@ -98,7 +100,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           style={{ backgroundColor: levelCfg ? levelCfg.color + '18' : '#f9fafb' }}
         >
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className={`text-xl font-bold text-gray-900 ${observerMode ? 'blur select-none' : ''}`}>
               {student.firstName} {student.lastName}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
