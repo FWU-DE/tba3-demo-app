@@ -3,6 +3,21 @@ const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-cat
 
 const COMPONENTS = [
   {
+    name: 'CompetenceLevelDeltaChart',
+    route: '/competence-delta',
+    githubFile: 'CompetenceLevelDeltaChart.vue',
+    tag: 'SVG',
+    tagSeverity: 'info',
+    desc: 'Differenz pro Kompetenzstufe (Pp.) zwischen Schule und mehreren Benchmarks. Gruppierte Balken je Stufe (I–V), dynamisches +/-Panel für Landesmittelwert, Parallel-Klassen, Testheft-Varianten. Inkl. Summary-Karten und Auto-Text pro aktivem Vergleich.',
+    useCases: [
+      'Wo steht meine Schule pro Kompetenzstufe vs. Landesmittelwert?',
+      'Parallel-Klassen als Peer-Benchmark hinzuschalten',
+      'Mehrere Vergleichsdimensionen gleichzeitig sichtbar machen',
+    ],
+    api: '/groups, /states (competence-levels)',
+    preview: 'competence-delta',
+  },
+  {
     name: 'ItemExpectedActualChart',
     route: '/item-expected-actual',
     githubFile: 'ItemExpectedActualChart.vue',
@@ -334,6 +349,41 @@ const COMPONENTS = [
             <!-- x-axis -->
             <line x1="4" y1="90" x2="196" y2="90" stroke="#94a3b8" stroke-width="0.8" />
             <text x="100" y="105" text-anchor="middle" font-size="7" fill="#64748b">BISTA Werte</text>
+          </svg>
+
+          <!-- Competence-delta preview: grouped Pp bars around zero line -->
+          <svg v-else-if="comp.preview === 'competence-delta'" viewBox="0 0 200 120" class="preview-svg">
+            <!-- y-grid + zero baseline -->
+            <line x1="20" y1="30"  x2="190" y2="30"  stroke="#e2e8f0" stroke-width="0.8"/>
+            <line x1="20" y1="60"  x2="190" y2="60"  stroke="#94a3b8" stroke-width="1.2"/>
+            <line x1="20" y1="90"  x2="190" y2="90"  stroke="#e2e8f0" stroke-width="0.8"/>
+            <text x="18" y="32" text-anchor="end" font-size="6" fill="#94a3b8">+10</text>
+            <text x="18" y="62" text-anchor="end" font-size="6" fill="#94a3b8">0</text>
+            <text x="18" y="92" text-anchor="end" font-size="6" fill="#94a3b8">-10</text>
+            <!-- 5 groups x 2 bars: I II III IV V -->
+            <!-- I: -2 / +5 -->
+            <rect x="28"  y="60" width="6" height="6"  fill="#fca5a5" rx="1"/>
+            <rect x="36"  y="45" width="6" height="15" fill="#15803d" rx="1"/>
+            <text x="35" y="116" text-anchor="middle" font-size="7" fill="#475569" font-weight="700">I</text>
+            <!-- II: -8 / -4 -->
+            <rect x="60"  y="60" width="6" height="24" fill="#b91c1c" rx="1"/>
+            <rect x="68"  y="60" width="6" height="12" fill="#fca5a5" rx="1"/>
+            <text x="67" y="116" text-anchor="middle" font-size="7" fill="#475569" font-weight="700">II</text>
+            <!-- III: -6 / -3 -->
+            <rect x="92"  y="60" width="6" height="18" fill="#b91c1c" rx="1"/>
+            <rect x="100" y="60" width="6" height="9"  fill="#fca5a5" rx="1"/>
+            <text x="99" y="116" text-anchor="middle" font-size="7" fill="#475569" font-weight="700">III</text>
+            <!-- IV: +19 / +25 -->
+            <rect x="124" y="32" width="6" height="28" fill="#15803d" rx="1"/>
+            <rect x="132" y="22" width="6" height="38" fill="#15803d" rx="1"/>
+            <text x="131" y="116" text-anchor="middle" font-size="7" fill="#475569" font-weight="700">IV</text>
+            <!-- V: -6 / -15 -->
+            <rect x="156" y="60" width="6" height="18" fill="#b91c1c" rx="1"/>
+            <rect x="164" y="60" width="6" height="30" fill="#b91c1c" rx="1"/>
+            <text x="163" y="116" text-anchor="middle" font-size="7" fill="#475569" font-weight="700">V</text>
+            <!-- Floating + button hint -->
+            <circle cx="184" cy="14" r="6" fill="#0f172a"/>
+            <text x="184" y="17" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">+</text>
           </svg>
 
           <!-- Item expected vs actual preview -->

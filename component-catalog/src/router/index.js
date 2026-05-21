@@ -9,6 +9,7 @@ import BistaDistributionView from '../views/BistaDistributionView.vue';
 import StudentSolutionTableView from '../views/StudentSolutionTableView.vue';
 import MeanComparisonView from '../views/MeanComparisonView.vue';
 import ItemExpectedActualView from '../views/ItemExpectedActualView.vue';
+import CompetenceLevelDeltaView from '../views/CompetenceLevelDeltaView.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -23,5 +24,6 @@ export default createRouter({
     { path: '/student-solution-table', component: StudentSolutionTableView },
     { path: '/mean-comparison', component: MeanComparisonView },
     { path: '/item-expected-actual', component: ItemExpectedActualView },
+    { path: '/competence-delta', component: CompetenceLevelDeltaView },
   ],
 });
