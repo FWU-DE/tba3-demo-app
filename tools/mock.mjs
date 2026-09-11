@@ -87,7 +87,11 @@ const materialien = (query) => {
  * dann aggregation, dann type), statt einen 404 zu liefern — die Anwendungen
  * sollen auch bei einer unbekannten Kombination etwas anzuzeigen haben.
  */
-export const antwortFuer = (pfad, query = {}) => {
+export const antwortFuer = (eingang, query = {}) => {
+  // Der Rewrite kann einen abschließenden Schrägstrich liefern (/materials/) —
+  // vor jedem Vergleich also abschneiden.
+  const pfad = eingang.replace(/\/+$/, '') || '/';
+
   if (pfad === '/materials') {
     const daten = materialien(query);
     return daten === undefined ? { daten: null, treffer: 'keiner' } : { daten, treffer: 'genau' };
