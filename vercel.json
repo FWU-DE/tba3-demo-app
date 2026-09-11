@@ -1,0 +1,34 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/groups/:path*",
+      "destination": "https://apps.indibit.eu/tba3-api/groups/:path*"
+    },
+    {
+      "source": "/schools/:path*",
+      "destination": "https://apps.indibit.eu/tba3-api/schools/:path*"
+    },
+    {
+      "source": "/states/:path*",
+      "destination": "https://apps.indibit.eu/tba3-api/states/:path*"
+    },
+    {
+      "source": "/tba3-api/:path*",
+      "destination": "https://apps.indibit.eu/tba3-api/:path*"
+    },
+    {
+      "source": "/tba3-spec.yml",
+      "destination": "https://raw.githubusercontent.com/indibit-eu/tba3/refs/heads/main/tba3-spec.yml"
+    },
+    {
+      "source": "/demo/:path*",
+      "destination": "/demo/index.html"
+    },
+    {
+      "source": "/katalog/:path*",
+      "destination": "/katalog/index.html"
+    }
+  ]
+}

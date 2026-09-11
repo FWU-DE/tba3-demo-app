@@ -1,249 +1,73 @@
-# TBA3 Demo Application
+# TBA3
 
-Eine moderne, interaktive Frontend-Demo-Anwendung zur Visualisierung von Bildungstestdaten über die TBA3 (VERA Auswertungsschnittstelle) API.
+Alles zur TBA3-Auswertungsschnittstelle an einem Ort: die Demoanwendung, die
+Komponentenbibliothek, die API-Referenz — und künftig die vollständigen
+Rückmeldungsbeispiele. Ein Repository, ein Deployment, eine URL.
 
-## Überblick
+| Pfad | Bereich | Stack |
+|---|---|---|
+| `/` | Portal — Einstieg und Wegweiser | statisches HTML |
+| `/demo` | Demoanwendung: Filter, Kompetenzstufen, Schülerdetails, Export | React 19 + Recharts + Tailwind |
+| `/katalog` | Komponentenbibliothek: die Visualisierungen einzeln, mit Einsatzzweck und Quelltext | Vue 3 + PrimeVue |
+| `/schnittstelle` | API-Referenz, live aus der Spezifikation gerendert | Redoc |
+| `/beispiele` | Rückmeldungsbeispiele | folgt |
 
-Diese Demo-Anwendung zeigt die Möglichkeiten der TBA3 API durch ansprechende Datenvisualisierungen. Sie dient als Referenzimplementierung für Frontend-Entwickler, die TBA3-konforme Backends integrieren möchten.
+## Struktur
 
-## Features
-
-- ✅ **Kompetenzstufen-Verteilung**: Visualisierung der Verteilung von Schülern über fünf Kompetenzstufen
-- ✅ **Item-Statistiken**: Detaillierte Lösungshäufigkeiten für einzelne Test-Items
-- ✅ **Multi-Level-Ansicht**: Datenansicht auf Gruppen-, Schul- und Bundeslandebene
-- 🔄 **Aggregationen**: Verschiedene Aggregationstypen (in Entwicklung)
-- 🎨 **Modernes UI**: Sleek Design mit Tailwind CSS
-- 📊 **Interaktive Charts**: Responsive Diagramme mit Recharts
-- 🔍 **Erweiterte Filter**: Filterung nach Fach, Klassenstufe, Geschlecht, Sprache
-
-## Technologie-Stack
-
-- **Frontend**: React 18 + Vite
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **HTTP Client**: Axios
-- **State Management**: React Context + Hooks
-
-## Voraussetzungen
-
-- Node.js 18+ (empfohlen: Node.js 20)
-- npm oder yarn
-- TBA3 Mock Server (Backend)
-
-## Installation
-
-1. **Abhängigkeiten installieren**:
-   ```bash
-   npm install
-   ```
-
-2. **Mock Server starten**:
-
-   **WICHTIG**: Derzeit gibt es ein Kompatibilitätsproblem mit Python 3.14 und Pydantic.
-
-   Entweder:
-   - Verwenden Sie Python 3.11 oder 3.12 für den Mock Server
-   - Oder warten Sie auf ein Pydantic-Update
-
-   ```bash
-   cd ../tba3-repo/mock-server
-   # Mit Python 3.11/3.12:
-   python -m venv venv
-   source venv/bin/activate  # oder: venv\Scripts\activate auf Windows
-   pip install -r requirements.txt
-   uvicorn server:app --reload --port 8000
-   ```
-
-3. **Frontend Dev Server starten**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Öffnen Sie den Browser**:
-   ```
-   http://localhost:5173
-   ```
+```
+apps/
+├── portal/        Startseite und API-Referenz (statisch, kein Build)
+├── demo/          Demoanwendung        → Workspace @tba3/demo
+├── katalog/       Komponentenbibliothek → Workspace @tba3/katalog
+└── beispiele/     Rückmeldungsbeispiele (Platzhalter)
+mcp-server/        MCP-Server zur Demoanwendung (eigenes Paket, kein Workspace)
+tools/
+├── build-site.mjs Setzt die App-Builds zu dist/ zusammen
+└── serve-site.mjs Liefert dist/ lokal aus wie das Deployment
+```
 
 ## Entwicklung
 
-### Verzeichnisstruktur
+```bash
+npm install            # installiert alle Workspaces
 
-```
-demo-app/
-├── src/
-│   ├── components/
-│   │   ├── layout/          # Layout-Komponenten (Header, Sidebar, Dashboard)
-│   │   ├── charts/          # Chart-Komponenten (Kompetenzstufen, Items)
-│   │   ├── filters/         # Filter-Komponenten
-│   │   └── common/          # Wiederverwendbare Komponenten (Card, Loading, Error)
-│   ├── hooks/               # Custom React Hooks
-│   ├── services/            # API Client
-│   ├── utils/               # Hilfsfunktionen
-│   ├── context/             # React Context (Filter State)
-│   └── App.jsx              # Haupt-App-Komponente
-├── public/                  # Statische Assets
-├── index.html               # HTML Entry Point
-├── vite.config.js          # Vite Konfiguration
-├── tailwind.config.js      # Tailwind CSS Konfiguration
-└── package.json            # Abhängigkeiten
+npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
+npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
+
+npm run build          # baut alle Bereiche nach dist/
+npm run preview        # liefert dist/ aus  → http://localhost:4173
+npm run lint           # ESLint über die Demoanwendung
 ```
 
-### Verfügbare Scripts
+Beide Dev-Server erwarten den TBA3-Mock-Server auf `http://localhost:8000` und
+leiten `/groups`, `/schools` und `/states` dorthin weiter. Quelle und Anleitung:
+[indibit-eu/tba3 → mock-server](https://github.com/indibit-eu/tba3/tree/main/mock-server).
+`npm run preview` fragt stattdessen das öffentliche Referenz-Backend ab
+(über `TBA3_API_BASE_URL` umstellbar).
 
-- `npm run dev` - Startet den Entwicklungsserver (Port 5173)
-- `npm run build` - Erstellt Production Build
-- `npm run preview` - Vorschau des Production Builds
-- `npm run lint` - ESLint Linting (falls konfiguriert)
+## Schnittstelle
 
-### API Endpoints
+Spezifikation, Konzeptdokumentation und Mock-Server leben in
+[indibit-eu/tba3](https://github.com/indibit-eu/tba3). Die Referenz unter
+`/schnittstelle` lädt `tba3-spec.yml` bei jedem Aufruf direkt von dort — sie
+kann also nicht veralten. Das Umschreiben des Pfads `/tba3-spec.yml` steht in
+`vercel.json` (Produktion), `nginx.conf` (Docker) und `tools/serve-site.mjs` (lokal).
 
-Die Anwendung kommuniziert mit folgenden TBA3 API Endpoints:
-
-**Gruppen-Ebene**:
-- `GET /groups/{id}/competence-levels` - Kompetenzstufen-Verteilung
-- `GET /groups/{id}/items` - Item-Statistiken
-- `GET /groups/{id}/aggregations` - Aggregationen
-
-**Schul-Ebene**:
-- `GET /schools/{id}/competence-levels`
-- `GET /schools/{id}/items`
-- `GET /schools/{id}/aggregations`
-
-**Bundesland-Ebene**:
-- `GET /states/{id}/competence-levels`
-- `GET /states/{id}/items`
-- `GET /states/{id}/aggregations`
-
-### Query Parameter
-
-Alle Endpoints unterstützen folgende Query Parameter:
-
-- `type`: `group` | `students` | `both` - Datentyp
-- `gender`: `f` | `m` | `d` - Geschlecht-Filter
-- `languageAtHome`: `german` | `english` | `french` | `other` - Sprache-Filter
-
-## Bekannte Probleme
-
-### Python 3.14 Kompatibilität
-
-Der Mock Server hat derzeit Probleme mit Python 3.14 aufgrund einer Inkompatibilität zwischen Pydantic und der neuen Python-Version.
-
-**Lösung**: Verwenden Sie Python 3.11 oder 3.12 für den Mock Server.
-
-### CORS
-
-Falls CORS-Probleme auftreten, überprüfen Sie die Vite Proxy-Konfiguration in `vite.config.js`.
-
-## Komponenten
-
-### Kompetenzstufen-Chart
-
-Zeigt die Verteilung der Schüler über die fünf Kompetenzstufen:
-
-- **Level I**: Unter Mindeststandard (rot)
-- **Level II**: Mindeststandard (orange)
-- **Level III**: Regelstandard (gelb)
-- **Level IV**: Regelstandard Plus (grün)
-- **Level V**: Optimalstandard (dunkelgrün)
-
-### Item-Statistiken-Chart
-
-Horizontales Balkendiagramm der Lösungshäufigkeiten für alle Items:
-
-- Sortiert nach Aufgabe (Exercise ID)
-- Tooltip zeigt Item-Metadaten (IQB-Parameter)
-- Anpassbare Höhe basierend auf Item-Anzahl
-
-## Daten-Quellen
-
-Die App verwendet Testdaten vom TBA3 Mock Server:
-
-- **25 Gruppen**: Verschiedene Fächer (Deutsch, Mathe, Englisch, Französisch) und Klassenstufen (V3, V8)
-- **2 Schulen**: Grundschule Musterstadt, Gymnasium Beispielstadt
-- **1 Bundesland**: Beispielland
-
-Alle Daten werden mit IRT-Modellen (Item Response Theory) generiert.
-
-## Customization
-
-### Farben anpassen
-
-Bearbeiten Sie `tailwind.config.js` um das Farbschema anzupassen:
-
-```javascript
-theme: {
-  extend: {
-    colors: {
-      primary: '#2563eb',  // Hauptfarbe
-      'competence': {
-        1: '#ef4444',      // Level I
-        // ...
-      }
-    }
-  }
-}
-```
-
-### Neue Visualisierungen hinzufügen
-
-1. Erstellen Sie eine neue Komponente in `src/components/charts/`
-2. Erstellen Sie einen Custom Hook in `src/hooks/` für Daten-Fetching
-3. Fügen Sie die Komponente zu `Dashboard.jsx` hinzu
-
-## Performance
-
-- **Initial Load**: < 2s
-- **Chart Render**: < 500ms
-- **API Response**: < 1s (Mock Server)
-
-## Browser-Kompatibilität
-
-- Chrome/Edge (neueste Version)
-- Firefox (neueste Version)
-- Safari (neueste Version)
+Backend aller Ansichten: `https://apps.indibit.eu/tba3-api`.
 
 ## Deployment
 
-### Production Build erstellen
+**Vercel** — ein Projekt, Root des Repositories. `vercel.json` legt Build-Kommando,
+Ausgabeverzeichnis und die Rewrites fest (API-Proxy, Spezifikation, SPA-Fallback
+je Bereich).
 
-```bash
-npm run build
-```
+**Docker** — `Dockerfile` baut dieselbe Site und liefert sie über nginx aus,
+zusammen mit dem MCP-Server und einem lokalen Mock-API-Server. Der MCP-Server
+wird zusätzlich als eigenes Image gebaut (`FWU-DE/tba3-demo-app-mcp`).
 
-Dies erstellt optimierte Dateien im `dist/` Verzeichnis.
+## Weitere Dokumentation
 
-### Mit anderem Backend verwenden
-
-Setzen Sie die `VITE_API_BASE_URL` Umgebungsvariable:
-
-```bash
-VITE_API_BASE_URL=https://api.example.com npm run build
-```
-
-Oder erstellen Sie eine `.env` Datei:
-
-```env
-VITE_API_BASE_URL=https://api.example.com
-```
-
-## Mitwirkende
-
-Entwickelt als Demo für die TBA3 VERA Auswertungsschnittstelle.
-
-## Lizenz
-
-Siehe TBA3 Repository für Lizenzinformationen.
-
-## Support
-
-Bei Fragen oder Problemen öffnen Sie bitte ein Issue im TBA3 Repository.
-
-## Roadmap
-
-- [ ] Aggregationen-Visualisierung
-- [ ] Export-Funktionalität (CSV, PDF)
-- [ ] Dark Mode
-- [ ] Mobile-optimierte Ansicht
-- [ ] Vergleichs-Ansicht (mehrere Gruppen gleichzeitig)
-- [ ] Erweiterte Filter (Kombinationen)
-- [ ] Daten-Caching für bessere Performance
+- [`apps/demo/README.md`](apps/demo/README.md) — Demoanwendung im Detail
+- [`apps/katalog/AGENTS.md`](apps/katalog/AGENTS.md) — Komponentenbibliothek
+- [`apps/beispiele/README.md`](apps/beispiele/README.md) — wie die Beispiele eingehängt werden
+- [`CLAUDE.md`](CLAUDE.md) — Konventionen und Task-Workflow

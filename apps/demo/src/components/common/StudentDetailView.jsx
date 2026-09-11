@@ -241,7 +241,7 @@ const StudentDetailView = ({ student, onBack }) => {
   const handleDownloadPDF = async () => {
     setPdfLoading(true);
     try {
-      exportStudentPDF(student);
+      await exportStudentPDF(student);
     } finally {
       setPdfLoading(false);
     }

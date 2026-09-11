@@ -23,6 +23,9 @@ const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
     <header class="shell-header">
       <div class="shell-header-inner">
         <div class="header-brand">
+          <!-- Zurück ins Portal — der Katalog ist ein Bereich unter /katalog -->
+          <a href="/" class="header-back" title="Zur TBA3-Übersicht">← TBA3</a>
+          <span class="header-sep">/</span>
           <RouterLink to="/" class="header-title">TBA3 Component Catalog</RouterLink>
           <template v-if="componentName">
             <span class="header-sep">/</span>
@@ -84,6 +87,13 @@ a { text-decoration: none; color: inherit; }
 }
 
 .header-brand { display: flex; align-items: center; gap: 8px; }
+.header-back {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.header-back:hover { color: #93c5fd; }
 .header-title { font-size: 1rem; font-weight: 700; color: #fff; }
 .header-title:hover { color: #93c5fd; }
 .header-sep { color: rgba(255,255,255,0.3); }

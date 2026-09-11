@@ -51,7 +51,9 @@ const ltiCallbackPlugin = {
 };
 
 // https://vite.dev/config/
+// Die Demo wird unter /demo/ ausgeliefert (siehe tools/build-site.mjs).
 export default defineConfig({
+  base: '/demo/',
   plugins: [react(), ltiCallbackPlugin],
   server: {
     proxy: {
