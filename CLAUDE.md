@@ -30,6 +30,7 @@ apps/portal/        Startseite (/) und API-Referenz (/schnittstelle) — statisc
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
 apps/beispiele/     Rückmeldungsbeispiele — Platzhalter, siehe README dort
+apps/shared/        Gemeinsame Navigationsleiste (Custom Element) → /gemeinsam/
 api/                Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
@@ -38,9 +39,24 @@ tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + schnittstelle/
 tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
 ```
 
-Wer einen Bereich hinzufügt, fasst drei Stellen an: `tools/build-site.mjs`
+Wer einen Bereich hinzufügt, fasst vier Stellen an: `tools/build-site.mjs`
 (Zusammenbau), `vercel.json` und `nginx.conf` (Fallback), `apps/portal/index.html`
-(Verlinkung).
+(Verlinkung) und `BEREICHE` in `apps/shared/tba3-leiste.js` (Navigationsleiste).
+
+### Gemeinsame Navigationsleiste
+
+`apps/shared/tba3-leiste.js` ist ein Custom Element mit Shadow DOM und steht in
+jedem Bereich **im HTML-Dokument**, nicht im Framework-Baum:
+
+```html
+<tba3-leiste aktiv="demo"></tba3-leiste>
+```
+
+So muss weder React noch Vue davon wissen, und das Shadow DOM hält Tailwind und
+PrimeVue aus den Stilen heraus. Eingebunden wird sie zur Laufzeit per
+`document.createElement` — ein `<script src="/gemeinsam/…">` im Markup würde Vite
+auflösen und mitbündeln wollen. Im Dev-Server liefert
+`apps/shared/vite-plugin-gemeinsam.js` die Datei aus, im Build `tools/build-site.mjs`.
 
 ### Base-Pfade
 

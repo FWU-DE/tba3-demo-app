@@ -19,7 +19,8 @@ apps/
 ├── portal/        Startseite und API-Referenz (statisch, kein Build)
 ├── demo/          Demoanwendung        → Workspace @tba3/demo
 ├── katalog/       Komponentenbibliothek → Workspace @tba3/katalog
-└── beispiele/     Rückmeldungsbeispiele (Platzhalter)
+├── beispiele/     Rückmeldungsbeispiele (Platzhalter)
+└── shared/        Gemeinsame Navigationsleiste über allen Bereichen
 api/               Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs  Die Beispieldaten (gepackt, erzeugt von tools/fetch-fixtures.mjs)
 mcp-server/        MCP-Server zur Demoanwendung (eigenes Paket, kein Workspace)

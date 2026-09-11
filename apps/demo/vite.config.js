@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { gemeinsameDateien } from '../shared/vite-plugin-gemeinsam.js'
 
 // ── LTI callback handler ───────────────────────────────────────────────────
 // When a LTI content-item tool (e.g. MUNDO) is launched in an iframe, the
@@ -54,7 +55,7 @@ const ltiCallbackPlugin = {
 // Die Demo wird unter /demo/ ausgeliefert (siehe tools/build-site.mjs).
 export default defineConfig({
   base: '/demo/',
-  plugins: [react(), ltiCallbackPlugin],
+  plugins: [react(), ltiCallbackPlugin, gemeinsameDateien()],
   server: {
     proxy: {
       '/groups': 'http://localhost:8000',

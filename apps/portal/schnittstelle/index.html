@@ -21,32 +21,6 @@
       background: #fff;
     }
 
-    /* Kopfzeile wie im Portal, damit der Bereich zusammengehört */
-    header { border-bottom: 1px solid var(--linie); background: #fff; }
-    .kopf {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .marke {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 700; color: var(--tinte); text-decoration: none;
-    }
-    .marke-zeichen {
-      width: 30px; height: 30px; border-radius: 9px;
-      background: var(--blau); color: #fff;
-      display: grid; place-items: center;
-      font-size: 13px; font-weight: 800;
-    }
-    nav { display: flex; gap: 20px; font-size: 14px; flex-wrap: wrap; }
-    nav a { color: var(--grau); text-decoration: none; }
-    nav a:hover { color: var(--blau); }
-
     .hinweis {
       max-width: 1200px;
       margin: 0 auto;
@@ -98,20 +72,7 @@
 </head>
 <body>
 
-<header>
-  <div class="kopf">
-    <a class="marke" href="/">
-      <span class="marke-zeichen" aria-hidden="true">T3</span>
-      <span>TBA3</span>
-    </a>
-    <nav>
-      <a href="/demo">Demoanwendung</a>
-      <a href="/katalog">Komponenten</a>
-      <a href="https://github.com/indibit-eu/tba3/blob/main/docs/konzepte.md">Konzepte</a>
-      <a href="https://github.com/indibit-eu/tba3">Spezifikations-Repository</a>
-    </nav>
-  </div>
-</header>
+<tba3-leiste aktiv="schnittstelle"></tba3-leiste>
 
 <p class="hinweis">
   <strong>Ausprobieren erwünscht:</strong> „Try it out“ fragt dieselben Demodaten ab,
@@ -179,6 +140,8 @@
     }, 20000);
   }
 </script>
+
+<script type="module" src="/gemeinsam/tba3-leiste.js"></script>
 
 </body>
 </html>

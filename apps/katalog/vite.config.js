@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { gemeinsameDateien } from '../shared/vite-plugin-gemeinsam.js';
 
 // Der Katalog wird unter /katalog/ ausgeliefert (siehe tools/build-site.mjs).
 export default defineConfig({
   base: '/katalog/',
-  plugins: [vue()],
+  plugins: [vue(), gemeinsameDateien()],
   server: {
     port: 5174,
     proxy: {

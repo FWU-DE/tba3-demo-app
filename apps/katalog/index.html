@@ -6,7 +6,20 @@
     <title>TBA3 Component Catalog</title>
   </head>
   <body>
+    <!-- Gemeinsame Leiste aller Bereiche; steht bewusst außerhalb von #app -->
+    <tba3-leiste aktiv="katalog"></tba3-leiste>
     <div id="app"></div>
+    <script>
+      // Die Leiste liegt für alle Bereiche gemeinsam unter /gemeinsam/ und
+      // gehört nicht ins Bündel dieser App. Deshalb zur Laufzeit angehängt:
+      // ein <script src> im Markup würde Vite auflösen und mitbündeln wollen.
+      (function () {
+        var el = document.createElement('script');
+        el.type = 'module';
+        el.src = '/gemeinsam/tba3-leiste.js';
+        document.head.appendChild(el);
+      })();
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -4,10 +4,23 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>demo-app</title>
+    <title>TBA3 Demoanwendung</title>
   </head>
   <body>
+    <!-- Gemeinsame Leiste aller Bereiche; steht bewusst außerhalb von #root -->
+    <tba3-leiste aktiv="demo"></tba3-leiste>
     <div id="root"></div>
+    <script>
+      // Die Leiste liegt für alle Bereiche gemeinsam unter /gemeinsam/ und
+      // gehört nicht ins Bündel dieser App. Deshalb zur Laufzeit angehängt:
+      // ein <script src> im Markup würde Vite auflösen und mitbündeln wollen.
+      (function () {
+        var el = document.createElement('script');
+        el.type = 'module';
+        el.src = '/gemeinsam/tba3-leiste.js';
+        document.head.appendChild(el);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

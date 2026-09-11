@@ -105,10 +105,6 @@ const Header = () => {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              {/* Zurück ins Portal — die Demo ist ein Bereich unter /demo */}
-              <a href="/" className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-primary transition-colors mb-1">
-                <span aria-hidden="true">←</span> TBA3
-              </a>
               <h1 className="text-2xl font-bold text-gray-900">TBA3 Demo</h1>
               <p className="text-sm text-gray-600 mt-1">
                 VERA Auswertungsschnittstelle – Interaktive Datenvisualisierung

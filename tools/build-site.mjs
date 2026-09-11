@@ -51,6 +51,12 @@ for (const [from, to, required] of PARTS) {
   console.log(`✓ ${from} → dist/${to || ''}`);
 }
 
+// Die gemeinsame Navigationsleiste liegt unter /gemeinsam/ und wird von allen
+// Bereichen eingebunden — auch von denen, die React bzw. Vue nutzen.
+mkdirSync(join(dist, 'gemeinsam'), { recursive: true });
+copyFileSync(join(root, 'apps/shared/tba3-leiste.js'), join(dist, 'gemeinsam/tba3-leiste.js'));
+console.log('✓ apps/shared/tba3-leiste.js → dist/gemeinsam/');
+
 // Swagger UI rendert die API-Referenz unter /schnittstelle. Die Dateien kommen aus
 // node_modules statt von einem CDN — sonst hinge das Deployment an fremder Infrastruktur.
 const SWAGGER_DATEIEN = ['swagger-ui-bundle.js', 'swagger-ui.css'];
