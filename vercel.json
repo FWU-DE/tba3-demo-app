@@ -4,19 +4,19 @@
   "rewrites": [
     {
       "source": "/groups/:path*",
-      "destination": "/api/groups/:path*"
+      "destination": "/api/tba3?pfad=groups/:path*"
     },
     {
       "source": "/schools/:path*",
-      "destination": "/api/schools/:path*"
+      "destination": "/api/tba3?pfad=schools/:path*"
     },
     {
       "source": "/states/:path*",
-      "destination": "/api/states/:path*"
+      "destination": "/api/tba3?pfad=states/:path*"
     },
     {
       "source": "/tba3-api/:path*",
-      "destination": "/api/:path*"
+      "destination": "/api/tba3?pfad=:path*"
     },
     {
       "source": "/demo/:path*",
