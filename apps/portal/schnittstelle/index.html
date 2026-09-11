@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TBA3 — Auswertungsschnittstelle</title>
   <meta name="description" content="Die OpenAPI-Referenz der TBA3-Auswertungsschnittstelle, mit Abfragen gegen die Demodaten." />
-  <link rel="stylesheet" href="./swagger-ui.css" />
+  <link rel="stylesheet" href="/schnittstelle/swagger-ui.css" />
   <style>
     :root {
       --blau: #2563eb;
@@ -134,7 +134,7 @@
 
 <div id="swagger"></div>
 
-<script src="./swagger-ui-bundle.js" onerror="zeigeFehler()"></script>
+<script src="/schnittstelle/swagger-ui-bundle.js" onerror="zeigeFehler()"></script>
 <script>
   function zeigeFehler() {
     var laedt = document.getElementById('laedt');
@@ -146,7 +146,7 @@
     zeigeFehler();
   } else {
     SwaggerUIBundle({
-      url: './tba3-spec.yml',
+      url: '/schnittstelle/tba3-spec.yml',
       dom_id: '#swagger',
       deepLinking: true,
       defaultModelsExpandDepth: -1,
