@@ -94,6 +94,7 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
 
           {tooltip && (
             <div
+              data-testid="competency-tooltip"
               className="absolute z-20 bg-slate-800 text-white rounded-lg px-3 py-2 pointer-events-none whitespace-nowrap shadow-lg -translate-x-1/2 -translate-y-[calc(100%+12px)]"
               style={{ left: `${tooltip.x}px`, top: `${tooltip.y}px` }}
             >

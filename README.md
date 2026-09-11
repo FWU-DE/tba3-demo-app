@@ -44,6 +44,7 @@ npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 
 npm run build          # baut alle Bereiche nach dist/
 npm run preview        # liefert dist/ aus  → http://localhost:4173
+npm test               # Tests (Vitest)
 npm run lint           # ESLint über die Demoanwendung
 ```
 

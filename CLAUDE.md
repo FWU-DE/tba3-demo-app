@@ -11,15 +11,20 @@ npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
 npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 npm run build          # alle Bereiche → dist/
 npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
+npm test               # Vitest (apps/demo mit jsdom, tools/ als Node)
+npm run test:watch     # dasselbe im Beobachtungsmodus
 npm run lint           # ESLint über apps/demo
 ```
 
 **CI check (run before every commit):**
 ```bash
-npm run lint && npm run build
+npm run lint && npm test && npm run build
 ```
 
-Beides läuft ohne Befund; bitte sauber halten.
+Alle drei laufen ohne Befund; bitte sauber halten. `.github/workflows/ci.yml`
+führt sie bei jedem Push und Pull Request aus und prüft anschließend den
+ausgelieferten Stand über `npm run preview` — Seiten, Spezifikationen, Leiste
+und Mock-Antworten.
 
 ## Architektur
 
@@ -97,6 +102,27 @@ Die OpenAPI-Spezifikation liegt als Kopie unter
 `indibit-eu/tba3` nachgezogen — bewusst eingecheckt, damit die Referenz an nichts
 Externem hängt. In der Referenz schreibt ein `requestInterceptor` Anfragen auf den
 eigenen Host um, sodass „Try it out“ ohne CORS gegen dieselben Demodaten läuft.
+
+## Tests
+
+```
+apps/demo/src/utils/__tests__/dataTransformers.test.js   Datenaufbereitung
+apps/demo/src/hooks/__tests__/useApiDaten.test.jsx       Laden, Fehler, überholte Antworten
+apps/demo/src/components/charts/__tests__/…              Übersichtskarten
+apps/demo/src/__tests__/App.test.jsx                     Zusammenspiel: Filter, Reiter, Abfragen
+tools/mock.test.mjs                                      Mock: Schlüssel, Ersatz, Materialfilter
+```
+
+Der App-Test ersetzt `src/services/tba3Api` — das ist die einzige Stelle, an der
+die Anwendung mit dem Backend spricht, und genügt deshalb, um Filter, Reiter und
+Fehlerzustände zu prüfen. Bedienelemente werden über `data-testid` adressiert
+(`ebene-*`, `auswahl-*`, `reiter-*`), nicht über Beschriftungen — die ändern sich
+häufiger als die Kennungen.
+
+Zwei Fallen aus der Praxis: `userEvent.hover` erreicht SVG-Elemente in jsdom nicht
+(`fireEvent.mouseEnter` nehmen), und Recharts misst in jsdom keine Fläche — Tests
+sollten sich deshalb nicht auf gezeichnete Balken stützen, sondern auf Daten und
+Beschriftungen.
 
 ## Konventionen
 

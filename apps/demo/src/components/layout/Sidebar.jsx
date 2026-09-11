@@ -54,6 +54,8 @@ const Sidebar = () => {
             ].map((level) => (
               <button
                 key={level.value}
+                data-testid={`ebene-${level.value}`}
+                aria-pressed={selectedLevel === level.value}
                 onClick={() => setSelectedLevel(level.value)}
                 className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                   selectedLevel === level.value
@@ -77,6 +79,8 @@ const Sidebar = () => {
 
           {selectedLevel === 'group' && (
             <select
+              data-testid="auswahl-gruppe"
+              aria-label="Lerngruppe"
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -95,6 +99,8 @@ const Sidebar = () => {
 
           {selectedLevel === 'school' && (
             <select
+              data-testid="auswahl-schule"
+              aria-label="Schule"
               value={selectedSchool}
               onChange={(e) => setSelectedSchool(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -109,6 +115,8 @@ const Sidebar = () => {
 
           {selectedLevel === 'state' && (
             <select
+              data-testid="auswahl-bundesland"
+              aria-label="Bundesland"
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -128,6 +136,8 @@ const Sidebar = () => {
             Fach
           </h3>
           <select
+            data-testid="auswahl-fach"
+            aria-label="Fach"
             value={selectedSubject || ''}
             onChange={(e) => setSelectedSubject(e.target.value || null)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -147,6 +157,8 @@ const Sidebar = () => {
             Klassenstufe
           </h3>
           <select
+            data-testid="auswahl-klassenstufe"
+            aria-label="Klassenstufe"
             value={selectedGrade || ''}
             onChange={(e) => setSelectedGrade(e.target.value || null)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -166,6 +178,8 @@ const Sidebar = () => {
             Datentyp
           </h3>
           <select
+            data-testid="auswahl-datentyp"
+            aria-label="Datentyp"
             value={typeParam}
             onChange={(e) => setTypeParam(e.target.value)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"

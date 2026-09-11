@@ -16,12 +16,19 @@
     "build": "npm run build --workspaces && node tools/build-site.mjs",
     "preview": "node tools/serve-site.mjs",
     "lint": "npm run lint -w @tba3/demo",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "fixtures:update": "node tools/fetch-fixtures.mjs",
     "spec:update": "node tools/update-spec.mjs",
     "material-spec:update": "node tools/build-material-spec.mjs"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "js-yaml": "^5.4.1",
-    "swagger-ui-dist": "^5.32.15"
+    "jsdom": "^30.0.1",
+    "swagger-ui-dist": "^5.32.15",
+    "vitest": "^5.0.0"
   }
 }

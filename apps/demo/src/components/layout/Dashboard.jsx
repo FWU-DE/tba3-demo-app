@@ -66,7 +66,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex-1 p-8">
+    <div className="flex-1 p-8" data-testid="dashboard">
       <div className="max-w-7xl mx-auto">
         {/* Overview cards — always visible at the top */}
         <CompetencyOverviewCards chartData={overviewChartData} stats={overviewStats} />
@@ -78,6 +78,8 @@ const Dashboard = () => {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
+                  data-testid={`reiter-${tab.id}`}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
                   onClick={() => { setActiveTab(tab.id); setActiveStudentId(null); }}
                   className={`
                     py-4 px-1 border-b-2 font-medium text-sm transition-colors
