@@ -6,10 +6,14 @@ WORKDIR /app
 ARG VITE_API_BASE_URL=/tba3-api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-COPY package*.json ./
+# Erst die Manifeste aller Workspaces — so bleibt die npm-Schicht cachebar
+COPY package.json package-lock.json ./
+COPY apps/demo/package.json apps/demo/
+COPY apps/katalog/package.json apps/katalog/
 RUN npm ci
 
 COPY . .
+# Baut Demo und Katalog und setzt sie mit Portal und API-Referenz zu dist/ zusammen
 RUN npm run build
 
 # MCP-Server-Dependencies im Builder (Runner hat nur node, kein npm)

@@ -1,72 +1,82 @@
-# CLAUDE.md — TBA3 Demo App
+# CLAUDE.md — TBA3
 
 ## Commands
 
+Alle Kommandos im Repository-Wurzelverzeichnis (npm workspaces):
+
 ```bash
-npm run dev        # Dev server — http://localhost:5173
-npm run build      # Production build → dist/
-npm run lint       # ESLint
-npm run preview    # Preview production build
+npm install            # alle Workspaces
+npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
+npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
+npm run build          # alle Bereiche → dist/
+npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
+npm run lint           # ESLint über apps/demo
 ```
 
 **CI check (run before every commit):**
 ```bash
-npm run lint && npm run build
+npm run build
 ```
 
-## Architecture
+`npm run lint` meldet Altlasten aus `apps/demo` (React-Hook-Regeln, unbenutzte
+Variablen). Neue Dateien müssen sauber sein — den Bestand nicht nebenbei mit
+umbauen.
 
-React 19 + Vite SPA. No TypeScript yet (JSX). Package manager: npm.
+## Architektur
 
-### Source structure
+Monorepo mit vier Bereichen, die zu **einem** Deployment zusammengesetzt werden.
 
 ```
-src/
-├── components/
-│   ├── charts/        # Recharts-based visualizations
-│   ├── common/        # Shared UI components
-│   ├── filters/       # Filter controls
-│   ├── layout/        # App shell (header, sidebar)
-│   └── HelpView.jsx   # MCP connection docs
-├── context/
-│   └── FilterContext.jsx   # Global filter state
-├── hooks/
-│   ├── useAggregations.js
-│   ├── useCompetenceLevels.js
-│   └── useItems.js
-├── services/
-│   └── tba3Api.js     # API client (axios, proxied via Vite dev / vercel.json prod)
-└── utils/             # Data transformers, formatters, export helpers
+apps/portal/        Startseite (/) und API-Referenz (/schnittstelle) — statisches HTML
+apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
+apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
+apps/beispiele/     Rückmeldungsbeispiele — Platzhalter, siehe README dort
+mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
+                    eigener Lockfile, eigener Docker-Kontext)
+tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + schnittstelle/
+tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
 ```
 
-### MCP Server (`mcp-server/`)
+Wer einen Bereich hinzufügt, fasst drei Stellen an: `tools/build-site.mjs`
+(Zusammenbau), `vercel.json` und `nginx.conf` (Fallback), `apps/portal/index.html`
+(Verlinkung).
 
-Bundled into the main Docker image. Nginx proxies `/mcp` to the MCP server for SSE.
-Separate Docker image is also built (`FWU-DE/tba3-demo-app-mcp`).
+### Base-Pfade
 
-### API proxy
+Demo und Katalog liegen in Unterpfaden — `base: '/demo/'` bzw. `base: '/katalog/'`
+in der jeweiligen `vite.config.js`. Wird das geändert, muss der Zielpfad in
+`tools/build-site.mjs` mitgezogen werden, sonst laden die Assets ins Leere.
 
-| Environment | Proxy config |
+### API-Zugriff
+
+| Umgebung | Weg |
 |---|---|
-| Local dev | `vite.config.js` proxy rules |
-| Vercel | `vercel.json` rewrites |
-| Docker | nginx (`nginx.conf`) |
+| Dev | Vite-Proxy je App → `http://localhost:8000` |
+| Vercel | Rewrites in `vercel.json` → `apps.indibit.eu/tba3-api` |
+| Docker | nginx (`nginx.conf`) → `/tba3-api` extern, `/groups…` lokaler Mock |
+| Preview | `tools/serve-site.mjs` → `TBA3_API_BASE_URL` |
 
-Backend: `https://apps.indibit.eu/tba3-api` (external, not in this repo).
+Die API-Basis kommt in beiden Apps aus `VITE_API_BASE_URL` (Demo:
+`src/services/tba3Api.js`, Katalog: `axios.defaults.baseURL` in `src/main.js`);
+leer bedeutet „gleicher Host".
 
-### Deployment
+Die OpenAPI-Spezifikation wird nicht eingecheckt: `/tba3-spec.yml` wird auf
+`raw.githubusercontent.com/indibit-eu/tba3` umgeschrieben, damit die Referenz
+unter `/schnittstelle` nicht driftet.
 
-Two targets:
-- **Vercel** — static site + serverless `api/lti-callback.js`
-- **Docker** — `Dockerfile` (main app + MCP server via supervisord + nginx)
+## Konventionen
 
-## Key Conventions
-
-- All new UI components must have `data-testid` attributes.
-- API calls go through `src/services/tba3Api.js` — no direct `fetch`/`axios` in components.
-- State lives in `FilterContext` — don't add new global state solutions without an ADR.
-- No cascade operations — keep side effects explicit.
+- Neue UI-Komponenten bekommen `data-testid`-Attribute.
+- API-Aufrufe der Demo laufen über `apps/demo/src/services/tba3Api.js` — kein
+  direktes `fetch`/`axios` in Komponenten.
+- Globaler Zustand der Demo lebt in `FilterContext`; neue globale
+  State-Lösungen nur mit ADR.
+- Keine Kaskaden-Operationen — Seiteneffekte explizit halten.
+- Redoc kommt aus `node_modules` und wird beim Build kopiert, nicht von einem
+  CDN geladen — das Deployment soll nicht an fremder Infrastruktur hängen.
 
 ## Task Workflow
 
-Task tickets live in `docs/tasks/todo/{slug}.md`. Pushing a new file there triggers the Claude Code agent via GitHub Actions. Full workflow: `skills/ai-first-webapp-gitops/01-requirements.md` (in FWU-DE/skills repo).
+Task-Tickets liegen in `docs/tasks/todo/{slug}.md`. Eine neue Datei dort löst
+über GitHub Actions den Claude-Code-Agenten aus. Vollständiger Ablauf:
+`skills/ai-first-webapp-gitops/01-requirements.md` (Repository FWU-DE/skills).

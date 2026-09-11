@@ -11,34 +11,34 @@ import {
 
 // Demo base URL – replace with real LMS URL in production
 const MATERIAL_BASE_URL = 'https://tba3.bildung.example/materialien';
-const getMaterialUrl = (material) => `${MATERIAL_BASE_URL}/${material.id}`;
+export const getMaterialUrl = (material) => `${MATERIAL_BASE_URL}/${material.id}`;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const hexToRgb = (hex) => [
+export const hexToRgb = (hex) => [
   parseInt(hex.slice(1, 3), 16),
   parseInt(hex.slice(3, 5), 16),
   parseInt(hex.slice(5, 7), 16),
 ];
 
 // Strip emoji / non-latin characters that jsPDF Helvetica can't render
-const safe = (str) =>
+export const safe = (str) =>
   String(str ?? '').replace(
     /[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]/gu,
     ''
   ).trim();
 
-const generateQR = (url) =>
+export const generateQR = (url) =>
   QRCode.toDataURL(url, { width: 160, margin: 1, color: { dark: '#111827', light: '#ffffff' } });
 
 // ── Drawing helpers ───────────────────────────────────────────────────────────
 
-const PAGE_W = 210;
-const PAGE_H = 297;
-const MARGIN = 14;
-const CONTENT_W = PAGE_W - 2 * MARGIN;
+export const PAGE_W = 210;
+export const PAGE_H = 297;
+export const MARGIN = 14;
+export const CONTENT_W = PAGE_W - 2 * MARGIN;
 
-const setFont = (pdf, size, style = 'normal', color = [17, 24, 39]) => {
+export const setFont = (pdf, size, style = 'normal', color = [17, 24, 39]) => {
   pdf.setFontSize(size);
   pdf.setFont('helvetica', style);
   pdf.setTextColor(...color);
@@ -108,7 +108,7 @@ const drawSeparatorPage = (pdf, title, subtitle, date) => {
   pdf.text(`TBA3 Lernmaterialien · ${date}`, PAGE_W / 2, PAGE_H - 12, { align: 'center' });
 };
 
-const drawFooter = (pdf, date) => {
+export const drawFooter = (pdf, date) => {
   setFont(pdf, 6.5, 'normal', [156, 163, 175]);
   pdf.text(`Exportiert aus TBA3 Demo App · ${date}`, MARGIN, PAGE_H - 6);
   pdf.text('Demo-URLs – keine echten Links', PAGE_W - MARGIN, PAGE_H - 6, { align: 'right' });
@@ -118,9 +118,9 @@ const drawFooter = (pdf, date) => {
   pdf.line(MARGIN, PAGE_H - 9, PAGE_W - MARGIN, PAGE_H - 9);
 };
 
-const LEVEL_BAR_H = 7;
+export const LEVEL_BAR_H = 7;
 
-const drawLevelBar = (pdf, levelKey, y) => {
+export const drawLevelBar = (pdf, levelKey, y) => {
   const cfg = COMPETENCE_LEVELS[levelKey];
   if (!cfg) {
     // Unknown level key (group-mode export): neutral gray section header
@@ -147,11 +147,11 @@ const drawLevelBar = (pdf, levelKey, y) => {
   pdf.text(`Kompetenzstufe ${levelKey}  –  ${safe(cfg.description)}`, MARGIN + 6, y + 5);
 };
 
-const CARD_H = 38;
+export const CARD_H = 38;
 const QR_SIZE = 26;
 const TEXT_W = CONTENT_W - QR_SIZE - 10;
 
-const drawMaterialCard = (pdf, material, y, qrDataUrl) => {
+export const drawMaterialCard = (pdf, material, y, qrDataUrl) => {
   const type = MATERIAL_TYPES[material.type];
   const url = material.url || getMaterialUrl(material);
 
