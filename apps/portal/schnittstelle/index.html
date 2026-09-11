@@ -78,7 +78,9 @@
   <strong>Ausprobieren erwünscht:</strong> „Try it out“ fragt dieselben Demodaten ab,
   die auch Demoanwendung und Komponentenbibliothek zeigen — etwa die Lerngruppe
   <code>3a-deutsch</code>, die Schule <code>gs-musterstadt</code> oder das Bundesland
-  <code>beispielland</code>. Die Spezifikation stammt aus
+  <code>beispielland</code>. Unter <em>Servers</em> lässt sich zwischen den eigenen
+  Beispieldaten und dem Referenzserver von indibit umschalten; beide laufen über
+  diese Seite, es gibt also keine CORS-Hürde. Die Spezifikation stammt aus
   <a href="https://github.com/indibit-eu/tba3">indibit-eu/tba3</a> und liegt hier als Kopie
   (Aktualisierung im Repository: <code>npm run spec:update</code>).
 </p>
@@ -115,17 +117,6 @@
       tryItOutEnabled: true,
       presets: [SwaggerUIBundle.presets.apis],
 
-      // Anfragen laufen über den eigenen Host: /groups, /schools und /states
-      // werden dort zum Referenz-Backend weitergereicht (vercel.json, nginx.conf,
-      // tools/serve-site.mjs). Das erspart CORS und trifft dieselben Demodaten
-      // wie die übrigen Bereiche.
-      requestInterceptor: function (req) {
-        var backend = 'https://apps.indibit.eu/tba3-api';
-        if (req.url.indexOf(backend) === 0) {
-          req.url = window.location.origin + req.url.slice(backend.length);
-        }
-        return req;
-      },
 
       onComplete: function () {
         document.getElementById('laedt').style.display = 'none';

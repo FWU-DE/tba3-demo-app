@@ -80,13 +80,29 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 2. Statische Datei
+  // 2. Referenz-Backend durchreichen (wie /referenz-api in vercel.json)
+  if (pathname === '/referenz-api' || pathname.startsWith('/referenz-api/')) {
+    const ziel = `https://apps.indibit.eu/tba3-api${pathname.slice('/referenz-api'.length)}${url.search}`;
+    try {
+      const upstream = await fetch(ziel, { headers: { Accept: 'application/json' } });
+      res.writeHead(upstream.status, {
+        'Content-Type': upstream.headers.get('content-type') || 'application/json',
+      });
+      res.end(Buffer.from(await upstream.arrayBuffer()));
+    } catch (err) {
+      res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(`Referenz-Backend nicht erreichbar: ${err.message}\n`);
+    }
+    return;
+  }
+
+  // 3. Statische Datei
   const rel = normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const candidate = join(dist, rel);
   if (isFile(candidate)) return sendFile(res, candidate);
   if (isFile(join(candidate, 'index.html'))) return sendFile(res, join(candidate, 'index.html'));
 
-  // 3. SPA-Fallback des jeweiligen Bereichs, sonst Portal
+  // 4. SPA-Fallback des jeweiligen Bereichs, sonst Portal
   const spaRoot = SPA_ROOTS.find((p) => pathname.startsWith(`${p}/`));
   const fallback = join(dist, spaRoot ? `${spaRoot}/index.html` : 'index.html');
   if (isFile(fallback)) return sendFile(res, fallback);

@@ -7,7 +7,7 @@
 //
 // Aufruf: node tools/build-site.mjs (via `npm run build` nach den App-Builds).
 
-import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -50,6 +50,26 @@ for (const [from, to, required] of PARTS) {
   }
   console.log(`✓ ${from} → dist/${to || ''}`);
 }
+
+// Die ausgelieferte Spezifikation bekommt die Server ergänzt, die tatsächlich
+// erreichbar sind: die eigenen Beispieldaten und — über denselben Host geleitet —
+// der Referenzserver. Die eingecheckte Datei bleibt die unveränderte Kopie aus
+// indibit-eu/tba3, damit `npm run spec:update` konfliktfrei bleibt.
+const specDatei = join(dist, 'schnittstelle/tba3-spec.yml');
+const spec = readFileSync(specDatei, 'utf8');
+const serverBlock = /^servers:\n(?: {2}[-\s].*\n)+/m;
+if (!serverBlock.test(spec)) {
+  console.error('✗ servers-Block in tba3-spec.yml nicht gefunden — Aufbau der Spezifikation geändert?');
+  process.exit(1);
+}
+writeFileSync(specDatei, spec.replace(serverBlock, `servers:
+  # Ergänzt von tools/build-site.mjs — im Quell-Repository steht nur der Referenzserver.
+  - url: /
+    description: Diese Seite — eigene Beispieldaten
+  - url: /referenz-api
+    description: Referenzserver von indibit (über diese Seite geleitet)
+`));
+console.log('✓ Server der Spezifikation ergänzt');
 
 // Die gemeinsame Navigationsleiste liegt unter /gemeinsam/ und wird von allen
 // Bereichen eingebunden — auch von denen, die React bzw. Vue nutzen.

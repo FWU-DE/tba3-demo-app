@@ -19,6 +19,10 @@
       "destination": "/api/tba3?pfad=:path*"
     },
     {
+      "source": "/referenz-api/:path*",
+      "destination": "https://apps.indibit.eu/tba3-api/:path*"
+    },
+    {
       "source": "/demo/:path*",
       "destination": "/demo/index.html"
     },
