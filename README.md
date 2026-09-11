@@ -20,10 +20,16 @@ apps/
 ├── demo/          Demoanwendung        → Workspace @tba3/demo
 ├── katalog/       Komponentenbibliothek → Workspace @tba3/katalog
 └── beispiele/     Rückmeldungsbeispiele (Platzhalter)
+api/               Eigener TBA3-Mock als Vercel-Funktion
+data/fixtures.mjs  Die Beispieldaten (gepackt, erzeugt von tools/fetch-fixtures.mjs)
 mcp-server/        MCP-Server zur Demoanwendung (eigenes Paket, kein Workspace)
 tools/
-├── build-site.mjs Setzt die App-Builds zu dist/ zusammen
-└── serve-site.mjs Liefert dist/ lokal aus wie das Deployment
+├── build-site.mjs    Setzt die App-Builds zu dist/ zusammen
+├── serve-site.mjs    Liefert dist/ lokal aus wie das Deployment
+├── mock-server.mjs   Der Mock als eigenständiger Server (npm run mock, Docker)
+├── mock.mjs          Nachschlage-Logik, von allen Mock-Varianten geteilt
+├── fetch-fixtures.mjs Zieht die Beispieldaten vom Referenzserver ab
+└── update-spec.mjs   Holt die OpenAPI-Spezifikation
 ```
 
 ## Entwicklung
@@ -31,6 +37,7 @@ tools/
 ```bash
 npm install            # installiert alle Workspaces
 
+npm run mock           # TBA3-Mock          → http://localhost:8000
 npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
 npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 
@@ -39,11 +46,9 @@ npm run preview        # liefert dist/ aus  → http://localhost:4173
 npm run lint           # ESLint über die Demoanwendung
 ```
 
-Beide Dev-Server erwarten den TBA3-Mock-Server auf `http://localhost:8000` und
-leiten `/groups`, `/schools` und `/states` dorthin weiter. Quelle und Anleitung:
-[indibit-eu/tba3 → mock-server](https://github.com/indibit-eu/tba3/tree/main/mock-server).
-`npm run preview` fragt stattdessen das öffentliche Referenz-Backend ab
-(über `TBA3_API_BASE_URL` umstellbar).
+Beide Dev-Server leiten `/groups`, `/schools` und `/states` an
+`http://localhost:8000` weiter — dort antwortet `npm run mock`. Ein Python-Setup
+ist dafür nicht mehr nötig. `npm run preview` beantwortet dieselben Pfade direkt.
 
 ## Schnittstelle
 
@@ -60,7 +65,24 @@ In der Referenz fragt „Try it out“ über den eigenen Host ab; `/groups`, `/s
 und `/states` werden von dort zum Backend weitergereicht, deshalb ohne CORS-Umwege
 und mit denselben Demodaten wie in den übrigen Bereichen.
 
-Backend aller Ansichten: `https://apps.indibit.eu/tba3-api`.
+## Beispieldaten
+
+Alle Bereiche werden vom **eigenen Mock** bedient — im Deployment durch die
+Vercel-Funktion in `api/`, lokal durch `npm run mock` bzw. die Vorschau, im
+Docker-Image durch `tools/mock-server.mjs`. Alle drei nutzen dieselben Daten
+und dieselbe Logik (`tools/mock.mjs`).
+
+Die Daten stammen einmalig vom Referenzserver `https://apps.indibit.eu/tba3-api`
+und liegen gepackt in `data/fixtures.mjs` (157 Antworten, ~650 KB). Nachziehen:
+
+```bash
+npm run fixtures:update     # danach git diff --stat prüfen und mit committen
+```
+
+Ist eine Parameterkombination nicht hinterlegt, wird auf die allgemeinere
+Antwort ausgewichen; der Antwortkopf `X-TBA3-Mock-Treffer` sagt, ob `genau`
+oder `ersatz` geliefert wurde. Gegen das echte Backend testen:
+`TBA3_API_BASE_URL=https://apps.indibit.eu/tba3-api npm run preview`.
 
 ## Deployment
 

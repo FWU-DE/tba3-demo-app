@@ -36,21 +36,18 @@ Die drei Endpunkt-Gruppen:
 
 ### Backend
 
-`https://apps.indibit.eu/tba3-api` — der Referenz-Mock-Server.
+Alle Ansichten werden vom eigenen Mock bedient — lokal `npm run mock` (Port 8000),
+im Deployment die Vercel-Funktion in `api/`. Die Beispieldaten stammen einmalig
+vom Referenzserver `https://apps.indibit.eu/tba3-api` und liegen in
+`data/fixtures.mjs` (`npm run fixtures:update`).
+
 Die Basis-URL kommt aus `VITE_API_BASE_URL` (`axios.defaults.baseURL` in
 `src/main.js`); leer heißt „gleicher Host", dann greifen Proxy bzw. Rewrites.
 
-### Mock-Server (lokal)
-
-Quelle: `https://github.com/indibit-eu/tba3/tree/main/mock-server`
-
 ```bash
-uv venv && uv sync
-uv run uvicorn server:app --reload --port 8000
+npm run mock          # aus dem Repository-Wurzelverzeichnis
+npm run dev:katalog
 ```
-
-Im Dev-Betrieb leitet Vite `/groups/**`, `/schools/**`, `/states/**` dorthin weiter
-(`vite.config.js`).
 
 ---
 

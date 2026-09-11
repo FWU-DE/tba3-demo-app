@@ -4,19 +4,19 @@
   "rewrites": [
     {
       "source": "/groups/:path*",
-      "destination": "https://apps.indibit.eu/tba3-api/groups/:path*"
+      "destination": "/api/groups/:path*"
     },
     {
       "source": "/schools/:path*",
-      "destination": "https://apps.indibit.eu/tba3-api/schools/:path*"
+      "destination": "/api/schools/:path*"
     },
     {
       "source": "/states/:path*",
-      "destination": "https://apps.indibit.eu/tba3-api/states/:path*"
+      "destination": "/api/states/:path*"
     },
     {
       "source": "/tba3-api/:path*",
-      "destination": "https://apps.indibit.eu/tba3-api/:path*"
+      "destination": "/api/:path*"
     },
     {
       "source": "/demo/:path*",

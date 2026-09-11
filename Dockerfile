@@ -35,7 +35,10 @@ ENV MCP_PORT=3000
 WORKDIR /app
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY simple-api-server.cjs ./
+
+# Eigener TBA3-Mock (ohne externe Abhängigkeiten, nur node)
+COPY tools/mock-server.mjs tools/mock.mjs tools/mock-schluessel.mjs tools/
+COPY data/fixtures.mjs data/
 
 # MCP server (fertig mit node_modules aus Builder)
 COPY --from=builder /app/mcp-server /app/mcp-server

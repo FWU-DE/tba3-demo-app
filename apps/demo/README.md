@@ -33,11 +33,12 @@ Alle Kommandos laufen im Repository-Wurzelverzeichnis:
 
 ```bash
 npm install          # einmalig, installiert alle Workspaces
+npm run mock         # TBA3-Mock  → http://localhost:8000
 npm run dev:demo     # Dev-Server → http://localhost:5173/demo/
 ```
 
-Ohne lokalen Mock-Server bleiben die Daten leer — der Vite-Proxy erwartet ihn auf
-`http://localhost:8000` (siehe [indibit-eu/tba3](https://github.com/indibit-eu/tba3/tree/main/mock-server)).
+Der Vite-Proxy leitet `/groups`, `/schools` und `/states` an Port 8000 weiter,
+wo `npm run mock` die Beispieldaten aus `data/fixtures.mjs` ausliefert.
 
 ## Entwicklung
 

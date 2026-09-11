@@ -6,6 +6,7 @@ Alle Kommandos im Repository-Wurzelverzeichnis (npm workspaces):
 
 ```bash
 npm install            # alle Workspaces
+npm run mock           # TBA3-Mock          → http://localhost:8000
 npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
 npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 npm run build          # alle Bereiche → dist/
@@ -31,6 +32,8 @@ apps/portal/        Startseite (/) und API-Referenz (/schnittstelle) — statisc
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
 apps/beispiele/     Rückmeldungsbeispiele — Platzhalter, siehe README dort
+api/                Eigener TBA3-Mock als Vercel-Funktion
+data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
                     eigener Lockfile, eigener Docker-Kontext)
 tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + schnittstelle/
@@ -49,12 +52,21 @@ in der jeweiligen `vite.config.js`. Wird das geändert, muss der Zielpfad in
 
 ### API-Zugriff
 
+Alle Wege führen zum **eigenen Mock** — kein externes Backend zur Laufzeit:
+
 | Umgebung | Weg |
 |---|---|
-| Dev | Vite-Proxy je App → `http://localhost:8000` |
-| Vercel | Rewrites in `vercel.json` → `apps.indibit.eu/tba3-api` |
-| Docker | nginx (`nginx.conf`) → `/tba3-api` extern, `/groups…` lokaler Mock |
-| Preview | `tools/serve-site.mjs` → `TBA3_API_BASE_URL` |
+| Dev | Vite-Proxy je App → `npm run mock` auf Port 8000 |
+| Vercel | Rewrites in `vercel.json` → `api/[...pfad].js` |
+| Docker | nginx → `tools/mock-server.mjs` im selben Container |
+| Preview | `tools/serve-site.mjs` beantwortet direkt |
+
+Geteilte Logik: `tools/mock.mjs`. Daten: `data/fixtures.mjs`, einmal vom
+Referenzserver abgezogen (`npm run fixtures:update`), pro Antwort brotli-gepackt
+und erst beim Zugriff ausgepackt. Fehlt eine Parameterkombination, wird auf die
+allgemeinere Antwort ausgewichen — `X-TBA3-Mock-Treffer` sagt `genau` oder `ersatz`.
+`type=group,students` wird aus Gruppen- und Schülerdaten zusammengesetzt statt
+gespeichert; das halbiert die Datenmenge.
 
 Die API-Basis kommt in beiden Apps aus `VITE_API_BASE_URL` (Demo:
 `src/services/tba3Api.js`, Katalog: `axios.defaults.baseURL` in `src/main.js`);

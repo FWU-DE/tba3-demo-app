@@ -7,6 +7,7 @@
 // Backend über TBA3_API_BASE_URL umstellbar (z. B. auf den lokalen Mock-Server).
 
 import { createServer } from 'node:http';
+import { antwortFuer } from './mock.mjs';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { dirname, extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +15,9 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 const port = Number(process.env.PORT) || 4173;
-const apiBase = process.env.TBA3_API_BASE_URL || 'https://apps.indibit.eu/tba3-api';
+// Ohne gesetzte Variable antwortet der eigene Mock aus data/fixtures.mjs —
+// so läuft die Vorschau ohne Netz und zeigt dieselben Daten wie das Deployment.
+const apiBase = process.env.TBA3_API_BASE_URL || null;
 
 const API_PREFIXES = ['/groups', '/schools', '/states'];
 // Bereiche mit eigenem SPA-Fallback — Reihenfolge wie in vercel.json
@@ -47,9 +50,21 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${port}`);
   const pathname = decodeURIComponent(url.pathname);
 
-  // 1. API-Rewrites (wie vercel.json)
+  // 1. API — eigener Mock, oder Weiterleitung an ein echtes Backend
   const apiPrefix = API_PREFIXES.find((p) => pathname === p || pathname.startsWith(`${p}/`));
   if (apiPrefix) {
+    if (!apiBase) {
+      const { daten, treffer } = antwortFuer(pathname, Object.fromEntries(url.searchParams));
+      const status = treffer === 'keiner' ? 404 : 200;
+      res.writeHead(status, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-TBA3-Mock-Treffer': treffer,
+      });
+      res.end(JSON.stringify(treffer === 'keiner'
+        ? { fehler: 'Keine Beispieldaten für diese Anfrage', pfad: pathname }
+        : daten));
+      return;
+    }
     try {
       const upstream = await fetch(`${apiBase}${pathname}${url.search}`, {
         headers: { Accept: 'application/json' },
@@ -90,5 +105,5 @@ server.listen(port, () => {
   console.log(`  Demo         → http://localhost:${port}/demo`);
   console.log(`  Katalog      → http://localhost:${port}/katalog`);
   console.log(`  Schnittstelle→ http://localhost:${port}/schnittstelle`);
-  console.log(`  API-Backend  → ${apiBase}`);
+  console.log(`  API          → ${apiBase ?? 'eigener Mock (data/fixtures.mjs)'}`);
 });

@@ -12,9 +12,11 @@
     "dev": "npm run dev -w @tba3/demo",
     "dev:demo": "npm run dev -w @tba3/demo",
     "dev:katalog": "npm run dev -w @tba3/katalog",
+    "mock": "node tools/mock-server.mjs",
     "build": "npm run build --workspaces && node tools/build-site.mjs",
     "preview": "node tools/serve-site.mjs",
     "lint": "npm run lint -w @tba3/demo",
+    "fixtures:update": "node tools/fetch-fixtures.mjs",
     "spec:update": "node tools/update-spec.mjs"
   },
   "devDependencies": {
