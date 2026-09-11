@@ -66,15 +66,15 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex-1 p-8" data-testid="dashboard">
+    <div className="flex-1 p-4 lg:p-8 min-w-0" data-testid="dashboard">
       <div className="max-w-7xl mx-auto">
         {/* Overview cards — always visible at the top */}
         <CompetencyOverviewCards chartData={overviewChartData} stats={overviewStats} />
 
         {/* Tabs */}
         <div className="mb-6">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+          <div className="border-b border-gray-200 overflow-x-auto">
+            <nav className="-mb-px flex space-x-8 min-w-max">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}

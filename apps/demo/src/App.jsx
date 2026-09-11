@@ -8,7 +8,7 @@ function App() {
     <FilterProvider>
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="flex">
+        <div className="flex flex-col lg:flex-row">
           <Sidebar />
           <Dashboard />
         </div>

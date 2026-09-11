@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useFilters } from '../../context/useFilters';
 import { GROUPS, SCHOOLS, STATES, SUBJECTS, GRADES, TYPE_OPTIONS } from '../../utils/constants';
 
@@ -38,9 +38,28 @@ const Sidebar = () => {
     }
   }, [selectedSubject, selectedGrade, selectedLevel]); // eslint-disable-line
 
+  // Unter 1024 px stünde die 320 px breite Leiste dem Inhalt im Weg — dort wird
+  // sie zu einem aufklappbaren Block über dem Dashboard.
+  const [filterOffen, setFilterOffen] = useState(false);
+
   return (
-    <aside className="w-80 bg-gray-900 text-white min-h-screen p-6">
-      <div className="space-y-6">
+    <aside className="w-full lg:w-80 shrink-0 bg-gray-900 text-white lg:min-h-screen p-4 lg:p-6">
+      <button
+        type="button"
+        data-testid="filter-umschalter"
+        aria-expanded={filterOffen}
+        aria-controls="filterbereich"
+        onClick={() => setFilterOffen((offen) => !offen)}
+        className="lg:hidden w-full flex items-center justify-between px-4 py-2 mb-4 rounded-md bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors"
+      >
+        <span className="font-medium">Filter</span>
+        <span aria-hidden="true">{filterOffen ? '▲' : '▼'}</span>
+      </button>
+
+      <div
+        id="filterbereich"
+        className={`space-y-6 ${filterOffen ? '' : 'hidden'} lg:block`}
+      >
         {/* Level Selector */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">

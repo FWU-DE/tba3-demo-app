@@ -102,8 +102,10 @@ const Header = () => {
   return (
     <>
       <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="px-4 lg:px-6 py-4">
+          {/* Auf schmalen Schirmen rutschen die Schalter unter den Titel,
+              statt über den Rand hinauszulaufen. */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">TBA3 Demo</h1>
               <p className="text-sm text-gray-600 mt-1">

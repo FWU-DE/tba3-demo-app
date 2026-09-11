@@ -126,6 +126,26 @@ describe('Demoanwendung', () => {
     expect(screen.getByTestId('reiter-items')).toHaveAttribute('aria-current', 'page');
   });
 
+  it('klappt die Filter auf schmalen Schirmen auf und zu', async () => {
+    render(<App />);
+    await waitFor(() => expect(api.getGroupCompetenceLevels).toHaveBeenCalled());
+
+    const umschalter = screen.getByTestId('filter-umschalter');
+    const bereich = document.getElementById('filterbereich');
+
+    // Zugeklappt: nur die Voreinstellung für schmale Schirme, ab lg blendet CSS
+    // die Klasse wieder aus.
+    expect(umschalter).toHaveAttribute('aria-expanded', 'false');
+    expect(bereich.className).toContain('hidden');
+
+    await userEvent.click(umschalter);
+    expect(umschalter).toHaveAttribute('aria-expanded', 'true');
+    expect(bereich.className).not.toContain('hidden');
+
+    await userEvent.click(umschalter);
+    expect(umschalter).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('meldet einen Fehler der Schnittstelle, statt leer zu bleiben', async () => {
     api.getGroupCompetenceLevels.mockRejectedValue(new Error('Backend nicht erreichbar'));
     render(<App />);
