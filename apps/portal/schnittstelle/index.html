@@ -65,7 +65,25 @@
       font-size: 14.5px;
     }
     #ladefehler a { color: #991b1b; }
-    redoc { display: block; }
+    redoc, #redoc { display: block; }
+    #laedt {
+      max-width: 1040px;
+      margin: 40px auto;
+      padding: 0 24px;
+      font-size: 15px;
+      color: var(--grau);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid var(--linie);
+      border-top-color: var(--blau);
+      border-radius: 50%;
+      animation: dreh 0.8s linear infinite;
+    }
+    @keyframes dreh { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -99,17 +117,34 @@
   öffnen.
 </div>
 
+<div id="laedt"><span class="spinner" aria-hidden="true"></span> Referenz wird geladen …</div>
+
 <!-- /tba3-spec.yml wird auf raw.githubusercontent.com umgeschrieben (vercel.json bzw. tools/serve-site.mjs) -->
-<redoc spec-url="/tba3-spec.yml" hide-download-button></redoc>
-<script src="./redoc.standalone.js"></script>
+<div id="redoc"></div>
+
+<script src="./redoc.standalone.js" onerror="zeigeFehler()"></script>
 <script>
-  // Bleibt die Referenz leer, war die Spec nicht erreichbar — dann den Hinweis zeigen.
-  setTimeout(function () {
-    var el = document.querySelector('redoc');
-    if (!el || el.clientHeight < 100) {
-      document.getElementById('ladefehler').style.display = 'block';
-    }
-  }, 6000);
+  function zeigeFehler() {
+    var laedt = document.getElementById('laedt');
+    if (laedt) laedt.style.display = 'none';
+    document.getElementById('ladefehler').style.display = 'block';
+  }
+
+  // Redoc meldet über den Callback, ob die Spezifikation geladen und gerendert
+  // werden konnte — keine Heuristik über Wartezeiten.
+  if (window.Redoc) {
+    Redoc.init(
+      '/tba3-spec.yml',
+      { hideDownloadButton: true, expandResponses: '200' },
+      document.getElementById('redoc'),
+      function (fehler) {
+        document.getElementById('laedt').style.display = 'none';
+        if (fehler) zeigeFehler();
+      }
+    );
+  } else {
+    zeigeFehler();
+  }
 </script>
 
 </body>
