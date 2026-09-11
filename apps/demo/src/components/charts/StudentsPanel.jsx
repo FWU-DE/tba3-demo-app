@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { STUDENTS } from '../../utils/studentData';
 import { GROUPS, SUBJECTS, GRADES, COMPETENCE_LEVELS } from '../../utils/constants';
 import {
@@ -9,7 +9,7 @@ import {
   deleteCustomGroup,
   renameCustomGroup,
 } from '../../utils/customGroupsStore';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 
 import Card from '../common/Card';
 import AutoGroupingCard from './AutoGroupingCard';
@@ -315,18 +315,17 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
   const [filterSubject, setFilterSubject] = useState(() => sidebarSubject || '');
   const [filterGrade, setFilterGrade] = useState(() => sidebarGrade || '');
 
-  // Sync filter state when sidebar changes
-  useEffect(() => {
+  // Filter der Seitenleiste übernehmen, sobald sie sich ändern — beim Rendern
+  // statt in drei Effekten: so wird kein Durchlauf mit den alten Werten
+  // angezeigt (React-Muster „Zustand beim Wechsel von Props anpassen").
+  const seitenleiste = `${selectedLevel}|${sidebarGroup}|${sidebarSubject}|${sidebarGrade}`;
+  const [letzteSeitenleiste, setLetzteSeitenleiste] = useState(seitenleiste);
+  if (letzteSeitenleiste !== seitenleiste) {
+    setLetzteSeitenleiste(seitenleiste);
     setFilterGroup(selectedLevel === 'group' ? sidebarGroup : '');
-  }, [selectedLevel, sidebarGroup]);
-
-  useEffect(() => {
     setFilterSubject(sidebarSubject || '');
-  }, [sidebarSubject]);
-
-  useEffect(() => {
     setFilterGrade(sidebarGrade || '');
-  }, [sidebarGrade]);
+  }
 
   // ── Selection state ──
   const [selectedIds, setSelectedIds] = useState(new Set());

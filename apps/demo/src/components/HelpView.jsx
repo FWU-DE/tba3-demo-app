@@ -30,7 +30,7 @@ const HelpView = () => {
         </div>
         <div className="p-5 space-y-4 text-sm">
           <p className="text-gray-700">
-            Der MCP-Server wird als eigenes Docker-Image (z. B. <code className="bg-gray-100 px-1 rounded">ghcr.io/…/…-mcp</code>) bereitgestellt. Auf dem Server Container starten und <strong>TBA3_API_BASE_URL</strong> auf die TBA3-API setzen (z. B. Ihre Mock- oder Backend-API). Der Endpunkt für Clients ist <code className="bg-gray-100 px-1 rounded">POST /mcp</code> (Streamable HTTP).
+            Der MCP-Server wird als eigenes Docker-Image (z. B. <code className="bg-gray-100 px-1 rounded">ghcr.io/…/…-mcp</code>) bereitgestellt. Auf dem Server Container starten und <strong>TBA3_API_BASE_URL</strong> auf die TBA3-API setzen (z. B. Ihre Mock- oder Backend-API). Der Endpunkt für Clients ist <code className="bg-gray-100 px-1 rounded">POST /mcp</code> (Streamable HTTP).
           </p>
           <p className="text-gray-600">
             Beispiel: <code className="bg-gray-100 px-1 rounded">docker run -e TBA3_API_BASE_URL=https://api.example.com -p 3000:3000 …-mcp</code>. Die URL, die Cursor/Claude brauchen, ist dann <code className="bg-gray-100 px-1 rounded">https://ihr-server/mcp</code> (je nach Reverse-Proxy/Ingress).
@@ -118,11 +118,11 @@ const HelpView = () => {
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2.5 pr-4 font-mono text-xs text-primary">tba3_get_aggregations</td>
-                <td className="py-2.5">Aggregations-Statistiken (z. B. Mittelwert, Häufigkeit) für eine Einheit.</td>
+                <td className="py-2.5">Aggregations-Statistiken (z. B. Mittelwert, Häufigkeit) für eine Einheit.</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2.5 pr-4 font-mono text-xs text-primary">tba3_get_items</td>
-                <td className="py-2.5">Item-Statistiken (z. B. Lösungsquote) pro Gruppe/Schule/Land.</td>
+                <td className="py-2.5">Item-Statistiken (z. B. Lösungsquote) pro Gruppe/Schule/Land.</td>
               </tr>
             </tbody>
           </table>

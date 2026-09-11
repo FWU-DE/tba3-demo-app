@@ -2,7 +2,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
   PieChart, Pie, Legend,
 } from 'recharts';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { useAggregations } from '../../hooks/useAggregations';
 import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES } from '../../utils/constants';
 import { STUDENTS } from '../../utils/studentData';
@@ -12,6 +12,21 @@ import LoadingSkeleton from '../common/LoadingSkeleton';
 // ── Local fallback charts from student data ───────────────────────────────────
 
 const LEVEL_KEYS = ['I', 'II', 'III', 'IV', 'V'];
+
+// Auf Modulebene, nicht im Render: sonst entsteht bei jedem Durchlauf eine
+// neue Komponente und Recharts hängt den Tooltip jedes Mal neu ein.
+const StufenTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
+      <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
+      <p className="text-gray-600">{d.name}</p>
+      <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen</p>
+      <p className="text-gray-500">{d.pct}% der Gruppe</p>
+    </div>
+  );
+};
 
 const LocalCompetenceChart = ({ students }) => {
   const counts = LEVEL_KEYS.reduce((acc, lk) => ({ ...acc, [lk]: 0 }), {});
@@ -25,19 +40,6 @@ const LocalCompetenceChart = ({ students }) => {
     color: COMPETENCE_LEVELS[lk]?.color ?? '#6b7280',
     name: COMPETENCE_LEVELS[lk]?.description ?? lk,
   }));
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (!active || !payload?.length) return null;
-    const d = payload[0].payload;
-    return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
-        <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
-        <p className="text-gray-600">{d.name}</p>
-        <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen</p>
-        <p className="text-gray-500">{d.pct}% der Gruppe</p>
-      </div>
-    );
-  };
 
   return (
     <ResponsiveContainer width="100%" height={220}>
@@ -55,7 +57,7 @@ const LocalCompetenceChart = ({ students }) => {
           axisLine={false}
           allowDecimals={false}
         />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<StufenTooltip />} />
         <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={60}>
           {data.map((entry) => (
             <Cell key={entry.level} fill={entry.color} />
@@ -124,6 +126,18 @@ const LocalDomainChart = ({ students }) => {
 
 // ── API-based chart: competence aggregation ───────────────────────────────────
 
+const ApiStufenTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload;
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
+      <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
+      <p className="text-gray-600">{d.name}</p>
+      <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen ({d.pct}%)</p>
+    </div>
+  );
+};
+
 const ApiCompetenceChart = ({ competenceAggregation }) => {
   const data = (competenceAggregation || []).map((comp) => ({
     level: comp.nameShort,
@@ -135,25 +149,13 @@ const ApiCompetenceChart = ({ competenceAggregation }) => {
 
   if (data.length === 0) return null;
 
-  const CustomTooltip = ({ active, payload }) => {
-    if (!active || !payload?.length) return null;
-    const d = payload[0].payload;
-    return (
-      <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
-        <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
-        <p className="text-gray-600">{d.name}</p>
-        <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen ({d.pct}%)</p>
-      </div>
-    );
-  };
-
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
         <XAxis dataKey="level" tick={{ fontSize: 13, fontWeight: 700 }} tickLine={false} axisLine={false} />
         <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} allowDecimals={false} />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<ApiStufenTooltip />} />
         <Bar dataKey="count" radius={[5, 5, 0, 0]} maxBarSize={56}>
           {data.map((entry) => <Cell key={entry.level} fill={entry.color} />)}
         </Bar>
@@ -227,7 +229,7 @@ const StatChip = ({ label, value }) => (
 
 const AggregationsView = ({ level, id }) => {
   const { buildQueryParams, selectedLevel, selectedGroup, selectedSubject, selectedGrade } = useFilters();
-  const { data, loading, error, refetch } = useAggregations(level, id, buildQueryParams());
+  const { data, loading, error } = useAggregations(level, id, buildQueryParams());
 
   // Local student data filtered by current sidebar selection
   const localStudents = STUDENTS.filter((s) => {

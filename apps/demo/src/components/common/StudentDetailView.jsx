@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import {
   Radar,
   RadarChart,
@@ -10,7 +10,6 @@ import {
   Tooltip,
 } from 'recharts';
 import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES, EDUCATIONAL_MATERIALS, MATERIAL_TYPES, GENDERS } from '../../utils/constants';
-import { exportStudentPDF } from '../../utils/studentPdfExport';
 
 const LEVEL_ORDER = ['I', 'II', 'III', 'IV', 'V'];
 const LEVEL_TO_NUM = { I: 1, II: 2, III: 3, IV: 4, V: 5 };
@@ -241,6 +240,8 @@ const StudentDetailView = ({ student, onBack }) => {
   const handleDownloadPDF = async () => {
     setPdfLoading(true);
     try {
+      // jsPDF wird erst beim Export geladen, nicht beim Start der Anwendung
+      const { exportStudentPDF } = await import('../../utils/studentPdfExport');
       await exportStudentPDF(student);
     } finally {
       setPdfLoading(false);

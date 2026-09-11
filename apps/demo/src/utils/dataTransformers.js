@@ -71,6 +71,51 @@ export const groupItemsByExercise = (items) => {
  * @param {Array} items - Array of item objects from API
  * @returns {Array} Transformed data for Recharts
  */
+/**
+ * Sammelt die Items aus einer Item-Antwort für die Aufgaben-Statistik.
+ *
+ * Die Antwort enthält je nach Datentyp einen Gruppeneintrag, einen Eintrag je
+ * Schüler*in oder beides — und jeder davon führt dieselbe Aufgabenliste. Früher
+ * wurden alle aneinandergehängt: bei „Beide" erschien jede Aufgabe so oft, wie
+ * es Schüler*innen gibt (über 1300 Balken statt 27).
+ *
+ * Deshalb: die Aggregatebene gewinnt. Liegen ausschließlich Schülerdaten vor,
+ * wird je Aufgabe über die Schüler*innen gemittelt.
+ *
+ * @param {Array|Object} data - API-Antwort
+ * @returns {Array} Items für die Darstellung
+ */
+export const collectItems = (data) => {
+  if (!Array.isArray(data)) return data?.items ?? [];
+
+  const mitItems = data.filter((eintrag) => Array.isArray(eintrag.items) && eintrag.items.length);
+  if (mitItems.length === 0) return [];
+
+  const aggregate = mitItems.filter((eintrag) => eintrag.type !== 'student');
+  if (aggregate.length > 0) return aggregate.flatMap((eintrag) => eintrag.items);
+
+  // Nur Schülerdaten: je Aufgabe die mittlere Lösungshäufigkeit bilden
+  const proAufgabe = new Map();
+  for (const eintrag of mitItems) {
+    for (const item of eintrag.items) {
+      const schluessel = item.iqbId || item.id || item.name;
+      const eintragung = proAufgabe.get(schluessel);
+      const wert = item.descriptiveStatistics?.mean ?? 0;
+      if (eintragung) {
+        eintragung.summe += wert;
+        eintragung.anzahl += 1;
+      } else {
+        proAufgabe.set(schluessel, { vorlage: item, summe: wert, anzahl: 1 });
+      }
+    }
+  }
+
+  return [...proAufgabe.values()].map(({ vorlage, summe, anzahl }) => ({
+    ...vorlage,
+    descriptiveStatistics: { ...vorlage.descriptiveStatistics, mean: summe / anzahl },
+  }));
+};
+
 export const transformItems = (items) => {
   if (!Array.isArray(items)) return [];
 

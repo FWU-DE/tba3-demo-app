@@ -1,12 +1,32 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { useCompetenceLevels } from '../../hooks/useCompetenceLevels';
 import { transformCompetenceLevels, calculateSummaryStats } from '../../utils/dataTransformers';
-import { formatPercentage, formatStudentCount } from '../../utils/formatters';
+import { formatPercentage } from '../../utils/formatters';
 import { COMPETENCE_LEVELS } from '../../utils/constants';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
+
+// Auf Modulebene, nicht im Render: sonst entsteht bei jedem Durchlauf eine
+// neue Komponente und Recharts hängt den Tooltip jedes Mal neu ein.
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+  const item = payload[0].payload;
+    return (
+      <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg">
+        <p className="font-semibold text-gray-900 mb-2">{item.name}</p>
+        <p className="text-sm text-gray-600">
+          Anzahl: <span className="font-medium">{item.count}</span>
+        </p>
+        <p className="text-sm text-gray-600">
+          Anteil: <span className="font-medium">{formatPercentage(item.percentage)}</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const CompetenceLevelsChart = ({ level, id }) => {
   const { buildQueryParams } = useFilters();
@@ -40,24 +60,6 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   const chartData = transformCompetenceLevels(data);
   const stats = calculateSummaryStats(data);
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const item = payload[0].payload;
-      return (
-        <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-900 mb-2">{item.name}</p>
-          <p className="text-sm text-gray-600">
-            Anzahl: <span className="font-medium">{item.count}</span>
-          </p>
-          <p className="text-sm text-gray-600">
-            Anteil: <span className="font-medium">{formatPercentage(item.percentage)}</span>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <Card title="Kompetenzstufen-Verteilung">

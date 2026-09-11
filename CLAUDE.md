@@ -16,12 +16,10 @@ npm run lint           # ESLint über apps/demo
 
 **CI check (run before every commit):**
 ```bash
-npm run build
+npm run lint && npm run build
 ```
 
-`npm run lint` meldet Altlasten aus `apps/demo` (React-Hook-Regeln, unbenutzte
-Variablen). Neue Dateien müssen sauber sein — den Bestand nicht nebenbei mit
-umbauen.
+Beides läuft ohne Befund; bitte sauber halten.
 
 ## Architektur
 
@@ -86,6 +84,12 @@ eigenen Host um, sodass „Try it out“ ohne CORS gegen dieselben Demodaten lä
 - Globaler Zustand der Demo lebt in `FilterContext`; neue globale
   State-Lösungen nur mit ADR.
 - Keine Kaskaden-Operationen — Seiteneffekte explizit halten.
+- Zustand, der nur Props oder Kontext spiegelt, wird beim Rendern abgeglichen
+  (`if (letzterWert !== aktuell) { … }`), nicht in einem Effekt nachgezogen.
+- Tooltip- und Hilfskomponenten gehören auf Modulebene; im Render definiert
+  hängt Recharts sie bei jedem Durchlauf neu ein.
+- Schwere Bibliotheken (jsPDF, JSZip) werden erst im Moment des Exports
+  geladen: `const { exportPDF } = await import(…)`.
 - Swagger UI kommt aus `node_modules` und wird beim Build kopiert, nicht von einem
   CDN geladen — das Deployment soll nicht an fremder Infrastruktur hängen. Wer die
   Bibliothek tauscht, prüft, ob sie zur Laufzeit weitere Dateien nachlädt: Redoc

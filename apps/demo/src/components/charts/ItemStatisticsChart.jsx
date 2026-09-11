@@ -1,11 +1,48 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { useItems } from '../../hooks/useItems';
-import { transformItems, sortItems } from '../../utils/dataTransformers';
+import { collectItems, transformItems, sortItems } from '../../utils/dataTransformers';
 import { formatPercentage } from '../../utils/formatters';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
+
+// Auf Modulebene, nicht im Render — sonst wird der Tooltip bei jedem
+// Durchlauf als neue Komponente eingehängt.
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const item = payload[0].payload;
+    return (
+      <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg max-w-sm">
+        <p className="font-semibold text-gray-900 mb-2">{item.id}</p>
+        <p className="text-sm text-gray-600 mb-1">
+          Lösungshäufigkeit: <span className="font-medium">{formatPercentage(item.solutionFrequency)}</span>
+        </p>
+        {item.exerciseId && item.exerciseId !== 'unknown' && (
+          <p className="text-sm text-gray-600 mb-1">
+            Aufgabe: <span className="font-mono text-xs">{item.exerciseId}</span>
+          </p>
+        )}
+        {item.competenceLevel && (
+          <p className="text-sm text-gray-600">
+            Kompetenzstufe: <span className="font-medium">{item.competenceLevel}</span>
+          </p>
+        )}
+        {item.metadata && Object.keys(item.metadata).length > 0 && (
+          <div className="mt-2 pt-2 border-t border-gray-200">
+            <p className="text-xs text-gray-500 mb-1">IQB Metadaten:</p>
+            {Object.entries(item.metadata).map(([key, value]) => (
+              <p key={key} className="text-xs text-gray-500">
+                {key}: {JSON.stringify(value)}
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+  return null;
+};
 
 const ItemStatisticsChart = ({ level, id }) => {
   const { buildQueryParams } = useFilters();
@@ -27,18 +64,7 @@ const ItemStatisticsChart = ({ level, id }) => {
     );
   }
 
-  // Handle array response (multiple domains)
-  let allItems = [];
-  if (Array.isArray(data)) {
-    // Flatten items from all domains
-    data.forEach((domain) => {
-      if (domain.items && Array.isArray(domain.items)) {
-        allItems = allItems.concat(domain.items);
-      }
-    });
-  } else if (data?.items) {
-    allItems = data.items;
-  }
+  const allItems = collectItems(data);
 
   if (allItems.length === 0) {
     return (
@@ -52,41 +78,6 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   const sortedItems = sortItems(allItems);
   const chartData = transformItems(sortedItems);
-
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const item = payload[0].payload;
-      return (
-        <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg max-w-sm">
-          <p className="font-semibold text-gray-900 mb-2">{item.id}</p>
-          <p className="text-sm text-gray-600 mb-1">
-            Lösungshäufigkeit: <span className="font-medium">{formatPercentage(item.solutionFrequency)}</span>
-          </p>
-          {item.exerciseId && item.exerciseId !== 'unknown' && (
-            <p className="text-sm text-gray-600 mb-1">
-              Aufgabe: <span className="font-mono text-xs">{item.exerciseId}</span>
-            </p>
-          )}
-          {item.competenceLevel && (
-            <p className="text-sm text-gray-600">
-              Kompetenzstufe: <span className="font-medium">{item.competenceLevel}</span>
-            </p>
-          )}
-          {item.metadata && Object.keys(item.metadata).length > 0 && (
-            <div className="mt-2 pt-2 border-t border-gray-200">
-              <p className="text-xs text-gray-500 mb-1">IQB Metadaten:</p>
-              {Object.entries(item.metadata).map(([key, value]) => (
-                <p key={key} className="text-xs text-gray-500">
-                  {key}: {JSON.stringify(value)}
-                </p>
-              ))}
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
 
   // Calculate height based on number of items
   const chartHeight = Math.max(600, chartData.length * 30);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 
 // ── Settings dialog ────────────────────────────────────────────────────────────
 

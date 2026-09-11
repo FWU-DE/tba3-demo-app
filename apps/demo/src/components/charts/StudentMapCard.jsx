@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { GROUPS, COMPETENCE_LEVELS } from '../../utils/constants';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { SUBJECT_DOMAINS } from '../../utils/studentData';
 import { createCustomGroup, addStudentsToGroup } from '../../utils/customGroupsStore';
 
@@ -230,13 +230,18 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
   const [showForm, setShowForm] = useState(false);
   const [feedback, setFeedback] = useState(null);
 
-  // Reset when dims change (e.g. filter changes subject)
-  useEffect(() => {
+  // Achsen und Auswahl zurücksetzen, wenn andere Dimensionen kommen (etwa weil
+  // der Filter das Fach wechselt) — beim Rendern statt im Effekt, damit kein
+  // Durchlauf mit Achsen aus dem alten Fach gezeichnet wird.
+  const dimsSchluessel = dims.map((d) => d.key).join('|');
+  const [letzteDims, setLetzteDims] = useState(dimsSchluessel);
+  if (letzteDims !== dimsSchluessel) {
+    setLetzteDims(dimsSchluessel);
     setXKey(dims[0]?.key ?? '__level__');
     setYKey(dims.length > 1 ? dims[1].key : dims[0]?.key ?? '__level__');
     setClusters(null);
     setSelectedIds(new Set());
-  }, [dims]);
+  }
 
   // ── Student points ──────────────────────────────────────────────────────────
 
@@ -313,7 +318,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
     setLasso((prev) => prev ? { ...prev, x1: x, y1: y } : null);
   }, [getSvgPt]);
 
-  const onMouseUp = useCallback((e) => {
+  const onMouseUp = useCallback(() => {
     if (isDraggingDot.current) {
       isDraggingDot.current = false;
       setDraggingDot((prev) => {

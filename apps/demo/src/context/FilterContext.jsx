@@ -1,15 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { GROUPS } from '../utils/constants';
-
-const FilterContext = createContext();
-
-export const useFilters = () => {
-  const context = useContext(FilterContext);
-  if (!context) {
-    throw new Error('useFilters must be used within a FilterProvider');
-  }
-  return context;
-};
+import { FilterContext } from './filterKontext';
 
 // Helper to get initial value from URL or default
 const getUrlParam = (param, defaultValue) => {

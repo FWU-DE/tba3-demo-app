@@ -269,12 +269,6 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
     return () => clearInterval(id);
   }, [popupOpen]);
 
-  // Auto-launch on first open
-  useEffect(() => {
-    if (hasConfig) launch(config);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // ── LTI launch via popup (about:blank + document.write avoids Origin:null) ──
   const launch = async (cfg) => {
     setLaunchErr(null);
@@ -296,6 +290,13 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
       setLaunching(false);
     }
   };
+
+  // Beim ersten Öffnen automatisch starten, sofern eine Konfiguration vorliegt.
+  // Bewusst nur beim Einhängen — `launch` entsteht bei jedem Durchlauf neu.
+  // Der Aufruf stößt das LTI-Popup an und setzt dabei den Ladezustand; das ist
+  // hier gewollt und kein ableitbarer Zustand.
+  /* eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect */
+  useEffect(() => { if (hasConfig) launch(config); }, []);
 
   const handleConfigSave = (cfg) => {
     saveConfig(cfg);

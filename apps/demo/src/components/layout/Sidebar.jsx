@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { GROUPS, SCHOOLS, STATES, SUBJECTS, GRADES, TYPE_OPTIONS } from '../../utils/constants';
 
 const Sidebar = () => {

@@ -24,7 +24,8 @@ export const hexToRgb = (hex) => [
 // Strip emoji / non-latin characters that jsPDF Helvetica can't render
 export const safe = (str) =>
   String(str ?? '').replace(
-    /[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]/gu,
+    // Emoji und Variantenselektoren, die jsPDFs Helvetica nicht darstellen kann
+    /[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{FE00}-\u{FE0F}]|\u{FEFF}/gu,
     ''
   ).trim();
 
@@ -45,7 +46,7 @@ export const setFont = (pdf, size, style = 'normal', color = [17, 24, 39]) => {
 };
 
 // Draw a filled rounded rectangle (helper around jsPDF's roundedRect)
-const fillRect = (pdf, x, y, w, h, r, rgb) => {
+export const fillRect = (pdf, x, y, w, h, r, rgb) => {
   pdf.setFillColor(...rgb);
   pdf.setDrawColor(...rgb);
   pdf.roundedRect(x, y, w, h, r, r, 'F');

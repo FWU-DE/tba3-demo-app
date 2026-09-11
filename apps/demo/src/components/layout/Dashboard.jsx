@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { useCompetenceLevels } from '../../hooks/useCompetenceLevels';
 import { transformCompetenceLevels, calculateSummaryStats } from '../../utils/dataTransformers';
 import CompetenceLevelsChart from '../charts/CompetenceLevelsChart';

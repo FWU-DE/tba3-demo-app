@@ -3,7 +3,6 @@ import { GROUPS } from './constants';
 // ── Deterministic pseudo-random helpers ──────────────────────────────────────
 
 const lcgNext = (s) => (s * 1664525 + 1013904223) & 0xffffffff;
-const lcgFloat = (s) => (lcgNext(s) >>> 0) / 0xffffffff;
 
 // ── Domain definitions per subject / grade ───────────────────────────────────
 

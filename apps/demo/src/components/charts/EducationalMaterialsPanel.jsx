@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useFilters } from '../../context/FilterContext';
+import { useState, useMemo } from 'react';
+import { useFilters } from '../../context/useFilters';
 import { useCompetenceLevels } from '../../hooks/useCompetenceLevels';
 import { transformCompetenceLevels } from '../../utils/dataTransformers';
 import {
@@ -9,8 +9,6 @@ import {
   COMPETENCE_LEVELS,
   GROUPS,
 } from '../../utils/constants';
-import { exportCommonCartridge } from '../../utils/commonCartridgeExport';
-import { exportPDF } from '../../utils/pdfExport';
 import { loadCustomGroups } from '../../utils/customGroupsStore';
 import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
@@ -213,8 +211,15 @@ const CatalogSection = ({
   const [selected, setSelected] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Reset selection when assigned IDs or catalog changes
-  useEffect(() => setSelected([]), [assignedIds.join(','), catalogMaterials.length]);
+  // Auswahl verwerfen, sobald sich Katalog oder Zuweisungen ändern. Beim
+  // Rendern statt im Effekt — so wird kein Durchlauf mit veralteter Auswahl
+  // angezeigt (React-Muster „Zustand beim Wechsel von Props anpassen").
+  const katalogStand = `${assignedIds.join(',')}|${catalogMaterials.length}`;
+  const [letzterStand, setLetzterStand] = useState(katalogStand);
+  if (letzterStand !== katalogStand) {
+    setLetzterStand(katalogStand);
+    setSelected([]);
+  }
 
   const toggle = (id) => {
     if (assignedIds.includes(id)) return;
@@ -368,19 +373,22 @@ const EducationalMaterialsPanel = () => {
   const predefinedGroup   = GROUPS.find((g) => g.id === predefinedGroupId);
 
   // ── Mode ──
-  const [mode, setMode] = useState('level'); // 'level' | 'group'
+  // Einmal beim ersten Rendern: kommt die Ansicht aus einer verlinkten Gruppe?
+  const [navigierteGruppe] = useState(() => {
+    const id = sessionStorage.getItem('tba3_navigate_custom_group');
+    if (id) sessionStorage.removeItem('tba3_navigate_custom_group');
+    return id;
+  });
+
+  const [mode, setMode] = useState(navigierteGruppe ? 'group' : 'level'); // 'level' | 'group'
 
   // ── Level-mode state ──
   const [activeLevel,   setActiveLevel]   = useState(null);
   const [levelAss,      setLevelAss]      = useState(() => load(LEVEL_KEY));
 
   // ── Group-mode state ──
-  const [customGroups,  setCustomGroups]  = useState(loadCustomGroups);
-  const [activeGroupId, setActiveGroupId] = useState(() => {
-    const id = sessionStorage.getItem('tba3_navigate_custom_group');
-    if (id) { sessionStorage.removeItem('tba3_navigate_custom_group'); return id; }
-    return null;
-  });
+  const [customGroups] = useState(loadCustomGroups);
+  const [activeGroupId, setActiveGroupId] = useState(navigierteGruppe);
   const [groupAss,      setGroupAss]      = useState(() => load(GROUP_KEY));
 
   // ── External (MUNDO) materials ──
@@ -391,16 +399,6 @@ const EducationalMaterialsPanel = () => {
   const [exportingCC,  setExportingCC]  = useState(null);
   const [exportingPDF, setExportingPDF] = useState(null);
   const [exportMsg,    setExportMsg]    = useState(null);
-
-  // Navigate to group mode when sessionStorage has a group id
-  useEffect(() => {
-    if (activeGroupId) setMode('group');
-  }, []);
-
-  // Refresh custom groups on mount
-  useEffect(() => {
-    setCustomGroups(loadCustomGroups());
-  }, []);
 
   // Reset active level/group when switching modes
   const switchMode = (m) => {
@@ -544,6 +542,7 @@ const EducationalMaterialsPanel = () => {
     setExportingCC(true);
     const { assignments: exp, extraGroups } = buildExport();
     try {
+      const { exportCommonCartridge } = await import('../../utils/commonCartridgeExport');
       const count = await exportCommonCartridge(exp, null, extraGroups, externalMaterials);
       flashMsg({ type: 'success', message: `${count} Materialien als .imscc exportiert.` });
     } catch (err) {
@@ -555,6 +554,7 @@ const EducationalMaterialsPanel = () => {
     setExportingPDF(true);
     const { assignments: exp, extraGroups } = buildExport();
     try {
+      const { exportPDF } = await import('../../utils/pdfExport');
       const count = await exportPDF(exp, null, extraGroups, externalMaterials);
       flashMsg({ type: 'success', message: `${count} Materialien als PDF exportiert.` });
     } catch (err) {

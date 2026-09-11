@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES } from '../../utils/constants';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { loadCustomGroups, addStudentsToGroup, removeStudentFromGroup } from '../../utils/customGroupsStore';
 
 const LEVEL_TO_NUM = { I: 1, II: 2, III: 3, IV: 4, V: 5 };

@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, Cell, ResponsiveContainer,
 } from 'recharts';
-import { useFilters } from '../../context/FilterContext';
+import { useFilters } from '../../context/useFilters';
 import { useCompetenceDelta } from '../../hooks/useCompetenceDelta';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
