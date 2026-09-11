@@ -15,6 +15,14 @@
       "destination": "/api/tba3?pfad=states/:path*"
     },
     {
+      "source": "/materials/:path*",
+      "destination": "/api/tba3?pfad=materials/:path*"
+    },
+    {
+      "source": "/materials",
+      "destination": "/api/tba3?pfad=materials"
+    },
+    {
       "source": "/tba3-api/:path*",
       "destination": "/api/tba3?pfad=:path*"
     },

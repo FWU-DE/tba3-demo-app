@@ -1,0 +1,473 @@
+# Zusammengesetzt von tools/build-material-spec.mjs — nicht von Hand bearbeiten.
+#
+# Quelle: indibit-eu/tba3#54 (Branch janrenz:wip/materialien-schnittstelle-entwurf),
+# dort als Fragmente unter docs/entwuerfe/materialien/.
+# Aktualisieren: npm run material-spec:update
+openapi: 3.1.0
+info:
+  title: TBA III — Materialien
+  summary: 'Entwurf: Begleitmaterialien zu Auswertungsdaten'
+  description: |-
+    **Status: Entwurf.** Diese Erweiterung ist noch nicht Teil der offiziellen
+    Spezifikation — sie steht als Pull Request
+    [indibit-eu/tba3#54](https://github.com/indibit-eu/tba3/pull/54) zur Diskussion.
+
+    Materialien (Handreichungen, Fördermaterial, Musterlösungen, Transkripte, …)
+    werden über `attachments[]` an Bezugspunkte der Auswertung geknüpft: an den Test,
+    eine Kompetenz oder Leitidee, eine Aufgabe, ein Item, eine Kompetenzstufe — oder
+    ohne spezifischen Bezug.
+
+    Die Erweiterung ist additiv: alle Felder sind optional, bestehende Backends und
+    Frontends bleiben spec-konform. Die vollständige Begründung steht im Entwurf unter
+    [docs/entwuerfe/materialien](https://github.com/indibit-eu/tba3/pull/54/files).
+  version: 0.1-entwurf
+  license:
+    name: MIT
+    url: https://opensource.org/license/MIT
+servers:
+  - url: /
+    description: Diese Seite — Beispiele aus dem Entwurf
+tags:
+  - name: materials
+    description: Begleitmaterialien zu Tests, Aufgaben, Items, Kompetenzen und Kompetenzstufen
+paths:
+  /materials:
+    get:
+      operationId: getMaterials
+      summary: Materialien mit Bezug zu Auswertungsdaten abfragen
+      description: |
+        Liefert Materialien (Handreichungen, Fördermaterial, Musterlösungen, Audio, ...),
+        optional eingegrenzt auf bestimmte Bezugspunkte (Test, Aufgabe, Item,
+        Kompetenz/Leitidee, Kompetenzstufe) oder auf Material-Eigenschaften
+        (Art, Sprache, Zielgruppe).
+
+        Ohne Filter liefert das Backend **alle** ihm bekannten Materialien (optional paginiert
+        — Paginierung ist in dieser Spec-Version nicht standardisiert).
+      tags:
+        - materials
+      parameters:
+        - in: query
+          name: scope
+          schema:
+            type: string
+          description: |
+            Kommasepariert. Filter auf Attachment-Scopes. Empfohlene Werte&#58;
+            `test`, `exercise`, `item`, `competence`, `competence-level`, `general`.
+          examples:
+            Kompetenzstufen:
+              value: competence-level
+            Aufgabe und Item:
+              value: exercise,item
+        - in: query
+          name: test
+          schema:
+            type: string
+          description: Testheft-/Test-Kennung, für die Materialien geliefert werden sollen.
+        - in: query
+          name: exercise
+          schema:
+            type: string
+          description: Aufgabe-ID.
+        - in: query
+          name: item
+          schema:
+            type: string
+          description: |
+            Item-Kennung. Entweder interne `item.id` oder `iqbId:<IQBID>` um explizit die
+            IQB-Item-Id zu verwenden.
+          examples:
+            Interne ID:
+              value: b8d23653-3881-40de-a45a-d34e2dd191ed
+            IQB ID:
+              value: iqbId:AB1021
+        - in: query
+          name: competence
+          schema:
+            type: string
+          description: |
+            Kompetenz-ID (auch Leitidee). Falls das Backend mit Kürzeln arbeitet, kann
+            `name:<Kürzel>` verwendet werden (z. B. `name:L1`).
+        - in: query
+          name: competenceLevel
+          schema:
+            type: string
+          description: |
+            Kompetenzstufen-ID oder `nameShort:<Kürzel>` (z. B. `nameShort:Ia`).
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: Fachkürzel (z. B. `de`, `ma`).
+        - in: query
+          name: domain
+          schema:
+            type: string
+          description: Domänen-Kürzel (z. B. `le`, `rs`).
+        - in: query
+          name: kind
+          schema:
+            type: string
+          description: Kommasepariert. Filter auf Material-Arten.
+        - in: query
+          name: language
+          schema:
+            type: string
+          description: BCP47-Sprachcode.
+        - in: query
+          name: audience
+          schema:
+            type: string
+          description: Zielgruppe (`teacher`, `student`, `parents`, ...).
+      responses:
+        '200':
+          description: Liste passender Materialien (evtl. leer)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        '400':
+          description: Ungültige Anfrage, z.B. ungültige Werte für die Parameter
+        '501':
+          description: Backend unterstützt einen der Filter prinzipiell nicht
+  /materials/{id}:
+    get:
+      operationId: getMaterialById
+      summary: Einzelnes Material abrufen
+      description: |
+        Liefert das vollständige Material-Objekt zu einer ID. Wird vor allem genutzt, wenn
+        in Auswertungs­responses nur kompakte `MaterialReference`-Objekte eingebettet waren
+        und das Frontend Details nachladen möchte.
+      tags:
+        - materials
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Material-ID
+      responses:
+        '200':
+          description: Material
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        '404':
+          description: Material nicht gefunden
+components:
+  schemas:
+    Material:
+      type: object
+      description: |
+        Ein eigenständiges Material (Handreichung, Fördermaterial, Lesetext, Musterlösung, ...),
+        das über `attachments[]` einem oder mehreren Bezugspunkten der Auswertung
+        (Test, Leitidee/Kompetenz, Aufgabe, Item, Kompetenzstufe, allgemein) zugeordnet ist.
+      required:
+        - id
+        - title
+        - kind
+        - attachments
+      properties:
+        id:
+          type: string
+          description: Eindeutige Kennung des Materials
+          examples:
+            - 9a21ad44-3e8b-4a1e-9f76-2a1e8a6b0e5a
+        title:
+          type: string
+          description: Kurzer, sprechender Titel
+          examples:
+            - Förderheft Leseverstehen Stufe Ia
+            - Transkript Hörverstehen Aufgabe 3
+        description:
+          type: string
+          description: Längere, optionale Beschreibung
+        kind:
+          type: string
+          description: |
+            Art des Materials. Offener String. Empfohlene Werte (Stufe-2-Konvention):
+            `support`, `diagnostic`, `didactic`, `anchor-text`, `solution`, `example`,
+            `audio`, `video`, `transcript`, `info`, `other`.
+
+            Die Werte sind bewusst bewusst überschaubar gehalten. Wer feinere Klassifikation
+            braucht, kann zusätzlich `externalMetadata[]` nutzen und dort auf ein
+            AMB-/LRMI-`learningResourceType`-Vokabular (z. B. `https://w3id.org/kim/hcrt/`)
+            verweisen. Siehe README &sect; 8 für die Mapping-Tabelle.
+          examples:
+            - support
+            - diagnostic
+            - anchor-text
+            - solution
+        format:
+          type: string
+          description: MIME-Typ bzw. technisches Format
+          examples:
+            - application/pdf
+            - text/html
+            - video/mp4
+            - audio/mpeg
+        language:
+          type: string
+          description: Sprache des Materials als BCP47-Kennung
+          examples:
+            - de
+            - de-DE
+            - en
+        url:
+          type: string
+          format: uri
+          description: |
+            Direkter Link zum Material. Entweder `url` **oder** `content` muss gesetzt sein.
+            Das Backend kann pre-signed URLs verwenden oder Auth voraussetzen.
+          examples:
+            - https://materials.example.org/foerderheft-lesen-ia.pdf
+        content:
+          type: string
+          description: |
+            Inline-Inhalt für kleine Materialien (kurze Hinweise, Erklärtexte).
+            Format ist durch `format` angegeben (z. B. `text/html`, `text/markdown`).
+        thumbnailUrl:
+          type: string
+          format: uri
+        size:
+          type: integer
+          description: Größe in Bytes
+          minimum: 0
+        duration:
+          type: integer
+          description: Laufzeit in Sekunden (für Audio/Video)
+          minimum: 0
+        license:
+          type: string
+          description: SPDX-Kennung oder Freitext-Lizenzhinweis
+          examples:
+            - CC-BY-4.0
+            - IQB Nutzungsbedingungen
+        source:
+          type: string
+          description: Herkunft / Autor / Institution
+          examples:
+            - IQB
+            - VERA
+            - Schulträger Musterstadt
+        version:
+          type: string
+        audience:
+          type: string
+          description: Zielgruppe. Empfohlene Werte&#58; `teacher`, `student`, `parents`, `other`.
+          examples:
+            - teacher
+            - student
+            - parents
+        tags:
+          type: array
+          description: Freie Schlagworte
+          items:
+            type: string
+        properties:
+          type: array
+          description: Freie Key-Value-Metadaten (analog zu value-group.yml)
+          items:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+        attachments:
+          type: array
+          description: |
+            Bezugspunkte des Materials. Mindestens ein Eintrag. Ein Material kann gleichzeitig
+            an mehrere Entitäten hängen (z. B. eine Kompetenzstufe UND eine Leitidee).
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/MaterialAttachment'
+        externalMetadata:
+          type: array
+          description: |
+            Optionale Verweise auf externe Metadatensätze (LRMI, AMB, LOM, schema.org, ...),
+            unter denen dieses Material in einem anderen Metadatenschema vollständig beschrieben
+            ist. Dient der Interoperabilität mit OER-Repositories (edu-sharing,
+            WirLernenOnline, Bildungsserver, ...). **Keine Duplikation** der TBA3-Kernfelder —
+            wer die reichen Metadaten braucht, dereferenziert `url` und liest das Zielschema.
+          items:
+            type: object
+            required:
+              - schema
+              - url
+            properties:
+              schema:
+                type: string
+                description: |
+                  Kennung des referenzierten Metadatenschemas. Empfohlene Werte:
+                  - `amb`        - Allgemeines Metadatenprofil für Bildungsressourcen (DINI-AG KIM)
+                  - `lrmi`       - Learning Resource Metadata Initiative (schema.org)
+                  - `lom`        - IEEE LOM 1484.12.1
+                  - `lom-de`     - deutsches Anwendungsprofil von LOM
+                  - `schema.org` - generisches schema.org
+                examples:
+                  - amb
+                  - lrmi
+                  - lom
+              url:
+                type: string
+                format: uri
+                description: URL, unter der der externe Metadatensatz abrufbar ist (JSON-LD, XML, ...)
+                examples:
+                  - https://wirlernenonline.de/entry/abc123.jsonld
+              inlineId:
+                type: string
+                description: |
+                  Falls das Zielschema eine eigenständige, URL-unabhängige Kennung verwendet
+                  (z. B. LOM `identifier.entry`), kann diese hier transportiert werden.
+              mediaType:
+                type: string
+                description: MIME-Typ des Metadatensatzes, z. B. `application/ld+json`, `application/xml`.
+                examples:
+                  - application/ld+json
+                  - application/xml
+    MaterialAttachment:
+      type: object
+      description: |
+        Verknüpfung eines Materials mit einem Bezugspunkt in der Auswertungsstruktur.
+        `refId` ist außer bei `scope=general` zwingend.
+      required:
+        - scope
+      properties:
+        scope:
+          type: string
+          description: |
+            Art des Bezugspunkts. Offener String. Empfohlene Werte:
+            - `test`             - Material bezieht sich auf einen (Test-)Gesamtkontext
+            - `exercise`         - Bezug zu einer Aufgabe (`exercise.id`)
+            - `item`             - Bezug zu einem Item / einer Lösungshäufigkeit
+            - `competence`       - Bezug zu einer Kompetenz oder Leitidee (`competence.id`)
+            - `competence-level` - Bezug zu einer Kompetenzstufe (`competence-level.id`)
+            - `general`          - Allgemein, kein spezifischer Bezugspunkt
+          examples:
+            - competence-level
+            - exercise
+            - item
+            - competence
+            - test
+            - general
+        refId:
+          type: string
+          description: |
+            ID der verknüpften Entität. Pflicht außer bei `scope=general`.
+            Für `test` ist die testspezifische Kennung gemeint (z. B. Testheft-Id,
+            wie auch in `value-group.properties.booklet` üblich).
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+            - V8-2024-DE-TH01
+            - AB1021
+            - L1
+        refName:
+          type: string
+          description: |
+            Optionale menschenlesbare Kennung, falls hilfreich zur Anzeige oder wenn keine
+            stabile ID vorliegt (z. B. Kurzkennung der Kompetenzstufe, Itemname).
+          examples:
+            - Ia
+            - 2.5.1
+            - Leitidee Zahl
+        refKind:
+          type: string
+          description: |
+            Qualifier bei mehrdeutigen ID-Räumen. Empfohlene Werte:
+            - `iqbId`        - `refId` ist eine IQB-Itemkennung
+            - `nameShort`    - `refId` ist das Kürzel (z. B. einer Kompetenzstufe)
+            - `internalId`   - `refId` ist eine backendinterne UUID
+            - `curriculumUri` - `refId` ist eine URI aus einem Kompetenz-/Curriculum-Vokabular
+              (z. B. aus dem KMK-/IQB-Bildungsstandards-Vokabular oder einem Landeslehrplan).
+              Diese URIs passen 1:1 in LRMI/AMB `alignmentObject.targetUrl` und erleichtern
+              den Übergang zu externen Metadaten erheblich.
+          examples:
+            - iqbId
+            - nameShort
+            - internalId
+            - curriculumUri
+        subject:
+          description: |
+            Optional&#58; Fach, auf das sich das Material bezieht. Struktur wie in
+            `value-group.subject`.
+          $ref: '#/components/schemas/Subject'
+        domain:
+          description: |
+            Optional&#58; Domäne, auf die sich das Material bezieht. Struktur wie in
+            `value-group.domain`.
+          $ref: '#/components/schemas/Domain'
+        properties:
+          type: array
+          description: Freie Key-Value-Metadaten zur Verknüpfung (z. B. Relevanz, Reihenfolge).
+          items:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+    MaterialReference:
+      type: object
+      description: |
+        Kompakte Referenz auf ein Material, wie sie in Auswertungs­responses eingebettet wird.
+        Das vollständige Material ist über `GET /materials/{id}` erreichbar.
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Verweis auf `Material.id`
+          examples:
+            - 9a21ad44-3e8b-4a1e-9f76-2a1e8a6b0e5a
+        title:
+          type: string
+          description: Zur Anzeige ohne zusätzliches Nachladen
+        kind:
+          type: string
+          description: Für Icon/Filter ohne Nachladen (siehe Material.kind)
+        url:
+          type: string
+          format: uri
+          description: Direktlink, wenn ohne Vorverarbeitung nutzbar
+        audience:
+          type: string
+    Subject:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name des Fachs
+          examples:
+            - Deutsch
+            - Mathematik
+    Domain:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name der Domäne
+          examples:
+            - Rechtschreibung
+            - Leseverstehen

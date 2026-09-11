@@ -19,7 +19,7 @@ const port = Number(process.env.PORT) || 4173;
 // so läuft die Vorschau ohne Netz und zeigt dieselben Daten wie das Deployment.
 const apiBase = process.env.TBA3_API_BASE_URL || null;
 
-const API_PREFIXES = ['/groups', '/schools', '/states'];
+const API_PREFIXES = ['/groups', '/schools', '/states', '/materials'];
 // Bereiche mit eigenem SPA-Fallback — Reihenfolge wie in vercel.json
 const SPA_ROOTS = ['/demo', '/katalog', '/beispiele'];
 

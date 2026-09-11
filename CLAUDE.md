@@ -33,6 +33,8 @@ apps/beispiele/     Rückmeldungsbeispiele — Platzhalter, siehe README dort
 apps/shared/        Gemeinsame Navigationsleiste (Custom Element) → /gemeinsam/
 api/                Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
+data/material-fixtures.mjs
+                    Beispiele des Materialien-Entwurfs (npm run material-spec:update)
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
                     eigener Lockfile, eigener Docker-Kontext)
 tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + schnittstelle/
@@ -85,6 +87,10 @@ gespeichert; das halbiert die Datenmenge.
 Die API-Basis kommt in beiden Apps aus `VITE_API_BASE_URL` (Demo:
 `src/services/tba3Api.js`, Katalog: `axios.defaults.baseURL` in `src/main.js`);
 leer bedeutet „gleicher Host".
+
+`/materials` bedient der Mock nicht über hinterlegte Schlüssel, sondern filtert die
+Beispiele des Entwurfs zur Laufzeit (scope, kind, audience, item, competenceLevel …) —
+sonst gäbe „Try it out“ auf jede Anfrage dieselbe Liste zurück.
 
 Die OpenAPI-Spezifikation liegt als Kopie unter
 `apps/portal/schnittstelle/tba3-spec.yml` und wird mit `npm run spec:update` aus

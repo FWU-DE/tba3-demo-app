@@ -9,7 +9,7 @@ Rückmeldungsbeispiele. Ein Repository, ein Deployment, eine URL.
 | `/` | Portal — Einstieg und Wegweiser | statisches HTML |
 | `/demo` | Demoanwendung: Filter, Kompetenzstufen, Schülerdetails, Export | React 19 + Recharts + Tailwind |
 | `/katalog` | Komponentenbibliothek: die Visualisierungen einzeln, mit Einsatzzweck und Quelltext | Vue 3 + PrimeVue |
-| `/schnittstelle` | API-Referenz, Endpunkte direkt ausprobierbar | Swagger UI |
+| `/schnittstelle` | API-Referenz (Auswertung und Materialien-Entwurf), ausprobierbar | Swagger UI |
 | `/beispiele` | Rückmeldungsbeispiele | folgt |
 
 ## Struktur
@@ -61,6 +61,19 @@ an nichts Externem. Auf neuen Stand bringen:
 ```bash
 npm run spec:update     # holt tba3-spec.yml, danach git diff prüfen und mit committen
 ```
+
+Unter `/schnittstelle` liegen zwei Spezifikationen nebeneinander:
+
+| Reiter | Inhalt | Pflege |
+|---|---|---|
+| Auswertung | die verabschiedete TBA3-Schnittstelle | `npm run spec:update` |
+| Materialien | Entwurf für Begleitmaterialien aus [indibit-eu/tba3#54](https://github.com/indibit-eu/tba3/pull/54) | `npm run material-spec:update` |
+
+Der Materialien-Entwurf liegt im Quell-Repository als Fragmente (Schemas, Pfad-Skizzen,
+Beispiele) und wird von `tools/build-material-spec.mjs` zu einer eigenständigen Datei
+zusammengesetzt; die mitgelieferten Beispiele werden dabei zu Mock-Antworten, sodass
+`/materials` samt Filtern ausprobierbar ist. Solange der Pull Request offen ist, liest
+das Skript aus dessen Branch.
 
 In der Referenz fragt „Try it out“ über den eigenen Host ab; `/groups`, `/schools`
 und `/states` werden von dort zum Backend weitergereicht, deshalb ohne CORS-Umwege

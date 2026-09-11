@@ -8,6 +8,7 @@
 
 import { brotliDecompressSync } from 'node:zlib';
 import fixtures, { stand, quelle } from '../data/fixtures.mjs';
+import materialFixtures from '../data/material-fixtures.mjs';
 import { normalisiereAbfrage } from './mock-schluessel.mjs';
 
 export { normalisiereAbfrage, stand, quelle };
@@ -16,7 +17,7 @@ const ausgepackt = new Map();
 
 const hole = (schluessel) => {
   if (ausgepackt.has(schluessel)) return ausgepackt.get(schluessel);
-  const gepackt = fixtures[schluessel];
+  const gepackt = fixtures[schluessel] ?? materialFixtures[schluessel];
   if (gepackt === undefined) return undefined;
   const daten = JSON.parse(brotliDecompressSync(Buffer.from(gepackt, 'base64')).toString('utf8'));
   ausgepackt.set(schluessel, daten);
@@ -37,6 +38,49 @@ const suche = (pfad, query) => {
   return hole(normalisiereAbfrage(pfad, query));
 };
 
+// Die Filter des Materialien-Entwurfs lassen sich direkt auf den Beispieldaten
+// anwenden — sonst gäbe "Try it out" für jede Anfrage dieselbe Liste zurück.
+const listen = (wert) => String(wert).split(',').map((t) => t.trim()).filter(Boolean);
+
+const passtAufAnhang = (material, pruefung) =>
+  (material.attachments ?? []).some(pruefung);
+
+const materialFilter = {
+  scope: (m, wert) => passtAufAnhang(m, (a) => listen(wert).includes(a.scope)),
+  kind: (m, wert) => listen(wert).includes(m.kind),
+  language: (m, wert) => m.language === wert,
+  audience: (m, wert) => m.audience === wert,
+  subject: (m, wert) => passtAufAnhang(m, (a) => a.subject?.name === wert || a.subject?.id === wert),
+  domain: (m, wert) => passtAufAnhang(m, (a) => a.domain?.name === wert || a.domain?.id === wert),
+};
+
+// test, exercise, item, competence und competenceLevel zeigen alle auf refId bzw.
+// refName des jeweiligen Scopes; 'iqbId:AB1021' und 'nameShort:Ia' sind erlaubt.
+for (const [name, scope] of Object.entries({
+  test: 'test',
+  exercise: 'exercise',
+  item: 'item',
+  competence: 'competence',
+  competenceLevel: 'competence-level',
+})) {
+  materialFilter[name] = (m, wert) => {
+    const [qualifizierer, rest] = wert.includes(':') ? [wert.split(':')[0], wert.split(':').slice(1).join(':')] : [null, wert];
+    return passtAufAnhang(m, (a) =>
+      a.scope === scope &&
+      (a.refId === rest || a.refName === rest) &&
+      (!qualifizierer || a.refKind === qualifizierer)
+    );
+  };
+}
+
+const materialien = (query) => {
+  const alle = hole('/materials');
+  if (!Array.isArray(alle)) return undefined;
+  const aktiv = Object.entries(query).filter(([name, wert]) => materialFilter[name] && wert !== '');
+  if (aktiv.length === 0) return alle;
+  return alle.filter((m) => aktiv.every(([name, wert]) => materialFilter[name](m, wert)));
+};
+
 /**
  * Sucht die passende Antwort. Gibt es die angefragte Parameterkombination
  * nicht, werden die Parameter der Reihe nach fallen gelassen (erst comparison,
@@ -44,6 +88,11 @@ const suche = (pfad, query) => {
  * sollen auch bei einer unbekannten Kombination etwas anzuzeigen haben.
  */
 export const antwortFuer = (pfad, query = {}) => {
+  if (pfad === '/materials') {
+    const daten = materialien(query);
+    return daten === undefined ? { daten: null, treffer: 'keiner' } : { daten, treffer: 'genau' };
+  }
+
   const genau = suche(pfad, query);
   if (genau !== undefined) return { daten: genau, treffer: 'genau' };
 

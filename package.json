@@ -17,9 +17,11 @@
     "preview": "node tools/serve-site.mjs",
     "lint": "npm run lint -w @tba3/demo",
     "fixtures:update": "node tools/fetch-fixtures.mjs",
-    "spec:update": "node tools/update-spec.mjs"
+    "spec:update": "node tools/update-spec.mjs",
+    "material-spec:update": "node tools/build-material-spec.mjs"
   },
   "devDependencies": {
+    "js-yaml": "^5.4.1",
     "swagger-ui-dist": "^5.32.15"
   }
 }

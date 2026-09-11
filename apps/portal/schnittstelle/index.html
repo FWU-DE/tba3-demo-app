@@ -32,6 +32,45 @@
     .hinweis strong { color: var(--tinte); font-weight: 600; }
     .hinweis a { color: var(--blau); }
 
+    .reiter {
+      max-width: 1200px;
+      margin: 18px auto 0;
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .reiter button {
+      font: inherit;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--linie);
+      background: #fff;
+      color: var(--grau);
+      cursor: pointer;
+      transition: border-color .12s, color .12s, background-color .12s;
+    }
+    .reiter button:hover { color: var(--blau); border-color: #bfdbfe; }
+    .reiter button[aria-selected="true"] {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+    .reiter .entwurfsmarke {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #b45309;
+      background: #fef3c7;
+      border-radius: 999px;
+      padding: 2px 8px;
+      align-self: center;
+      margin-left: 4px;
+    }
+
     #laedt {
       max-width: 1200px;
       margin: 40px auto;
@@ -83,7 +122,19 @@
   diese Seite, es gibt also keine CORS-Hürde. Die Spezifikation stammt aus
   <a href="https://github.com/indibit-eu/tba3">indibit-eu/tba3</a> und liegt hier als Kopie
   (Aktualisierung im Repository: <code>npm run spec:update</code>).
+  <br />
+  Oben links lässt sich auf <strong>Materialien (Entwurf)</strong> umschalten — die
+  vorgeschlagene Erweiterung um Begleitmaterialien aus
+  <a href="https://github.com/indibit-eu/tba3/pull/54">Pull Request #54</a>, noch nicht Teil
+  der offiziellen Spezifikation. Auch dort antworten die Beispiele aus dem Entwurf, samt
+  wirksamer Filter.
 </p>
+
+<div class="reiter" role="tablist" aria-label="Spezifikation">
+  <button type="button" role="tab" data-spec="auswertung" aria-selected="true">Auswertung</button>
+  <button type="button" role="tab" data-spec="materialien" aria-selected="false">Materialien</button>
+  <span class="entwurfsmarke" id="entwurfsmarke" hidden>Entwurf</span>
+</div>
 
 <div id="laedt"><span class="spinner" aria-hidden="true"></span> Referenz wird geladen …</div>
 
@@ -105,30 +156,54 @@
     document.getElementById('ladefehler').style.display = 'block';
   }
 
-  if (!window.SwaggerUIBundle) {
-    zeigeFehler();
-  } else {
+  var SPECS = {
+    auswertung: '/schnittstelle/tba3-spec.yml',
+    materialien: '/schnittstelle/material-spec.yml',
+  };
+
+  // Eigene Umschaltung statt Swaggers `urls`-Option: die setzt Swaggers Topbar
+  // voraus, und die passt nicht zum übrigen Auftritt.
+  function zeichne(name) {
+    var laedt = document.getElementById('laedt');
+    document.getElementById('ladefehler').style.display = 'none';
+    laedt.style.display = 'flex';
+    document.getElementById('swagger').innerHTML = '';
+    document.getElementById('entwurfsmarke').hidden = name !== 'materialien';
+
+    document.querySelectorAll('.reiter button').forEach(function (knopf) {
+      knopf.setAttribute('aria-selected', String(knopf.dataset.spec === name));
+    });
+
     SwaggerUIBundle({
-      url: '/schnittstelle/tba3-spec.yml',
+      url: SPECS[name],
       dom_id: '#swagger',
       deepLinking: true,
       defaultModelsExpandDepth: -1,
       docExpansion: 'list',
       tryItOutEnabled: true,
       presets: [SwaggerUIBundle.presets.apis],
-
-
-      onComplete: function () {
-        document.getElementById('laedt').style.display = 'none';
-      },
+      onComplete: function () { laedt.style.display = 'none'; },
       onFailure: zeigeFehler,
     });
 
-    // Fällt Swagger UI beim Parsen der Spec um, bleibt onComplete aus.
+    // Fällt Swagger UI beim Parsen der Spezifikation um, bleibt onComplete aus.
     setTimeout(function () {
-      var laedt = document.getElementById('laedt');
-      if (laedt && laedt.style.display !== 'none') zeigeFehler();
+      if (laedt.style.display !== 'none') zeigeFehler();
     }, 20000);
+  }
+
+  if (!window.SwaggerUIBundle) {
+    zeigeFehler();
+  } else {
+    document.querySelectorAll('.reiter button').forEach(function (knopf) {
+      knopf.addEventListener('click', function () {
+        history.replaceState(null, '', knopf.dataset.spec === 'materialien' ? '#materialien' : '#');
+        zeichne(knopf.dataset.spec);
+      });
+    });
+
+    // Direkt verlinkbar: /schnittstelle#materialien
+    zeichne(location.hash === '#materialien' ? 'materialien' : 'auswertung');
   }
 </script>
 
