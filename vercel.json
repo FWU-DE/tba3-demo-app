@@ -19,10 +19,6 @@
       "destination": "https://apps.indibit.eu/tba3-api/:path*"
     },
     {
-      "source": "/tba3-spec.yml",
-      "destination": "https://raw.githubusercontent.com/indibit-eu/tba3/refs/heads/main/tba3-spec.yml"
-    },
-    {
       "source": "/demo/:path*",
       "destination": "/demo/index.html"
     },

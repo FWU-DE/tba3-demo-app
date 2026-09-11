@@ -9,7 +9,7 @@ Rückmeldungsbeispiele. Ein Repository, ein Deployment, eine URL.
 | `/` | Portal — Einstieg und Wegweiser | statisches HTML |
 | `/demo` | Demoanwendung: Filter, Kompetenzstufen, Schülerdetails, Export | React 19 + Recharts + Tailwind |
 | `/katalog` | Komponentenbibliothek: die Visualisierungen einzeln, mit Einsatzzweck und Quelltext | Vue 3 + PrimeVue |
-| `/schnittstelle` | API-Referenz, live aus der Spezifikation gerendert | Redoc |
+| `/schnittstelle` | API-Referenz, Endpunkte direkt ausprobierbar | Swagger UI |
 | `/beispiele` | Rückmeldungsbeispiele | folgt |
 
 ## Struktur
@@ -48,10 +48,17 @@ leiten `/groups`, `/schools` und `/states` dorthin weiter. Quelle und Anleitung:
 ## Schnittstelle
 
 Spezifikation, Konzeptdokumentation und Mock-Server leben in
-[indibit-eu/tba3](https://github.com/indibit-eu/tba3). Die Referenz unter
-`/schnittstelle` lädt `tba3-spec.yml` bei jedem Aufruf direkt von dort — sie
-kann also nicht veralten. Das Umschreiben des Pfads `/tba3-spec.yml` steht in
-`vercel.json` (Produktion), `nginx.conf` (Docker) und `tools/serve-site.mjs` (lokal).
+[indibit-eu/tba3](https://github.com/indibit-eu/tba3). Die Spezifikation liegt hier
+als Kopie unter `apps/portal/schnittstelle/tba3-spec.yml` — die Referenz hängt damit
+an nichts Externem. Auf neuen Stand bringen:
+
+```bash
+npm run spec:update     # holt tba3-spec.yml, danach git diff prüfen und mit committen
+```
+
+In der Referenz fragt „Try it out“ über den eigenen Host ab; `/groups`, `/schools`
+und `/states` werden von dort zum Backend weitergereicht, deshalb ohne CORS-Umwege
+und mit denselben Demodaten wie in den übrigen Bereichen.
 
 Backend aller Ansichten: `https://apps.indibit.eu/tba3-api`.
 

@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TBA3 — Auswertungsschnittstelle</title>
-  <meta name="description" content="Die OpenAPI-Referenz der TBA3-Auswertungsschnittstelle, live aus indibit-eu/tba3." />
+  <meta name="description" content="Die OpenAPI-Referenz der TBA3-Auswertungsschnittstelle, mit Abfragen gegen die Demodaten." />
+  <link rel="stylesheet" href="./swagger-ui.css" />
   <style>
     :root {
       --blau: #2563eb;
@@ -19,10 +20,11 @@
       color: #334155;
       background: #fff;
     }
+
     /* Kopfzeile wie im Portal, damit der Bereich zusammengehört */
     header { border-bottom: 1px solid var(--linie); background: #fff; }
     .kopf {
-      max-width: 1040px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 14px 24px;
       display: flex;
@@ -46,28 +48,18 @@
     nav a:hover { color: var(--blau); }
 
     .hinweis {
-      max-width: 1040px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 16px 24px 0;
-      font-size: 14px;
-      color: var(--grau);
-    }
-    .hinweis a { color: var(--blau); }
-    #ladefehler {
-      display: none;
-      max-width: 1040px;
-      margin: 24px auto;
-      padding: 16px 20px;
-      border: 1px solid #fecaca;
-      background: #fef2f2;
-      border-radius: 12px;
-      color: #991b1b;
+      padding: 18px 24px 0;
       font-size: 14.5px;
+      color: var(--grau);
+      line-height: 1.6;
     }
-    #ladefehler a { color: #991b1b; }
-    redoc, #redoc { display: block; }
+    .hinweis strong { color: var(--tinte); font-weight: 600; }
+    .hinweis a { color: var(--blau); }
+
     #laedt {
-      max-width: 1040px;
+      max-width: 1200px;
       margin: 40px auto;
       padding: 0 24px;
       font-size: 15px;
@@ -84,6 +76,24 @@
       animation: dreh 0.8s linear infinite;
     }
     @keyframes dreh { to { transform: rotate(360deg); } }
+
+    #ladefehler {
+      display: none;
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 16px 20px;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      border-radius: 12px;
+      color: #991b1b;
+      font-size: 14.5px;
+    }
+    #ladefehler a { color: #991b1b; }
+
+    /* Swagger UI etwas ruhiger stellen */
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .info { margin: 24px 0; }
+    .swagger-ui { font-family: inherit; }
   </style>
 </head>
 <body>
@@ -104,10 +114,15 @@
 </header>
 
 <p class="hinweis">
-  Diese Referenz wird bei jedem Aufruf direkt aus
-  <a href="https://github.com/indibit-eu/tba3/blob/main/tba3-spec.yml">indibit-eu/tba3</a>
-  geladen und zeigt damit immer den aktuellen Stand der Spezifikation.
+  <strong>Ausprobieren erwünscht:</strong> „Try it out“ fragt dieselben Demodaten ab,
+  die auch Demoanwendung und Komponentenbibliothek zeigen — etwa die Lerngruppe
+  <code>3a-deutsch</code>, die Schule <code>gs-musterstadt</code> oder das Bundesland
+  <code>beispielland</code>. Die Spezifikation stammt aus
+  <a href="https://github.com/indibit-eu/tba3">indibit-eu/tba3</a> und liegt hier als Kopie
+  (Aktualisierung im Repository: <code>npm run spec:update</code>).
 </p>
+
+<div id="laedt"><span class="spinner" aria-hidden="true"></span> Referenz wird geladen …</div>
 
 <div id="ladefehler">
   Die Spezifikation konnte nicht geladen werden. Sie liegt im Original unter
@@ -117,12 +132,9 @@
   öffnen.
 </div>
 
-<div id="laedt"><span class="spinner" aria-hidden="true"></span> Referenz wird geladen …</div>
+<div id="swagger"></div>
 
-<!-- /tba3-spec.yml wird auf raw.githubusercontent.com umgeschrieben (vercel.json bzw. tools/serve-site.mjs) -->
-<div id="redoc"></div>
-
-<script src="./redoc.standalone.js" onerror="zeigeFehler()"></script>
+<script src="./swagger-ui-bundle.js" onerror="zeigeFehler()"></script>
 <script>
   function zeigeFehler() {
     var laedt = document.getElementById('laedt');
@@ -130,20 +142,41 @@
     document.getElementById('ladefehler').style.display = 'block';
   }
 
-  // Redoc meldet über den Callback, ob die Spezifikation geladen und gerendert
-  // werden konnte — keine Heuristik über Wartezeiten.
-  if (window.Redoc) {
-    Redoc.init(
-      '/tba3-spec.yml',
-      { hideDownloadButton: true, expandResponses: '200' },
-      document.getElementById('redoc'),
-      function (fehler) {
-        document.getElementById('laedt').style.display = 'none';
-        if (fehler) zeigeFehler();
-      }
-    );
-  } else {
+  if (!window.SwaggerUIBundle) {
     zeigeFehler();
+  } else {
+    SwaggerUIBundle({
+      url: './tba3-spec.yml',
+      dom_id: '#swagger',
+      deepLinking: true,
+      defaultModelsExpandDepth: -1,
+      docExpansion: 'list',
+      tryItOutEnabled: true,
+      presets: [SwaggerUIBundle.presets.apis],
+
+      // Anfragen laufen über den eigenen Host: /groups, /schools und /states
+      // werden dort zum Referenz-Backend weitergereicht (vercel.json, nginx.conf,
+      // tools/serve-site.mjs). Das erspart CORS und trifft dieselben Demodaten
+      // wie die übrigen Bereiche.
+      requestInterceptor: function (req) {
+        var backend = 'https://apps.indibit.eu/tba3-api';
+        if (req.url.indexOf(backend) === 0) {
+          req.url = window.location.origin + req.url.slice(backend.length);
+        }
+        return req;
+      },
+
+      onComplete: function () {
+        document.getElementById('laedt').style.display = 'none';
+      },
+      onFailure: zeigeFehler,
+    });
+
+    // Fällt Swagger UI beim Parsen der Spec um, bleibt onComplete aus.
+    setTimeout(function () {
+      var laedt = document.getElementById('laedt');
+      if (laedt && laedt.style.display !== 'none') zeigeFehler();
+    }, 20000);
   }
 </script>
 

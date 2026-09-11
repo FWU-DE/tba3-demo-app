@@ -17,9 +17,6 @@ const port = Number(process.env.PORT) || 4173;
 const apiBase = process.env.TBA3_API_BASE_URL || 'https://apps.indibit.eu/tba3-api';
 
 const API_PREFIXES = ['/groups', '/schools', '/states'];
-// Die OpenAPI-Spec wird live aus dem Spezifikations-Repository gelesen (wie in vercel.json).
-const SPEC_PFAD = '/tba3-spec.yml';
-const SPEC_URL = 'https://raw.githubusercontent.com/indibit-eu/tba3/refs/heads/main/tba3-spec.yml';
 // Bereiche mit eigenem SPA-Fallback — Reihenfolge wie in vercel.json
 const SPA_ROOTS = ['/demo', '/katalog', '/beispiele'];
 
@@ -29,6 +26,8 @@ const MIME = {
   '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.yml': 'text/yaml; charset=utf-8',
+  '.yaml': 'text/yaml; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -66,26 +65,13 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 2. OpenAPI-Spec durchreichen
-  if (pathname === SPEC_PFAD) {
-    try {
-      const upstream = await fetch(SPEC_URL);
-      res.writeHead(upstream.status, { 'Content-Type': 'text/yaml; charset=utf-8' });
-      res.end(Buffer.from(await upstream.arrayBuffer()));
-    } catch (err) {
-      res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end(`Spezifikation nicht erreichbar: ${err.message}\n`);
-    }
-    return;
-  }
-
-  // 3. Statische Datei
+  // 2. Statische Datei
   const rel = normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   const candidate = join(dist, rel);
   if (isFile(candidate)) return sendFile(res, candidate);
   if (isFile(join(candidate, 'index.html'))) return sendFile(res, join(candidate, 'index.html'));
 
-  // 4. SPA-Fallback des jeweiligen Bereichs, sonst Portal
+  // 3. SPA-Fallback des jeweiligen Bereichs, sonst Portal
   const spaRoot = SPA_ROOTS.find((p) => pathname.startsWith(`${p}/`));
   const fallback = join(dist, spaRoot ? `${spaRoot}/index.html` : 'index.html');
   if (isFile(fallback)) return sendFile(res, fallback);

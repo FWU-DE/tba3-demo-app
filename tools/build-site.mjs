@@ -51,15 +51,17 @@ for (const [from, to, required] of PARTS) {
   console.log(`✓ ${from} → dist/${to || ''}`);
 }
 
-// Redoc rendert die API-Referenz unter /schnittstelle. Das Bundle kommt aus
+// Swagger UI rendert die API-Referenz unter /schnittstelle. Die Dateien kommen aus
 // node_modules statt von einem CDN — sonst hinge das Deployment an fremder Infrastruktur.
-const redoc = join(root, 'node_modules/redoc/bundles/redoc.standalone.js');
-if (existsSync(redoc)) {
-  copyFileSync(redoc, join(dist, 'schnittstelle/redoc.standalone.js'));
-  console.log('✓ redoc.standalone.js → dist/schnittstelle/');
-} else {
-  console.error('✗ node_modules/redoc fehlt — `npm install` ausführen');
-  process.exit(1);
+const SWAGGER_DATEIEN = ['swagger-ui-bundle.js', 'swagger-ui.css'];
+for (const datei of SWAGGER_DATEIEN) {
+  const quelle = join(root, 'node_modules/swagger-ui-dist', datei);
+  if (!existsSync(quelle)) {
+    console.error(`✗ node_modules/swagger-ui-dist/${datei} fehlt — \`npm install\` ausführen`);
+    process.exit(1);
+  }
+  copyFileSync(quelle, join(dist, 'schnittstelle', datei));
 }
+console.log(`✓ swagger-ui → dist/schnittstelle/`);
 
 console.log('\nSite gebaut → dist/  (lokal ansehen: npm run preview)');

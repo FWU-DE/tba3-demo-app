@@ -14,9 +14,10 @@
     "dev:katalog": "npm run dev -w @tba3/katalog",
     "build": "npm run build --workspaces && node tools/build-site.mjs",
     "preview": "node tools/serve-site.mjs",
-    "lint": "npm run lint -w @tba3/demo"
+    "lint": "npm run lint -w @tba3/demo",
+    "spec:update": "node tools/update-spec.mjs"
   },
   "devDependencies": {
-    "redoc": "^2.5.4"
+    "swagger-ui-dist": "^5.32.15"
   }
 }

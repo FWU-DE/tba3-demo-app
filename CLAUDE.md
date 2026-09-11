@@ -60,9 +60,11 @@ Die API-Basis kommt in beiden Apps aus `VITE_API_BASE_URL` (Demo:
 `src/services/tba3Api.js`, Katalog: `axios.defaults.baseURL` in `src/main.js`);
 leer bedeutet „gleicher Host".
 
-Die OpenAPI-Spezifikation wird nicht eingecheckt: `/tba3-spec.yml` wird auf
-`raw.githubusercontent.com/indibit-eu/tba3` umgeschrieben, damit die Referenz
-unter `/schnittstelle` nicht driftet.
+Die OpenAPI-Spezifikation liegt als Kopie unter
+`apps/portal/schnittstelle/tba3-spec.yml` und wird mit `npm run spec:update` aus
+`indibit-eu/tba3` nachgezogen — bewusst eingecheckt, damit die Referenz an nichts
+Externem hängt. In der Referenz schreibt ein `requestInterceptor` Anfragen auf den
+eigenen Host um, sodass „Try it out“ ohne CORS gegen dieselben Demodaten läuft.
 
 ## Konventionen
 
@@ -72,8 +74,10 @@ unter `/schnittstelle` nicht driftet.
 - Globaler Zustand der Demo lebt in `FilterContext`; neue globale
   State-Lösungen nur mit ADR.
 - Keine Kaskaden-Operationen — Seiteneffekte explizit halten.
-- Redoc kommt aus `node_modules` und wird beim Build kopiert, nicht von einem
-  CDN geladen — das Deployment soll nicht an fremder Infrastruktur hängen.
+- Swagger UI kommt aus `node_modules` und wird beim Build kopiert, nicht von einem
+  CDN geladen — das Deployment soll nicht an fremder Infrastruktur hängen. Wer die
+  Bibliothek tauscht, prüft, ob sie zur Laufzeit weitere Dateien nachlädt: Redoc
+  holte einen Worker-Chunk nach, der im Deployment fehlte und die Seite kippen ließ.
 
 ## Task Workflow
 
