@@ -1,3 +1,5 @@
+import { uebersetze } from '../i18n';
+
 /**
  * Minimal OAuth 1.0a signing for LTI 1.1 ContentItemSelectionRequest.
  * Uses the Web Crypto API (SubtleCrypto) — no external dependencies.
@@ -99,7 +101,7 @@ export const launchLtiPopup = async (toolUrl, consumerKey, consumerSecret, retur
     'width=1100,height=750,left=100,top=80,resizable=yes,scrollbars=yes'
   );
 
-  if (!popup) throw new Error('Popup wurde blockiert. Bitte Popup-Blocker für diese Seite deaktivieren.');
+  if (!popup) throw new Error(uebersetze('ausgabe.popupBlockiert'));
 
   // Write directly into the popup — origin becomes window.location.origin, not null
   popup.document.write(`<!DOCTYPE html>

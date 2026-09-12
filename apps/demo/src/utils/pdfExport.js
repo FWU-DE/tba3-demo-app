@@ -1,13 +1,18 @@
 import { jsPDF } from 'jspdf';
 import QRCode from 'qrcode';
-import {
-  EDUCATIONAL_MATERIALS,
-  MATERIAL_TYPES,
-  SUBJECTS,
-  GRADES,
-  COMPETENCE_LEVELS,
-  GROUPS,
-} from './constants';
+import { EDUCATIONAL_MATERIALS, GROUPS } from './constants';
+import { konstantenJetzt, sprache, uebersetze } from '../i18n';
+
+// Die Ausgabe entsteht auf Zuruf, nicht beim Rendern. Die beschrifteten
+// Konstanten werden deshalb zu Beginn jedes Exports frisch geholt — sonst
+// stünde im PDF die Sprache, die beim Laden des Moduls galt.
+let { MATERIAL_TYPES, SUBJECTS, GRADES, COMPETENCE_LEVELS } = konstantenJetzt();
+
+export const beschriftungenAktualisieren = () => {
+  ({ MATERIAL_TYPES, SUBJECTS, GRADES, COMPETENCE_LEVELS } = konstantenJetzt());
+};
+
+const LOCALE = { de: 'de-DE', en: 'en-GB' };
 
 // Demo base URL – replace with real LMS URL in production
 const MATERIAL_BASE_URL = 'https://tba3.bildung.example/materialien';
@@ -74,8 +79,8 @@ const drawHeader = (pdf, group, pageNum, totalPages) => {
 
   // Right: branding + page count
   setFont(pdf, 8, 'normal', [186, 211, 253]);
-  pdf.text('TBA3 Lernmaterialien', PAGE_W - MARGIN, 10, { align: 'right' });
-  pdf.text(`Seite ${pageNum} von ${totalPages}`, PAGE_W - MARGIN, 17, { align: 'right' });
+  pdf.text(safe(uebersetze('ausgabe.lernmaterialien')), PAGE_W - MARGIN, 10, { align: 'right' });
+  pdf.text(safe(uebersetze('ausgabe.seiteVon', { n: pageNum, gesamt: totalPages })), PAGE_W - MARGIN, 17, { align: 'right' });
 };
 
 const drawSeparatorPage = (pdf, title, subtitle, date) => {
@@ -90,7 +95,7 @@ const drawSeparatorPage = (pdf, title, subtitle, date) => {
 
   // Section label
   setFont(pdf, 9, 'normal', [186, 211, 253]);
-  pdf.text('Abschnitt', PAGE_W / 2, PAGE_H / 2 - 14, { align: 'center' });
+  pdf.text(safe(uebersetze('ausgabe.abschnitt')), PAGE_W / 2, PAGE_H / 2 - 14, { align: 'center' });
 
   // Large title
   setFont(pdf, 26, 'bold', [255, 255, 255]);
@@ -106,13 +111,13 @@ const drawSeparatorPage = (pdf, title, subtitle, date) => {
 
   // Branding footer
   setFont(pdf, 7, 'normal', [186, 211, 253]);
-  pdf.text(`TBA3 Lernmaterialien · ${date}`, PAGE_W / 2, PAGE_H - 12, { align: 'center' });
+  pdf.text(safe(uebersetze('ausgabe.fusszeile', { datum: date })), PAGE_W / 2, PAGE_H - 12, { align: 'center' });
 };
 
 export const drawFooter = (pdf, date) => {
   setFont(pdf, 6.5, 'normal', [156, 163, 175]);
-  pdf.text(`Exportiert aus TBA3 Demo App · ${date}`, MARGIN, PAGE_H - 6);
-  pdf.text('Demo-URLs – keine echten Links', PAGE_W - MARGIN, PAGE_H - 6, { align: 'right' });
+  pdf.text(safe(uebersetze('ausgabe.exportiertAus', { datum: date })), MARGIN, PAGE_H - 6);
+  pdf.text(safe(uebersetze('ausgabe.demoUrls')), PAGE_W - MARGIN, PAGE_H - 6, { align: 'right' });
   // Hairline above footer
   pdf.setDrawColor(229, 231, 235);
   pdf.setLineWidth(0.2);
@@ -130,7 +135,7 @@ export const drawLevelBar = (pdf, levelKey, y) => {
     pdf.setFillColor(240, 242, 244);
     pdf.rect(MARGIN + 3, y, CONTENT_W - 3, LEVEL_BAR_H, 'F');
     setFont(pdf, 8.5, 'bold', [55, 65, 81]);
-    pdf.text('Zugewiesene Materialien', MARGIN + 6, y + 5);
+    pdf.text(safe(uebersetze('ausgabe.zugewiesene')), MARGIN + 6, y + 5);
     return;
   }
   const [r, g, b] = hexToRgb(cfg.color);
@@ -145,7 +150,7 @@ export const drawLevelBar = (pdf, levelKey, y) => {
   pdf.rect(MARGIN + 3, y, CONTENT_W - 3, LEVEL_BAR_H, 'F');
 
   setFont(pdf, 8.5, 'bold', [r, g, b]);
-  pdf.text(`Kompetenzstufe ${levelKey}  –  ${safe(cfg.description)}`, MARGIN + 6, y + 5);
+  pdf.text(safe(uebersetze('ausgabe.stufeMitText', { n: levelKey, text: cfg.description })), MARGIN + 6, y + 5);
 };
 
 export const CARD_H = 38;
@@ -188,7 +193,7 @@ export const drawMaterialCard = (pdf, material, y, qrDataUrl) => {
 
   // Title
   setFont(pdf, 9.5, 'bold', [17, 24, 39]);
-  const titleLines = pdf.splitTextToSize(safe(material.title) || '(kein Titel)', TEXT_W);
+  const titleLines = pdf.splitTextToSize(safe(material.title) || safe(uebersetze('ausgabe.keinTitel')), TEXT_W);
   if (titleLines.length > 0) pdf.text(titleLines.slice(0, 2), MARGIN + 3, y + 13);
 
   // Description
@@ -206,7 +211,7 @@ export const drawMaterialCard = (pdf, material, y, qrDataUrl) => {
     pdf.setFillColor(r, g, b);
     pdf.roundedRect(lx, y + 26, 12, 4, 1, 1, 'F');
     setFont(pdf, 6, 'bold', [255, 255, 255]);
-    pdf.text(`Stufe ${lk}`, lx + 6, y + 28.8, { align: 'center' });
+    pdf.text(safe(uebersetze('gemeinsam.stufe', { n: lk })), lx + 6, y + 28.8, { align: 'center' });
     lx += 14;
   });
 
@@ -229,6 +234,7 @@ export const drawMaterialCard = (pdf, material, y, qrDataUrl) => {
  * @param {string} [filterGroupId] – export only this group when provided
  */
 export const exportPDF = async (assignments, filterGroupId = null, extraGroups = [], extraMaterials = []) => {
+  beschriftungenAktualisieren();
   const allMaterials = [...EDUCATIONAL_MATERIALS, ...extraMaterials];
   const allGroups = [...GROUPS, ...extraGroups];
   const groupsToExport = (filterGroupId ? allGroups.filter((g) => g.id === filterGroupId) : allGroups)
@@ -240,8 +246,8 @@ export const exportPDF = async (assignments, filterGroupId = null, extraGroups =
   if (groupsToExport.length === 0) {
     throw new Error(
       filterGroupId
-        ? 'Keine zugewiesenen Materialien für diese Klasse.'
-        : 'Keine zugewiesenen Materialien vorhanden.'
+        ? uebersetze('ausgabe.keineFuerKlasse')
+        : uebersetze('ausgabe.keineVorhanden')
     );
   }
 
@@ -263,7 +269,7 @@ export const exportPDF = async (assignments, filterGroupId = null, extraGroups =
   );
 
   const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-  const date = new Date().toLocaleDateString('de-DE');
+  const date = new Date().toLocaleDateString(LOCALE[sprache()] ?? LOCALE.de);
   const STANDARD_LEVEL_ORDER = ['I', 'II', 'III', 'IV', 'V'];
 
   for (let gi = 0; gi < groupsToExport.length; gi++) {
@@ -277,10 +283,10 @@ export const exportPDF = async (assignments, filterGroupId = null, extraGroups =
         const isGroupSection = group._type === 'group';
         drawSeparatorPage(
           pdf,
-          isGroupSection ? 'Nach Gruppe' : 'Nach Kompetenzstufe',
+          isGroupSection ? uebersetze('ausgabe.nachGruppe') : uebersetze('ausgabe.nachStufe'),
           isGroupSection
-            ? 'Materialzuordnung nach eigenen Gruppen'
-            : 'Materialzuordnung nach Kompetenzstufe',
+            ? uebersetze('ausgabe.zuordnungGruppe')
+            : uebersetze('ausgabe.zuordnungStufe'),
           date
         );
       }

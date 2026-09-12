@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { STUDENTS } from '../../utils/studentData';
-import { GROUPS, SUBJECTS, GRADES, COMPETENCE_LEVELS } from '../../utils/constants';
+import { GROUPS } from '../../utils/constants';
 import {
   loadCustomGroups,
   createCustomGroup,
@@ -12,12 +12,14 @@ import {
 import { useFilters } from '../../context/useFilters';
 
 import Card from '../common/Card';
+import { useKonstanten, useTexte } from '../../i18n';
 import AutoGroupingCard from './AutoGroupingCard';
 import StudentMapCard from './StudentMapCard';
 
 // ── Small reusable pieces ─────────────────────────────────────────────────────
 
 const LevelBadge = ({ level, small }) => {
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const cfg = COMPETENCE_LEVELS[level];
   if (!cfg) return null;
   return (
@@ -31,6 +33,7 @@ const LevelBadge = ({ level, small }) => {
 };
 
 const SubjectTag = ({ subject }) => {
+  const { SUBJECTS } = useKonstanten();
   const s = SUBJECTS[subject];
   return (
     <span
@@ -45,6 +48,8 @@ const SubjectTag = ({ subject }) => {
 // ── Student row ───────────────────────────────────────────────────────────────
 
 const StudentRow = ({ student, selected, onToggle, onDetail }) => {
+  const t = useTexte();
+  const { GRADES } = useKonstanten();
   const group = GROUPS.find((g) => g.id === student.classGroupId);
   const { observerMode } = useFilters();
   return (
@@ -67,13 +72,13 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
         <LevelBadge level={student.competenceLevel} />
         <button
           onClick={() => onDetail(student)}
-          title="Datenblatt anzeigen"
+          title={t('schueler.datenblattAnzeigen')}
           className="ml-1 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-primary transition-colors px-1.5 py-0.5 rounded hover:bg-blue-50"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
           </svg>
-          Datenblatt
+          {t('schueler.datenblatt')}
         </button>
       </div>
     </div>
@@ -85,6 +90,8 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
 const LEVEL_KEYS = ['I', 'II', 'III', 'IV', 'V'];
 
 const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateMaterials, onDetail }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const [renamingName, setRenamingName] = useState(false);
   const [nameInput, setNameInput] = useState(group.name);
   const { observerMode } = useFilters();
@@ -164,14 +171,14 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
         ) : (
           <>
             <span className="font-semibold text-sm text-gray-900 flex-1 truncate">{group.name}</span>
-            <span className="text-xs text-gray-400 flex-shrink-0">{members.length} Mitgl.</span>
-            <button onClick={() => setRenamingName(true)} title="Umbenennen"
+            <span className="text-xs text-gray-400 flex-shrink-0">{t('schueler.mitglieder', { n: members.length })}</span>
+            <button onClick={() => setRenamingName(true)} title={t('schueler.umbenennen')}
               className="text-gray-400 hover:text-gray-600 flex-shrink-0">
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
               </svg>
             </button>
-            <button onClick={() => onDelete(group.id)} title="Gruppe löschen"
+            <button onClick={() => onDelete(group.id)} title={t('schueler.gruppeLoeschen')}
               className="text-red-300 hover:text-red-500 flex-shrink-0">
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -187,7 +194,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
           {/* Level distribution */}
           <div className="flex gap-1 px-3 py-2 flex-wrap min-h-[2rem] items-center">
             {members.length === 0
-              ? <span className="text-xs text-gray-400">Noch keine Mitglieder</span>
+              ? <span className="text-xs text-gray-400">{t('schueler.keineMitglieder')}</span>
               : LEVEL_KEYS.map((lk) => levelCounts[lk] ? (
                   <span key={lk} className="text-xs font-semibold px-1.5 py-0.5 rounded text-white"
                     style={{ backgroundColor: COMPETENCE_LEVELS[lk]?.color }}>
@@ -207,7 +214,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
                   <span className="text-xs text-gray-400">{GROUPS.find(g => g.id === s.classGroupId)?.name}</span>
                   <button
                     onClick={() => onDetail(s)}
-                    title="Datenblatt anzeigen"
+                    title={t('schueler.datenblattAnzeigen')}
                     className="text-gray-300 hover:text-primary transition-colors"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -226,11 +233,11 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
               </svg>
-              Mitglieder bearbeiten
+              {t('schueler.mitgliederBearbeiten')}
             </button>
             <button onClick={() => onNavigateMaterials(group.id)}
               className="text-xs font-medium text-primary hover:underline">
-              Materialien →
+              {t('schueler.materialien')}
             </button>
           </div>
         </>
@@ -242,36 +249,36 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
           {/* Editor filter bar */}
           <div className="flex flex-wrap gap-2 p-3 bg-blue-50 border-b border-blue-100">
             <input
-              autoFocus type="search" placeholder="Name suchen…"
+              autoFocus type="search" placeholder={t('schueler.nameSuchen')}
               value={editorSearch} onChange={(e) => setEditorSearch(e.target.value)}
               className="flex-1 min-w-24 text-xs border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
             />
             <select value={editorClass} onChange={(e) => setEditorClass(e.target.value)}
               className="text-xs border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-              <option value="">Alle Klassen</option>
+              <option value="">{t('schueler.alleKlassen')}</option>
               {GROUPS.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
             </select>
             <select value={editorLevel} onChange={(e) => setEditorLevel(e.target.value)}
               className="text-xs border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-              <option value="">Alle Stufen</option>
+              <option value="">{t('schueler.alleStufen')}</option>
               {LEVEL_KEYS.map((lk) => (
-                <option key={lk} value={lk}>Stufe {lk}</option>
+                <option key={lk} value={lk}>{t('gemeinsam.stufe', { n: lk })}</option>
               ))}
             </select>
           </div>
 
           {/* Stats bar */}
           <div className="flex items-center gap-3 px-3 py-1.5 bg-blue-50 border-b border-blue-100 text-xs text-gray-600">
-            <span><strong className="text-primary">{draft.size}</strong> ausgewählt</span>
-            {added   > 0 && <span className="text-green-600">+{added} neu</span>}
-            {removed > 0 && <span className="text-red-500">−{removed} entfernt</span>}
-            <span className="ml-auto text-gray-400">{editorStudents.length} angezeigt</span>
+            <span><strong className="text-primary">{draft.size}</strong> {t('schueler.ausgewaehlt')}</span>
+            {added   > 0 && <span className="text-green-600">{t('schueler.neu', { n: added })}</span>}
+            {removed > 0 && <span className="text-red-500">{t('schueler.entfernt', { n: removed })}</span>}
+            <span className="ml-auto text-gray-400">{t('schueler.angezeigt', { n: editorStudents.length })}</span>
           </div>
 
           {/* Checkbox student list */}
           <ul className="max-h-64 overflow-y-auto divide-y divide-gray-100">
             {editorStudents.length === 0 && (
-              <li className="text-xs text-gray-400 text-center py-4">Keine Schüler*innen gefunden.</li>
+              <li className="text-xs text-gray-400 text-center py-4">{t('schueler.keineGefunden')}</li>
             )}
             {editorStudents.map((s) => (
               <li key={s.id}>
@@ -290,11 +297,11 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
           <div className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 border-t border-gray-200">
             <button onClick={saveEditor}
               className="text-xs font-medium bg-primary text-white px-3 py-1.5 rounded hover:bg-blue-700 transition-colors">
-              Speichern
+              {t('schueler.speichern')}
             </button>
             <button onClick={cancelEditor}
               className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded hover:bg-gray-100 transition-colors">
-              Abbrechen
+              {t('schueler.abbrechen')}
             </button>
           </div>
         </div>
@@ -306,6 +313,8 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
 // ── Main component ────────────────────────────────────────────────────────────
 
 const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
+  const t = useTexte();
+  const { SUBJECTS, GRADES, COMPETENCE_LEVELS } = useKonstanten();
   const { selectedLevel, selectedGroup: sidebarGroup, selectedSubject: sidebarSubject, selectedGrade: sidebarGrade } = useFilters();
 
   // ── Filter state (initialised from sidebar) ──
@@ -391,7 +400,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
     setNewGroupName('');
     setShowNewGroupForm(false);
     clearSelection();
-    flash(`Gruppe „${created.name}" erstellt.`);
+    flash(t('schueler.gruppeErstellt', { name: created.name }));
   };
 
   const handleAddToExisting = () => {
@@ -400,7 +409,10 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
     const g = groups.find((x) => x.id === targetGroupId);
     setCustomGroups(groups);
     clearSelection();
-    flash(`${selectedIds.size} Schüler*in zu „${g?.name}" hinzugefügt.`);
+    flash(t(
+      selectedIds.size === 1 ? 'schueler.zuGruppeHinzugefuegtEiner' : 'schueler.zuGruppeHinzugefuegtMehrere',
+      { n: selectedIds.size, name: g?.name },
+    ));
   };
 
   const flash = (msg) => {
@@ -441,8 +453,8 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
               </svg>
             </div>
             <div>
-              <span className="font-semibold text-sm text-gray-900">Schüler-Karte</span>
-              <span className="ml-2 text-xs text-gray-500">Interaktive 2D-Visualisierung · Clustering · Gruppenbildung</span>
+              <span className="font-semibold text-sm text-gray-900">{t('schueler.karteTitel')}</span>
+              <span className="ml-2 text-xs text-gray-500">{t('schueler.karteUnterzeile')}</span>
             </div>
           </div>
           <svg
@@ -469,12 +481,12 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
 
         {/* ── Left: Student list ────────────────────────────────────────── */}
         <div className="lg:col-span-2 space-y-4">
-          <Card title={`Schüler*innen (${STUDENTS.length})`}>
+          <Card title={t('schueler.titel', { n: STUDENTS.length })}>
             {/* Filter bar */}
             <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-gray-100">
               <input
                 type="search"
-                placeholder="Name suchen…"
+                placeholder={t('schueler.nameSuchen')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary flex-1 min-w-32"
@@ -484,7 +496,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                 onChange={(e) => setFilterGroup(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Klassen</option>
+                <option value="">{t('schueler.alleKlassen')}</option>
                 {GROUPS.map((g) => (
                   <option key={g.id} value={g.id}>{g.name}</option>
                 ))}
@@ -494,7 +506,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                 onChange={(e) => setFilterSubject(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Fächer</option>
+                <option value="">{t('schueler.alleFaecher')}</option>
                 {Object.values(SUBJECTS).map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
                 ))}
@@ -504,7 +516,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                 onChange={(e) => setFilterGrade(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Klassenstufen</option>
+                <option value="">{t('schueler.alleKlassenstufen')}</option>
                 {Object.values(GRADES).map((g) => (
                   <option key={g.code} value={g.code}>{g.name}</option>
                 ))}
@@ -514,9 +526,11 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                 onChange={(e) => setFilterLevel(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Stufen</option>
-                {['I', 'II', 'III', 'IV', 'V'].map((lk) => (
-                  <option key={lk} value={lk}>Stufe {lk} – {COMPETENCE_LEVELS[lk]?.description}</option>
+                <option value="">{t('schueler.alleStufen')}</option>
+                {LEVEL_KEYS.map((lk) => (
+                  <option key={lk} value={lk}>
+                    {t('schueler.stufeMitText', { n: lk, text: COMPETENCE_LEVELS[lk]?.description })}
+                  </option>
                 ))}
               </select>
             </div>
@@ -530,14 +544,16 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                 className="w-4 h-4 accent-blue-600"
               />
               <span className="text-xs text-gray-500">
-                {filtered.length} Schüler*in{filtered.length !== 1 ? 'nen' : ''} angezeigt
+                {t(filtered.length === 1 ? 'schueler.angezeigtEiner' : 'schueler.angezeigtMehrere', { n: filtered.length })}
                 {selectedIds.size > 0 && (
-                  <span className="ml-2 font-medium text-primary">· {selectedIds.size} ausgewählt</span>
+                  <span className="ml-2 font-medium text-primary">
+                    {t('schueler.ausgewaehltZusatz', { n: selectedIds.size })}
+                  </span>
                 )}
               </span>
               {selectedIds.size > 0 && (
                 <button onClick={clearSelection} className="ml-auto text-xs text-gray-400 hover:text-gray-600">
-                  Auswahl aufheben
+                  {t('schueler.auswahlAufheben')}
                 </button>
               )}
             </div>
@@ -545,7 +561,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
             {/* Student rows */}
             <div className="max-h-[520px] overflow-y-auto space-y-0.5 pr-1">
               {filtered.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-8">Keine Schüler*innen gefunden.</p>
+                <p className="text-sm text-gray-400 text-center py-8">{t('schueler.keineGefunden')}</p>
               ) : (
                 filtered.map((s) => (
                   <StudentRow
@@ -565,7 +581,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
             <Card>
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-sm font-medium text-gray-700">
-                  {selectedIds.size} Schüler*in{selectedIds.size !== 1 ? 'nen' : ''} ausgewählt
+                  {t(selectedIds.size === 1 ? 'schueler.ausgewaehltEiner' : 'schueler.ausgewaehltMehrere', { n: selectedIds.size })}
                 </span>
 
                 {/* Add to existing group */}
@@ -576,7 +592,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                       onChange={(e) => setTargetGroupId(e.target.value)}
                       className="text-sm border border-gray-200 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                     >
-                      <option value="">Gruppe wählen…</option>
+                      <option value="">{t('schueler.gruppeWaehlen')}</option>
                       {customGroups.map((g) => (
                         <option key={g.id} value={g.id}>{g.name}</option>
                       ))}
@@ -590,7 +606,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     >
-                      Hinzufügen
+                      {t('schueler.hinzufuegen')}
                     </button>
                   </div>
                 )}
@@ -603,7 +619,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                   >
                     <input
                       autoFocus
-                      placeholder="Name der neuen Gruppe…"
+                      placeholder={t('schueler.neuerGruppenname')}
                       value={newGroupName}
                       onChange={(e) => setNewGroupName(e.target.value)}
                       className="text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary w-52"
@@ -617,14 +633,14 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     >
-                      Erstellen & hinzufügen
+                      {t('schueler.erstellenUndHinzufuegen')}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowNewGroupForm(false)}
                       className="text-sm text-gray-400 hover:text-gray-600"
                     >
-                      Abbrechen
+                      {t('schueler.abbrechen')}
                     </button>
                   </form>
                 ) : (
@@ -632,7 +648,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                     onClick={() => setShowNewGroupForm(true)}
                     className="text-sm px-3 py-1.5 rounded-md font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
                   >
-                    + Neue Gruppe erstellen
+                    {t('schueler.neueGruppe')}
                   </button>
                 )}
 
@@ -646,10 +662,10 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
 
         {/* ── Right: Custom groups ──────────────────────────────────────── */}
         <div className="space-y-4">
-          <Card title="Eigene Gruppen">
+          <Card title={t('schueler.eigeneGruppen')}>
             {customGroups.length === 0 && !showNewGroupForm && (
               <p className="text-sm text-gray-400 mb-3">
-                Noch keine eigenen Gruppen. Wählen Sie Schüler*innen aus und erstellen Sie eine Gruppe.
+                {t('schueler.keineEigenenGruppen')}
               </p>
             )}
 
@@ -677,7 +693,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                   >
                     <input
                       autoFocus
-                      placeholder="Gruppenname…"
+                      placeholder={t('schueler.gruppenname')}
                       value={newGroupName}
                       onChange={(e) => setNewGroupName(e.target.value)}
                       className="flex-1 text-sm border border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -691,7 +707,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     >
-                      Erstellen
+                      {t('schueler.erstellen')}
                     </button>
                     <button
                       type="button"
@@ -706,7 +722,7 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
                     onClick={() => setShowNewGroupForm(true)}
                     className="w-full text-sm text-gray-500 hover:text-gray-700 border border-dashed border-gray-300 rounded-md py-2 hover:border-gray-400 transition-colors"
                   >
-                    + Neue leere Gruppe erstellen
+                    {t('schueler.neueLeereGruppe')}
                   </button>
                 )}
               </div>

@@ -11,6 +11,16 @@
 }
 
 @layer components {
+  /* Übersetzte Texte bringen ihre Auszeichnung mit (siehe i18n/HtmlText.jsx);
+     die Klassen dafür stehen deshalb hier statt am einzelnen Element. */
+  .reichtext code {
+    @apply bg-gray-100 px-1 rounded text-gray-800;
+  }
+
+  .reichtext strong {
+    @apply font-semibold text-gray-900;
+  }
+
   .card {
     @apply bg-white rounded-lg shadow-md p-6;
   }

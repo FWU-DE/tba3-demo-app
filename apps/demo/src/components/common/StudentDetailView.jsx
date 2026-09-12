@@ -9,7 +9,8 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES, EDUCATIONAL_MATERIALS, MATERIAL_TYPES, GENDERS } from '../../utils/constants';
+import { COMPETENCE_LEVELS, GROUPS, EDUCATIONAL_MATERIALS } from '../../utils/constants';
+import { useKonstanten, useTexte } from '../../i18n';
 
 const LEVEL_ORDER = ['I', 'II', 'III', 'IV', 'V'];
 const LEVEL_TO_NUM = { I: 1, II: 2, III: 3, IV: 4, V: 5 };
@@ -45,6 +46,8 @@ const LevelGauge = ({ level }) => (
 // ── Domain bar ────────────────────────────────────────────────────────────────
 
 const DomainBar = ({ name, level }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const cfg = COMPETENCE_LEVELS[level];
   const pct = (LEVEL_TO_NUM[level] / 5) * 100;
   return (
@@ -60,7 +63,7 @@ const DomainBar = ({ name, level }) => {
         className="text-xs font-bold px-2.5 py-0.5 rounded-full text-white w-20 text-center flex-shrink-0"
         style={{ backgroundColor: cfg?.color ?? '#6b7280' }}
       >
-        Stufe {level}
+        {t('gemeinsam.stufe', { n: level })}
       </span>
     </div>
   );
@@ -69,6 +72,7 @@ const DomainBar = ({ name, level }) => {
 // ── Material card ─────────────────────────────────────────────────────────────
 
 const MaterialCard = ({ material }) => {
+  const { MATERIAL_TYPES } = useKonstanten();
   const type = MATERIAL_TYPES[material.type];
   const isDiagnostic = material.type === 'diagnostic';
   return (
@@ -120,23 +124,29 @@ const pctToLevel = (pct) => {
 };
 
 const RadarTooltip = ({ active, payload }) => {
+  const t = useTexte();
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
-  const t = pctToLevel(p.score);
+  const schwelle = pctToLevel(p.score);
   return (
     <div className="rounded-lg bg-white border border-gray-200 shadow-md px-3 py-2 text-xs">
       <p className="font-semibold text-gray-900">{p.domain}</p>
       <p className="text-gray-700">
-        Ø Punktwert: <span className="font-bold text-gray-900">{Math.round(p.score)}%</span>
+        {t('datenblatt.punktwertZeile')} <span className="font-bold text-gray-900">{Math.round(p.score)}%</span>
       </p>
       <p className="text-gray-500">
-        entspricht <span className="font-semibold" style={{ color: t.color }}>Stufe {t.level}</span>
+        {t('datenblatt.entspricht')}{' '}
+        <span className="font-semibold" style={{ color: schwelle.color }}>
+          {t('gemeinsam.stufe', { n: schwelle.level })}
+        </span>
       </p>
     </div>
   );
 };
 
 const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScore, color }) => {
+  const t = useTexte();
+  const gesamtName = t('datenblatt.gesamt');
   const data = useMemo(() => {
     const entries = Object.entries(domainLevels ?? {});
     const rows = entries.map(([name, lvl]) => ({
@@ -146,12 +156,12 @@ const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScor
     // Wenn < 3 Domänen: Gesamtergebnis ergänzen, damit das Netz ein Polygon ist.
     if (rows.length > 0 && rows.length < 3) {
       rows.push({
-        domain: 'Gesamt',
+        domain: gesamtName,
         score: overallScore ?? (LEVEL_TO_NUM[overallLevel] / 5) * 100,
       });
     }
     return rows;
-  }, [domainLevels, domainScores, overallLevel, overallScore]);
+  }, [domainLevels, domainScores, overallLevel, overallScore, gesamtName]);
 
   if (data.length === 0) return null;
 
@@ -161,10 +171,10 @@ const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScor
         <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" />
         </svg>
-        Kompetenzprofil (Spinnennetz)
+        {t('datenblatt.radarTitel')}
       </h2>
       <p className="text-xs text-gray-500 mb-3">
-        Ungewichteter Durchschnittswert der Aufgaben je Teilbereich in Prozent (0 % innen – 100 % außen).
+        {t('datenblatt.radarErklaerung')}
       </p>
       <div className="w-full" style={{ height: 280 }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -182,7 +192,7 @@ const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScor
               tickFormatter={(v) => `${v}%`}
             />
             <Radar
-              name="Ø Punktwert"
+              name={t('datenblatt.punktwert')}
               dataKey="score"
               stroke={color}
               fill={color}
@@ -195,17 +205,21 @@ const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScor
       </div>
       {/* Mini-Legende Kompetenzstufen-Schwellen */}
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500">
-        <span className="text-gray-400 font-medium">Schwellen:</span>
-        {LEVEL_THRESHOLDS_PCT.map((t) => (
-          <span key={t.level} className="inline-flex items-center gap-1">
+        <span className="text-gray-400 font-medium">{t('datenblatt.schwellen')}</span>
+        {LEVEL_THRESHOLDS_PCT.map((schwelle) => (
+          <span key={schwelle.level} className="inline-flex items-center gap-1">
             <span
               className="inline-block w-2.5 h-2.5 rounded-sm"
-              style={{ backgroundColor: t.color }}
+              style={{ backgroundColor: schwelle.color }}
             />
             <span>
-              Stufe {t.level}
+              {t('gemeinsam.stufe', { n: schwelle.level })}
               <span className="text-gray-400">
-                {' '}{t.min === 0 ? `<${t.max}%` : t.max === 100 ? `≥${t.min}%` : `${t.min}–${t.max - 1}%`}
+                {' '}{schwelle.min === 0
+                  ? `<${schwelle.max}%`
+                  : schwelle.max === 100
+                  ? `≥${schwelle.min}%`
+                  : `${schwelle.min}–${schwelle.max - 1}%`}
               </span>
             </span>
           </span>
@@ -218,6 +232,8 @@ const CompetenceRadar = ({ domainLevels, domainScores, overallLevel, overallScor
 // ── Main component ────────────────────────────────────────────────────────────
 
 const StudentDetailView = ({ student, onBack }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS, SUBJECTS, GRADES, GENDERS } = useKonstanten();
   const [pdfLoading, setPdfLoading] = useState(false);
   const { observerMode } = useFilters();
 
@@ -263,7 +279,7 @@ const StudentDetailView = ({ student, onBack }) => {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Zurück zur Schüler-Übersicht
+          {t('datenblatt.zurueck')}
         </button>
 
         <button
@@ -285,7 +301,7 @@ const StudentDetailView = ({ student, onBack }) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           )}
-          {pdfLoading ? 'Wird erstellt…' : 'Datenblatt als PDF'}
+          {pdfLoading ? t('datenblatt.wirdErstellt') : t('datenblatt.alsPdf')}
         </button>
       </div>
 
@@ -341,7 +357,7 @@ const StudentDetailView = ({ student, onBack }) => {
                   {student.competenceLevel}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 mt-2 font-medium">Kompetenzstufe</p>
+              <p className="text-xs text-gray-500 mt-2 font-medium">{t('datenblatt.kompetenzstufe')}</p>
             </div>
           </div>
         </div>
@@ -349,7 +365,7 @@ const StudentDetailView = ({ student, onBack }) => {
         {/* Level gauge bar */}
         <div className="px-6 pb-6">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-            Gesamtergebnis
+            {t('datenblatt.gesamtergebnis')}
           </p>
           <LevelGauge level={student.competenceLevel} />
           <p className="text-xs text-gray-500 mt-2">
@@ -379,7 +395,7 @@ const StudentDetailView = ({ student, onBack }) => {
               <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              Ergebnisse nach Teilbereich
+              {t('datenblatt.nachTeilbereich')}
             </h2>
             <div className="space-y-3.5">
               {domains.map(([name, level]) => (
@@ -395,7 +411,7 @@ const StudentDetailView = ({ student, onBack }) => {
             <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Übersicht Kompetenzstufen
+            {t('datenblatt.uebersichtStufen')}
           </h2>
           <div className="space-y-1.5">
             {LEVEL_ORDER.map((lk) => {
@@ -426,7 +442,7 @@ const StudentDetailView = ({ student, onBack }) => {
                       className="flex-shrink-0 text-xs font-semibold"
                       style={{ color: cfg.color }}
                     >
-                      ← aktuell
+                      {t('datenblatt.aktuell')}
                     </span>
                   )}
                 </div>
@@ -443,12 +459,12 @@ const StudentDetailView = ({ student, onBack }) => {
             <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            Empfohlene Lernmaterialien
+            {t('datenblatt.empfohlene')}
             <span
               className="ml-1 text-xs font-bold px-2 py-0.5 rounded-full text-white"
               style={{ backgroundColor: levelCfg?.color }}
             >
-              Stufe {student.competenceLevel}
+              {t('gemeinsam.stufe', { n: student.competenceLevel })}
             </span>
           </h2>
           <div className="grid gap-2.5">
@@ -468,15 +484,13 @@ const StudentDetailView = ({ student, onBack }) => {
                 <svg className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
                 </svg>
-                Ergänzende Diagnostik
+                {t('datenblatt.diagnostik')}
                 <span className="ml-1 text-xs font-bold px-2 py-0.5 rounded-full text-white bg-amber-600">
-                  optional
+                  {t('datenblatt.optional')}
                 </span>
               </h2>
               <p className="text-xs text-gray-600 mt-1 max-w-2xl">
-                Diese kurzen Diagnose-Instrumente helfen, die konkrete Förderbaustelle innerhalb
-                der Kompetenzstufe {student.competenceLevel} präziser zu bestimmen, bevor mit
-                der Förderung begonnen wird.
+                {t('datenblatt.diagnostikText', { stufe: student.competenceLevel })}
               </p>
             </div>
           </div>

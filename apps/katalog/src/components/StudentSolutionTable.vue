@@ -1,14 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   rows: { type: Array, required: true },
   domains: {
     type: Array,
+    // Ohne Angabe die drei üblichen Bereiche, übersetzt.
     default: () => [
-      { key: 'total',     label: 'Insgesamt' },
-      { key: 'reading',   label: 'Lesen' },
-      { key: 'listening', label: 'Hören' },
+      { key: 'total',     pfad: 'bausteine.schuelerTabelle.insgesamt' },
+      { key: 'reading',   pfad: 'bausteine.schuelerTabelle.lesen' },
+      { key: 'listening', pfad: 'bausteine.schuelerTabelle.hoeren' },
     ],
   },
 });
@@ -69,9 +71,9 @@ const labelX = (seg) => seg.x + seg.w / 2;
   <div class="sst-wrap">
     <!-- Legend -->
     <div class="sst-legend">
-      <span class="leg-item"><span class="leg-dot" :style="{ background: '#3b82f6' }" />Richtig</span>
-      <span class="leg-item"><span class="leg-dot" :style="{ background: '#cbd5e1' }" />Ausgelassen</span>
-      <span class="leg-item"><span class="leg-dot" :style="{ background: '#f97316' }" />Falsch</span>
+      <span class="leg-item"><span class="leg-dot" :style="{ background: '#3b82f6' }" />{{ t('bausteine.schuelerTabelle.richtig') }}</span>
+      <span class="leg-item"><span class="leg-dot" :style="{ background: '#cbd5e1' }" />{{ t('bausteine.schuelerTabelle.ausgelassen') }}</span>
+      <span class="leg-item"><span class="leg-dot" :style="{ background: '#f97316' }" />{{ t('bausteine.schuelerTabelle.falsch') }}</span>
     </div>
 
     <!-- Table -->
@@ -79,7 +81,7 @@ const labelX = (seg) => seg.x + seg.w / 2;
       <table class="sst-table">
         <thead>
           <tr>
-            <th class="th-student">Schüler:in</th>
+            <th class="th-student">{{ t('bausteine.schuelerTabelle.schuelerin') }}</th>
             <th
               v-for="d in domains"
               :key="d.key"
@@ -87,7 +89,7 @@ const labelX = (seg) => seg.x + seg.w / 2;
               @click="toggleSort(d.key)"
             >
               <div class="th-inner">
-                {{ d.label }}
+                {{ d.label ?? t(d.pfad) }}
                 <span class="sort-caret">
                   <i class="pi pi-caret-up"  :class="{ 'sort-active': sortKey === d.key && sortDir === 'asc'  }" />
                   <i class="pi pi-caret-down" :class="{ 'sort-active': sortKey === d.key && sortDir === 'desc' }" />
@@ -102,7 +104,7 @@ const labelX = (seg) => seg.x + seg.w / 2;
             <td class="td-student">
               <div class="name-row">
                 <span class="student-name">{{ row.name }}</span>
-                <span class="gender-sym" :title="row.gender === 'f' ? 'weiblich' : row.gender === 'm' ? 'männlich' : 'divers'">
+                <span class="gender-sym" :title="t(`geschlechter.${row.gender === 'f' ? 'weiblich' : row.gender === 'm' ? 'maennlich' : 'divers'}`)">
                   {{ row.gender === 'f' ? '♀' : row.gender === 'm' ? '♂' : '⚧' }}
                 </span>
                 <a
@@ -111,7 +113,7 @@ const labelX = (seg) => seg.x + seg.w / 2;
                   target="_blank"
                   rel="noopener"
                   class="solution-link"
-                  title="SuS-Lösungen öffnen"
+                  :title="t('bausteine.schuelerTabelle.loesungenOeffnen')"
                   @click.stop
                 >
                   <i class="pi pi-external-link" />
@@ -134,7 +136,7 @@ const labelX = (seg) => seg.x + seg.w / 2;
             <template v-if="row.absent">
               <td :colspan="domains.length" class="td-absent">
                 <span class="absent-msg">
-                  {{ row.absentMessage ?? 'Schüler:in war am Testtag abwesend.' }}
+                  {{ row.absentMessage ?? t('bausteine.schuelerTabelle.abwesend') }}
                 </span>
               </td>
             </template>

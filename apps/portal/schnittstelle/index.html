@@ -14,6 +14,12 @@
       --linie: #e2e8f0;
     }
     * { box-sizing: border-box; }
+
+    /* Zweisprachig: beide Fassungen stehen im Markup, sichtbar ist die, die
+       <html lang> nennt — umgeschaltet in der Leiste (apps/shared/sprache.js).
+       Die Spezifikation selbst bleibt in ihrer Originalsprache. */
+    html[lang="de"] [lang="en"] { display: none; }
+    html[lang="en"] [lang="de"] { display: none; }
     body {
       margin: 0;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -113,7 +119,7 @@
 
 <tba3-leiste aktiv="schnittstelle"></tba3-leiste>
 
-<p class="hinweis">
+<p class="hinweis" lang="de">
   <strong>Ausprobieren erwünscht:</strong> „Try it out“ fragt dieselben Demodaten ab,
   die auch Demoanwendung und Komponentenbibliothek zeigen — etwa die Lerngruppe
   <code>3a-deutsch</code>, die Schule <code>gs-musterstadt</code> oder das Bundesland
@@ -130,20 +136,55 @@
   wirksamer Filter.
 </p>
 
-<div class="reiter" role="tablist" aria-label="Spezifikation">
-  <button type="button" role="tab" data-spec="auswertung" aria-selected="true">Auswertung</button>
-  <button type="button" role="tab" data-spec="materialien" aria-selected="false">Materialien</button>
-  <span class="entwurfsmarke" id="entwurfsmarke" hidden>Entwurf</span>
+<p class="hinweis" lang="en">
+  <strong>Please try it out:</strong> “Try it out” queries the same demo data that the
+  demo application and the component library show — for instance the learning group
+  <code>3a-deutsch</code>, the school <code>gs-musterstadt</code> or the state
+  <code>beispielland</code>. Under <em>Servers</em> you can switch between our own sample
+  data and indibit's reference server; both are routed through this page, so there is no
+  CORS hurdle. The specification comes from
+  <a href="https://github.com/indibit-eu/tba3">indibit-eu/tba3</a> and is kept here as a copy
+  (updated in the repository with <code>npm run spec:update</code>).
+  <br />
+  Above on the left you can switch to <strong>Materials (draft)</strong> — the proposed
+  extension for accompanying materials from
+  <a href="https://github.com/indibit-eu/tba3/pull/54">pull request #54</a>, not yet part of
+  the official specification. Its examples answer as well, filters included.
+  The specification itself is written in German.
+</p>
+
+<div class="reiter" role="tablist" id="reiter">
+  <button type="button" role="tab" data-spec="auswertung" aria-selected="true">
+    <span lang="de">Auswertung</span><span lang="en">Reporting</span>
+  </button>
+  <button type="button" role="tab" data-spec="materialien" aria-selected="false">
+    <span lang="de">Materialien</span><span lang="en">Materials</span>
+  </button>
+  <span class="entwurfsmarke" id="entwurfsmarke" hidden>
+    <span lang="de">Entwurf</span><span lang="en">Draft</span>
+  </span>
 </div>
 
-<div id="laedt"><span class="spinner" aria-hidden="true"></span> Referenz wird geladen …</div>
+<div id="laedt">
+  <span class="spinner" aria-hidden="true"></span>
+  <span lang="de">Referenz wird geladen …</span>
+  <span lang="en">Loading the reference …</span>
+</div>
 
 <div id="ladefehler">
-  Die Spezifikation konnte nicht geladen werden. Sie liegt im Original unter
-  <a href="https://github.com/indibit-eu/tba3/blob/main/tba3-spec.yml">indibit-eu/tba3 → tba3-spec.yml</a>
-  und lässt sich auch in der
-  <a href="https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Findibit-eu%2Ftba3%2Frefs%2Fheads%2Fmain%2Ftba3-spec.yml">Swagger UI</a>
-  öffnen.
+  <span lang="de">
+    Die Spezifikation konnte nicht geladen werden. Sie liegt im Original unter
+    <a href="https://github.com/indibit-eu/tba3/blob/main/tba3-spec.yml">indibit-eu/tba3 → tba3-spec.yml</a>
+    und lässt sich auch in der
+    <a href="https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Findibit-eu%2Ftba3%2Frefs%2Fheads%2Fmain%2Ftba3-spec.yml">Swagger UI</a>
+    öffnen.
+  </span>
+  <span lang="en">
+    The specification could not be loaded. The original lives at
+    <a href="https://github.com/indibit-eu/tba3/blob/main/tba3-spec.yml">indibit-eu/tba3 → tba3-spec.yml</a>
+    and can also be opened in the
+    <a href="https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Findibit-eu%2Ftba3%2Frefs%2Fheads%2Fmain%2Ftba3-spec.yml">Swagger UI</a>.
+  </span>
 </div>
 
 <div id="swagger"></div>
@@ -208,6 +249,26 @@
 </script>
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>
+<script type="module">
+  // Titel, Beschreibung und die Beschriftung der Reiterleiste stehen in
+  // Attributen — die lassen sich nicht über html[lang] umschalten.
+  import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
+
+  dokumentKopf({
+    titel: { de: 'TBA3 — Auswertungsschnittstelle', en: 'TBA3 — reporting API' },
+    beschreibung: {
+      de: 'Die OpenAPI-Referenz der TBA3-Auswertungsschnittstelle, mit Abfragen gegen die Demodaten.',
+      en: 'The OpenAPI reference of the TBA3 reporting API, with queries against the demo data.',
+    },
+  });
+
+  const BESCHRIFTUNG = { de: 'Spezifikation', en: 'Specification' };
+  const beschriften = () => {
+    document.getElementById('reiter').setAttribute('aria-label', text(BESCHRIFTUNG, sprache()));
+  };
+  beschriften();
+  beiSprachwechsel(beschriften);
+</script>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
+import { t } from './i18n';
 
 const route = useRoute();
 
@@ -16,6 +17,13 @@ const ROUTE_NAMES = {
 
 const isHome        = computed(() => route.path === '/');
 const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
+
+// Der Titel im Browser-Reiter folgt der Sprachwahl; das Markup kann das nicht.
+watchEffect(() => {
+  document.title = componentName.value
+    ? `${componentName.value} — ${t('huelle.titel')}`
+    : t('huelle.titel');
+});
 </script>
 
 <template>
@@ -23,7 +31,7 @@ const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
     <header class="shell-header">
       <div class="shell-header-inner">
         <div class="header-brand">
-          <RouterLink to="/" class="header-title">TBA3 Component Catalog</RouterLink>
+          <RouterLink to="/" class="header-title">{{ t('huelle.titel') }}</RouterLink>
           <template v-if="componentName">
             <span class="header-sep">/</span>
             <span class="header-breadcrumb">{{ componentName }}</span>
@@ -31,7 +39,7 @@ const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
         </div>
         <div class="header-right">
           <!-- GitHub führt die gemeinsame Leiste; hier bleibt der Stack-Hinweis -->
-          <span class="header-sub">Vue 3 · PrimeVue · Beispieldaten</span>
+          <span class="header-sub">{{ t('huelle.stack') }}</span>
         </div>
       </div>
     </header>
@@ -41,7 +49,7 @@ const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
       <div class="breadcrumb-inner">
         <RouterLink to="/" class="bc-home">
           <i class="pi pi-th-large" />
-          Alle Komponenten
+          {{ t('huelle.alleKomponenten') }}
         </RouterLink>
         <i class="pi pi-chevron-right bc-sep" />
         <span class="bc-current">{{ componentName ?? route.path }}</span>

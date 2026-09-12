@@ -9,13 +9,14 @@ import Tag from 'primevue/tag';
 import ToggleSwitch from 'primevue/toggleswitch';
 import CompetenceLevelBar from '../components/CompetenceLevelBar.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'CompetenceLevelBar.vue',
   propsDocs: [
-    { name: 'rows',   type: 'Array',  required: true,  description: 'Ein Eintrag pro Ebene (Klasse, Schule, Bundesland). Jeder Eintrag: { label: string, total: number, levels: [{ nameShort, pct, color }] }. pct-Werte sollten sich zu ~100 addieren.' },
-    { name: 'title',  type: 'String', default: "''",    description: 'Optionaler Titel über den Balken (z. B. Gruppenname).' },
-    { name: 'domain', type: 'String', default: "''",    description: 'Domänenname, der als Abschnittsüberschrift angezeigt wird (z. B. "Hörverstehen").' },
+    { name: 'rows',   type: 'Array',  required: true,  pfad: 'ansichten.stufen.props.rows' },
+    { name: 'title',  type: 'String', default: "''",    pfad: 'ansichten.stufen.props.title' },
+    { name: 'domain', type: 'String', default: "''",    pfad: 'ansichten.stufen.props.domain' },
   ],
   dataShape: `// rows-Element
 {
@@ -76,12 +77,20 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/competence-levels',  description: 'Kompetenzstufenverteilung der Lerngruppe' },
-    { method: 'GET', path: '/schools/{id}/competence-levels', description: 'Verteilung auf Schulebene (Referenz)' },
-    { method: 'GET', path: '/states/{id}/competence-levels',  description: 'Verteilung auf Bundeslandebene (Referenz)' },
+    { method: 'GET', path: '/groups/{id}/competence-levels',  pfad: 'ansichten.stufen.endpunkte.gruppe' },
+    { method: 'GET', path: '/schools/{id}/competence-levels', pfad: 'ansichten.stufen.endpunkte.schule' },
+    { method: 'GET', path: '/states/{id}/competence-levels',  pfad: 'ansichten.stufen.endpunkte.land' },
   ],
-  apiNote: 'Jede Antwort ist ein Array von Value-Groups (eine pro Domäne). Die Komponente benötigt aufbereitete rows-Objekte — siehe Verwendungsbeispiel für das Mapping.',
+  apiNotePfad: 'ansichten.stufen.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch', label: '3a Deutsch',    schoolId: 'gs-musterstadt',    stateId: 'beispielland' },
@@ -209,12 +218,11 @@ const domainCharts = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">CompetenceLevelBar</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Kompetenzstufenverteilung — Klasse · Schule · Fairer Vergleich · Bundesland</strong><br />
-              Horizontale Stapelbalken für jede Ebene: Anteile der Schüler*innen in den Kompetenzstufen I–V.
-              Mit optionalem <strong>Fairen Vergleich</strong> (⚖ Standorttyp) — Referenz zu Schulen mit ähnlicher sozialer Zusammensetzung.
+              <strong>{{ t('ansichten.stufen.titel') }}</strong><br />
+              <span v-html="t('ansichten.stufen.beschreibung')" />
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -232,12 +240,12 @@ const domainCharts = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
           <div class="ctrl-field ctrl-fair">
-            <label class="ctrl-label">Fairer Vergleich</label>
+            <label class="ctrl-label">{{ t('ansichten.stufen.fairerVergleich') }}</label>
             <div class="fair-toggle-row">
               <ToggleSwitch v-model="showFairComparison" input-id="fair-toggle" />
               <label for="fair-toggle" class="fair-toggle-label">
@@ -245,7 +253,7 @@ const domainCharts = computed(() => {
                 Standorttyp anzeigen
               </label>
             </div>
-            <span class="fair-hint">Schulen mit ähnlicher sozialer Zusammensetzung</span>
+            <span class="fair-hint">{{ t('ansichten.stufen.fairHinweis') }}</span>
           </div>
         </div>
 
@@ -253,7 +261,7 @@ const domainCharts = computed(() => {
           <Skeleton v-for="n in 6" :key="n" height="40px" class="mb-3" />
         </div>
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
           Keine Daten.
@@ -272,11 +280,11 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="CompetenceLevelBar"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

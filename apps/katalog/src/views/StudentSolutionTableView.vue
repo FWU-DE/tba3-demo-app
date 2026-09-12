@@ -6,12 +6,13 @@ import Tag from 'primevue/tag';
 import Skeleton from 'primevue/skeleton';
 import StudentSolutionTable from '../components/StudentSolutionTable.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS_META = {
   githubFile: 'StudentSolutionTable.vue',
   propsDocs: [
-    { name: 'rows',    type: 'Array', required: true,  description: 'Schüler:innen-Zeilen. Jede Zeile: { id, name, gender, testBooklet: { label, url } | null, solutionUrl: string | null, absent, absentMessage, domains: { [key]: { pctCorrect, pctOmitted?, pctIncorrect } } }' },
-    { name: 'domains', type: 'Array', default: '[Insgesamt, Lesen, Zuhören]', description: 'Domänen-Konfiguration: [{ key: string, label: string }]. key muss einem Schlüssel in row.domains entsprechen.' },
+    { name: 'rows',    type: 'Array', required: true,  pfad: 'ansichten.schuelerTabelle.props.rows' },
+    { name: 'domains', type: 'Array', default: '[Insgesamt, Lesen, Zuhören]', pfad: 'ansichten.schuelerTabelle.props.domains' },
   ],
   dataShape: `// rows-Element
 {
@@ -85,10 +86,18 @@ onMounted(async () => {
   <StudentSolutionTable :rows="rows" :domains="domains" />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items?type=students', description: 'Schülerindividuelle Lösungsquoten — eine Value-Group pro Schüler:in und Domäne' },
+    { method: 'GET', path: '/groups/{id}/items?type=students', pfad: 'ansichten.schuelerTabelle.endpunkte.schueler' },
   ],
-  apiNote: '?type=students liefert Value-Groups mit type="student". Jede Value-Group enthält items mit score-Feldern. pctCorrect/Omitted/Incorrect müssen aus den Einzelscores berechnet werden.',
+  apiNotePfad: 'ansichten.schuelerTabelle.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS_META.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS_META.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const GROUPS = [
@@ -214,31 +223,30 @@ const rows    = computed(() => generateStudents(selectedGroup.value));
           <div>
             <div class="comp-name-row">
               <code class="comp-name">StudentSolutionTable</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Lösungshäufigkeiten auf Schüler:innen-Ebene</strong><br />
-              Sortierbare Tabelle mit barrierefreien Balken (kein Rot/Grün) pro Schüler:in und Kompetenzbereich.
-              Enthält Verlinkung zu Testheft und SuS-Lösungen sowie Anzeige abwesender Schüler:innen.
+              <strong>{{ t('ansichten.schuelerTabelle.titel') }}</strong><br />
+              {{ t('ansichten.schuelerTabelle.beschreibung') }}
             </p>
             <div class="use-case-note">
               <i class="pi pi-info-circle" />
-              <span>Barrierearm (Blau/Orange) · Sortierbar nach Lösungsquote · Testheft- & Lösungslinks</span>
+              <span>{{ t('ansichten.schuelerTabelle.merkmale') }}</span>
             </div>
           </div>
-          <Tag value="Tabelle" severity="secondary" />
+          <Tag :value="t('index.tabelle')" severity="secondary" />
         </div>
       </template>
 
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select
               v-model="selectedGroup"
               :options="GROUPS"
               option-label="label"
-              placeholder="Gruppe wählen"
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')"
               class="ctrl-select"
             />
           </div>
@@ -249,11 +257,11 @@ const rows    = computed(() => generateStudents(selectedGroup.value));
         <ComponentDocs
           component-name="StudentSolutionTable"
           :github-file="DOCS_META.githubFile"
-          :props-docs="DOCS_META.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS_META.dataShape"
           :code-example="DOCS_META.codeExample"
-          :api-endpoints="DOCS_META.apiEndpoints"
-          :api-note="DOCS_META.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS_META.apiNotePfad)"
         />
       </template>
     </Card>

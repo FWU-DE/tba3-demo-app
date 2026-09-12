@@ -1,52 +1,59 @@
 import { useState, useMemo } from 'react';
 import { STUDENTS } from '../../utils/studentData';
-import { GROUPS, SUBJECTS, GRADES, COMPETENCE_LEVELS } from '../../utils/constants';
+import { GROUPS, COMPETENCE_LEVELS } from '../../utils/constants';
 import { createCustomGroup, addStudentsToGroup, saveCustomGroups } from '../../utils/customGroupsStore';
+import { useKonstanten, useTexte } from '../../i18n';
+import HtmlText from '../../i18n/HtmlText';
 
 // ── Grouping strategy definitions ────────────────────────────────────────────
+//
+// Beschriftungen stehen in i18n/texte.js unter `gruppierung.strategien` bzw.
+// `gruppierung.gruppen`; die Stufengruppen heißen nach ihrer Stufe.
 
 const STRATEGIES = [
   {
     id: 'by_level',
-    label: 'Nach Kompetenzstufe',
-    description: '5 Gruppen – eine pro Stufe',
     icon: '5️⃣',
     groups: [
-      { key: 'I',   label: 'Stufe I',   levels: ['I'],           color: COMPETENCE_LEVELS.I.color },
-      { key: 'II',  label: 'Stufe II',  levels: ['II'],          color: COMPETENCE_LEVELS.II.color },
-      { key: 'III', label: 'Stufe III', levels: ['III'],         color: COMPETENCE_LEVELS.III.color },
-      { key: 'IV',  label: 'Stufe IV',  levels: ['IV'],          color: COMPETENCE_LEVELS.IV.color },
-      { key: 'V',   label: 'Stufe V',   levels: ['V'],           color: COMPETENCE_LEVELS.V.color },
+      { key: 'I',   stufe: 'I',   levels: ['I'],   color: COMPETENCE_LEVELS.I.color },
+      { key: 'II',  stufe: 'II',  levels: ['II'],  color: COMPETENCE_LEVELS.II.color },
+      { key: 'III', stufe: 'III', levels: ['III'], color: COMPETENCE_LEVELS.III.color },
+      { key: 'IV',  stufe: 'IV',  levels: ['IV'],  color: COMPETENCE_LEVELS.IV.color },
+      { key: 'V',   stufe: 'V',   levels: ['V'],   color: COMPETENCE_LEVELS.V.color },
     ],
   },
   {
     id: 'three_tier',
-    label: 'Dreistufig',
-    description: '3 Gruppen – Fördern · Regelstandard · Fordern',
     icon: '3️⃣',
     groups: [
-      { key: 'foerder',    label: 'Fördergruppe',       levels: ['I', 'II'],   color: COMPETENCE_LEVELS.I.color },
-      { key: 'regel',      label: 'Regelgruppe',        levels: ['III'],       color: COMPETENCE_LEVELS.III.color },
-      { key: 'erweiter',   label: 'Erweiterungsgruppe', levels: ['IV', 'V'],   color: COMPETENCE_LEVELS.V.color },
+      { key: 'foerder',  levels: ['I', 'II'], color: COMPETENCE_LEVELS.I.color },
+      { key: 'regel',    levels: ['III'],     color: COMPETENCE_LEVELS.III.color },
+      { key: 'erweiter', levels: ['IV', 'V'], color: COMPETENCE_LEVELS.V.color },
     ],
   },
   {
     id: 'two_tier',
-    label: 'Zweigeteilt',
-    description: '2 Gruppen – Förderung & Fortgeschrittene',
     icon: '2️⃣',
     groups: [
-      { key: 'support',  label: 'Fördergruppe',     levels: ['I', 'II', 'III'], color: COMPETENCE_LEVELS.II.color },
-      { key: 'advanced', label: 'Fortgeschrittene', levels: ['IV', 'V'],        color: COMPETENCE_LEVELS.V.color },
+      { key: 'support',  levels: ['I', 'II', 'III'], color: COMPETENCE_LEVELS.II.color },
+      { key: 'advanced', levels: ['IV', 'V'],        color: COMPETENCE_LEVELS.V.color },
     ],
   },
 ];
 
+// Name einer Zielgruppe: Stufengruppen heißen „Stufe III", die übrigen stehen
+// unter ihrem Schlüssel in texte.js.
+const gruppenName = (gDef, t) =>
+  gDef.stufe ? t('gemeinsam.stufe', { n: gDef.stufe }) : t(`gruppierung.gruppen.${gDef.key}`);
+
 // ── Preview row ───────────────────────────────────────────────────────────────
 
 const PreviewRow = ({ groupDef, students, prefix }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const count = students.length;
-  const name = prefix.trim() ? `${groupDef.label} – ${prefix.trim()}` : groupDef.label;
+  const basis = gruppenName(groupDef, t);
+  const name = prefix.trim() ? `${basis} – ${prefix.trim()}` : basis;
   const levelCounts = groupDef.levels.reduce((acc, l) => {
     acc[l] = students.filter((s) => s.competenceLevel === l).length;
     return acc;
@@ -74,7 +81,7 @@ const PreviewRow = ({ groupDef, students, prefix }) => {
       </div>
       <div className="text-right flex-shrink-0">
         <span className="text-xl font-bold text-gray-800">{count}</span>
-        <p className="text-xs text-gray-400">Schüler*in</p>
+        <p className="text-xs text-gray-400">{t('gruppierung.schuelerIn')}</p>
       </div>
     </div>
   );
@@ -83,6 +90,8 @@ const PreviewRow = ({ groupDef, students, prefix }) => {
 // ── Main component ────────────────────────────────────────────────────────────
 
 const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
+  const t = useTexte();
+  const { SUBJECTS } = useKonstanten();
   const [open, setOpen] = useState(false);
   const [strategyId, setStrategyId] = useState('three_tier');
   const [filterClass, setFilterClass] = useState('');
@@ -115,9 +124,8 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
     let groups = [...customGroups];
 
     groupsToCreate.forEach(({ groupDef, students }) => {
-      const name = prefix.trim()
-        ? `${groupDef.label} – ${prefix.trim()}`
-        : groupDef.label;
+      const basis = gruppenName(groupDef, t);
+      const name = prefix.trim() ? `${basis} – ${prefix.trim()}` : basis;
       groups = createCustomGroup(groups, name);
       const created = groups[groups.length - 1];
       groups = addStudentsToGroup(groups, created.id, students.map((s) => s.id));
@@ -126,7 +134,10 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
     saveCustomGroups(groups);
     onGroupsCreated(groups);
 
-    setSuccess(`${groupsToCreate.length} Gruppen mit ${totalStudents} Schüler*innen erstellt.`);
+    setSuccess(t('gruppierung.erstellt', {
+      gruppen: groupsToCreate.length,
+      schueler: totalStudents,
+    }));
     setTimeout(() => setSuccess(null), 4000);
     setOpen(false);
   };
@@ -140,8 +151,8 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
       >
         <span className="text-lg">⚡</span>
         <div className="flex-1">
-          <p className="font-semibold text-gray-800 text-sm">Automatische Gruppierung</p>
-          <p className="text-xs text-gray-500">Schüler*innen anhand ihrer Kompetenzstufe automatisch in Gruppen einteilen</p>
+          <p className="font-semibold text-gray-800 text-sm">{t('gruppierung.titel')}</p>
+          <p className="text-xs text-gray-500">{t('gruppierung.unterzeile')}</p>
         </div>
         {success && (
           <span className="text-xs text-green-600 font-medium mr-2">✓ {success}</span>
@@ -159,7 +170,7 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
 
           {/* Strategy selector */}
           <div className="pt-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Strategie</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('gruppierung.strategie')}</p>
             <div className="grid grid-cols-3 gap-3">
               {STRATEGIES.map((s) => (
                 <button
@@ -172,9 +183,9 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
                   }`}
                 >
                   <p className={`font-semibold text-sm ${strategyId === s.id ? 'text-primary' : 'text-gray-800'}`}>
-                    {s.label}
+                    {t(`gruppierung.strategien.${s.id}.label`)}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{s.description}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{t(`gruppierung.strategien.${s.id}.beschreibung`)}</p>
                 </button>
               ))}
             </div>
@@ -182,14 +193,14 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
 
           {/* Filters */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Schüler*innen aus</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{t('gruppierung.schuelerAus')}</p>
             <div className="flex flex-wrap gap-3">
               <select
                 value={filterClass}
                 onChange={(e) => setFilterClass(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Klassen ({STUDENTS.length})</option>
+                <option value="">{t('gruppierung.alleKlassen', { n: STUDENTS.length })}</option>
                 {GROUPS.map((g) => {
                   const n = STUDENTS.filter((s) => s.classGroupId === g.id).length;
                   return <option key={g.id} value={g.id}>{g.name} ({n})</option>;
@@ -201,36 +212,47 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
                 onChange={(e) => setFilterSubject(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary bg-white"
               >
-                <option value="">Alle Fächer</option>
+                <option value="">{t('gruppierung.alleFaecher')}</option>
                 {Object.values(SUBJECTS).map((s) => (
                   <option key={s.code} value={s.code}>{s.name}</option>
                 ))}
               </select>
 
-              <span className="self-center text-sm text-gray-500">
-                → <strong>{totalStudents}</strong> Schüler*innen werden eingeteilt
-              </span>
+              <HtmlText
+                als="span"
+                pfad="gruppierung.werdenEingeteilt"
+                werte={{ n: totalStudents }}
+                className="self-center text-sm text-gray-500"
+              />
             </div>
           </div>
 
           {/* Group name prefix */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Namenszusatz (optional)</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{t('gruppierung.namenszusatz')}</p>
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                placeholder={filterClass ? GROUPS.find((g) => g.id === filterClass)?.name : 'z.B. Klasse 3a, Schuljahr 25/26'}
+                placeholder={
+                  filterClass
+                    ? GROUPS.find((g) => g.id === filterClass)?.name
+                    : t('gruppierung.namenszusatzBeispiel')
+                }
                 value={prefix}
                 onChange={(e) => setPrefix(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary w-72"
               />
-              <span className="text-xs text-gray-400">→ z.B. „Fördergruppe – {prefix || 'Klasse 3a'}"</span>
+              <span className="text-xs text-gray-400">
+                {t('gruppierung.namenszusatzVorschau', {
+                  name: `${t('gruppierung.gruppen.foerder')} – ${prefix || t('gruppierung.beispielZusatz')}`,
+                })}
+              </span>
             </div>
           </div>
 
           {/* Preview */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vorschau</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{t('gruppierung.vorschau')}</p>
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               {preview.map(({ groupDef, students }) => (
                 <PreviewRow
@@ -248,7 +270,7 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
                 onChange={(e) => setSkipEmpty(e.target.checked)}
                 className="accent-blue-600"
               />
-              Leere Gruppen überspringen
+              {t('gruppierung.leereUeberspringen')}
             </label>
           </div>
 
@@ -263,13 +285,13 @@ const AutoGroupingCard = ({ customGroups, onGroupsCreated }) => {
                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }`}
             >
-              ⚡ {groupsToCreate.length} Gruppen automatisch erstellen
+              ⚡ {t('gruppierung.erstellen', { n: groupsToCreate.length })}
             </button>
             <button
               onClick={() => setOpen(false)}
               className="text-sm text-gray-400 hover:text-gray-600"
             >
-              Abbrechen
+              {t('gruppierung.abbrechen')}
             </button>
           </div>
         </div>

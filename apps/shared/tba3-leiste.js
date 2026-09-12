@@ -1,5 +1,5 @@
 // Gemeinsame Navigationsleiste über allen Bereichen (Portal, Demoanwendung,
-// Komponentenbibliothek, Schnittstelle).
+// Komponentenbibliothek, Rückmeldungsbeispiele, Schnittstelle).
 //
 // Bewusst ein Custom Element mit Shadow DOM statt einer Komponente je Stack:
 // die Bereiche laufen auf React, Vue und statischem HTML. Das Element steht im
@@ -8,14 +8,27 @@
 //
 //   <tba3-leiste aktiv="demo"></tba3-leiste>
 //
-// `aktiv` markiert den aktuellen Bereich: portal | demo | katalog | schnittstelle
+// `aktiv` markiert den aktuellen Bereich:
+// portal | demo | katalog | beispiele | schnittstelle
+//
+// Hier sitzt auch die Sprachwahl der ganzen Seite (siehe sprache.js): sie gilt
+// für alle Bereiche, weil die Leiste in allen steht.
+
+import { SPRACHEN, anwenden, beiSprachwechsel, setzeSprache, sprache, text } from './sprache.js';
 
 const BEREICHE = [
-  { id: 'portal',        text: 'Übersicht',      pfad: '/' },
-  { id: 'demo',          text: 'Demoanwendung',  pfad: '/demo' },
-  { id: 'katalog',       text: 'Komponenten',    pfad: '/katalog' },
-  { id: 'schnittstelle', text: 'Schnittstelle',  pfad: '/schnittstelle' },
+  { id: 'portal',        text: { de: 'Übersicht',     en: 'Overview' },   pfad: '/' },
+  { id: 'demo',          text: { de: 'Demoanwendung', en: 'Demo app' },   pfad: '/demo' },
+  { id: 'katalog',       text: { de: 'Komponenten',   en: 'Components' }, pfad: '/katalog' },
+  { id: 'beispiele',     text: { de: 'Rückmeldungen', en: 'Reports' },    pfad: '/beispiele' },
+  { id: 'schnittstelle', text: { de: 'Schnittstelle', en: 'API' },        pfad: '/schnittstelle' },
 ];
+
+const BESCHRIFTUNG = {
+  bereiche: { de: 'Bereiche', en: 'Sections' },
+  quelle: { de: 'Quelltext', en: 'Source' },
+  sprache: { de: 'Sprache', en: 'Language' },
+};
 
 const STIL = `
   :host {
@@ -109,10 +122,39 @@ const STIL = `
   .quelle:hover { color: #2563eb; }
   .quelle svg { width: 14px; height: 14px; }
 
-  /* Auf Telefonen weicht der GitHub-Verweis, die Bereiche zählen mehr */
+  .sprachen {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    padding: 2px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+  }
+  .sprachen button {
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: #64748b;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  .sprachen button:hover { color: #2563eb; }
+  .sprachen button[aria-pressed="true"] {
+    color: #1d4ed8;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+  }
+
+  /* Auf Telefonen weicht der GitHub-Verweis, Bereiche und Sprachwahl zählen mehr */
   @media (max-width: 640px) {
     .leiste { padding: 0 12px; gap: 10px; }
     .quelle span { display: none; }
+    .sprachen button { padding: 3px 6px; }
   }
 `;
 
@@ -124,19 +166,36 @@ class Tba3Leiste extends HTMLElement {
 
   connectedCallback() {
     if (!this.shadowRoot) this.attachShadow({ mode: 'open' });
+    // Die Leiste steht in jedem Bereich — sie wendet die Sprache an, damit auch
+    // rein statische Seiten nichts weiter einbinden müssen.
+    anwenden();
+    this.#abmelden = beiSprachwechsel(() => this.#zeichnen());
     this.#zeichnen();
+  }
+
+  disconnectedCallback() {
+    this.#abmelden?.();
+    this.#abmelden = null;
   }
 
   attributeChangedCallback() {
     if (this.shadowRoot) this.#zeichnen();
   }
 
+  #abmelden = null;
+
   #zeichnen() {
     const aktiv = this.getAttribute('aktiv') ?? '';
+    const gewaehlt = sprache();
     const eintraege = BEREICHE.map((b) => {
       const markiert = b.id === aktiv ? ' aria-current="page"' : '';
-      return `<a href="${b.pfad}"${markiert}>${b.text}</a>`;
+      return `<a href="${b.pfad}"${markiert}>${text(b.text, gewaehlt)}</a>`;
     }).join('');
+    const schalter = Object.keys(SPRACHEN).map((kuerzel) => `
+      <button type="button" data-sprache="${kuerzel}" lang="${kuerzel}"
+              aria-pressed="${kuerzel === gewaehlt}" title="${SPRACHEN[kuerzel]}">
+        ${kuerzel.toUpperCase()}
+      </button>`).join('');
 
     this.shadowRoot.innerHTML = `
       <style>${STIL}</style>
@@ -145,15 +204,20 @@ class Tba3Leiste extends HTMLElement {
           <span class="zeichen" aria-hidden="true">T3</span>
           <span>TBA3</span>
         </a>
-        <nav aria-label="Bereiche">${eintraege}</nav>
+        <nav aria-label="${text(BESCHRIFTUNG.bereiche, gewaehlt)}">${eintraege}</nav>
         <div class="rechts">
           <a class="quelle" href="https://github.com/FWU-DE/tba3-demo-app" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${GITHUB_PFAD}"/></svg>
-            <span>Quelltext</span>
+            <span>${text(BESCHRIFTUNG.quelle, gewaehlt)}</span>
           </a>
+          <div class="sprachen" role="group" aria-label="${text(BESCHRIFTUNG.sprache, gewaehlt)}">${schalter}</div>
         </div>
       </div>
     `;
+
+    for (const knopf of this.shadowRoot.querySelectorAll('[data-sprache]')) {
+      knopf.addEventListener('click', () => setzeSprache(knopf.dataset.sprache));
+    }
   }
 }
 

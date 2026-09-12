@@ -8,14 +8,17 @@ import { useCompetenceDelta } from '../../hooks/useCompetenceDelta';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
+import { useTexte } from '../../i18n';
+import HtmlText from '../../i18n/HtmlText';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const EXTRA_COMPARISONS = [
-  { id: 'vergleichsschule', label: 'Vergleichsschule', disabled: true },
-  { id: 'testheft', label: 'Testheft', disabled: true },
-  { id: 'vergangene', label: 'Vergangene Durchgänge', disabled: true },
-];
+// Noch nicht belegt, aber im Auswahlfeld sichtbar — Beschriftung aus texte.js.
+const EXTRA_COMPARISONS = ['vergleichsschule', 'testheft', 'vergangene'];
+
+// Kürzel, für die texte.js eine Übersetzung führt; alles andere kommt so aus
+// der Schnittstelle, wie es dort steht.
+const UEBERSETZTE_DOMAENEN = ['ho', 'le', 'rs'];
 
 const COMPARISON_COLORS = [
   '#3b82f6', // blue
@@ -33,9 +36,11 @@ function barColor(value) {
   return '#b91c1c';
 }
 
-function signedPp(value) {
+function signedPp(value, t) {
   if (value == null) return '';
-  return value >= 0 ? `+${value} Pp.` : `${value} Pp.`;
+  return value >= 0
+    ? t('vergleich.prozentpunkteZu', { n: value })
+    : t('vergleich.prozentpunkteAb', { n: value });
 }
 
 function trendIcon(a, b) {
@@ -49,16 +54,17 @@ function trendCls(a, b) {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 const DeltaTooltip = ({ active, payload, label, compColors }) => {
+  const t = useTexte();
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm min-w-[180px]">
-      <p className="font-semibold text-gray-800 mb-1">Stufe {label}</p>
+      <p className="font-semibold text-gray-800 mb-1">{t('gemeinsam.stufe', { n: label })}</p>
       {payload.map((p, i) => (
         <p key={p.dataKey} className="text-gray-600 flex items-center gap-1">
           <span className="inline-block w-2 h-2 rounded-full" style={{ background: compColors[i] ?? '#6b7280' }} />
           vs. {p.dataKey}:
           <span className="font-medium ml-1" style={{ color: p.value >= 0 ? '#15803d' : '#b91c1c' }}>
-            {signedPp(p.value)}
+            {signedPp(p.value, t)}
           </span>
         </p>
       ))}
@@ -67,6 +73,7 @@ const DeltaTooltip = ({ active, payload, label, compColors }) => {
 };
 
 const SummaryBox = ({ compId, label, color, school, compData }) => {
+  const t = useTexte();
   const isPositive = school.upperLevels >= compData.upperLevels;
   return (
     <div
@@ -76,67 +83,48 @@ const SummaryBox = ({ compId, label, color, school, compData }) => {
     >
       <div className="flex items-center gap-2 mb-2">
         <span className="inline-block w-3 h-3 rounded-full" style={{ background: color }} />
-        <span className="font-semibold text-sm text-gray-800">vs. {label}</span>
+        <span className="font-semibold text-sm text-gray-800">{t('vergleich.gegen', { name: label })}</span>
       </div>
-      <p className="text-xs text-gray-600">
-        Obere Stufen{' '}
-        <span className="font-semibold text-gray-900">{school.upperLevels} %</span>
-        {' / '}
-        <span className="font-semibold" style={{ color }}>{compData.upperLevels} %</span>
-        {', Unter Mindeststandard '}
-        <span className="font-semibold text-gray-900">{school.belowMin} %</span>
-        {' / '}
-        <span className="font-semibold" style={{ color }}>{compData.belowMin} %</span>
-      </p>
+      <HtmlText
+        pfad="vergleich.obereStufen"
+        werte={{
+          eigen: school.upperLevels,
+          andere: compData.upperLevels,
+          eigenUnten: school.belowMin,
+          andereUnten: compData.belowMin,
+          farbe: color,
+        }}
+        className="text-xs text-gray-600"
+      />
     </div>
   );
 };
 
 const ComparisonText = ({ compId, label, school, compData }) => {
+  const t = useTexte();
+
+  // Je Zeile: Pfeil aus dem Vergleich beider Werte, dann der Satz dazu.
+  const zeilen = [
+    ['vergleich.satzUnterMindest', compData.belowMin, school.belowMin, school.belowMin, compData.belowMin],
+    ['vergleich.satzOptimal', school.optimal, compData.optimal, school.optimal, compData.optimal],
+    ['vergleich.satzObereStufen', school.upperLevels, compData.upperLevels, school.upperLevels, compData.upperLevels],
+  ];
+
   return (
     <div data-testid={`comparison-text-${compId}`}>
       <p className="font-semibold text-gray-800 mb-2">
         <span className="text-gray-500 mr-1">⇄</span>
-        Vergleich mit {label}
+        {t('vergleich.vergleichMit', { name: label })}
       </p>
       <ul className="space-y-1 text-sm text-gray-700">
-        <li className="flex items-start gap-2">
-          <span className={`mt-0.5 flex-shrink-0 ${trendCls(compData.belowMin, school.belowMin)}`}>
-            {trendIcon(compData.belowMin, school.belowMin)}
-          </span>
-          <span>
-            In <strong>Schule</strong> liegen{' '}
-            <strong>{school.belowMin} %</strong> der Teilnehmenden{' '}
-            <span className="inline-block w-2 h-2 rounded-full bg-orange-400 mx-0.5 mb-0.5 align-middle" />
-            <strong>unter Mindeststandard</strong>, bei <strong>{label}</strong> sind es{' '}
-            <strong>{compData.belowMin} %</strong>.
-          </span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className={`mt-0.5 flex-shrink-0 ${trendCls(school.optimal, compData.optimal)}`}>
-            {trendIcon(school.optimal, compData.optimal)}
-          </span>
-          <span>
-            In <strong>Schule</strong> erreichen{' '}
-            <strong>{school.optimal} %</strong> der Teilnehmenden den{' '}
-            <span className="inline-block w-2 h-2 rounded-full bg-yellow-400 mx-0.5 mb-0.5 align-middle" />
-            <strong>Optimalstandard</strong>, bei <strong>{label}</strong> sind es{' '}
-            <strong>{compData.optimal} %</strong>.
-          </span>
-        </li>
-        <li className="flex items-start gap-2">
-          <span className={`mt-0.5 flex-shrink-0 ${trendCls(school.upperLevels, compData.upperLevels)}`}>
-            {trendIcon(school.upperLevels, compData.upperLevels)}
-          </span>
-          <span>
-            In <strong>Schule</strong> erreichen{' '}
-            <strong>{school.upperLevels} %</strong> der Teilnehmenden die{' '}
-            <span className="inline-block w-2 h-2 rounded-full bg-blue-400 mx-0.5 mb-0.5 align-middle" />
-            <span className="inline-block w-2 h-2 rounded-full bg-yellow-400 mb-0.5 align-middle" />
-            {' '}<strong>oberen Stufen</strong>, bei <strong>{label}</strong> sind es{' '}
-            <strong>{compData.upperLevels} %</strong>.
-          </span>
-        </li>
+        {zeilen.map(([pfad, trendA, trendB, eigen, andere]) => (
+          <li key={pfad} className="flex items-start gap-2">
+            <span className={`mt-0.5 flex-shrink-0 ${trendCls(trendA, trendB)}`}>
+              {trendIcon(trendA, trendB)}
+            </span>
+            <HtmlText als="span" pfad={pfad} werte={{ eigen, andere, name: label }} />
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -145,6 +133,7 @@ const ComparisonText = ({ compId, label, school, compData }) => {
 // ── Main component ────────────────────────────────────────────────────────────
 
 const CompetenceDeltaView = () => {
+  const t = useTexte();
   const { selectedGroup, selectedState } = useFilters();
   const { loading, error, data } = useCompetenceDelta(selectedGroup, selectedState);
 
@@ -164,7 +153,7 @@ const CompetenceDeltaView = () => {
 
   if (loading) {
     return (
-      <Card title="Vergleichsauswertung">
+      <Card title={t('vergleich.titel')}>
         <LoadingSkeleton height="420px" />
       </Card>
     );
@@ -172,7 +161,7 @@ const CompetenceDeltaView = () => {
 
   if (error) {
     return (
-      <Card title="Vergleichsauswertung">
+      <Card title={t('vergleich.titel')}>
         <ErrorMessage error={error} />
       </Card>
     );
@@ -180,8 +169,8 @@ const CompetenceDeltaView = () => {
 
   if (!data) {
     return (
-      <Card title="Vergleichsauswertung">
-        <div className="text-gray-500 text-center py-8">Bitte eine Lerngruppe auswählen.</div>
+      <Card title={t('vergleich.titel')}>
+        <div className="text-gray-500 text-center py-8">{t('vergleich.keineGruppe')}</div>
       </Card>
     );
   }
@@ -202,7 +191,12 @@ const CompetenceDeltaView = () => {
   );
   const resolvedComparisons = effectiveComparisons.length > 0 ? effectiveComparisons : defaultComparisons;
 
-  const domainLabel = domains.find(d => d.code === currentDomain)?.label ?? currentDomain;
+  // Beschriftungen hier statt aus dem Hook: sie sollen dem Sprachwechsel folgen,
+  // ohne dass die Daten neu geladen werden.
+  const domaeneLabel = (d) =>
+    UEBERSETZTE_DOMAENEN.includes(d.code) ? t(`vergleich.domaenen.${d.code}`) : (d.label ?? d.code);
+  const aktuelleDomaene = domains.find(d => d.code === currentDomain);
+  const domainLabel = aktuelleDomaene ? domaeneLabel(aktuelleDomaene) : currentDomain;
   const ownDomainStats = ownStats[currentDomain] ?? { belowMin: 0, upperLevels: 0, optimal: 0 };
 
   // Collect level order from first available comparison
@@ -230,15 +224,18 @@ const CompetenceDeltaView = () => {
   const yMin = Math.floor(Math.min(-10, ...allValues) / 5) * 5 - 5;
   const yMax = Math.ceil(Math.max(10, ...allValues) / 5) * 5 + 5;
 
-  const compLabel = (id) => availableComparisons.find(c => c.id === id)?.label ?? id;
+  const compLabel = (id) =>
+    id === 'landesmittelwert'
+      ? t('vergleich.landesmittelwert')
+      : (availableComparisons.find(c => c.id === id)?.label ?? id);
   const compColor = (id) => {
     const idx = availableComparisons.findIndex(c => c.id === id);
     return COMPARISON_COLORS[idx % COMPARISON_COLORS.length] ?? '#6b7280';
   };
 
   const panelComparisons = [
-    ...availableComparisons,
-    ...EXTRA_COMPARISONS,
+    ...availableComparisons.map((c) => ({ ...c, label: compLabel(c.id) })),
+    ...EXTRA_COMPARISONS.map((id) => ({ id, label: t(`vergleich.${id}`), disabled: true })),
   ];
 
   return (
@@ -260,7 +257,7 @@ const CompetenceDeltaView = () => {
               onClick={() => setActiveDomainCode(d.code)}
               data-testid={`domain-tab-${d.code}`}
             >
-              {d.label}
+              {domaeneLabel(d)}
             </button>
           ))}
         </div>
@@ -289,7 +286,7 @@ const CompetenceDeltaView = () => {
             />
             <YAxis
               domain={[yMin, yMax]}
-              tickFormatter={v => `${v} Pp.`}
+              tickFormatter={v => t('vergleich.achseProzentpunkte', { n: v })}
               tick={{ fontSize: 11 }}
               tickLine={false}
               axisLine={false}
@@ -314,7 +311,7 @@ const CompetenceDeltaView = () => {
             className="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-xl font-light hover:bg-gray-700 transition-colors shadow-md"
             onClick={() => setShowPanel(v => !v)}
             data-testid="comparison-panel-toggle"
-            aria-label="Vergleiche auswählen"
+            aria-label={t('vergleich.vergleicheWaehlen')}
           >
             +
           </button>
@@ -323,7 +320,7 @@ const CompetenceDeltaView = () => {
               className="absolute right-0 top-12 bg-white border border-gray-200 rounded-xl shadow-xl z-30 p-4 min-w-[220px]"
               data-testid="comparison-panel"
             >
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-3 font-medium">auswählen</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wide mb-3 font-medium">{t('vergleich.auswaehlen')}</p>
               <div className="space-y-2">
                 {panelComparisons.map((cmp) => {
                   const checked = resolvedComparisons.includes(cmp.id);
@@ -365,7 +362,7 @@ const CompetenceDeltaView = () => {
         {resolvedComparisons.map(cmpId => (
           <span key={cmpId} className="flex items-center gap-1.5 text-sm text-gray-600">
             <span className="inline-block w-3 h-3 rounded-full" style={{ background: compColor(cmpId) }} />
-            vs. {compLabel(cmpId)}
+            {t('vergleich.gegen', { name: compLabel(cmpId) })}
           </span>
         ))}
       </div>

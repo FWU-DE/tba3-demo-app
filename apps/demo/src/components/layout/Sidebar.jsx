@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useFilters } from '../../context/useFilters';
-import { GROUPS, SCHOOLS, STATES, SUBJECTS, GRADES, TYPE_OPTIONS } from '../../utils/constants';
+import { GROUPS, SCHOOLS, STATES, SUBJECTS, GRADES, TYPE_VALUES } from '../../utils/constants';
+import { useTexte } from '../../i18n';
 
 const Sidebar = () => {
+  const t = useTexte();
   const {
     selectedLevel,
     setSelectedLevel,
@@ -52,7 +54,7 @@ const Sidebar = () => {
         onClick={() => setFilterOffen((offen) => !offen)}
         className="lg:hidden w-full flex items-center justify-between px-4 py-2 mb-4 rounded-md bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors"
       >
-        <span className="font-medium">Filter</span>
+        <span className="font-medium">{t('seitenleiste.filter')}</span>
         <span aria-hidden="true">{filterOffen ? '▲' : '▼'}</span>
       </button>
 
@@ -63,13 +65,13 @@ const Sidebar = () => {
         {/* Level Selector */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Ebene
+            {t('seitenleiste.ebene')}
           </h3>
           <div className="space-y-2">
             {[
-              { value: 'group', label: 'Gruppe' },
-              { value: 'school', label: 'Schule' },
-              { value: 'state', label: 'Bundesland' },
+              { value: 'group', label: t('seitenleiste.gruppe') },
+              { value: 'school', label: t('seitenleiste.schule') },
+              { value: 'state', label: t('seitenleiste.bundesland') },
             ].map((level) => (
               <button
                 key={level.value}
@@ -91,21 +93,21 @@ const Sidebar = () => {
         {/* Entity Selector */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            {selectedLevel === 'group' && 'Gruppe'}
-            {selectedLevel === 'school' && 'Schule'}
-            {selectedLevel === 'state' && 'Bundesland'}
+            {selectedLevel === 'group' && t('seitenleiste.gruppe')}
+            {selectedLevel === 'school' && t('seitenleiste.schule')}
+            {selectedLevel === 'state' && t('seitenleiste.bundesland')}
           </h3>
 
           {selectedLevel === 'group' && (
             <select
               data-testid="auswahl-gruppe"
-              aria-label="Lerngruppe"
+              aria-label={t('seitenleiste.lerngruppe')}
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             >
               {filteredGroups.length === 0 ? (
-                <option value="">Keine Gruppen verfügbar</option>
+                <option value="">{t('seitenleiste.keineGruppen')}</option>
               ) : (
                 filteredGroups.map((group) => (
                   <option key={group.id} value={group.id}>
@@ -119,7 +121,7 @@ const Sidebar = () => {
           {selectedLevel === 'school' && (
             <select
               data-testid="auswahl-schule"
-              aria-label="Schule"
+              aria-label={t('seitenleiste.schule')}
               value={selectedSchool}
               onChange={(e) => setSelectedSchool(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -135,7 +137,7 @@ const Sidebar = () => {
           {selectedLevel === 'state' && (
             <select
               data-testid="auswahl-bundesland"
-              aria-label="Bundesland"
+              aria-label={t('seitenleiste.bundesland')}
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
               className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -152,19 +154,19 @@ const Sidebar = () => {
         {/* Subject Filter */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Fach
+            {t('seitenleiste.fach')}
           </h3>
           <select
             data-testid="auswahl-fach"
-            aria-label="Fach"
+            aria-label={t('seitenleiste.fach')}
             value={selectedSubject || ''}
             onChange={(e) => setSelectedSubject(e.target.value || null)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option value="">Alle Fächer</option>
+            <option value="">{t('seitenleiste.alleFaecher')}</option>
             {Object.values(SUBJECTS).map((subject) => (
               <option key={subject.code} value={subject.code}>
-                {subject.name}
+                {t(`faecher.${subject.code}`)}
               </option>
             ))}
           </select>
@@ -173,19 +175,19 @@ const Sidebar = () => {
         {/* Grade Filter */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Klassenstufe
+            {t('seitenleiste.klassenstufe')}
           </h3>
           <select
             data-testid="auswahl-klassenstufe"
-            aria-label="Klassenstufe"
+            aria-label={t('seitenleiste.klassenstufe')}
             value={selectedGrade || ''}
             onChange={(e) => setSelectedGrade(e.target.value || null)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option value="">Alle Klassenstufen</option>
+            <option value="">{t('seitenleiste.alleKlassenstufen')}</option>
             {Object.values(GRADES).map((grade) => (
               <option key={grade.code} value={grade.code}>
-                {grade.name}
+                {t(`klassenstufen.${grade.code}`)}
               </option>
             ))}
           </select>
@@ -194,18 +196,18 @@ const Sidebar = () => {
         {/* Type Parameter */}
         <div>
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Datentyp
+            {t('seitenleiste.datentyp')}
           </h3>
           <select
             data-testid="auswahl-datentyp"
-            aria-label="Datentyp"
+            aria-label={t('seitenleiste.datentyp')}
             value={typeParam}
             onChange={(e) => setTypeParam(e.target.value)}
             className="w-full bg-gray-800 text-white border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            {TYPE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {TYPE_VALUES.map((wert) => (
+              <option key={wert} value={wert}>
+                {t(`datentypen.${wert}`)}
               </option>
             ))}
           </select>
@@ -214,7 +216,7 @@ const Sidebar = () => {
         {/* Info Section */}
         <div className="pt-6 border-t border-gray-700">
           <p className="text-xs text-gray-500">
-            TBA3 Demonstration App
+            {t('seitenleiste.fuss')}
             <br />
             Version 1.0.0
           </p>

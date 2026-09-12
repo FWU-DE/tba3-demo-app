@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   /**
@@ -70,10 +71,10 @@ const barAreaH = computed(() =>
 
     <!-- Legend -->
     <div class="ieac-legend">
-      <span class="leg-item"><span class="leg-dot" style="background:#16a34a"></span>Über Erwartung (&gt;+{{ 7 }} PP)</span>
-      <span class="leg-item"><span class="leg-dot" style="background:#64748b"></span>Im Erwartungsbereich</span>
-      <span class="leg-item"><span class="leg-dot" style="background:#dc2626"></span>Unter Erwartung (&lt;−{{ 7 }} PP)</span>
-      <span class="leg-item"><span class="leg-line"></span>Erwartungswert (Rasch)</span>
+      <span class="leg-item"><span class="leg-dot" style="background:#16a34a"></span>{{ t('bausteine.erwartung.ueber', { n: 7 }) }}</span>
+      <span class="leg-item"><span class="leg-dot" style="background:#64748b"></span>{{ t('bausteine.erwartung.im') }}</span>
+      <span class="leg-item"><span class="leg-dot" style="background:#dc2626"></span>{{ t('bausteine.erwartung.unter', { n: 7 }) }}</span>
+      <span class="leg-item"><span class="leg-line"></span>{{ t('bausteine.erwartung.wert') }}</span>
     </div>
 
     <div class="ieac-scroll">

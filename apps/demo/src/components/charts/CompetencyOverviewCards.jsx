@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { formatPercentage, formatStudentCount } from '../../utils/formatters';
+import { useTexte } from '../../i18n';
 
 // Übersichtskarten über allen Tabs: Ringdiagramm der Kompetenzstufen-Verteilung
 // plus die beiden Schlüsselkennzahlen. Portiert aus der Vue-Fassung im
@@ -44,6 +45,7 @@ const buildSlices = (chartData) => {
 // ── Komponente ───────────────────────────────────────────────────────────────
 
 const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
+  const t = useTexte();
   const [hoveredLevel, setHoveredLevel] = useState(null);
   const [tooltip, setTooltip] = useState(null);
 
@@ -71,7 +73,7 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
 
       {/* Ringdiagramm */}
       <div className="bg-white border border-gray-200 rounded-xl px-5 py-4 flex flex-col gap-3">
-        <div className="text-sm font-bold text-gray-800">Kompetenzübersicht</div>
+        <div className="text-sm font-bold text-gray-800">{t('uebersicht.titel')}</div>
 
         <div className="relative flex items-center justify-center" data-donut-wrap>
           <svg viewBox="0 0 200 200" className="w-44 h-44 overflow-visible" data-testid="competency-donut">
@@ -100,7 +102,7 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
             >
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: tooltip.slice.color }} />
-                <span className="text-xs font-bold">Stufe {tooltip.slice.level}</span>
+                <span className="text-xs font-bold">{t('gemeinsam.stufe', { n: tooltip.slice.level })}</span>
               </div>
               <div className="text-[11px] opacity-75 mb-1.5">{tooltip.slice.name}</div>
               <div className="flex items-baseline justify-between gap-5">
@@ -115,7 +117,7 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
             <span className="text-2xl font-bold text-gray-900 leading-tight" data-testid="competency-total">
               {stats.total}
             </span>
-            <span className="text-[11px] text-gray-400">Schüler*innen</span>
+            <span className="text-[11px] text-gray-400">{t('uebersicht.schuelerinnen')}</span>
           </div>
         </div>
 
@@ -130,7 +132,7 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
               onMouseLeave={() => setHoveredLevel(null)}
             >
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }} />
-              <span className="text-xs text-gray-500">Stufe {d.level}</span>
+              <span className="text-xs text-gray-500">{t('gemeinsam.stufe', { n: d.level })}</span>
             </div>
           ))}
         </div>
@@ -138,22 +140,26 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
 
       {/* Schlüsselkennzahlen */}
       <div className="bg-white border border-gray-200 rounded-xl px-5 py-4 flex flex-col gap-3">
-        <div className="text-sm font-bold text-gray-800">Schlüsselkennzahlen</div>
+        <div className="text-sm font-bold text-gray-800">{t('uebersicht.kennzahlen')}</div>
 
         <div className="flex flex-col gap-3 flex-1">
           <div className="flex-1 rounded-lg px-4 py-4 text-white bg-green-500" data-testid="stat-at-or-above">
             <div className="text-3xl font-bold leading-none">{formatPercentage(atOrAbove, 0)}</div>
-            <div className="text-sm font-medium mt-1.5">Mindeststandard und darüber</div>
+            <div className="text-sm font-medium mt-1.5">{t('uebersicht.abMindeststandard')}</div>
             <div className="text-xs opacity-85 mt-0.5">
-              Kompetenzstufen II–V · {formatStudentCount(Math.round(atOrAbove * stats.total))}
+              {t('uebersicht.abMindeststandardZusatz', {
+                anzahl: formatStudentCount(Math.round(atOrAbove * stats.total)),
+              })}
             </div>
           </div>
 
           <div className="flex-1 rounded-lg px-4 py-4 text-white bg-orange-500" data-testid="stat-below-standard">
             <div className="text-3xl font-bold leading-none">{formatPercentage(belowStandard, 0)}</div>
-            <div className="text-sm font-medium mt-1.5">Unter Mindeststandard</div>
+            <div className="text-sm font-medium mt-1.5">{t('uebersicht.unterMindeststandard')}</div>
             <div className="text-xs opacity-85 mt-0.5">
-              Kompetenzstufe I · {formatStudentCount(Math.round(belowStandard * stats.total))}
+              {t('uebersicht.unterMindeststandardZusatz', {
+                anzahl: formatStudentCount(Math.round(belowStandard * stats.total)),
+              })}
             </div>
           </div>
         </div>

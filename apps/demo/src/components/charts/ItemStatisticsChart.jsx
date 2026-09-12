@@ -6,31 +6,33 @@ import { formatPercentage } from '../../utils/formatters';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
+import { useTexte } from '../../i18n';
 
 // Auf Modulebene, nicht im Render — sonst wird der Tooltip bei jedem
 // Durchlauf als neue Komponente eingehängt.
 const CustomTooltip = ({ active, payload }) => {
+  const t = useTexte();
   if (active && payload && payload.length) {
     const item = payload[0].payload;
     return (
       <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg max-w-sm">
         <p className="font-semibold text-gray-900 mb-2">{item.id}</p>
         <p className="text-sm text-gray-600 mb-1">
-          Lösungshäufigkeit: <span className="font-medium">{formatPercentage(item.solutionFrequency)}</span>
+          {t('itemDiagramm.loesungshaeufigkeit')} <span className="font-medium">{formatPercentage(item.solutionFrequency)}</span>
         </p>
         {item.exerciseId && item.exerciseId !== 'unknown' && (
           <p className="text-sm text-gray-600 mb-1">
-            Aufgabe: <span className="font-mono text-xs">{item.exerciseId}</span>
+            {t('itemDiagramm.aufgabe')} <span className="font-mono text-xs">{item.exerciseId}</span>
           </p>
         )}
         {item.competenceLevel && (
           <p className="text-sm text-gray-600">
-            Kompetenzstufe: <span className="font-medium">{item.competenceLevel}</span>
+            {t('itemDiagramm.kompetenzstufe')} <span className="font-medium">{item.competenceLevel}</span>
           </p>
         )}
         {item.metadata && Object.keys(item.metadata).length > 0 && (
           <div className="mt-2 pt-2 border-t border-gray-200">
-            <p className="text-xs text-gray-500 mb-1">IQB Metadaten:</p>
+            <p className="text-xs text-gray-500 mb-1">{t('itemDiagramm.metadaten')}</p>
             {Object.entries(item.metadata).map(([key, value]) => (
               <p key={key} className="text-xs text-gray-500">
                 {key}: {JSON.stringify(value)}
@@ -45,12 +47,13 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const ItemStatisticsChart = ({ level, id }) => {
+  const t = useTexte();
   const { buildQueryParams } = useFilters();
   const { data, loading, error, refetch } = useItems(level, id, buildQueryParams());
 
   if (loading) {
     return (
-      <Card title="Item-Statistiken">
+      <Card title={t('itemDiagramm.titel')}>
         <LoadingSkeleton height="600px" />
       </Card>
     );
@@ -58,7 +61,7 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   if (error) {
     return (
-      <Card title="Item-Statistiken">
+      <Card title={t('itemDiagramm.titel')}>
         <ErrorMessage error={error} retry={refetch} />
       </Card>
     );
@@ -68,9 +71,9 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   if (allItems.length === 0) {
     return (
-      <Card title="Item-Statistiken">
+      <Card title={t('itemDiagramm.titel')}>
         <div className="text-gray-500 text-center py-8">
-          Keine Item-Daten verfügbar
+          {t('itemDiagramm.keineDaten')}
         </div>
       </Card>
     );
@@ -83,13 +86,13 @@ const ItemStatisticsChart = ({ level, id }) => {
   const chartHeight = Math.max(600, chartData.length * 30);
 
   return (
-    <Card title="Item-Statistiken">
+    <Card title={t('itemDiagramm.titel')}>
       <div className="mb-4">
         <p className="text-sm text-gray-600">
-          Zeigt die Lösungshäufigkeit für jedes Item an. Bewegen Sie den Mauszeiger über einen Balken, um Details zu sehen.
+          {t('itemDiagramm.einleitung')}
         </p>
         <p className="text-sm text-gray-500 mt-1">
-          Anzahl Items: <span className="font-medium">{chartData.length}</span>
+          {t('itemDiagramm.anzahlItems')} <span className="font-medium">{chartData.length}</span>
         </p>
       </div>
 

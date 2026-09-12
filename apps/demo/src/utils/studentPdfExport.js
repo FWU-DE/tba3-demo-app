@@ -1,11 +1,10 @@
 import { jsPDF } from 'jspdf';
-import {
-  COMPETENCE_LEVELS,
-  EDUCATIONAL_MATERIALS,
-  GRADES,
-  GROUPS,
-  SUBJECTS,
-} from './constants';
+import { EDUCATIONAL_MATERIALS, GROUPS } from './constants';
+import { konstantenJetzt, sprache, uebersetze } from '../i18n';
+
+// Wie in pdfExport: Beschriftungen zu Beginn des Exports frisch holen.
+let { COMPETENCE_LEVELS, GRADES, SUBJECTS } = konstantenJetzt();
+const LOCALE = { de: 'de-DE', en: 'en-GB' };
 import {
   CARD_H,
   CONTENT_W,
@@ -45,7 +44,7 @@ const drawHeader = (pdf, student, group) => {
   pdf.text(safe(teile.join('  ·  ')), MARGIN, 19);
 
   setFont(pdf, 7.5, 'normal', [191, 219, 254]);
-  pdf.text('Individuelle Rückmeldung', PAGE_W - MARGIN, 12, { align: 'right' });
+  pdf.text(safe(uebersetze('ausgabe.individuelleRueckmeldung')), PAGE_W - MARGIN, 12, { align: 'right' });
 };
 
 // Farbiges Feld mit der erreichten Kompetenzstufe.
@@ -58,10 +57,10 @@ const drawLevelPanel = (pdf, levelKey, y) => {
   pdf.roundedRect(MARGIN, y, CONTENT_W, 20, 2, 2, 'F');
 
   setFont(pdf, 7.5, 'normal', [255, 255, 255]);
-  pdf.text('Erreichte Kompetenzstufe', MARGIN + 6, y + 7);
+  pdf.text(safe(uebersetze('ausgabe.erreichteStufe')), MARGIN + 6, y + 7);
 
   setFont(pdf, 13, 'bold', [255, 255, 255]);
-  pdf.text(safe(`Stufe ${levelKey}`), MARGIN + 6, y + 15.5);
+  pdf.text(safe(uebersetze('gemeinsam.stufe', { n: levelKey })), MARGIN + 6, y + 15.5);
 
   setFont(pdf, 9, 'normal', [255, 255, 255]);
   pdf.text(safe(cfg.description), MARGIN + 40, y + 15.5);
@@ -75,7 +74,7 @@ const drawDomains = (pdf, domainLevels, y) => {
   if (eintraege.length === 0) return y;
 
   setFont(pdf, 9, 'bold', [17, 24, 39]);
-  pdf.text('Ergebnisse nach Teilbereich', MARGIN, y);
+  pdf.text(safe(uebersetze('ausgabe.nachTeilbereich')), MARGIN, y);
   y += 6;
 
   eintraege.forEach(([domain, level]) => {
@@ -93,7 +92,7 @@ const drawDomains = (pdf, domainLevels, y) => {
       pdf.setFillColor(r, g, b);
       pdf.roundedRect(PAGE_W - MARGIN - 40, y + 2, 36, 5, 1, 1, 'F');
       setFont(pdf, 6.5, 'bold', [255, 255, 255]);
-      pdf.text(safe(`Stufe ${level} · ${cfg.description}`), PAGE_W - MARGIN - 22, y + 5.5, {
+      pdf.text(safe(uebersetze('ausgabe.stufeUndText', { n: level, text: cfg.description })), PAGE_W - MARGIN - 22, y + 5.5, {
         align: 'center',
       });
     }
@@ -110,11 +109,12 @@ const drawDomains = (pdf, domainLevels, y) => {
  * @returns {Promise<void>} – erfüllt sich, wenn die Datei erzeugt ist
  */
 export const exportStudentPDF = async (student) => {
+  ({ COMPETENCE_LEVELS, GRADES, SUBJECTS } = konstantenJetzt());
   if (!student) return;
 
   const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
   const group = GROUPS.find((g) => g.id === student.classGroupId);
-  const datum = new Date().toLocaleDateString('de-DE');
+  const datum = new Date().toLocaleDateString(LOCALE[sprache()] ?? LOCALE.de);
 
   drawHeader(pdf, student, group);
 
@@ -132,7 +132,7 @@ export const exportStudentPDF = async (student) => {
 
   if (materialien.length > 0) {
     setFont(pdf, 9, 'bold', [17, 24, 39]);
-    pdf.text('Empfohlene Materialien', MARGIN, y);
+    pdf.text(safe(uebersetze('ausgabe.empfohlene')), MARGIN, y);
     y += 6;
 
     // QR-Codes vorab erzeugen — addImage selbst ist synchron.
@@ -153,7 +153,7 @@ export const exportStudentPDF = async (student) => {
 
   drawFooter(pdf, datum);
 
-  const dateiname = `Rueckmeldung_${safe(student.lastName)}_${safe(student.firstName)}.pdf`
+  const dateiname = `${uebersetze('ausgabe.dateinameRueckmeldung')}_${safe(student.lastName)}_${safe(student.firstName)}.pdf`
     .replace(/\s+/g, '_');
   pdf.save(dateiname);
 };

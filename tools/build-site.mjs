@@ -38,8 +38,8 @@ for (const [from, to, required] of PARTS) {
   const ziel = join(dist, to);
   cpSync(src, ziel, {
     recursive: true,
-    // README.md o. ä. gehören nicht ins Deployment
-    filter: (p) => !p.endsWith('README.md'),
+    // README.md und Tests o. ä. gehören nicht ins Deployment
+    filter: (p) => !p.endsWith('README.md') && !p.endsWith('.test.mjs'),
   });
 
   // Ein Bereich, der nach dem Filtern leer ist, gehört nicht ins Deployment.
@@ -71,11 +71,17 @@ writeFileSync(specDatei, spec.replace(serverBlock, `servers:
 `));
 console.log('✓ Server der Spezifikation ergänzt');
 
-// Die gemeinsame Navigationsleiste liegt unter /gemeinsam/ und wird von allen
-// Bereichen eingebunden — auch von denen, die React bzw. Vue nutzen.
+// Die gemeinsamen Dateien — Navigationsleiste und Sprachwahl — liegen unter
+// /gemeinsam/ und werden von allen Bereichen eingebunden, auch von denen, die
+// React bzw. Vue nutzen. Die Vite-Erweiterung daneben gehört nicht dazu: sie
+// liefert dieselben Dateien im Dev-Server aus.
 mkdirSync(join(dist, 'gemeinsam'), { recursive: true });
-copyFileSync(join(root, 'apps/shared/tba3-leiste.js'), join(dist, 'gemeinsam/tba3-leiste.js'));
-console.log('✓ apps/shared/tba3-leiste.js → dist/gemeinsam/');
+const gemeinsam = readdirSync(join(root, 'apps/shared'))
+  .filter((datei) => datei.endsWith('.js') && !datei.startsWith('vite-plugin-'));
+for (const datei of gemeinsam) {
+  copyFileSync(join(root, 'apps/shared', datei), join(dist, 'gemeinsam', datei));
+}
+console.log(`✓ apps/shared/{${gemeinsam.join(', ')}} → dist/gemeinsam/`);
 
 // Swagger UI rendert die API-Referenz unter /schnittstelle. Die Dateien kommen aus
 // node_modules statt von einem CDN — sonst hinge das Deployment an fremder Infrastruktur.

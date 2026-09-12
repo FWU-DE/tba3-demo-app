@@ -12,8 +12,10 @@ import HelpView from '../HelpView';
 import StudentDetailView from '../common/StudentDetailView';
 import CompetencyOverviewCards from '../charts/CompetencyOverviewCards';
 import { getStudentById } from '../../utils/studentData';
+import { useTexte } from '../../i18n';
 
 const Dashboard = () => {
+  const t = useTexte();
   const { selectedLevel, getSelectedId, buildQueryParams } = useFilters();
   const { data: competenceData } = useCompetenceLevels(selectedLevel, getSelectedId(), buildQueryParams());
   const overviewChartData = competenceData ? transformCompetenceLevels(competenceData) : null;
@@ -55,14 +57,15 @@ const Dashboard = () => {
     setActiveStudentId(null);
   };
 
+  // Beschriftung aus i18n/texte.js: `reiter.<id>`
   const tabs = [
-    { id: 'competence', label: 'Kompetenzstufen', icon: '📊' },
-    { id: 'delta', label: 'Vergleichsauswertung', icon: '⇄' },
-    { id: 'items', label: 'Item-Statistiken', icon: '📈' },
-    { id: 'aggregations', label: 'Aggregationen', icon: '📉' },
-    { id: 'students', label: 'Schüler*innen', icon: '👥' },
-    { id: 'materials', label: 'Lernmaterialien', icon: '📚' },
-    { id: 'help', label: 'Hilfe', icon: '📖' },
+    { id: 'competence', icon: '📊' },
+    { id: 'delta', icon: '⇄' },
+    { id: 'items', icon: '📈' },
+    { id: 'aggregations', icon: '📉' },
+    { id: 'students', icon: '👥' },
+    { id: 'materials', icon: '📚' },
+    { id: 'help', icon: '📖' },
   ];
 
   return (
@@ -91,7 +94,7 @@ const Dashboard = () => {
                   `}
                 >
                   <span className="mr-2">{tab.icon}</span>
-                  {tab.label}
+                  {t(`reiter.${tab.id}`)}
                 </button>
               ))}
             </nav>

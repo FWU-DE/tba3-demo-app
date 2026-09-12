@@ -8,13 +8,15 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import CompetencyOverviewCards from '../components/CompetencyOverviewCards.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'CompetencyOverviewCards.vue',
+  // Beschreibungen kommen aus i18n/texte.js — der Rest ist Technik.
   propsDocs: [
-    { name: 'chartData', type: 'Array',  required: true,  description: 'Ein Eintrag pro Kompetenzstufe: { level, count, percentage (0–1), color, name }' },
-    { name: 'stats',     type: 'Object', required: true,  description: '{ total, belowStandard, atStandard, aboveStandard } — alle als Anteile (0–1)' },
-    { name: 'subject',   type: 'String', default: "''",   description: 'Fachbezeichnung, die im Donut-Zentrum angezeigt wird (z. B. "Deutsch").' },
+    { name: 'chartData', type: 'Array',  required: true, pfad: 'ansichten.uebersicht.props.chartData' },
+    { name: 'stats',     type: 'Object', required: true, pfad: 'ansichten.uebersicht.props.stats' },
+    { name: 'subject',   type: 'String', default: "''",  pfad: 'ansichten.uebersicht.props.subject' },
   ],
   dataShape: `// chartData-Element
 { level: 'III', count: 8, percentage: 0.32, color: '#eab308', name: 'Regelstandard' }
@@ -68,10 +70,18 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/competence-levels', description: 'Kompetenzstufenverteilung der Lerngruppe (aggregiert über alle Domänen)' },
+    { method: 'GET', path: '/groups/{id}/competence-levels', pfad: 'ansichten.uebersicht.endpunkt' },
   ],
-  apiNote: 'Die Komponente aggregiert alle Domänen zu einer Gesamtverteilung. Für eine domänenspezifische Ansicht bitte CompetenceLevelBar verwenden.',
+  apiNotePfad: 'ansichten.uebersicht.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch',  label: '3a Deutsch',    subject: 'Deutsch' },
@@ -152,12 +162,11 @@ const hasData = computed(() => stats.value !== null);
           <div>
             <div class="comp-name-row">
               <code class="comp-name">CompetencyOverviewCards</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Kompetenzübersicht — Donut-Diagramm &amp; Schlüsselkennzahlen</strong><br />
-              Zwei Karten nebeneinander: Links ein SVG-Donut-Diagramm mit Kompetenzstufenverteilung,
-              rechts die Schlüsselkennzahlen „Mindeststandard und darüber" vs. „Unter Mindeststandard".
+              <strong>{{ t('ansichten.uebersicht.titel') }}</strong><br />
+              {{ t('ansichten.uebersicht.beschreibung') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -171,12 +180,12 @@ const hasData = computed(() => stats.value !== null);
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select
               v-model="selectedGroup"
               :options="GROUPS"
               option-label="label"
-              placeholder="Gruppe wählen"
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')"
               class="ctrl-select"
             />
           </div>
@@ -190,11 +199,11 @@ const hasData = computed(() => stats.value !== null);
         </div>
 
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
 
         <Message v-else-if="!hasData" severity="info" :closable="false" class="mt-2">
-          Keine Daten.
+          {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
         <CompetencyOverviewCards
@@ -207,11 +216,11 @@ const hasData = computed(() => stats.value !== null);
         <ComponentDocs
           component-name="CompetencyOverviewCards"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

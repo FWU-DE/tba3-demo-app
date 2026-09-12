@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES } from '../../utils/constants';
+import { COMPETENCE_LEVELS, GROUPS } from '../../utils/constants';
 import { useFilters } from '../../context/useFilters';
 import { loadCustomGroups, addStudentsToGroup, removeStudentFromGroup } from '../../utils/customGroupsStore';
+import { useKonstanten, useTexte } from '../../i18n';
 
 const LEVEL_TO_NUM = { I: 1, II: 2, III: 3, IV: 4, V: 5 };
 
 // ── Domain score row ──────────────────────────────────────────────────────────
 
 const DomainRow = ({ name, level }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const cfg = COMPETENCE_LEVELS[level];
   const pct = (LEVEL_TO_NUM[level] / 5) * 100;
 
@@ -24,7 +27,7 @@ const DomainRow = ({ name, level }) => {
         className="text-xs font-bold px-2 py-0.5 rounded text-white w-16 text-center flex-shrink-0"
         style={{ backgroundColor: cfg?.color ?? '#6b7280' }}
       >
-        Stufe {level}
+        {t('gemeinsam.stufe', { n: level })}
       </span>
     </div>
   );
@@ -58,6 +61,8 @@ const LevelGauge = ({ level }) => (
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
 const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS, SUBJECTS, GRADES } = useKonstanten();
   const { observerMode } = useFilters();
   const group = GROUPS.find((g) => g.id === student.classGroupId);
   const subject = SUBJECTS[student.subject];
@@ -124,7 +129,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           {/* Overall level gauge */}
           <div>
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-              Gesamtergebnis
+              {t('datenblatt.gesamtergebnis')}
             </p>
             <LevelGauge level={student.competenceLevel} />
             <p className="text-xs text-gray-400 mt-1.5">{levelCfg?.name}</p>
@@ -134,7 +139,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           {domains.length > 0 && (
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                Ergebnisse nach Teilbereich
+                {t('datenblatt.nachTeilbereich')}
               </p>
               <div className="space-y-2.5">
                 {domains.map(([name, level]) => (
@@ -148,7 +153,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           {customGroups.length > 0 && (
             <div className="pt-2 border-t border-gray-100">
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                Gruppen
+                {t('datenblatt.gruppen')}
               </p>
               <div className="space-y-1">
                 {customGroups.map((cg) => {
@@ -170,7 +175,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
                         {cg.name}
                       </span>
                       <span className="text-xs text-gray-400 flex-shrink-0">
-                        {cg.studentIds.length} Mitgl.
+                        {t('datenblatt.mitglieder', { n: cg.studentIds.length })}
                       </span>
                     </label>
                   );
@@ -182,7 +187,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           {/* Competence level legend */}
           <div className="pt-2 border-t border-gray-100">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-              Stufenbeschreibungen
+              {t('datenblatt.stufenbeschreibungen')}
             </p>
             <div className="space-y-1">
               {['I', 'II', 'III', 'IV', 'V'].map((lk) => {

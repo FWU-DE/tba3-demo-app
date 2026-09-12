@@ -1,4 +1,9 @@
 import { COMPETENCE_LEVELS } from './constants';
+import { uebersetze } from '../i18n';
+
+// Die Beschriftung der Kompetenzstufe hängt an der Sprache, die Farbe nicht.
+const stufenName = (stufe) =>
+  COMPETENCE_LEVELS[stufe] ? uebersetze(`kompetenzstufen.${stufe}.name`) : stufe;
 
 /**
  * Transform competence levels data for Recharts
@@ -29,7 +34,7 @@ export const transformCompetenceLevels = (data) => {
       count,
       percentage: totalStudents > 0 ? count / totalStudents : 0,
       color: COMPETENCE_LEVELS[level]?.color || '#gray',
-      name: COMPETENCE_LEVELS[level]?.name || level,
+      name: stufenName(level),
     }));
   }
 
@@ -44,7 +49,7 @@ export const transformCompetenceLevels = (data) => {
     count,
     percentage: total > 0 ? count / total : 0,
     color: COMPETENCE_LEVELS[level]?.color || '#gray',
-    name: COMPETENCE_LEVELS[level]?.name || level,
+    name: stufenName(level),
   }));
 };
 

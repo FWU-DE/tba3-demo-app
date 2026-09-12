@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   student: {
@@ -18,9 +19,9 @@ const ZONE_THEME = {
 const theme = computed(() => ZONE_THEME[props.student.zone] ?? ZONE_THEME['KS I']);
 
 const genderLabel = computed(() => {
-  if (props.student.gender === 'female') return '♀ weiblich';
-  if (props.student.gender === 'male')   return '♂ männlich';
-  return '⚧ divers';
+  if (props.student.gender === 'female') return `♀ ${t('geschlechter.weiblich')}`;
+  if (props.student.gender === 'male')   return `♂ ${t('geschlechter.maennlich')}`;
+  return `⚧ ${t('geschlechter.divers')}`;
 });
 </script>
 
@@ -37,7 +38,7 @@ const genderLabel = computed(() => {
     <div class="stu-body">
       <div class="stu-score-block">
         <span class="stu-score-num">{{ student.bistaScore }}</span>
-        <span class="stu-score-lbl">BISTA-Punkte</span>
+        <span class="stu-score-lbl">{{ t('bausteine.tooltip.bistaPunkte') }}</span>
       </div>
       <div
         class="stu-zone-block"

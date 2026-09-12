@@ -6,16 +6,17 @@ import Tag from 'primevue/tag';
 import BistaDistributionChart from '../components/BistaDistributionChart.vue';
 import StudentTooltip from '../components/StudentTooltip.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'BistaDistributionChart.vue',
   propsDocs: [
-    { name: 'students',   type: 'Array',  required: true,  description: 'Schülerliste: { id, name, bistaScore, yFrac (0–1, vertikale Streuung), emoji, ringColor, zone?, competencyLevel?, competencyDesc? }' },
-    { name: 'subject',    type: 'String', default: "''",   description: 'Fachbezeichnung für die Achsenbeschriftung.' },
-    { name: 'groupClass', type: 'String', default: "''",   description: 'Klassenkürzel (z. B. "8a"), wird im Titel angezeigt.' },
-    { name: 'title',      type: 'String', default: 'null', description: 'Optionaler Override-Titel. Wird automatisch aus subject + groupClass generiert wenn null.' },
-    { name: 'scoreMax',   type: 'Number', default: '565',  description: 'Maximaler BISTA-Wert (Ende der X-Achse).' },
-    { name: 'zones',      type: 'Array',  default: '[KS I, KS II, KS III]', description: 'Kompetenzstreifen: [{ id, label, from, to, color }]. color=null aktiviert den KS-I-Farbverlauf.' },
+    { name: 'students',   type: 'Array',  required: true,  pfad: 'ansichten.bista.props.students' },
+    { name: 'subject',    type: 'String', default: "''",   pfad: 'ansichten.bista.props.subject' },
+    { name: 'groupClass', type: 'String', default: "''",   pfad: 'ansichten.bista.props.groupClass' },
+    { name: 'title',      type: 'String', default: 'null', pfad: 'ansichten.bista.props.title' },
+    { name: 'scoreMax',   type: 'Number', default: '565',  pfad: 'ansichten.bista.props.scoreMax' },
+    { name: 'zones',      type: 'Array',  default: '[KS I, KS II, KS III]', pfad: 'ansichten.bista.props.zones' },
   ],
   dataShape: `// students-Element
 {
@@ -54,10 +55,18 @@ const students = ref([
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items?type=students', description: 'Schülerindividuelle Items inkl. Gesamtscore — Basis für BISTA-Werte' },
+    { method: 'GET', path: '/groups/{id}/items?type=students', pfad: 'ansichten.bista.endpunkte.schueler' },
   ],
-  apiNote: 'Die Komponente benötigt BISTA-Werte pro Schüler:in. Diese werden typischerweise aus dem ?type=students-Endpunkt abgeleitet (Gesamtscore → BISTA-Skala). Die ringColor und zone werden lokal aus dem Score berechnet.',
+  apiNotePfad: 'ansichten.bista.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '8a-deutsch',  label: '8a Deutsch',    subject: 'Deutsch',     groupClass: '8a', offset:   0 },
@@ -140,17 +149,15 @@ const tooltipDemos = computed(() => [
           <div>
             <div class="comp-name-row">
               <code class="comp-name">BistaDistributionChart</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Kompetenzverteilung Einzelschüler — BISTA-Werte-Strahl</strong><br />
-              Zeigt alle Schüler*innen als Avatar-Icons auf einem horizontalen BISTA-Wertestrahl.
-              Drei farbige Kompetenzstreifen (KS I–III) bilden den Hintergrund.
-              Mouseover öffnet den <code>StudentTooltip</code> mit Detailinformationen.
+              <strong>{{ t('ansichten.bista.titel') }}</strong><br />
+              <span v-html="t('ansichten.bista.beschreibung')" />
             </p>
             <div class="use-case-note">
               <i class="pi pi-users" />
-              <span>Schülerdaten mit BISTA-Werten · Klassen- oder Schulebene</span>
+              <span>{{ t('ansichten.bista.datenhinweis') }}</span>
             </div>
           </div>
           <Tag value="SVG" severity="info" />
@@ -162,7 +169,7 @@ const tooltipDemos = computed(() => [
         <!-- ── StudentTooltip standalone demo ──────────────────────────────── -->
         <div class="section-label">
           <code class="comp-name-sm">StudentTooltip</code>
-          <span class="section-sub">Standalone — kann überall eingebettet werden</span>
+          <span class="section-sub">{{ t('ansichten.bista.tooltipZusatz') }}</span>
         </div>
         <div class="tooltip-demo">
           <StudentTooltip v-for="s in tooltipDemos" :key="s.id" :student="s" />
@@ -173,12 +180,12 @@ const tooltipDemos = computed(() => [
         <!-- ── Chart controls ──────────────────────────────────────────────── -->
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select
               v-model="selectedGroup"
               :options="GROUPS"
               option-label="label"
-              placeholder="Gruppe wählen"
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')"
               class="ctrl-select"
             />
           </div>
@@ -194,11 +201,11 @@ const tooltipDemos = computed(() => [
         <ComponentDocs
           component-name="BistaDistributionChart"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

@@ -3,24 +3,25 @@ import { useFilters } from '../../context/useFilters';
 import { useCompetenceLevels } from '../../hooks/useCompetenceLevels';
 import { transformCompetenceLevels, calculateSummaryStats } from '../../utils/dataTransformers';
 import { formatPercentage } from '../../utils/formatters';
-import { COMPETENCE_LEVELS } from '../../utils/constants';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
+import { useKonstanten, useTexte } from '../../i18n';
 
 // Auf Modulebene, nicht im Render: sonst entsteht bei jedem Durchlauf eine
 // neue Komponente und Recharts hängt den Tooltip jedes Mal neu ein.
 const CustomTooltip = ({ active, payload }) => {
+  const t = useTexte();
   if (active && payload && payload.length) {
   const item = payload[0].payload;
     return (
       <div className="bg-white p-4 border border-gray-200 rounded-lg shadow-lg">
         <p className="font-semibold text-gray-900 mb-2">{item.name}</p>
         <p className="text-sm text-gray-600">
-          Anzahl: <span className="font-medium">{item.count}</span>
+          {t('kompetenzstufenDiagramm.anzahl')}: <span className="font-medium">{item.count}</span>
         </p>
         <p className="text-sm text-gray-600">
-          Anteil: <span className="font-medium">{formatPercentage(item.percentage)}</span>
+          {t('kompetenzstufenDiagramm.anteil')}: <span className="font-medium">{formatPercentage(item.percentage)}</span>
         </p>
       </div>
     );
@@ -29,12 +30,14 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const CompetenceLevelsChart = ({ level, id }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const { buildQueryParams } = useFilters();
   const { data, loading, error, refetch } = useCompetenceLevels(level, id, buildQueryParams());
 
   if (loading) {
     return (
-      <Card title="Kompetenzstufen-Verteilung">
+      <Card title={t('kompetenzstufenDiagramm.titel')}>
         <LoadingSkeleton height="400px" />
       </Card>
     );
@@ -42,7 +45,7 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   if (error) {
     return (
-      <Card title="Kompetenzstufen-Verteilung">
+      <Card title={t('kompetenzstufenDiagramm.titel')}>
         <ErrorMessage error={error} retry={refetch} />
       </Card>
     );
@@ -50,9 +53,9 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   if (!data) {
     return (
-      <Card title="Kompetenzstufen-Verteilung">
+      <Card title={t('kompetenzstufenDiagramm.titel')}>
         <div className="text-gray-500 text-center py-8">
-          Keine Daten verfügbar
+          {t('kompetenzstufenDiagramm.keineDaten')}
         </div>
       </Card>
     );
@@ -62,30 +65,30 @@ const CompetenceLevelsChart = ({ level, id }) => {
   const stats = calculateSummaryStats(data);
 
   return (
-    <Card title="Kompetenzstufen-Verteilung">
+    <Card title={t('kompetenzstufenDiagramm.titel')}>
       {/* Summary Statistics */}
       {stats && (
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-gray-50 rounded-lg p-4">
-            <div className="text-sm text-gray-600">Gesamt</div>
+            <div className="text-sm text-gray-600">{t('kompetenzstufenDiagramm.gesamt')}</div>
             <div className="text-2xl font-bold text-gray-900">
               {stats.total}
             </div>
-            <div className="text-xs text-gray-500">Schüler*innen</div>
+            <div className="text-xs text-gray-500">{t('kompetenzstufenDiagramm.schuelerinnen')}</div>
           </div>
           <div className="bg-red-50 rounded-lg p-4">
-            <div className="text-sm text-red-600">Unter Standard</div>
+            <div className="text-sm text-red-600">{t('kompetenzstufenDiagramm.unterStandard')}</div>
             <div className="text-2xl font-bold text-red-900">
               {formatPercentage(stats.belowStandard)}
             </div>
-            <div className="text-xs text-red-500">Stufe I</div>
+            <div className="text-xs text-red-500">{t('kompetenzstufenDiagramm.stufeI')}</div>
           </div>
           <div className="bg-green-50 rounded-lg p-4">
-            <div className="text-sm text-green-600">Über Standard</div>
+            <div className="text-sm text-green-600">{t('kompetenzstufenDiagramm.ueberStandard')}</div>
             <div className="text-2xl font-bold text-green-900">
               {formatPercentage(stats.aboveStandard)}
             </div>
-            <div className="text-xs text-green-500">Stufe IV & V</div>
+            <div className="text-xs text-green-500">{t('kompetenzstufenDiagramm.stufeIVundV')}</div>
           </div>
         </div>
       )}

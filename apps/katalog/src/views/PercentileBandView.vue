@@ -8,15 +8,16 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import PercentileBandChart from '../components/PercentileBandChart.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'PercentileBandChart.vue',
   propsDocs: [
-    { name: 'items',       type: 'Array',  required: true,  description: 'Ein Eintrag pro Aufgabe: { id, label, markerY, bandLow, bandMean, bandHigh }. Alle Werte in %. Aufgaben werden in der gegebenen Reihenfolge von oben nach unten dargestellt.' },
-    { name: 'title',       type: 'String', default: "''",   description: 'Titel über dem Diagramm.' },
-    { name: 'markerLabel', type: 'String', default: "'Schüler*in'", description: 'Legendenbezeichnung für den Diamant-Marker.' },
-    { name: 'bandLabel',   type: 'String', default: "'Streuungsband (MW ± 1 SD)'", description: 'Legendenbezeichnung für das Referenzband.' },
-    { name: 'xAxisLabel',  type: 'String', default: "'Lösungshäufigkeit (%)'", description: 'Beschriftung der X-Achse.' },
+    { name: 'items',       type: 'Array',  required: true,  pfad: 'ansichten.band.props.items' },
+    { name: 'title',       type: 'String', default: "''",   pfad: 'ansichten.band.props.title' },
+    { name: 'markerLabel', type: 'String', default: "'Schüler*in'", pfad: 'ansichten.band.props.markerLabel' },
+    { name: 'bandLabel',   type: 'String', default: "'Streuungsband (MW ± 1 SD)'", pfad: 'ansichten.band.props.bandLabel' },
+    { name: 'xAxisLabel',  type: 'String', default: "'Lösungshäufigkeit (%)'", pfad: 'ansichten.band.props.xAxisLabel' },
   ],
   dataShape: `// items-Element
 {
@@ -80,13 +81,21 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items',              description: 'Lösungsquoten der Lerngruppe pro Aufgabe (markerY)' },
-    { method: 'GET', path: '/schools/{id}/items',             description: 'Schulweite Lösungsquoten für Band (MW ± SD)' },
-    { method: 'GET', path: '/states/{id}/items',              description: 'Bundeslandweite Lösungsquoten für Band (Variante 2)' },
+    { method: 'GET', path: '/groups/{id}/items',              pfad: 'ansichten.band.endpunkte.gruppe' },
+    { method: 'GET', path: '/schools/{id}/items',             pfad: 'ansichten.band.endpunkte.schule' },
+    { method: 'GET', path: '/states/{id}/items',              pfad: 'ansichten.band.endpunkte.land' },
     { method: 'GET', path: '/groups/{id}/items?type=students','description': 'Schülerdaten für Perzentilrang-Modus (Schüler:in vs. Klasse)' },
   ],
-  apiNote: 'Für den Klasse-vs.-Schule-Modus: Gruppe fetchen (markerY) + Schule fetchen (Band). Für den Schüler:in-Perzentil-Modus: ?type=students fetchen, Rang der ausgewählten Person berechnen.',
+  apiNotePfad: 'ansichten.band.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 // ── Shared config ─────────────────────────────────────────────────────────────
 const GROUPS = [
@@ -336,17 +345,15 @@ const s3Items = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">PercentileBandChart</code>
-              <Tag value="Beispiel 1" severity="success" />
+              <Tag :value="t('ansichten.band.beispiel', { n: 1 })" severity="success" />
             </div>
             <p class="comp-desc">
-              <strong>Klasse vs. Schule — Lösungshäufigkeit</strong><br />
-              Diamant = Lösungshäufigkeit der Klasse pro Aufgabe.
-              Band = Schulverteilung (MW&nbsp;±&nbsp;1&nbsp;SD) als Referenz.
-              Aufgaben sortiert nach Bandmitte, sodass das Band als „blauer Fluss" von oben-rechts nach unten-links fließt.
+              <strong>{{ t('ansichten.band.eins.titel') }}</strong><br />
+              {{ t('ansichten.band.eins.beschreibung') }}
             </p>
             <div class="use-case-note">
               <i class="pi pi-check-circle" />
-              Sinnvoll für Aggregate: beide Seiten sind Mittelwerte, kein Einzelpersonenvergleich.
+              {{ t('ansichten.band.eins.aggregatHinweis') }}
             </div>
           </div>
           <Tag value="SVG" severity="info" />
@@ -357,10 +364,10 @@ const s3Items = computed(() => {
           <div class="ctrl-field">
             <label class="ctrl-label">Lerngruppe</label>
             <Select v-model="s1Group" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
           <div class="ctrl-field">
-            <label class="ctrl-label">Referenz (Schule)</label>
+            <label class="ctrl-label">{{ t('ansichten.band.eins.referenz') }}</label>
             <div class="ctrl-derived">
               <i class="pi pi-link" style="font-size:0.8rem" />
               {{ s1Group?.schoolId }}
@@ -371,14 +378,14 @@ const s3Items = computed(() => {
           <Skeleton v-for="n in 14" :key="n" height="22px" class="mb-1" />
         </div>
         <Message v-else-if="s1Error" severity="error" :closable="false" class="mt-2">{{ s1Error }}</Message>
-        <Message v-else-if="!s1Items.length" severity="info" :closable="false" class="mt-2">Keine übereinstimmenden Aufgaben.</Message>
+        <Message v-else-if="!s1Items.length" severity="info" :closable="false" class="mt-2">{{ t('ansichten.band.eins.keineAufgaben') }}</Message>
         <div v-else class="chart-wrap">
           <PercentileBandChart
             :items="s1Items"
             :title="s1Group?.label"
-            marker-label="Klassenmittelwert"
-            band-label="Schulverteilung (MW ± 1 SD)"
-            x-axis-label="Lösungshäufigkeit (%)"
+            :marker-label="t('ansichten.band.eins.marker')"
+            :band-label="t('ansichten.band.eins.band')"
+            :x-axis-label="t('bausteine.band.achse')"
           />
         </div>
       </template>
@@ -391,13 +398,11 @@ const s3Items = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">PercentileBandChart</code>
-              <Tag value="Beispiel 2" severity="secondary" />
+              <Tag :value="t('ansichten.band.beispiel', { n: 2 })" severity="secondary" />
             </div>
             <p class="comp-desc">
-              <strong>Schule vs. Bundesland — Lösungshäufigkeit</strong><br />
-              Diamant = schulweite Lösungshäufigkeit pro Aufgabe.
-              Band = Landesverteilung (MW&nbsp;±&nbsp;1&nbsp;SD) als Referenz.
-              Beide Werte kommen direkt aus den API-Endpunkten — keine granularen Schülerdaten nötig.
+              <strong>{{ t('ansichten.band.zwei.titel') }}</strong><br />
+              {{ t('ansichten.band.zwei.beschreibung') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -416,10 +421,10 @@ const s3Items = computed(() => {
           <div class="ctrl-field">
             <label class="ctrl-label">Schule</label>
             <Select v-model="s2School" :options="SCHOOLS" option-label="label"
-              placeholder="Schule wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.band.zwei.schuleWaehlen')" class="ctrl-select" />
           </div>
           <div class="ctrl-field">
-            <label class="ctrl-label">Referenz (Bundesland)</label>
+            <label class="ctrl-label">{{ t('ansichten.band.zwei.referenz') }}</label>
             <div class="ctrl-derived">
               <i class="pi pi-link" style="font-size:0.8rem" />
               {{ s2School?.stateId }}
@@ -430,14 +435,14 @@ const s3Items = computed(() => {
           <Skeleton v-for="n in 14" :key="n" height="22px" class="mb-1" />
         </div>
         <Message v-else-if="s2Error" severity="error" :closable="false" class="mt-2">{{ s2Error }}</Message>
-        <Message v-else-if="!s2Items.length" severity="info" :closable="false" class="mt-2">Keine Daten.</Message>
+        <Message v-else-if="!s2Items.length" severity="info" :closable="false" class="mt-2">{{ t('ansichten.band.zwei.keineDaten') }}</Message>
         <div v-else class="chart-wrap">
           <PercentileBandChart
             :items="s2Items"
             :title="s2School?.label"
-            marker-label="Schulmittelwert"
-            band-label="Landesverteilung (MW ± 1 SD)"
-            x-axis-label="Lösungshäufigkeit (%)"
+            :marker-label="t('ansichten.band.zwei.marker')"
+            :band-label="t('ansichten.band.zwei.band')"
+            :x-axis-label="t('bausteine.band.achse')"
           />
         </div>
       </template>
@@ -450,18 +455,15 @@ const s3Items = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">PercentileBandChart</code>
-              <Tag value="Beispiel 3" severity="warning" />
+              <Tag :value="t('ansichten.band.beispiel', { n: 3 })" severity="warning" />
             </div>
             <p class="comp-desc">
-              <strong>Schüler*in Perzentilrang</strong><br />
-              X-Achse = Perzentilrang (0&nbsp;=&nbsp;schwächste, 100&nbsp;=&nbsp;stärkste Leistung in der Klasse).
-              Diamant = Rangposition der Schüler*in pro Aufgabe.
-              Band = Interquartilsbereich P25–P75 aller Klassenmitglieder.
-              Aufgaben sortiert nach Band-Mitte für den Fluss-Effekt.
+              <strong>{{ t('ansichten.band.drei.titel') }}</strong><br />
+              {{ t('ansichten.band.drei.beschreibung') }}
             </p>
             <div class="use-case-note">
               <i class="pi pi-info-circle" />
-              Sinnvoll für Einzelpersonen, weil die X-Achse relativer Rang ist, kein absoluter Score.
+              {{ t('ansichten.band.drei.einzelHinweis') }}
             </div>
           </div>
           <Tag value="SVG" severity="info" />
@@ -472,16 +474,16 @@ const s3Items = computed(() => {
           <div class="ctrl-field">
             <label class="ctrl-label">Lerngruppe</label>
             <Select v-model="s3Group" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
           <div class="ctrl-field">
-            <label class="ctrl-label">Schüler*in</label>
+            <label class="ctrl-label">{{ t('ansichten.band.drei.schuelerin') }}</label>
             <Select v-model="s3Student" :options="s3Students" option-label="name"
-              placeholder="Schüler*in wählen" :disabled="!s3Students.length || s3Loading"
+              :placeholder="t('ansichten.band.drei.schuelerinWaehlen')" :disabled="!s3Students.length || s3Loading"
               class="ctrl-select" />
           </div>
           <div class="ctrl-field">
-            <label class="ctrl-label">Band (Referenzbereich)</label>
+            <label class="ctrl-label">{{ t('ansichten.band.drei.bandBereich') }}</label>
             <Select v-model="s3BandRange" :options="BAND_RANGES" option-label="label"
               class="ctrl-select-wide" />
           </div>
@@ -494,20 +496,20 @@ const s3Items = computed(() => {
           <PercentileBandChart
             :items="s3Items"
             :title="s3Group?.label"
-            :marker-label="s3Student?.name ?? 'Schüler*in'"
+            :marker-label="s3Student?.name ?? t('ansichten.band.drei.schuelerin')"
             :band-label="`Klasse (${s3BandRange?.label?.split(' ')[0] ?? 'P25–P75'})`"
-            x-axis-label="Perzentilrang in der Klasse"
+            :x-axis-label="t('ansichten.band.drei.achse')"
           />
         </div>
 
         <ComponentDocs
           component-name="PercentileBandChart"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

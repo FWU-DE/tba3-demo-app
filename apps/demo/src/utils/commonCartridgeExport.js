@@ -1,12 +1,10 @@
 import JSZip from 'jszip';
-import {
-  EDUCATIONAL_MATERIALS,
-  MATERIAL_TYPES,
-  SUBJECTS,
-  GRADES,
-  COMPETENCE_LEVELS,
-  GROUPS,
-} from './constants';
+import { EDUCATIONAL_MATERIALS, GROUPS } from './constants';
+import { konstantenJetzt, sprache, uebersetze } from '../i18n';
+
+// Wie bei den PDF-Ausgaben: Beschriftungen zu Beginn des Exports frisch holen.
+let { MATERIAL_TYPES, SUBJECTS, GRADES, COMPETENCE_LEVELS } = konstantenJetzt();
+const LOCALE = { de: 'de-DE', en: 'en-GB' };
 
 const CC_VERSION = '1.3.0';
 const CC_XMLNS = 'http://www.imsglobal.org/xsd/imsccv1p3/imscp_v1p1';
@@ -55,13 +53,13 @@ const buildMaterialHtml = (material, group, levelKey) => {
 </head>
 <body>
   <h1>${xmlEscape(material.title)}</h1>
-  <div class="subtitle">${xmlEscape(material.source === 'mundo' ? 'MUNDO (extern)' : (type?.label ?? material.type))} · ${xmlEscape(material.duration ?? '')}</div>
+  <div class="subtitle">${xmlEscape(material.source === 'mundo' ? uebersetze('ausgabe.mundoExtern') : (type?.label ?? material.type))} · ${xmlEscape(material.duration ?? '')}</div>
 
   <div class="meta">
     ${subject ? `<span class="badge" style="background:${subject.color ?? '#6b7280'}">${xmlEscape(subject.name)}</span>` : ''}
     ${grade ? `<span class="badge" style="background:#6b7280">${xmlEscape(grade.name)}</span>` : ''}
     <span class="badge" style="background:#2563eb">Gruppe: ${xmlEscape(group.name)}</span>
-    ${level ? `<span class="badge" style="background:${level.color ?? '#6b7280'}">Stufe ${xmlEscape(levelKey)}: ${xmlEscape(level.description ?? '')}</span>` : ''}
+    ${level ? `<span class="badge" style="background:${level.color ?? '#6b7280'}">${xmlEscape(uebersetze('ausgabe.stufeMitBeschreibung', { n: levelKey, text: level.description ?? '' }))}</span>` : ''}
   </div>
 
   <div class="section">
@@ -81,14 +79,14 @@ const buildMaterialHtml = (material, group, levelKey) => {
       })
       .join('\n    ')}
   </div>` : ''}
-  ${material.url ? `<div class="section"><h2>Direktlink</h2><p><a href="${xmlEscape(material.url)}">${xmlEscape(material.url)}</a></p></div>` : ''}
+  ${material.url ? `<div class="section"><h2>${xmlEscape(uebersetze('ausgabe.direktlink'))}</h2><p><a href="${xmlEscape(material.url)}">${xmlEscape(material.url)}</a></p></div>` : ''}
 
   <div class="section">
     <h2>Zugeordnet an</h2>
     <p>Gruppe: <strong>${xmlEscape(group.name)}</strong> · Kompetenzstufe: <strong>${xmlEscape(levelKey)}</strong></p>
   </div>
 
-  <footer>Exportiert aus TBA3 Demo App · ${new Date().toLocaleDateString('de-DE')}</footer>
+  <footer>${xmlEscape(uebersetze('ausgabe.exportiertAus', { datum: new Date().toLocaleDateString(LOCALE[sprache()] ?? LOCALE.de) }))}</footer>
 </body>
 </html>`;
 };
@@ -123,8 +121,8 @@ const buildManifest = (items) => {
           const level = COMPETENCE_LEVELS[lk];
           const levelItemId = `org_${toId(group.id)}_level_${toId(lk)}`;
           const levelTitle = level
-            ? `Kompetenzstufe ${lk} – ${xmlEscape(level.description ?? '')}`
-            : 'Zugewiesene Materialien';
+            ? xmlEscape(uebersetze('ausgabe.stufeMitText', { n: lk, text: level.description ?? '' }))
+            : xmlEscape(uebersetze('ausgabe.zugewiesene'));
           const matItems = byLevel[lk]
             .map(
               ({ resourceId, material }) =>
@@ -198,6 +196,7 @@ ${resources}
  * @param {string} [filterGroupId] - If provided, only export this one group.
  */
 export const exportCommonCartridge = async (assignments, filterGroupId = null, extraGroups = [], extraMaterials = []) => {
+  ({ MATERIAL_TYPES, SUBJECTS, GRADES, COMPETENCE_LEVELS } = konstantenJetzt());
   const zip = new JSZip();
   const allMaterials = [...EDUCATIONAL_MATERIALS, ...extraMaterials];
   const allGroups = [...GROUPS, ...extraGroups];

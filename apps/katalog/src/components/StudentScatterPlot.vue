@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   students: { type: Array, required: true },
@@ -202,8 +203,9 @@ const xToLevel = (x) => {
   return              { label: 'V',   color: '#15803d' };
 };
 
-const DOMAIN_LABELS = { ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch', ma: 'Mathematik', en: 'Englisch', fr: 'Französisch' };
-const domLabel = (d) => DOMAIN_LABELS[d] ?? d?.toUpperCase() ?? '';
+// Kürzel, für die texte.js eine Übersetzung führt (bausteine.domaenen)
+const DOMAIN_CODES = ['ho', 'le', 'sr', 'ma', 'en', 'fr'];
+const domLabel = (d) => (DOMAIN_CODES.includes(d) ? t(`bausteine.domaenen.${d}`) : (d?.toUpperCase() ?? ''));
 </script>
 
 <template>
@@ -212,19 +214,21 @@ const domLabel = (d) => DOMAIN_LABELS[d] ?? d?.toUpperCase() ?? '';
     <!-- ── Controls ──────────────────────────────────────────────────────── -->
     <div class="ssp-controls">
       <div class="ctrl-pair">
-        <span class="ctrl-lbl">X-Achse</span>
-        <span class="ctrl-val">Kompetenzstufe (gesamt)</span>
+        <span class="ctrl-lbl">{{ t('bausteine.scatter.xAchse') }}</span>
+        <span class="ctrl-val">{{ t('bausteine.scatter.xWert') }}</span>
       </div>
       <div class="ctrl-pair">
-        <span class="ctrl-lbl">Y-Achse</span>
-        <span class="ctrl-val">Rohwert (gesamt, %)</span>
+        <span class="ctrl-lbl">{{ t('bausteine.scatter.yAchse') }}</span>
+        <span class="ctrl-val">{{ t('bausteine.scatter.yWert') }}</span>
       </div>
       <div class="ctrl-pair ctrl-right">
-        <span class="ctrl-lbl">Cluster</span>
+        <span class="ctrl-lbl">{{ t('bausteine.scatter.cluster') }}</span>
         <input v-model.number="clusterCount" type="number" min="1" max="6" class="ctrl-num" />
       </div>
-      <button class="btn-cluster" @click="runClustering">Clustern</button>
-      <button class="btn-groups" disabled title="Gruppen-Export — not implemented in demo">Alle als Gruppen →</button>
+      <button class="btn-cluster" @click="runClustering">{{ t('bausteine.scatter.clustern') }}</button>
+      <button class="btn-groups" disabled :title="t('bausteine.scatter.gruppenExportHinweis')">
+        {{ t('bausteine.scatter.alleAlsGruppen') }}
+      </button>
     </div>
 
     <!-- ── Hint ───────────────────────────────────────────────────────────── -->
@@ -324,7 +328,7 @@ const domLabel = (d) => DOMAIN_LABELS[d] ?? d?.toUpperCase() ?? '';
           </div>
           <div class="tip-divider" />
           <div class="tip-row">
-            <span>Rohwert (gesamt)</span>
+            <span>{{ t('bausteine.scatter.rohwert') }}</span>
             <strong>{{ tooltip.y.toFixed(0) }} %</strong>
           </div>
           <div v-for="det in (tooltip.details ?? [])" :key="det.domain" class="tip-row">

@@ -2,10 +2,12 @@
 import { computed } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { t } from '../i18n';
 
 const props = defineProps({
   item:       { type: Object, required: true },
-  groupLabel: { type: String, default: 'Klasse' },
+  // Ohne Angabe steht hier die Übersetzung von „Klasse“.
+  groupLabel: { type: String, default: null },
 });
 
 const FIRST = [
@@ -55,11 +57,10 @@ const LEVEL_COLORS = {
 };
 const levelColor = (l) => LEVEL_COLORS[l] ?? '#94a3b8';
 
-const DOMAIN_LABELS = {
-  ho:'Hörverstehen', le:'Leseverstehen', sr:'Sprachgebrauch',
-  ma:'Mathematik',   en:'Englisch',      fr:'Französisch',
-};
-const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '–');
+// Kürzel, für die texte.js eine Übersetzung führt (bausteine.domaenen)
+const DOMAIN_CODES = ['ho', 'le', 'sr', 'ma', 'en', 'fr'];
+const domainLabel = (d) => (DOMAIN_CODES.includes(d) ? t(`bausteine.domaenen.${d}`) : (d?.toUpperCase() ?? '–'));
+const gruppenName = computed(() => props.groupLabel ?? t('vokabular.klasse'));
 </script>
 
 <template>
@@ -77,20 +78,20 @@ const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '–');
           v-if="item.competenceLevel"
           class="level-badge"
           :style="{ background: levelColor(item.competenceLevel) }"
-        >Stufe {{ item.competenceLevel }}</span>
+        >{{ t('vokabular.stufe', { n: item.competenceLevel }) }}</span>
       </div>
 
       <div class="idv-stats">
         <div class="stat-item">
-          <span class="stat-label">{{ groupLabel }}</span>
+          <span class="stat-label">{{ gruppenName }}</span>
           <span class="stat-val">{{ item.classP != null ? item.classP.toFixed(0) + ' %' : '–' }}</span>
         </div>
         <div v-if="item.schoolP != null" class="stat-item">
-          <span class="stat-label">Schule</span>
+          <span class="stat-label">{{ t('vokabular.schule') }}</span>
           <span class="stat-val">{{ item.schoolP.toFixed(0) }} %</span>
         </div>
         <div v-if="item.stateP != null" class="stat-item">
-          <span class="stat-label">Bundesland</span>
+          <span class="stat-label">{{ t('vokabular.bundesland') }}</span>
           <span class="stat-val">{{ item.stateP.toFixed(0) }} %</span>
         </div>
       </div>
@@ -98,8 +99,10 @@ const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '–');
 
     <!-- Section title -->
     <div class="idv-section-title">
-      Schülerinnen und Schüler
-      <span class="solved-badge">{{ solvedCount }}/{{ students.length }} gelöst</span>
+      {{ t('bausteine.itemDetail.schuelerinnenUndSchueler') }}
+      <span class="solved-badge">
+        {{ t('bausteine.itemDetail.geloestVon', { n: solvedCount, gesamt: students.length }) }}
+      </span>
     </div>
 
     <!-- Per-student table -->
@@ -111,8 +114,8 @@ const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '–');
       scrollable
       sort-mode="single"
     >
-      <Column field="name"   header="Name"    :sortable="true" />
-      <Column field="solved" header="Gelöst"  :sortable="true" style="width:76px;text-align:center">
+      <Column field="name"   :header="t('bausteine.itemDetail.name')"   :sortable="true" />
+      <Column field="solved" :header="t('bausteine.itemDetail.geloest')" :sortable="true" style="width:76px;text-align:center">
         <template #body="{ data }">
           <i
             :class="data.solved ? 'pi pi-check' : 'pi pi-times'"
@@ -120,7 +123,7 @@ const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '–');
           />
         </template>
       </Column>
-      <Column field="score"  header="Punkte"  :sortable="true" style="width:78px;text-align:right">
+      <Column field="score"  :header="t('bausteine.itemDetail.punkte')" :sortable="true" style="width:78px;text-align:right">
         <template #body="{ data }">
           <span class="score-val">{{ data.score }} %</span>
         </template>
