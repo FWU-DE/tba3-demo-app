@@ -8,12 +8,13 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import StudentScatterPlot from '../components/StudentScatterPlot.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'StudentScatterPlot.vue',
   propsDocs: [
-    { name: 'students',   type: 'Array',  required: true,  description: 'Schülerliste: { id, initials, name, x (Kompetenzstufe 1–5), y (Rohwert % 0–100), details: [{ domain, pct, levelX }] }' },
-    { name: 'groupLabel', type: 'String', default: "''",   description: 'Gruppenbezeichnung für den Diagrammtitel.' },
+    { name: 'students',   type: 'Array',  required: true,  pfad: 'ansichten.scatter.props.students' },
+    { name: 'groupLabel', type: 'String', default: "''",   pfad: 'ansichten.scatter.props.groupLabel' },
   ],
   dataShape: `// students-Element
 {
@@ -78,10 +79,18 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items?type=students', description: 'Schülerindividuelle Item-Lösungsquoten — Basis für X/Y-Position im Scatter' },
+    { method: 'GET', path: '/groups/{id}/items?type=students', pfad: 'ansichten.scatter.endpunkte.schueler' },
   ],
-  apiNote: 'Der ?type=students-Parameter liefert Value-Groups mit type="student". x wird aus dem Gesamtscore → Kompetenzstufe abgeleitet; y ist der rohe Prozentsatz. K-Means-Clustering und Konvex-Hüllen werden komponentenintern berechnet.',
+  apiNotePfad: 'ansichten.scatter.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch',  label: '3a Deutsch',    schoolId: 'gs-musterstadt',    stateId: 'beispielland' },
@@ -196,11 +205,11 @@ const students = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">StudentScatterPlot</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Schüler*innen-Scatter: Kompetenzstufe × Rohwert</strong><br />
-              Jede Schüler*in als Punkt (Initialen). K-Means-Clustering mit konfigurierbarer Clusteranzahl.
+              <strong>{{ t('ansichten.scatter.titel') }}</strong><br />
+              {{ t('ansichten.scatter.beschreibung') }}
               Klick auf Punkt zeigt Detailcard mit Gesamtwert und Teilkompetenzen.
             </p>
             <div class="use-case-note use-case-api">
@@ -215,9 +224,9 @@ const students = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
         </div>
 
@@ -225,10 +234,10 @@ const students = computed(() => {
           <Skeleton height="460px" />
         </div>
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!students.length" severity="info" :closable="false" class="mt-2">
-          Keine Schüler*innen-Daten.
+          {{ t('ansichten.scatter.keineDaten') }}
         </Message>
 
         <StudentScatterPlot
@@ -240,11 +249,11 @@ const students = computed(() => {
         <ComponentDocs
           component-name="StudentScatterPlot"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

@@ -3,6 +3,7 @@ import { GROUPS, COMPETENCE_LEVELS } from '../../utils/constants';
 import { useFilters } from '../../context/useFilters';
 import { SUBJECT_DOMAINS } from '../../utils/studentData';
 import { createCustomGroup, addStudentsToGroup } from '../../utils/customGroupsStore';
+import { useTexte } from '../../i18n';
 
 // ── SVG layout constants ──────────────────────────────────────────────────────
 
@@ -151,16 +152,18 @@ const PCT_TICK_COLOR = '#6b7280';
 const defaultTickLabel = (v) => LEVEL_STR[v] ?? '';
 const defaultTickColor = (v) => COMPETENCE_LEVELS[LEVEL_STR[v]]?.color ?? '#6b7280';
 
-const getDims = (students) => {
+// `t` als Parameter statt Import: so hängen die Achsen an der Sprache und
+// werden nach einem Wechsel neu aufgebaut.
+const getDims = (students, t) => {
   const base = [
     {
       key: '__level__',
-      label: 'Kompetenzstufe (gesamt)',
+      label: t('karte.achsen.level'),
       fn: (s) => LEVEL_NUM[s.competenceLevel] ?? 3,
     },
     {
       key: '__score__',
-      label: 'Rohwert (gesamt, %)',
+      label: t('karte.achsen.score'),
       fn: (s) => s.score != null ? pctToChartVal(s.score) : LEVEL_NUM[s.competenceLevel] ?? 3,
       tickLabel: (v) => PCT_TICK_LABEL[v] ?? '',
       tickColor: () => PCT_TICK_COLOR,
@@ -177,7 +180,7 @@ const getDims = (students) => {
     if (domains.length > 1) {
       base.push({
         key: '__avg_domain__',
-        label: 'Ø Teilkompetenz',
+        label: t('karte.achsen.avgDomain'),
         fn: (s) => {
           const vals = domains.map((d) => LEVEL_NUM[s.domainLevels?.[d]] ?? LEVEL_NUM[s.competenceLevel] ?? 3);
           return vals.reduce((a, b) => a + b, 0) / vals.length;
@@ -196,7 +199,7 @@ const getDims = (students) => {
       if (students.some((s) => s.domainScores?.[domain] != null)) {
         base.push({
           key: `__score_${domain}__`,
-          label: `${domain} (%)`,
+          label: t('karte.achsen.domainProzent', { domaene: domain }),
           fn: (s) => s.domainScores?.[domain] != null ? pctToChartVal(s.domainScores[domain]) : LEVEL_NUM[s.competenceLevel] ?? 3,
           tickLabel: (v) => PCT_TICK_LABEL[v] ?? '',
           tickColor: () => PCT_TICK_COLOR,
@@ -211,10 +214,11 @@ const getDims = (students) => {
 // ── Main component ────────────────────────────────────────────────────────────
 
 const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
+  const t = useTexte();
   const svgRef = useRef(null);
   const { observerMode } = useFilters();
 
-  const dims = useMemo(() => getDims(students), [students]);
+  const dims = useMemo(() => getDims(students, t), [students, t]);
 
   const [xKey, setXKey] = useState(() => dims[0]?.key ?? '__level__');
   const [yKey, setYKey] = useState(() => (dims.length > 1 ? dims[1].key : dims[0]?.key ?? '__level__'));
@@ -375,7 +379,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
     g = addStudentsToGroup(g, created.id, [...selectedIds]);
     onGroupsChange(g);
     setGroupName(''); setShowForm(false); setSelectedIds(new Set());
-    flash(`Gruppe „${created.name}" mit ${selectedIds.size} Schüler*innen erstellt.`);
+    flash(t('karte.gruppeErstellt', { name: created.name, n: selectedIds.size }));
   };
 
   const createAllClusters = () => {
@@ -386,13 +390,13 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
     for (let ci = 0; ci < k; ci++) {
       const ids = clusters.labels.map((l, i) => l === ci ? points[i]?.id : null).filter(Boolean);
       if (!ids.length) continue;
-      g = createCustomGroup(g, `Cluster ${ci + 1}`);
+      g = createCustomGroup(g, t('karte.clusterNummer', { n: ci + 1 }));
       g = addStudentsToGroup(g, g[g.length - 1].id, ids);
       created++;
     }
     onGroupsChange(g);
     setClusters(null); setSelectedIds(new Set());
-    flash(`${created} Cluster-Gruppen erstellt.`);
+    flash(t('karte.clusterGruppenErstellt', { n: created }));
   };
 
   // ── Early return ─────────────────────────────────────────────────────────────
@@ -403,7 +407,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
         <svg className="h-12 w-12 mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
-        <p className="text-sm">Keine Schüler*innen für die aktuelle Filterauswahl gefunden.</p>
+        <p className="text-sm">{t('karte.keineSchueler')}</p>
       </div>
     );
   }
@@ -418,7 +422,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
 
         {/* Axis selectors */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-gray-500 w-14">X-Achse</span>
+          <span className="text-xs font-medium text-gray-500 w-14">{t('karte.xAchse')}</span>
           <select
             value={xKey}
             onChange={(e) => { setXKey(e.target.value); setClusters(null); }}
@@ -428,7 +432,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
           </select>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-gray-500 w-14">Y-Achse</span>
+          <span className="text-xs font-medium text-gray-500 w-14">{t('karte.yAchse')}</span>
           <select
             value={yKey}
             onChange={(e) => { setYKey(e.target.value); setClusters(null); }}
@@ -440,13 +444,13 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
 
         {multiSG && (
           <p className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200">
-            Filtern Sie nach einer Klasse für Teilkompetenz-Achsen.
+            {t('karte.klasseFiltern')}
           </p>
         )}
 
         {/* Cluster controls */}
         <div className="flex items-center gap-2 ml-auto">
-          <span className="text-xs font-medium text-gray-500">Cluster</span>
+          <span className="text-xs font-medium text-gray-500">{t('karte.cluster')}</span>
           <input
             type="number" min={2} max={8} value={kCount}
             onChange={(e) => setKCount(Math.max(2, Math.min(8, +e.target.value || 3)))}
@@ -456,21 +460,21 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
             onClick={runClustering}
             className="text-xs font-medium px-3 py-1.5 bg-primary text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Clustern
+            {t('karte.clustern')}
           </button>
           {clusters && (
             <button
               onClick={createAllClusters}
               className="text-xs font-medium px-3 py-1.5 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors"
             >
-              Alle als Gruppen →
+              {t('karte.alleAlsGruppen')}
             </button>
           )}
           {clusters && (
             <button
               onClick={() => { setClusters(null); setSelectedIds(new Set()); }}
               className="text-xs text-gray-400 hover:text-gray-600 px-1"
-              title="Cluster aufheben"
+              title={t('karte.clusterAufheben')}
             >
               ✕
             </button>
@@ -480,8 +484,8 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
 
       {/* ── Hint ────────────────────────────────────────────────────────────── */}
       <p className="text-xs text-gray-400">
-        Ziehen Sie ein Rechteck zur Gruppenauswahl · Klicken Sie auf Punkte zum Ein-/Ausschließen
-        {clusters ? ' · Klicken auf Cluster-Fläche wählt alle darin aus · Punkte ziehen zum Umverteilen' : ''}
+        {t('karte.hinweis')}
+        {clusters ? t('karte.hinweisCluster') : ''}
       </p>
 
       {/* ── SVG plot ─────────────────────────────────────────────────────────── */}
@@ -660,7 +664,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
           {tooltip && (() => {
             const s = tooltip.student;
             const grp = GROUPS.find((g) => g.id === s.classGroupId);
-            const clusterLabel = tooltip.clusterIdx >= 0 ? `Cluster ${tooltip.clusterIdx + 1}` : null;
+            const clusterLabel = tooltip.clusterIdx >= 0 ? t('karte.clusterNummer', { n: tooltip.clusterIdx + 1 }) : null;
             const levelColor = COMPETENCE_LEVELS[s.competenceLevel]?.color ?? '#6b7280';
 
             // Domains for this student
@@ -693,7 +697,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
                 {/* Level */}
                 <rect x={tx + 10} y={ty + 37} width={46} height={13} rx={4} fill={levelColor} />
                 <text x={tx + 33} y={ty + 47} textAnchor="middle" fontSize={9} fontWeight={700} fill="white">
-                  Stufe {s.competenceLevel}
+                  {t('gemeinsam.stufe', { n: s.competenceLevel })}
                 </text>
                 {clusterLabel && (
                   <>
@@ -707,7 +711,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
                 {/* Overall raw score */}
                 {hasScore && (
                   <g>
-                    <text x={tx + 10} y={ty + 58} fontSize={9} fill="#6b7280">Rohwert (gesamt)</text>
+                    <text x={tx + 10} y={ty + 58} fontSize={9} fill="#6b7280">{t('karte.rohwertGesamt')}</text>
                     <text x={tx + boxW - 8} y={ty + 58} textAnchor="end" fontSize={9} fontWeight={700} fill="#374151">{s.score}%</text>
                   </g>
                 )}
@@ -743,7 +747,9 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
               <button key={ci} onClick={() => selectCluster(ci)}
                 className="flex items-center gap-1.5 hover:opacity-75 transition-opacity">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: col }} />
-                <span className="text-xs text-gray-600">Cluster {ci + 1} <span className="text-gray-400">({count})</span></span>
+                <span className="text-xs text-gray-600">
+                  {t('karte.clusterNummer', { n: ci + 1 })} <span className="text-gray-400">({count})</span>
+                </span>
               </button>
             );
           })
@@ -751,11 +757,11 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
           Object.entries(COMPETENCE_LEVELS).map(([lvl, cfg]) => (
             <div key={lvl} className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cfg.color }} />
-              <span className="text-xs text-gray-600">Stufe {lvl}</span>
+              <span className="text-xs text-gray-600">{t('gemeinsam.stufe', { n: lvl })}</span>
             </div>
           ))
         )}
-        <span className="text-xs text-gray-400 ml-auto">{students.length} Schüler*innen</span>
+        <span className="text-xs text-gray-400 ml-auto">{t('karte.schuelerZahl', { n: students.length })}</span>
       </div>
 
       {/* ── Selection action bar ──────────────────────────────────────────────── */}
@@ -766,7 +772,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
             <span className="text-sm font-medium text-gray-700">
-              {selectedIds.size} Schüler*in{selectedIds.size !== 1 ? 'nen' : ''} ausgewählt
+              {t(selectedIds.size === 1 ? 'karte.ausgewaehltEiner' : 'karte.ausgewaehltMehrere', { n: selectedIds.size })}
             </span>
           </div>
 
@@ -774,7 +780,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
             <div className="flex items-center gap-2">
               <input
                 autoFocus
-                placeholder="Gruppenname…"
+                placeholder={t('karte.gruppenname')}
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && createGroup()}
@@ -785,7 +791,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
                 disabled={!groupName.trim()}
                 className={`text-sm font-medium px-3 py-1.5 rounded-md transition-colors ${groupName.trim() ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
               >
-                Erstellen
+                {t('karte.erstellen')}
               </button>
               <button onClick={() => setShowForm(false)} className="text-sm text-gray-400 hover:text-gray-600">✕</button>
             </div>
@@ -794,7 +800,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
               onClick={() => setShowForm(true)}
               className="text-sm font-medium px-3 py-1.5 bg-primary text-white rounded-md hover:bg-blue-700 transition-colors"
             >
-              Als Gruppe speichern
+              {t('karte.alsGruppeSpeichern')}
             </button>
           )}
 
@@ -802,7 +808,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
             onClick={() => { setSelectedIds(new Set()); setShowForm(false); }}
             className="text-xs text-gray-400 hover:text-gray-700 ml-auto"
           >
-            Auswahl aufheben
+            {t('karte.auswahlAufheben')}
           </button>
         </div>
       )}

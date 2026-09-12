@@ -9,14 +9,15 @@ import Tag from 'primevue/tag';
 import ToggleSwitch from 'primevue/toggleswitch';
 import MeanComparisonChart from '../components/MeanComparisonChart.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'MeanComparisonChart.vue',
   propsDocs: [
-    { name: 'rows',   type: 'Array',  required: true,  description: 'Ein Eintrag pro Vergleichsebene. Jeder Eintrag: { label, mean, ciLow?, ciHigh?, n?, fair? }. mean in Prozent (0–100).' },
-    { name: 'title',  type: 'String', default: "''",    description: 'Optionaler Titel.' },
-    { name: 'domain', type: 'String', default: "''",    description: 'Domänenname als Abschnittsüberschrift.' },
-    { name: 'xLabel', type: 'String', default: "'Mittlere Lösungsquote (%)'", description: 'Beschriftung der X-Achse.' },
+    { name: 'rows',   type: 'Array',  required: true,  pfad: 'ansichten.mittelwert.props.rows' },
+    { name: 'title',  type: 'String', default: "''",    pfad: 'ansichten.mittelwert.props.title' },
+    { name: 'domain', type: 'String', default: "''",    pfad: 'ansichten.mittelwert.props.domain' },
+    { name: 'xLabel', type: 'String', default: "'Mittlere Lösungsquote (%)'", pfad: 'ansichten.mittelwert.props.xLabel' },
   ],
   dataShape: `// rows-Element
 {
@@ -64,12 +65,20 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items',  description: 'Aufgabendaten der Lerngruppe (für Mittelwert)' },
-    { method: 'GET', path: '/schools/{id}/items', description: 'Schulebene (Referenz)' },
-    { method: 'GET', path: '/states/{id}/items',  description: 'Bundeslandebene (Referenz)' },
+    { method: 'GET', path: '/groups/{id}/items',  pfad: 'ansichten.mittelwert.endpunkte.gruppe' },
+    { method: 'GET', path: '/schools/{id}/items', pfad: 'ansichten.mittelwert.endpunkte.schule' },
+    { method: 'GET', path: '/states/{id}/items',  pfad: 'ansichten.mittelwert.endpunkte.land' },
   ],
-  apiNote: 'Der Mittelwert wird als Durchschnitt der descriptiveStatistics.mean-Werte aller Items berechnet (0–1 → × 100). CI-Grenzen müssen extern berechnet werden.',
+  apiNotePfad: 'ansichten.mittelwert.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch', label: '3a Deutsch',    schoolId: 'gs-musterstadt',    stateId: 'beispielland' },
@@ -172,11 +181,11 @@ const domainCharts = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">MeanComparisonChart</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Mittlere Lösungsquote — Klasse · Schule · Fairer Vergleich · Bundesland</strong><br />
-              Diamant-Marker auf einer horizontalen Skala zeigen die mittlere Lösungsquote je Ebene.
+              <strong>{{ t('ansichten.mittelwert.titel') }}</strong><br />
+              {{ t('ansichten.mittelwert.beschreibung') }}
               Optionale Konfidenzintervalle als Fehlerbalken. Hintergrundfarben markieren Kompetenzbereiche.
             </p>
             <div class="use-case-note use-case-api">
@@ -195,12 +204,12 @@ const domainCharts = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
           <div class="ctrl-field ctrl-fair">
-            <label class="ctrl-label">Fairer Vergleich</label>
+            <label class="ctrl-label">{{ t('ansichten.stufen.fairerVergleich') }}</label>
             <div class="fair-toggle-row">
               <ToggleSwitch v-model="showFairComparison" input-id="fair-toggle-mc" />
               <label for="fair-toggle-mc" class="fair-toggle-label">
@@ -208,7 +217,7 @@ const domainCharts = computed(() => {
                 Standorttyp anzeigen
               </label>
             </div>
-            <span class="fair-hint">Schulen mit ähnlicher sozialer Zusammensetzung</span>
+            <span class="fair-hint">{{ t('ansichten.stufen.fairHinweis') }}</span>
           </div>
         </div>
 
@@ -216,7 +225,7 @@ const domainCharts = computed(() => {
           <Skeleton v-for="n in 4" :key="n" height="60px" class="mb-3" />
         </div>
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
           Keine Daten.
@@ -235,11 +244,11 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="MeanComparisonChart"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

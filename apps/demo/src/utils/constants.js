@@ -1,3 +1,11 @@
+// Stammdaten und Kennungen der Demoanwendung.
+//
+// Beschriftungen stehen hier bewusst NICHT: alles Sichtbare liegt zweisprachig
+// in `src/i18n/texte.js`. Dieses Modul führt nur Kennungen, Farben und Zeichen.
+// Aufgelöste Fassungen (mit `name`, `description`, `label`) liefert
+// `useKonstanten()` aus `src/i18n` — dieselben Objekte, nur in der gewählten
+// Sprache.
+
 // Available Groups
 export const GROUPS = [
   // V3 Deutsch
@@ -43,86 +51,49 @@ export const STATES = [
   { id: 'beispielland', name: 'Beispielland' },
 ];
 
-// Subject mappings
+// Subject mappings — Namen in i18n/texte.js unter `faecher`
 export const SUBJECTS = {
-  DE: { code: 'DE', name: 'Deutsch', color: '#2563eb' },
-  MA: { code: 'MA', name: 'Mathematik', color: '#7c3aed' },
-  EN: { code: 'EN', name: 'Englisch', color: '#dc2626' },
-  FR: { code: 'FR', name: 'Französisch', color: '#0891b2' },
+  DE: { code: 'DE', color: '#2563eb' },
+  MA: { code: 'MA', color: '#7c3aed' },
+  EN: { code: 'EN', color: '#dc2626' },
+  FR: { code: 'FR', color: '#0891b2' },
 };
 
-// Grade levels
+// Grade levels — Namen in i18n/texte.js unter `klassenstufen`
 export const GRADES = {
-  V3: { code: 'V3', name: 'Klasse 3', description: 'Vergleichsarbeiten Klasse 3' },
-  V8: { code: 'V8', name: 'Klasse 8', description: 'Vergleichsarbeiten Klasse 8' },
+  V3: { code: 'V3' },
+  V8: { code: 'V8' },
 };
 
-// Competence levels
+// Competence levels — Namen und Beschreibungen in i18n/texte.js unter
+// `kompetenzstufen`; hier stehen Stufe und Farbe.
 export const COMPETENCE_LEVELS = {
-  I: {
-    level: 'I',
-    name: 'Kompetenzstufe I',
-    description: 'Unter Mindeststandard',
-    color: '#ef4444'
-  },
-  II: {
-    level: 'II',
-    name: 'Kompetenzstufe II',
-    description: 'Mindeststandard',
-    color: '#f97316'
-  },
-  III: {
-    level: 'III',
-    name: 'Kompetenzstufe III',
-    description: 'Regelstandard',
-    color: '#eab308'
-  },
-  IV: {
-    level: 'IV',
-    name: 'Kompetenzstufe IV',
-    description: 'Regelstandard Plus',
-    color: '#22c55e'
-  },
-  V: {
-    level: 'V',
-    name: 'Kompetenzstufe V',
-    description: 'Optimalstandard',
-    color: '#16a34a'
-  },
+  I: { level: 'I', color: '#ef4444' },
+  II: { level: 'II', color: '#f97316' },
+  III: { level: 'III', color: '#eab308' },
+  IV: { level: 'IV', color: '#22c55e' },
+  V: { level: 'V', color: '#16a34a' },
 };
 
-// Demographic categories
-export const GENDERS = {
-  f: 'Weiblich',
-  m: 'Männlich',
-  d: 'Divers',
-};
+// Demographic categories — Beschriftungen unter `geschlechter` bzw. `sprachen`
+export const GENDER_CODES = ['f', 'm', 'd'];
+export const LANGUAGE_CODES = ['german', 'english', 'french', 'other'];
 
-export const LANGUAGES = {
-  german: 'Deutsch',
-  english: 'Englisch',
-  french: 'Französisch',
-  other: 'Andere',
-};
+// Type parameters — Beschriftungen unter `datentypen`
+export const TYPE_VALUES = ['group', 'students', 'both'];
 
-// Type parameters
-export const TYPE_OPTIONS = [
-  { value: 'group', label: 'Nur Gruppe' },
-  { value: 'students', label: 'Nur Schüler*innen' },
-  { value: 'both', label: 'Beide' },
-];
-
-// Educational material types
+// Educational material types — Beschriftungen unter `materialarten`
 export const MATERIAL_TYPES = {
-  worksheet: { id: 'worksheet', label: 'Übungsblatt', icon: '📄' },
-  video: { id: 'video', label: 'Lernvideo', icon: '🎬' },
-  game: { id: 'game', label: 'Lernspiel', icon: '🎮' },
-  task_set: { id: 'task_set', label: 'Aufgabenset', icon: '📝' },
-  support: { id: 'support', label: 'Fördermaterial', icon: '🌟' },
-  reading: { id: 'reading', label: 'Lesetext', icon: '📖' },
+  worksheet: { id: 'worksheet', icon: '📄' },
+  video: { id: 'video', icon: '🎬' },
+  game: { id: 'game', icon: '🎮' },
+  task_set: { id: 'task_set', icon: '📝' },
+  support: { id: 'support', icon: '🌟' },
+  reading: { id: 'reading', icon: '📖' },
 };
 
-// Educational materials catalog
+// Educational materials catalog — Beispielmaterialien. Titel und Beschreibung
+// bleiben Deutsch: es sind deutschsprachige Lernmaterialien, keine Oberfläche.
 export const EDUCATIONAL_MATERIALS = [
   // Deutsch V3
   {

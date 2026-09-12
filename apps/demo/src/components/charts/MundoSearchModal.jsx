@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { launchLtiPopup } from '../../utils/ltiOauth';
+import { uebersetze, useTexte } from '../../i18n';
+import HtmlText from '../../i18n/HtmlText';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -66,7 +68,7 @@ const parseContentItems = (payload) => {
       sodixUrl ||
       '';
 
-    const title = item.title || item.text || item.label || 'MUNDO Material';
+    const title = item.title || item.text || item.label || uebersetze('mundo.standardTitel');
     const desc  = item.description || item.text || '';
     const thumb =
       (isAbsoluteUrl(item.thumbnail?.['@id']) ? item.thumbnail['@id'] : null) ||
@@ -80,7 +82,10 @@ const parseContentItems = (payload) => {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-const ItemRow = ({ item, onRemove }) => (
+const ItemRow = ({ item, onRemove }) => {
+  const t = useTexte();
+
+  return (
   <div className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0">
     {item.thumbnail ? (
       <img src={item.thumbnail} alt="" className="w-10 h-10 rounded object-cover flex-shrink-0 bg-gray-100" />
@@ -101,19 +106,21 @@ const ItemRow = ({ item, onRemove }) => (
         </a>
       ) : (
         <span className="text-xs text-amber-500 mt-0.5 block">
-          ⚠ URL fehlt – siehe Browser-Konsole (MUNDO LTI)
+          {t('mundo.urlFehlt')}
         </span>
       )}
     </div>
     {onRemove && (
       <button onClick={() => onRemove(item.id)}
         className="text-xs text-red-400 hover:text-red-600 flex-shrink-0 px-1 pt-0.5"
-        title="Entfernen">✕</button>
+        title={t('mundo.entfernen')}>✕</button>
     )}
   </div>
-);
+  );
+};
 
 const ManualEntry = ({ onAdd }) => {
+  const t = useTexte();
   const [title, setTitle] = useState('');
   const [url,   setUrl]   = useState('');
   const [desc,  setDesc]  = useState('');
@@ -127,26 +134,19 @@ const ManualEntry = ({ onAdd }) => {
 
   return (
     <form onSubmit={submit} className="space-y-2 p-6">
-      <p className="text-sm text-gray-600 mb-3">
-        Suche auf{' '}
-        <a href="https://mundo.schule/search" target="_blank" rel="noopener noreferrer"
-          className="text-blue-600 hover:underline font-medium">
-          mundo.schule ↗
-        </a>{' '}
-        und trage das Material hier ein:
-      </p>
+      <HtmlText pfad="mundo.manuellEinleitung" className="text-sm text-gray-600 mb-3" />
       <input required value={title} onChange={(e) => setTitle(e.target.value)}
-        placeholder="Titel *"
+        placeholder={t('mundo.titelFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       <input value={url} onChange={(e) => setUrl(e.target.value)}
-        placeholder="URL (optional)"
+        placeholder={t('mundo.urlFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       <input value={desc} onChange={(e) => setDesc(e.target.value)}
-        placeholder="Beschreibung (optional)"
+        placeholder={t('mundo.beschreibungFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       <button type="submit" disabled={!title.trim()}
         className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
-        Hinzufügen
+        {t('mundo.hinzufuegen')}
       </button>
     </form>
   );
@@ -155,6 +155,7 @@ const ManualEntry = ({ onAdd }) => {
 // ── LTI config panel ──────────────────────────────────────────────────────────
 
 const ConfigPanel = ({ config, onChange }) => {
+  const t = useTexte();
   const [local, setLocal] = useState({ ...MUNDO_DEFAULTS, ...config });
 
   const set = (k, v) => setLocal((p) => ({ ...p, [k]: v }));
@@ -168,34 +169,27 @@ const ConfigPanel = ({ config, onChange }) => {
     <form onSubmit={save} className="p-6 space-y-4">
       <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl text-sm text-blue-800">
         <span className="text-lg flex-shrink-0">ℹ️</span>
-        <p>
-          Zugangsdaten findest du auf{' '}
-          <a href="https://mundo.schule/cms/lti" target="_blank" rel="noopener noreferrer"
-            className="font-semibold underline">
-            mundo.schule/cms/lti ↗
-          </a>
-          . Kopiere <em>Consumer-Key</em> und <em>Shared Secret</em> und trage sie hier ein.
-        </p>
+        <HtmlText pfad="mundo.zugangsdaten" />
       </div>
 
       <div className="space-y-3">
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">LTI Tool-URL</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">{t('mundo.toolUrl')}</label>
           <input value={local.toolUrl ?? ''} onChange={(e) => set('toolUrl', e.target.value)}
             placeholder={MUNDO_DEFAULTS.toolUrl}
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-          <p className="text-xs text-gray-400 mt-0.5">Die eigentliche Launch-URL des LTI-Tools (nicht die Info-Seite)</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t('mundo.toolUrlHinweis')}</p>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Consumer Key</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">{t('mundo.consumerKey')}</label>
           <input value={local.consumerKey ?? ''} onChange={(e) => set('consumerKey', e.target.value)}
             placeholder={MUNDO_DEFAULTS.consumerKey}
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">Shared Secret</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">{t('mundo.sharedSecret')}</label>
           <input type="password" value={local.sharedSecret ?? ''} onChange={(e) => set('sharedSecret', e.target.value)}
             placeholder={MUNDO_DEFAULTS.sharedSecret}
             className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
@@ -205,10 +199,10 @@ const ConfigPanel = ({ config, onChange }) => {
       <div className="flex items-center gap-3 pt-1">
         <button type="submit"
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-          Speichern &amp; LTI starten
+          {t('mundo.speichernUndStarten')}
         </button>
         <p className="text-xs text-gray-400">
-          Callback-URL: <code className="bg-gray-100 px-1 rounded">{callbackUrl()}</code>
+          {t('mundo.callbackUrl')} <code className="bg-gray-100 px-1 rounded">{callbackUrl()}</code>
         </p>
       </div>
     </form>
@@ -218,6 +212,7 @@ const ConfigPanel = ({ config, onChange }) => {
 // ── Main modal ────────────────────────────────────────────────────────────────
 
 const MundoSearchModal = ({ onSelect, onClose }) => {
+  const t = useTexte();
   const popupRef = useRef(null);
 
   const [tab,      setTab]      = useState('lti');
@@ -327,14 +322,14 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                 onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             </div>
             <div>
-              <h2 className="font-bold text-gray-900 leading-none">MUNDO Materialsuche</h2>
+              <h2 className="font-bold text-gray-900 leading-none">{t('mundo.titel')}</h2>
               <p className="text-xs text-gray-400 mt-0.5">
                 LTI 1.1 ·{' '}
                 {popupOpen
-                  ? <span className="text-green-600 font-medium">Popup geöffnet</span>
+                  ? <span className="text-green-600 font-medium">{t('mundo.popupOffen')}</span>
                   : launched
-                  ? <span className="text-gray-500">Popup geschlossen</span>
-                  : <span>nicht gestartet</span>}
+                  ? <span className="text-gray-500">{t('mundo.popupGeschlossen')}</span>
+                  : <span>{t('mundo.nichtGestartet')}</span>}
               </p>
             </div>
           </div>
@@ -342,9 +337,9 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
           <div className="flex items-center gap-2">
             <div className="flex rounded-lg bg-gray-100 p-0.5 text-xs">
               {[
-                { key: 'lti',    label: 'LTI-Suche' },
-                { key: 'manual', label: 'Manuell' },
-                { key: 'config', label: '⚙ Konfig' },
+                { key: 'lti',    label: t('mundo.reiterLti') },
+                { key: 'manual', label: t('mundo.reiterManuell') },
+                { key: 'config', label: t('mundo.reiterKonfig') },
               ].map(({ key, label }) => (
                 <button key={key} onClick={() => setTab(key)}
                   className={`px-3 py-1.5 rounded-md font-medium transition-all ${
@@ -376,7 +371,7 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"/>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
                     </svg>
-                    LTI-Anfrage wird signiert…
+                    {t('mundo.signiert')}
                   </div>
                 )}
 
@@ -393,14 +388,18 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                     <span className="text-3xl flex-shrink-0">{popupOpen ? '🟢' : '🌍'}</span>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-900">
-                        {popupOpen ? 'MUNDO ist geöffnet' : launched ? 'Popup wurde geschlossen' : 'MUNDO Suche starten'}
+                        {popupOpen
+                          ? t('mundo.istGeoeffnet')
+                          : launched
+                          ? t('mundo.wurdeGeschlossen')
+                          : t('mundo.sucheStarten')}
                       </p>
                       <p className="text-sm text-gray-500 mt-0.5">
                         {popupOpen
-                          ? 'Suche und wähle Materialien im MUNDO-Fenster aus. Sie erscheinen automatisch rechts.'
+                          ? t('mundo.hinweisOffen')
                           : launched
-                          ? 'Das Popup wurde geschlossen. Erneut öffnen oder links ausgewählte Materialien übernehmen.'
-                          : 'Öffnet ein Popup-Fenster mit der MUNDO-Suche über LTI.'}
+                          ? t('mundo.hinweisGeschlossen')
+                          : t('mundo.hinweisStart')}
                       </p>
                     </div>
                     <button
@@ -408,13 +407,13 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                       disabled={launching}
                       className="flex-shrink-0 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
-                      {launched && !popupOpen ? 'Erneut öffnen' : 'Öffnen'}
+                      {launched && !popupOpen ? t('mundo.erneutOeffnen') : t('mundo.oeffnen')}
                     </button>
                   </div>
                 )}
 
                 <p className="text-xs text-gray-400">
-                  Callback-URL:{' '}
+                  {t('mundo.callbackUrl')}{' '}
                   <code className="bg-gray-100 px-1 rounded">{callbackUrl()}</code>
                 </p>
               </div>
@@ -433,15 +432,15 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
           <div className="w-72 flex-shrink-0 border-l border-gray-100 flex flex-col">
             <div className="px-4 py-3 border-b border-gray-100">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Ausgewählt{items.length > 0 && ` (${items.length})`}
+                {t('mundo.ausgewaehlt')}{items.length > 0 && ` (${items.length})`}
               </p>
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 py-2">
               {items.length === 0 ? (
                 <p className="text-xs text-gray-400 text-center pt-8 leading-relaxed">
-                  Materialien in der LTI-Suche auswählen.<br/>
-                  Sie erscheinen hier automatisch.
+                  {t('mundo.nochNichts')}<br/>
+                  {t('mundo.nochNichtsZusatz')}
                 </p>
               ) : (
                 items.map((item) => (
@@ -458,10 +457,10 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}>
                 {items.length > 0
-                  ? `${items.length} Material${items.length !== 1 ? 'ien' : ''} übernehmen`
-                  : 'Materialien auswählen'}
+                  ? t(items.length === 1 ? 'mundo.uebernehmenEines' : 'mundo.uebernehmenMehrere', { n: items.length })
+                  : t('mundo.auswaehlen')}
               </button>
-              <p className="text-xs text-gray-400 text-center mt-2">Werden direkt zugewiesen</p>
+              <p className="text-xs text-gray-400 text-center mt-2">{t('mundo.direktZugewiesen')}</p>
             </div>
           </div>
         </div>

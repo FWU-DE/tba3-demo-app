@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   chartData: {
@@ -100,7 +101,7 @@ function fmtPct(v) {
   <div class="overview-grid">
     <!-- Donut card -->
     <div class="ov-card">
-      <div class="ov-card-title">Kompetenzübersicht</div>
+      <div class="ov-card-title">{{ t('bausteine.uebersicht.titel') }}</div>
       <div class="donut-wrap">
         <svg :key="animKey" viewBox="0 0 200 200" class="donut-svg">
           <path
@@ -126,7 +127,7 @@ function fmtPct(v) {
         >
           <div class="tt-header">
             <span class="tt-dot" :style="{ background: tooltip.slice.color }" />
-            <span class="tt-level">Stufe {{ tooltip.slice.level }}</span>
+            <span class="tt-level">{{ t('vokabular.stufe', { n: tooltip.slice.level }) }}</span>
           </div>
           <div class="tt-name">{{ tooltip.slice.name }}</div>
           <div class="tt-stats">
@@ -138,7 +139,7 @@ function fmtPct(v) {
         <div class="donut-center">
           <span v-if="subject" class="donut-subject">{{ subject }}</span>
           <span class="donut-total">{{ stats.total }}</span>
-          <span class="donut-label">Schüler*innen</span>
+          <span class="donut-label">{{ t('bausteine.uebersicht.schuelerinnen') }}</span>
         </div>
       </div>
 
@@ -152,24 +153,24 @@ function fmtPct(v) {
           @mouseleave="hoveredLevel = null"
         >
           <span class="legend-dot" :style="{ backgroundColor: d.color }" />
-          <span class="legend-text">Stufe {{ d.level }}</span>
+          <span class="legend-text">{{ t('vokabular.stufe', { n: d.level }) }}</span>
         </div>
       </div>
     </div>
 
     <!-- Stats card -->
     <div class="ov-card">
-      <div class="ov-card-title">Schlüsselkennzahlen</div>
+      <div class="ov-card-title">{{ t('bausteine.uebersicht.kennzahlen') }}</div>
       <div class="stats-wrap" :key="animKey">
         <div class="stat-block stat-green" data-testid="stat-at-or-above">
           <div class="stat-value">{{ fmtPct(atOrAbove) }}</div>
-          <div class="stat-name">Mindeststandard und darüber</div>
-          <div class="stat-sub">Kompetenzstufen II–V · {{ atOrAboveCount }} Schüler*innen</div>
+          <div class="stat-name">{{ t('bausteine.uebersicht.abMindeststandard') }}</div>
+          <div class="stat-sub">{{ t('bausteine.uebersicht.abMindeststandardZusatz', { n: atOrAboveCount }) }}</div>
         </div>
         <div class="stat-block stat-orange" data-testid="stat-below-standard" style="animation-delay: 0.15s">
           <div class="stat-value">{{ fmtPct(stats.belowStandard ?? 0) }}</div>
-          <div class="stat-name">Unter Mindeststandard</div>
-          <div class="stat-sub">Kompetenzstufe I · {{ belowCount }} Schüler*innen</div>
+          <div class="stat-name">{{ t('bausteine.uebersicht.unterMindeststandard') }}</div>
+          <div class="stat-sub">{{ t('bausteine.uebersicht.unterMindeststandardZusatz', { n: belowCount }) }}</div>
         </div>
       </div>
     </div>

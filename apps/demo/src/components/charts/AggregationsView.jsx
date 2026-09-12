@@ -4,10 +4,11 @@ import {
 } from 'recharts';
 import { useFilters } from '../../context/useFilters';
 import { useAggregations } from '../../hooks/useAggregations';
-import { COMPETENCE_LEVELS, GROUPS, SUBJECTS, GRADES } from '../../utils/constants';
+import { COMPETENCE_LEVELS, GROUPS } from '../../utils/constants';
 import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
+import { useKonstanten, useTexte } from '../../i18n';
 
 // ── Local fallback charts from student data ───────────────────────────────────
 
@@ -16,19 +17,21 @@ const LEVEL_KEYS = ['I', 'II', 'III', 'IV', 'V'];
 // Auf Modulebene, nicht im Render: sonst entsteht bei jedem Durchlauf eine
 // neue Komponente und Recharts hängt den Tooltip jedes Mal neu ein.
 const StufenTooltip = ({ active, payload }) => {
+  const t = useTexte();
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
-      <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
+      <p className="font-bold" style={{ color: d.color }}>{t('gemeinsam.stufe', { n: d.level })}</p>
       <p className="text-gray-600">{d.name}</p>
-      <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen</p>
-      <p className="text-gray-500">{d.pct}% der Gruppe</p>
+      <p className="mt-1">{t('aggregationen.schuelerZahl', { n: d.count })}</p>
+      <p className="text-gray-500">{t('aggregationen.anteilDerGruppe', { n: d.pct })}</p>
     </div>
   );
 };
 
 const LocalCompetenceChart = ({ students }) => {
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const counts = LEVEL_KEYS.reduce((acc, lk) => ({ ...acc, [lk]: 0 }), {});
   students.forEach((s) => { counts[s.competenceLevel] = (counts[s.competenceLevel] || 0) + 1; });
   const total = students.length;
@@ -69,6 +72,7 @@ const LocalCompetenceChart = ({ students }) => {
 };
 
 const LocalDomainChart = ({ students }) => {
+  const t = useTexte();
   // Collect all domain names from these students
   const domainCounts = {};
   const domainTotals = {};
@@ -112,10 +116,17 @@ const LocalDomainChart = ({ students }) => {
           axisLine={false}
         />
         <Tooltip
-          formatter={(value, name) => [`${value} Schüler*innen`, `Stufe ${name}`]}
+          formatter={(value, name) => [
+            t('aggregationen.schuelerZahl', { n: value }),
+            t('gemeinsam.stufe', { n: name }),
+          ]}
           contentStyle={{ fontSize: 12 }}
         />
-        <Legend formatter={(v) => `Stufe ${v}`} iconSize={10} wrapperStyle={{ fontSize: 11 }} />
+        <Legend
+          formatter={(v) => t('gemeinsam.stufe', { n: v })}
+          iconSize={10}
+          wrapperStyle={{ fontSize: 11 }}
+        />
         {LEVEL_KEYS.map((lk) => (
           <Bar key={lk} dataKey={lk} stackId="a" fill={COMPETENCE_LEVELS[lk]?.color} />
         ))}
@@ -127,18 +138,20 @@ const LocalDomainChart = ({ students }) => {
 // ── API-based chart: competence aggregation ───────────────────────────────────
 
 const ApiStufenTooltip = ({ active, payload }) => {
+  const t = useTexte();
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-3 py-2 text-sm">
-      <p className="font-bold" style={{ color: d.color }}>Stufe {d.level}</p>
+      <p className="font-bold" style={{ color: d.color }}>{t('gemeinsam.stufe', { n: d.level })}</p>
       <p className="text-gray-600">{d.name}</p>
-      <p className="mt-1"><span className="font-semibold">{d.count}</span> Schüler*innen ({d.pct}%)</p>
+      <p className="mt-1">{t('aggregationen.schuelerMitAnteil', { n: d.count, pct: d.pct })}</p>
     </div>
   );
 };
 
 const ApiCompetenceChart = ({ competenceAggregation }) => {
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const data = (competenceAggregation || []).map((comp) => ({
     level: comp.nameShort,
     count: comp.descriptiveStatistics?.frequency ?? 0,
@@ -167,8 +180,9 @@ const ApiCompetenceChart = ({ competenceAggregation }) => {
 // ── API-based chart: exercise solution frequencies ────────────────────────────
 
 const ExerciseChart = ({ exerciseAggregation }) => {
+  const t = useTexte();
   const data = (exerciseAggregation || []).map((ex, i) => ({
-    name: ex.exercise?.name || `Aufg. ${i + 1}`,
+    name: ex.exercise?.name || t('aggregationen.aufgabeKurz', { n: i + 1 }),
     pct: Math.round((ex.solutionFrequency ?? 0) * 100),
   }));
 
@@ -205,7 +219,10 @@ const ExerciseChart = ({ exerciseAggregation }) => {
           tickLine={false}
           axisLine={false}
         />
-        <Tooltip formatter={(v) => [`${v}%`, 'Lösungshäufigkeit']} contentStyle={{ fontSize: 12 }} />
+        <Tooltip
+          formatter={(v) => [`${v}%`, t('aggregationen.loesungshaeufigkeit')]}
+          contentStyle={{ fontSize: 12 }}
+        />
         <Bar dataKey="pct" radius={[0, 4, 4, 0]} maxBarSize={22} label={{ position: 'right', fontSize: 11, formatter: (v) => `${v}%` }}>
           {data.map((entry, i) => (
             <Cell key={i} fill={getBarColor(entry.pct)} />
@@ -228,6 +245,8 @@ const StatChip = ({ label, value }) => (
 // ── Main component ────────────────────────────────────────────────────────────
 
 const AggregationsView = ({ level, id }) => {
+  const t = useTexte();
+  const { SUBJECTS, GRADES } = useKonstanten();
   const { buildQueryParams, selectedLevel, selectedGroup, selectedSubject, selectedGrade } = useFilters();
   const { data, loading, error } = useAggregations(level, id, buildQueryParams());
 
@@ -259,7 +278,7 @@ const AggregationsView = ({ level, id }) => {
           subject={localSubject}
           grade={localGrade}
         />
-        <Card title="API-Aggregationen">
+        <Card title={t('aggregationen.apiTitel')}>
           <LoadingSkeleton height="200px" />
         </Card>
       </div>
@@ -281,7 +300,7 @@ const AggregationsView = ({ level, id }) => {
 
   // ── API data available ──
   const groupedByDomain = data.reduce((acc, item) => {
-    const domainName = item.domain?.name || 'Gesamt';
+    const domainName = item.domain?.name || t('aggregationen.gesamt');
     if (!acc[domainName]) acc[domainName] = [];
     acc[domainName].push(item);
     return acc;
@@ -321,28 +340,38 @@ const AggregationsView = ({ level, id }) => {
 // ── Local data section (always rendered) ─────────────────────────────────────
 
 const LocalDataSection = ({ students, levelCounts, group, subject, grade }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const total = students.length;
   const dominant = LEVEL_KEYS.reduce((a, b) => (levelCounts[a] >= levelCounts[b] ? a : b));
   const atRisk = (levelCounts['I'] || 0) + (levelCounts['II'] || 0);
 
   return (
-    <Card title={`Kompetenzverteilung – ${group?.name ?? (subject?.name ? `${subject.name} ${grade?.name ?? ''}` : 'Alle')}`}>
+    <Card
+      title={t('aggregationen.verteilungTitel', {
+        auswahl:
+          group?.name ??
+          (subject?.name ? `${subject.name} ${grade?.name ?? ''}`.trim() : t('aggregationen.alle')),
+      })}
+    >
       <p className="text-xs text-gray-500 mb-4">
-        Verteilung der Kompetenzstufen basierend auf den Schülerdaten der aktuellen Auswahl.
+        {t('aggregationen.verteilungEinleitung')}
       </p>
 
       {/* Stat chips */}
       <div className="grid grid-cols-4 gap-3 mb-6">
-        <StatChip label="Schüler*innen" value={total} />
+        <StatChip label={t('aggregationen.schuelerinnen')} value={total} />
         <StatChip
-          label="Häufigste Stufe"
+          label={t('aggregationen.haeufigsteStufe')}
           value={
-            <span style={{ color: COMPETENCE_LEVELS[dominant]?.color }}>Stufe {dominant}</span>
+            <span style={{ color: COMPETENCE_LEVELS[dominant]?.color }}>
+              {t('gemeinsam.stufe', { n: dominant })}
+            </span>
           }
         />
-        <StatChip label="Förder­bedarf (I–II)" value={atRisk} />
+        <StatChip label={t('aggregationen.foerderbedarf')} value={atRisk} />
         <StatChip
-          label="Anteil I–II"
+          label={t('aggregationen.anteilIundII')}
           value={total > 0 ? `${Math.round((atRisk / total) * 100)}%` : '–'}
         />
       </div>
@@ -350,12 +379,12 @@ const LocalDataSection = ({ students, levelCounts, group, subject, grade }) => {
       {/* Competence level bar chart */}
       <div className="mb-6">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-          Verteilung nach Kompetenzstufe
+          {t('aggregationen.nachStufe')}
         </p>
         {total > 0 ? (
           <LocalCompetenceChart students={students} />
         ) : (
-          <p className="text-sm text-gray-400 text-center py-8">Keine Schüler*innen für diese Auswahl.</p>
+          <p className="text-sm text-gray-400 text-center py-8">{t('aggregationen.keineSchueler')}</p>
         )}
       </div>
 
@@ -363,7 +392,7 @@ const LocalDataSection = ({ students, levelCounts, group, subject, grade }) => {
       {total > 0 && (
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Verteilung nach Teilbereichen
+            {t('aggregationen.nachTeilbereichen')}
           </p>
           <LocalDomainChart students={students} />
         </div>
@@ -375,6 +404,7 @@ const LocalDataSection = ({ students, levelCounts, group, subject, grade }) => {
 // ── Single aggregation section (API data) ─────────────────────────────────────
 
 const AggSection = ({ agg }) => {
+  const t = useTexte();
   const stats = agg.descriptiveStatistics;
 
   return (
@@ -384,24 +414,27 @@ const AggSection = ({ agg }) => {
           <h5 className="text-sm font-semibold text-gray-700">
             {agg.type === 'custom' ? agg.value : agg.type}
           </h5>
-          <p className="text-xs text-gray-400">{agg.includedIqbIds?.length ?? 0} Items</p>
+          <p className="text-xs text-gray-400">{t('aggregationen.items', { n: agg.includedIqbIds?.length ?? 0 })}</p>
         </div>
         {stats && (
           <div className="text-right flex-shrink-0">
             <div className="text-2xl font-bold text-primary">
               {Math.round((stats.mean ?? 0) * 100)}%
             </div>
-            <div className="text-xs text-gray-500">Ø Lösungshäufigkeit</div>
+            <div className="text-xs text-gray-500">{t('aggregationen.mittlereLoesung')}</div>
           </div>
         )}
       </div>
 
       {stats && (
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <StatChip label="Gesamt" value={stats.total ?? 0} />
-          <StatChip label="Häufigkeit" value={stats.frequency ?? 0} />
+          <StatChip label={t('aggregationen.gesamt')} value={stats.total ?? 0} />
+          <StatChip label={t('aggregationen.haeufigkeit')} value={stats.frequency ?? 0} />
           {stats.standardDeviation !== undefined && (
-            <StatChip label="Standardabw." value={(stats.standardDeviation ?? 0).toFixed(3)} />
+            <StatChip
+              label={t('aggregationen.standardabweichung')}
+              value={(stats.standardDeviation ?? 0).toFixed(3)}
+            />
           )}
         </div>
       )}
@@ -409,7 +442,7 @@ const AggSection = ({ agg }) => {
       {agg.competenceAggregation?.length > 0 && (
         <div className="mb-4">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-            Kompetenzstufen-Verteilung
+            {t('aggregationen.stufenVerteilung')}
           </p>
           <ApiCompetenceChart competenceAggregation={agg.competenceAggregation} />
         </div>
@@ -418,7 +451,7 @@ const AggSection = ({ agg }) => {
       {agg.exerciseAggregation?.length > 0 && (
         <div>
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-            Aufgaben – Lösungshäufigkeit ({agg.exerciseAggregation.length})
+            {t('aggregationen.aufgabenLoesung', { n: agg.exerciseAggregation.length })}
           </p>
           <ExerciseChart exerciseAggregation={agg.exerciseAggregation} />
         </div>

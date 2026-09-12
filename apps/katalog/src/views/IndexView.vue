@@ -1,4 +1,6 @@
 <script setup>
+import { t } from '../i18n';
+
 const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-catalog/src/components/';
 
 const COMPONENTS = [
@@ -8,12 +10,6 @@ const COMPONENTS = [
     githubFile: 'ItemExpectedActualChart.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Tatsächliche vs. erwartete Lösungsquote pro Aufgabe. Der Erwartungswert kommt aus dem Rasch-Modell (BISTA-Parameter). Rot = unter Erwartung → direkter didaktischer Hinweis.',
-    useCases: [
-      'Welche Aufgaben hat die Klasse besser/schlechter als erwartet gelöst?',
-      'Didaktischer Handlungsbedarf auf Aufgabenebene erkennen',
-      'Rasch-Erwartungswert aus bistaPoints, kein neuer Endpunkt nötig',
-    ],
     api: '/groups/{id}/items',
     preview: 'item-expected',
   },
@@ -23,12 +19,6 @@ const COMPONENTS = [
     githubFile: 'MeanComparisonChart.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Mittlere Lösungsquote als Diamant-Marker auf einer horizontalen Skala. Vergleicht Klasse, Schule, Fairen Vergleich (⚖ Standorttyp) und Bundesland — inkl. optionaler Konfidenzintervalle.',
-    useCases: [
-      'Wo liegt meine Klasse im Vergleich zu ähnlichen Schulen?',
-      'Fairer Vergleich (Standorttyp) als Referenzlinie',
-      'Konfidenzintervalle für Lehrpersonen-Feedback',
-    ],
     api: '/groups, /schools, /states (items)',
     preview: 'mean-comparison',
   },
@@ -38,11 +28,6 @@ const COMPONENTS = [
     githubFile: 'BistaDistributionChart.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Alle Schüler*innen als Avatar-Icons auf einem horizontalen BISTA-Wertestrahl. Drei Kompetenzstreifen (KS I–III) als Hintergrund. Mouseover zeigt StudentTooltip mit Detailinformationen.',
-    useCases: [
-      'Individuelle BISTA-Scores einer Klasse visualisieren',
-      'Kompetenzzonenverteilung auf Schüler*innenebene',
-    ],
     api: 'Schülerdaten mit BISTA-Werten',
     preview: 'bista',
   },
@@ -52,11 +37,6 @@ const COMPONENTS = [
     githubFile: 'CompetencyOverviewCards.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Zwei Karten nebeneinander: SVG-Donut-Diagramm mit Kompetenzstufenverteilung und Schlüsselkennzahlen (Mindeststandard und darüber vs. darunter).',
-    useCases: [
-      'Schnellübersicht Kompetenzverteilung einer Klasse',
-      'Anteil Schüler*innen über/unter Mindeststandard',
-    ],
     api: '/groups (competence-levels)',
     preview: 'donut',
   },
@@ -66,12 +46,6 @@ const COMPONENTS = [
     githubFile: 'PercentileBandChart.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Visualisiert Lösungshäufigkeit oder Perzentilrang pro Aufgabe als Diamant-Marker, überlagert mit einem Streuungsband der Referenzgruppe.',
-    useCases: [
-      'Klasse vs. Schule — Lösungshäufigkeit',
-      'Schule vs. Bundesland — Lösungshäufigkeit',
-      'Schüler*in Perzentilrang in der Klasse',
-    ],
     api: '/groups, /schools, /states',
     preview: 'band',
   },
@@ -81,11 +55,6 @@ const COMPONENTS = [
     githubFile: 'CompetenceLevelBar.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Zeigt die Kompetenzstufenverteilung (I–V) als horizontale Stapelbalken. Mehrere Ebenen (Klasse, Schule, Bundesland) direkt vergleichbar.',
-    useCases: [
-      'Kompetenzstufenverteilung einer Klasse',
-      'Vergleich Klasse · Schule · Bundesland',
-    ],
     api: '/groups, /schools, /states (competence-levels)',
     preview: 'stacked',
   },
@@ -95,12 +64,6 @@ const COMPONENTS = [
     githubFile: 'StudentSolutionTable.vue',
     tag: 'Tabelle',
     tagSeverity: 'secondary',
-    desc: 'Lösungshäufigkeiten auf Schüler:innen-Ebene. Barrierefreie Balken (Blau/Orange statt Rot/Grün), sortierbar nach Lösungsquote, Verlinkung zu Testheft und SuS-Lösungen.',
-    useCases: [
-      'Individuelle Lösungsquoten pro Schüler:in und Kompetenzbereich',
-      'Sortierung hoch → tief / tief → hoch nach Lösungsquote',
-      'Verlinkung zu Testheft und SuS-Lösungsansichten',
-    ],
     api: '/groups (items?type=students)',
     preview: 'student-solution',
   },
@@ -110,12 +73,6 @@ const COMPONENTS = [
     githubFile: 'ItemSolutionTable.vue',
     tag: 'Tabelle',
     tagSeverity: 'secondary',
-    desc: 'Lösungsquoten auf Aufgabenebene als sortierbare Tabelle mit internen Balkendiagrammen. Spaltentoggle und Textsuche für Kompetenz, Stufe und Aufgabentitel.',
-    useCases: [
-      'Lösungsquoten Klasse vs. Schule vs. Bundesland',
-      'Suche & Filter nach Aufgabe / Kompetenz / Stufe',
-      'Opt-in: Kompetenztyp und numerische Prozentwerte',
-    ],
     api: '/groups, /schools, /states (items)',
     preview: 'table',
   },
@@ -125,12 +82,6 @@ const COMPONENTS = [
     githubFile: 'StudentScatterPlot.vue',
     tag: 'SVG',
     tagSeverity: 'info',
-    desc: 'Schüler*innen-Scatter: Kompetenzstufe (X) × Rohwert % (Y) mit K-Means-Clustering, Konvex-Hüll-Regionen (dashed) und interaktiver Detailcard.',
-    useCases: [
-      'Leistungsverteilung einer Klasse im Überblick',
-      'Gruppen ähnlicher Schüler*innen identifizieren',
-      'Einzelne Schüler*in im Klassenkontext verorten',
-    ],
     api: '/groups (items?type=students)',
     preview: 'scatter',
   },
@@ -140,11 +91,8 @@ const COMPONENTS = [
 <template>
   <main class="index-main">
     <div class="index-intro">
-      <h2 class="intro-heading">Komponenten</h2>
-      <p class="intro-text">
-        Vue 3 SVG-Visualisierungen für VERA-Auswertungsdaten.
-        Alle Komponenten lesen die TBA3-Auswertungsschnittstelle direkt — keine granularen Schülerdaten nötig.
-      </p>
+      <h2 class="intro-heading">{{ t('index.ueberschrift') }}</h2>
+      <p class="intro-text">{{ t('index.einleitung') }}</p>
     </div>
 
     <div class="index-grid">
@@ -171,16 +119,16 @@ const COMPONENTS = [
             <circle cx="55" cy="60" r="38" fill="none" stroke="#15803d" stroke-width="22"
               stroke-dasharray="41 203" stroke-dashoffset="-162" />
             <text x="55" y="57" text-anchor="middle" font-size="9" font-weight="700" fill="#0f172a">25</text>
-            <text x="55" y="67" text-anchor="middle" font-size="5.5" fill="#94a3b8">Schüler*innen</text>
+            <text x="55" y="67" text-anchor="middle" font-size="5.5" fill="#94a3b8">{{ t('vokabular.schuelerinnen') }}</text>
             <!-- Right: stat blocks -->
             <rect x="104" y="12" width="88" height="40" rx="5" fill="#22c55e" />
             <text x="110" y="28" font-size="11" font-weight="700" fill="white">68 %</text>
-            <text x="110" y="39" font-size="5.5" fill="rgba(255,255,255,0.9)">Mindeststandard+</text>
-            <text x="110" y="47" font-size="5" fill="rgba(255,255,255,0.75)">Stufen II–V · 17 Schüler*innen</text>
+            <text x="110" y="39" font-size="5.5" fill="rgba(255,255,255,0.9)">{{ t('vokabular.mindeststandardPlus') }}</text>
+            <text x="110" y="47" font-size="5" fill="rgba(255,255,255,0.75)">{{ t('vokabular.stufenIIbisV', { n: 17 }) }}</text>
             <rect x="104" y="58" width="88" height="40" rx="5" fill="#f97316" />
             <text x="110" y="74" font-size="11" font-weight="700" fill="white">32 %</text>
-            <text x="110" y="85" font-size="5.5" fill="rgba(255,255,255,0.9)">Unter Mindeststandard</text>
-            <text x="110" y="93" font-size="5" fill="rgba(255,255,255,0.75)">Stufe I · 8 Schüler*innen</text>
+            <text x="110" y="85" font-size="5.5" fill="rgba(255,255,255,0.9)">{{ t('vokabular.unterMindeststandard') }}</text>
+            <text x="110" y="93" font-size="5" fill="rgba(255,255,255,0.75)">{{ t('vokabular.stufeIMitZahl', { n: 8 }) }}</text>
           </svg>
 
           <!-- Band chart preview -->
@@ -211,7 +159,7 @@ const COMPONENTS = [
             <rect x="0" y="0" width="200" height="120" fill="#f8fafc" rx="4" />
             <!-- Header -->
             <rect x="0" y="0" width="200" height="14" fill="#f1f5f9" />
-            <text x="4"   y="10" font-size="5" fill="#94a3b8" font-weight="700">SCHÜLER:IN</text>
+            <text x="4"   y="10" font-size="5" fill="#94a3b8" font-weight="700">{{ t('vokabular.schuelerinKurz') }}</text>
             <text x="72"  y="10" font-size="5" fill="#94a3b8" font-weight="700">INSGESAMT ▼</text>
             <text x="130" y="10" font-size="5" fill="#94a3b8" font-weight="700">LESEN</text>
             <!-- Rows -->
@@ -245,7 +193,7 @@ const COMPONENTS = [
               <rect x="0" :y="16+ri*20" width="200" :height="20" :fill="ri%2===0?'#fff':'#f8fafc'" />
               <!-- domain chip -->
               <rect x="4" :y="20+ri*20" width="42" height="10" rx="4" :fill="row[2]" />
-              <text x="6" :y="28+ri*20" font-size="5" :fill="row[1]" font-family="system-ui">Hörverstehen</text>
+              <text x="6" :y="28+ri*20" font-size="5" :fill="row[1]" font-family="system-ui">{{ t('vokabular.hoerverstehen') }}</text>
               <!-- level badge -->
               <rect x="54" :y="20+ri*20" width="14" height="10" rx="2" :fill="row[4]" />
               <text x="57" :y="28+ri*20" font-size="6" fill="white" font-weight="700" font-family="system-ui">{{ row[3] }}</text>
@@ -396,21 +344,21 @@ const COMPONENTS = [
             <line x1="134" y1="12" x2="134" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
             <line x1="200" y1="12" x2="200" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
             <!-- Row 1: Klasse -->
-            <text x="46" y="34" text-anchor="end" font-size="7" fill="#374151">Klasse</text>
+            <text x="46" y="34" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.klasse') }}</text>
             <line x1="60" y1="30" x2="95" y2="30" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="60" y1="25" x2="60" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="95" y1="25" x2="95" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
             <polygon points="77,21 85,30 77,39 69,30" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
             <text x="77" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">55</text>
             <!-- Row 2: Schule -->
-            <text x="46" y="56" text-anchor="end" font-size="7" fill="#374151">Schule</text>
+            <text x="46" y="56" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.schule') }}</text>
             <line x1="72" y1="52" x2="105" y2="52" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="72" y1="47" x2="72" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="105" y1="47" x2="105" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
             <polygon points="88,43 96,52 88,61 80,52" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
             <text x="88" y="54" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">62</text>
             <!-- Row 3: Fairer Vergleich (teal) -->
-            <text x="40" y="78" text-anchor="end" font-size="7" fill="#0f766e">Fairer Vgl.</text>
+            <text x="40" y="78" text-anchor="end" font-size="7" fill="#0f766e">{{ t('vokabular.fairerVergleichKurz') }}</text>
             <text x="46" y="78" text-anchor="end" font-size="9">⚖</text>
             <line x1="68" y1="74" x2="103" y2="74" stroke="#0d9488" stroke-width="2" stroke-linecap="round"/>
             <line x1="68" y1="69" x2="68" y2="79" stroke="#0d9488" stroke-width="1.5"/>
@@ -418,7 +366,7 @@ const COMPONENTS = [
             <polygon points="85,65 93,74 85,83 77,74" fill="#0d9488" stroke="#0f766e" stroke-width="1"/>
             <text x="85" y="76" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">60</text>
             <!-- Row 4: Bundesland -->
-            <text x="46" y="100" text-anchor="end" font-size="7" fill="#374151">Bundesland</text>
+            <text x="46" y="100" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.bundesland') }}</text>
             <line x1="90" y1="96" x2="130" y2="96" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="90" y1="91" x2="90" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="130" y1="91" x2="130" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
@@ -430,21 +378,21 @@ const COMPONENTS = [
           <svg v-else-if="comp.preview === 'stacked'" viewBox="0 0 200 120" class="preview-svg">
             <g transform="translate(50, 15)">
               <!-- Row 1: Klasse -->
-              <text x="-4" y="17" text-anchor="end" font-size="8" fill="#64748b">Klasse</text>
+              <text x="-4" y="17" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.klasse') }}</text>
               <rect x="0" y="5" width="42" height="16" fill="#ef4444" rx="1" />
               <rect x="42" y="5" width="30" height="16" fill="#f97316" rx="1" />
               <rect x="72" y="5" width="28" height="16" fill="#eab308" rx="1" />
               <rect x="100" y="5" width="22" height="16" fill="#22c55e" rx="1" />
               <rect x="122" y="5" width="28" height="16" fill="#15803d" rx="1" />
               <!-- Row 2: Schule -->
-              <text x="-4" y="52" text-anchor="end" font-size="8" fill="#64748b">Schule</text>
+              <text x="-4" y="52" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.schule') }}</text>
               <rect x="0" y="40" width="32" height="16" fill="#ef4444" rx="1" />
               <rect x="32" y="40" width="34" height="16" fill="#f97316" rx="1" />
               <rect x="66" y="40" width="30" height="16" fill="#eab308" rx="1" />
               <rect x="96" y="40" width="26" height="16" fill="#22c55e" rx="1" />
               <rect x="122" y="40" width="28" height="16" fill="#15803d" rx="1" />
               <!-- Row 3: Land -->
-              <text x="-4" y="87" text-anchor="end" font-size="8" fill="#64748b">Land</text>
+              <text x="-4" y="87" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.land') }}</text>
               <rect x="0" y="75" width="24" height="16" fill="#ef4444" rx="1" />
               <rect x="24" y="75" width="28" height="16" fill="#f97316" rx="1" />
               <rect x="52" y="75" width="34" height="16" fill="#eab308" rx="1" />
@@ -466,9 +414,9 @@ const COMPONENTS = [
             <code class="card-name">{{ comp.name }}</code>
             <span class="card-api-badge">{{ comp.api }}</span>
           </div>
-          <p class="card-desc">{{ comp.desc }}</p>
+          <p class="card-desc">{{ t(`komponenten.${comp.name}.beschreibung`) }}</p>
           <ul class="card-use-cases">
-            <li v-for="uc in comp.useCases" :key="uc">{{ uc }}</li>
+            <li v-for="fall in t(`komponenten.${comp.name}.faelle`)" :key="fall">{{ fall }}</li>
           </ul>
         </div>
 
@@ -484,9 +432,9 @@ const COMPONENTS = [
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
             </svg>
-            Source
+            {{ t('index.quelltext') }}
           </a>
-          <span class="card-link">Öffnen <i class="pi pi-arrow-right" /></span>
+          <span class="card-link">{{ t('index.oeffnen') }} <i class="pi pi-arrow-right" /></span>
         </div>
       </RouterLink>
     </div>

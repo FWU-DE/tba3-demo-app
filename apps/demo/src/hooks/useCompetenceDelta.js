@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { tba3Api } from '../services/tba3Api';
 import { GROUPS } from '../utils/constants';
+import { uebersetze } from '../i18n';
 
-const DOMAIN_LABELS = {
-  ho: 'Hörverstehen',
-  le: 'Leseverstehen',
-  rs: 'Rechtschreibung',
-};
+// Beschriftungen kommen aus i18n/texte.js (`vergleich.domaenen`); unbekannte
+// Kürzel bleiben, wie die Schnittstelle sie liefert.
+const DOMAIN_CODES = ['ho', 'le', 'rs'];
+const domainLabel = (code) =>
+  DOMAIN_CODES.includes(code) ? uebersetze(`vergleich.domaenen.${code}`) : code;
 
 function extractByDomain(apiData) {
   const result = {};
@@ -107,7 +108,7 @@ export function useCompetenceDelta(groupId, stateId = 'beispielland') {
 
         const domains = Object.keys(ownByDomain).map(code => ({
           code,
-          label: DOMAIN_LABELS[code] || code,
+          label: domainLabel(code),
         }));
 
         const ownStats = Object.fromEntries(
@@ -148,7 +149,7 @@ export function useCompetenceDelta(groupId, stateId = 'beispielland') {
             ownStats,
             comparisons,
             availableComparisons: [
-              { id: 'landesmittelwert', label: 'Landesmittelwert' },
+              { id: 'landesmittelwert', label: uebersetze('vergleich.landesmittelwert') },
               ...peers.map(p => ({ id: p.id, label: p.name })),
             ],
             currentGroup,

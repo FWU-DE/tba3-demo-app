@@ -1,12 +1,14 @@
 <script setup>
 import { computed } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   items: { type: Array, required: true },
   title: { type: String, default: '' },
-  markerLabel: { type: String, default: 'Schüler*in' },
-  bandLabel: { type: String, default: 'Streuungsband (MW ± 1 SD)' },
-  xAxisLabel: { type: String, default: 'Lösungshäufigkeit (%)' },
+  // Ohne Angabe stehen hier die übersetzten Vorgaben.
+  markerLabel: { type: String, default: null },
+  bandLabel: { type: String, default: null },
+  xAxisLabel: { type: String, default: null },
 });
 
 // ── Layout ────────────────────────────────────────────────────────────────────
@@ -195,26 +197,26 @@ const axisLabelY = computed(() => PAD_TOP + props.items.length * ROW_H + 30);
           <g transform="translate(152,0)">
             <rect x="0" y="-5" width="12" height="10" rx="2"
                   fill="rgba(90,155,210,0.50)" stroke="rgba(60,125,185,0.70)" stroke-width="1" />
-            <text x="16" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">{{ bandLabel }}</text>
+            <text x="16" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">{{ bandLabel ?? t('bausteine.band.band') }}</text>
           </g>
 
           <!-- Green swatch -->
           <g transform="translate(350,0)">
             <rect x="0" y="-5" width="12" height="10" rx="2" fill="rgba(74,222,128,0.55)" />
-            <text x="16" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">überdurchschnittlich</text>
+            <text x="16" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">{{ t('bausteine.band.ueberdurchschnittlich') }}</text>
           </g>
 
           <!-- Diamond marker -->
           <g transform="translate(500,0)">
             <path :d="diamond(6, 0)" fill="#1e3a5f" stroke="white" stroke-width="0.8" />
-            <text x="15" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">{{ markerLabel }}</text>
+            <text x="15" y="4" font-size="10" fill="#64748b" font-family="system-ui,sans-serif">{{ markerLabel ?? t('bausteine.band.marker') }}</text>
           </g>
         </g>
 
         <!-- ── X-axis label ───────────────────────────────────────────────── -->
         <text :x="LABEL_W + CHART_W / 2" :y="axisLabelY"
               text-anchor="middle" font-size="10" fill="#94a3b8"
-              font-style="italic" font-family="system-ui, sans-serif">{{ xAxisLabel }}</text>
+              font-style="italic" font-family="system-ui, sans-serif">{{ xAxisLabel ?? t('bausteine.band.achse') }}</text>
       </svg>
     </div>
   </figure>

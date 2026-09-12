@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { uebersetze } from '../i18n';
 
 /**
  * Gemeinsame Grundlage der Daten-Hooks: lädt eine Ebene (Gruppe, Schule,
@@ -45,7 +46,7 @@ export const useApiDaten = (abrufe, level, id, params = {}) => {
 
   // Eine unbekannte Ebene ist ein Aufruffehler, kein Ladezustand — deshalb hier
   // abgeleitet statt im Effekt gesetzt.
-  const ebenenFehler = abrufen ? null : new Error(`Unbekannte Ebene: ${level}`);
+  const ebenenFehler = abrufen ? null : new Error(uebersetze('ausgabe.unbekannteEbene', { ebene: level }));
 
   return {
     data: ergebnis.data,

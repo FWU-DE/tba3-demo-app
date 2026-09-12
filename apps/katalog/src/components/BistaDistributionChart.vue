@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import StudentTooltip from './StudentTooltip.vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   students: { type: Array, required: true },
@@ -46,11 +47,11 @@ const zoneRects = computed(() =>
 );
 
 // ── Student enrichment ─────────────────────────────────────────────────────────
-const COMPETENCY = {
-  'KS I':   { level: 'Unter Mindeststandard', desc: 'Grundlegende Kompetenzen noch nicht gesichert.' },
-  'KS II':  { level: 'Mindeststandard',        desc: 'Grundlegende Kompetenzen vorhanden.'            },
-  'KS III': { level: 'Über Mindeststandard',   desc: 'Regelstandard oder Optimalstandard erreicht.'   },
-};
+// Beschriftung der Kompetenzzonen: texte.js führt sie unter `bausteine.bista.zonen`.
+const zonenText = (zone) => ({
+  level: t(`bausteine.bista.zonen.${zone}.level`),
+  desc: t(`bausteine.bista.zonen.${zone}.desc`),
+});
 
 function getZone(score) {
   for (const z of props.zones) {
@@ -83,7 +84,7 @@ const xTicks = computed(() => {
 // ── Chart title ────────────────────────────────────────────────────────────────
 const chartTitle = computed(() =>
   props.title ??
-  `Verteilung der Kompetenzen in ${props.subject} in der Klasse ${props.groupClass}`
+  t('bausteine.bista.titel', { fach: props.subject, klasse: props.groupClass })
 );
 const subtitle = computed(() => `(${props.students.length} SuS)`);
 
@@ -175,7 +176,7 @@ function onStudentLeave() {
       </g>
 
       <!-- X-axis title -->
-      <text x="465" y="275" text-anchor="middle" font-size="11" fill="#64748b">BISTA Werte</text>
+      <text x="465" y="275" text-anchor="middle" font-size="11" fill="#64748b">{{ t('bausteine.bista.achse') }}</text>
     </svg>
 
     <!-- Floating tooltip (StudentTooltip component) -->

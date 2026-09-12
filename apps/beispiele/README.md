@@ -1,18 +1,40 @@
 # Rückmeldungsbeispiele
 
-Platzhalter für die vollständigen Rückmeldungsbeispiele — die Beispiele selbst folgen noch.
+Übersicht der 16 prototypischen Rückmeldungen, ausgeliefert unter `/beispiele`.
 
-Was hier liegt, wird von `tools/build-site.mjs` unverändert nach `dist/beispiele/`
-kopiert und ist dann unter `/beispiele` erreichbar; `README.md` wird dabei ausgelassen.
-Solange der Ordner nur diese Datei enthält, entsteht kein Bereich im Deployment.
+Jede Rückmeldung liegt in einem **eigenen Repository** und wird über GitHub Pages
+veröffentlicht — hier steht nur der Verweis darauf. Dieser Bereich ist statisches
+HTML ohne Build; `tools/build-site.mjs` kopiert ihn unverändert nach
+`dist/beispiele/` (ohne `README.md` und Testdateien).
 
-Sobald die Beispiele da sind:
+## Eine Rückmeldung eintragen oder freischalten
 
-1. Inhalte hier ablegen (statisches HTML genügt; wird es eine eigene App, kommt sie
-   als Workspace `@tba3/beispiele` in die Root-`package.json` und baut nach
-   `apps/beispiele/dist` — dann in `tools/build-site.mjs` die Quelle entsprechend
-   umstellen).
-2. Im Portal (`apps/portal/index.html`) die Karte „Rückmeldungsbeispiele“ von
-   `<div class="karte bald">` auf `<a class="karte" href="/beispiele">` umstellen und
-   das Schild „in Vorbereitung“ entfernen.
-3. Bei eigenem Routing den SPA-Fallback `/beispiele/:path*` in `vercel.json` ergänzen.
+Alles steht in [`rueckmeldungen.js`](./rueckmeldungen.js) — eine Datei, sonst nichts:
+
+```js
+{
+  id: 'de-v3-lehrkraft',
+  titel: 'Klassenrückmeldung Deutsch, Klasse 3',
+  beschreibung: '…',
+  fach: 'DE',            // FAECHER
+  stufe: 'V3',           // STUFEN
+  zielgruppe: 'lehrkraft', // ZIELGRUPPEN
+  url: 'https://fwu-de.github.io/tba3-rueckmeldung-…/',
+}
+```
+
+Ohne `url` erscheint der Eintrag als „in Vorbereitung“ und ist nicht klickbar;
+sobald die Seite steht, wird er verlinkt. Titel, Beschreibungen und die Zuordnung
+zu Fach, Klassenstufe und Zielgruppe sind derzeit **Platzhalter** (4 Fächer ×
+2 Klassenstufen × 2 Zielgruppen), damit die Filter sichtbar arbeiten.
+
+## Filter
+
+Gefiltert wird nach Fach, Klassenstufe und Zielgruppe. Ein weiterer Filter kostet
+einen Eintrag in `FILTER` plus das Feld an den Rückmeldungen — Seite und Adresszeile
+(`?fach=DE&stufe=V3`) ziehen automatisch mit. Angeboten werden nur Werte, die
+mindestens einmal vorkommen; `ZIELGRUPPEN` kennt deshalb schon „Schüler:in“ und
+„Eltern“, ohne dass sie in der Auswahl auftauchen.
+
+Die Logik (`filtern`, `optionen`) ist von der Seite getrennt und wird in
+`rueckmeldungen.test.mjs` geprüft (`npm test`).

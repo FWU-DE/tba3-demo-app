@@ -8,13 +8,14 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import ItemExpectedActualChart from '../components/ItemExpectedActualChart.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'ItemExpectedActualChart.vue',
   propsDocs: [
-    { name: 'items',  type: 'Array',  required: true,  description: 'Ein Eintrag pro Aufgabe: { label, level, actual, expected }. actual und expected in Prozent (0–100).' },
-    { name: 'title',  type: 'String', default: "''",   description: 'Optionaler Titel.' },
-    { name: 'domain', type: 'String', default: "''",   description: 'Domänenname als Abschnittsüberschrift.' },
+    { name: 'items',  type: 'Array',  required: true,  pfad: 'ansichten.erwartung.props.items' },
+    { name: 'title',  type: 'String', default: "''",   pfad: 'ansichten.erwartung.props.title' },
+    { name: 'domain', type: 'String', default: "''",   pfad: 'ansichten.erwartung.props.domain' },
   ],
   dataShape: `// items-Element
 {
@@ -73,10 +74,18 @@ onMounted(async () => {
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items', description: 'Aufgabendaten mit descriptiveStatistics.mean und parameters.bistaPoints' },
+    { method: 'GET', path: '/groups/{id}/items', pfad: 'ansichten.erwartung.endpunkte.gruppe' },
   ],
-  apiNote: 'Kein zusätzlicher Endpunkt nötig. Der Erwartungswert wird clientseitig via Rasch-Modell aus bistaPoints und dem geschätzten Klassen-BISTA berechnet.',
+  apiNotePfad: 'ansichten.erwartung.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch',  label: '3a Deutsch',    schoolId: 'gs-musterstadt',    stateId: 'beispielland' },
@@ -169,24 +178,22 @@ const domainCharts = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">ItemExpectedActualChart</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Tatsächliche vs. erwartete Lösungsquote pro Aufgabe</strong><br />
-              Zeigt für jede Aufgabe, ob die Klasse über oder unter dem statistisch erwarteten Wert liegt.
-              Der Erwartungswert wird clientseitig via <strong>Rasch-Modell</strong> aus den
-              BISTA-Schwierigkeitsparametern und dem geschätzten Klassen-Niveau berechnet.
+              <strong>{{ t('ansichten.erwartung.titel') }}</strong><br />
+              <span v-html="t('ansichten.erwartung.beschreibung')" />
               Rot = systematisch unter Erwartung → didaktischer Handlungsbedarf.
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
-              <span><code>/groups/{id}/items</code> — kein zusätzlicher Endpunkt</span>
+              <span><code>/groups/{id}/items</code> {{ t('ansichten.erwartung.keinEndpunkt') }}</span>
             </div>
             <div class="use-case-note use-case-formula">
               <i class="pi pi-calculator" />
               <span>
                 P<sub>erwartet</sub> = 1 / (1 + e<sup>−(θ<sub>Klasse</sub> − β<sub>Aufgabe</sub>) / 50</sup>)
-                &nbsp;·&nbsp; θ = mittl. BISTA gelöster Aufgaben &nbsp;·&nbsp; β = parameters.bistaPoints
+                &nbsp;·&nbsp; {{ t('ansichten.erwartung.formelZusatz') }} &nbsp;·&nbsp; β = parameters.bistaPoints
               </span>
             </div>
           </div>
@@ -197,12 +204,12 @@ const domainCharts = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
           <div v-if="classBista && !loading" class="bista-badge">
-            <span class="bista-label">Geschätztes Klassen-Niveau</span>
+            <span class="bista-label">{{ t('ansichten.erwartung.klassenNiveau') }}</span>
             <span class="bista-value">Ø {{ Math.round(classBista) }} BISTA</span>
           </div>
         </div>
@@ -211,7 +218,7 @@ const domainCharts = computed(() => {
           <Skeleton v-for="n in 8" :key="n" height="28px" class="mb-2" />
         </div>
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
           Keine Daten.
@@ -230,11 +237,11 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="ItemExpectedActualChart"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

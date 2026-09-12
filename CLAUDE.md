@@ -11,7 +11,8 @@ npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
 npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 npm run build          # alle Bereiche → dist/
 npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
-npm test               # Vitest (apps/demo mit jsdom, tools/ als Node)
+npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
+                       #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
 npm run lint           # ESLint über apps/demo
 ```
@@ -28,21 +29,21 @@ und Mock-Antworten.
 
 ## Architektur
 
-Monorepo mit vier Bereichen, die zu **einem** Deployment zusammengesetzt werden.
+Monorepo mit fünf Bereichen, die zu **einem** Deployment zusammengesetzt werden.
 
 ```
 apps/portal/        Startseite (/) und API-Referenz (/schnittstelle) — statisches HTML
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
-apps/beispiele/     Rückmeldungsbeispiele — Platzhalter, siehe README dort
-apps/shared/        Gemeinsame Navigationsleiste (Custom Element) → /gemeinsam/
+apps/beispiele/     Rückmeldungsbeispiele — statisches HTML, unter /beispiele
+apps/shared/        Navigationsleiste + Sprachwahl (Custom Element) → /gemeinsam/
 api/                Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
 data/material-fixtures.mjs
                     Beispiele des Materialien-Entwurfs (npm run material-spec:update)
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
                     eigener Lockfile, eigener Docker-Kontext)
-tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + schnittstelle/
+tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + beispiele/ + schnittstelle/
 tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
 ```
 
@@ -64,6 +65,62 @@ PrimeVue aus den Stilen heraus. Eingebunden wird sie zur Laufzeit per
 `document.createElement` — ein `<script src="/gemeinsam/…">` im Markup würde Vite
 auflösen und mitbündeln wollen. Im Dev-Server liefert
 `apps/shared/vite-plugin-gemeinsam.js` die Datei aus, im Build `tools/build-site.mjs`.
+
+### Rückmeldungsbeispiele
+
+`apps/beispiele/` ist statisches HTML ohne Build — die 16 prototypischen
+Rückmeldungen liegen je in einem eigenen Repository und werden über GitHub Pages
+ausgeliefert. Hier steht nur die filterbare Übersicht. Alles Inhaltliche steckt in
+`apps/beispiele/rueckmeldungen.js`: Liste, Vokabular (Fach, Klassenstufe,
+Zielgruppe) und die Filterlogik. Ohne `url` gilt ein Eintrag als „in Vorbereitung“
+und wird nicht verlinkt. Die Auswahl steht in der Adresse (`?fach=DE`), damit sich
+eine gefilterte Ansicht verschicken lässt.
+
+### Zweisprachigkeit
+
+Die ganze Seite gibt es auf Deutsch und Englisch. Die Wahl gehört dem Besucher,
+nicht dem Bereich: sie steht in `localStorage` (`tba3-sprache`) und gilt damit
+über alle Bereiche hinweg. `apps/shared/sprache.js` führt sie; umgeschaltet wird
+in der Navigationsleiste.
+
+| Bereich | Weg |
+|---|---|
+| Portal, Rückmeldungen, Schnittstelle | beide Fassungen im Markup, `html[lang]` blendet die andere aus |
+| Demoanwendung | `useTexte()` → `t('pfad')`, Texte in `apps/demo/src/i18n/texte.js` |
+| Komponentenkatalog | `t('pfad')` aus `apps/katalog/src/i18n`, Texte in dessen `texte.js` |
+
+Reihenfolge beim Bestimmen der Sprache: `?lang=en` in der Adresse (wird gemerkt),
+dann die gemerkte Wahl, dann die Browsersprache, sonst Deutsch.
+
+Beim Umschalten zeichnen sich die Apps neu: React über `useSyncExternalStore`,
+Vue über eine reaktive Referenz. Was außerhalb einer Komponente übersetzt wird
+(PDF- und Cartridge-Ausgabe, Fehlermeldungen in Hooks), ruft `uebersetze()` bzw.
+`konstantenJetzt()` **beim Aufruf** auf — nicht beim Laden des Moduls, sonst
+steht in der Ausgabe die Sprache von vorhin.
+
+`utils/constants.js` der Demo führt nur Kennungen, Farben und Zeichen; die
+Beschriftungen liegen in `texte.js` und kommen über `useKonstanten()` dazu —
+dieselben Objekte (`COMPETENCE_LEVELS[x].name` …), nur übersetzt.
+
+Zwei Fallen:
+
+- `t()` ist für den React-Compiler eine fremde Funktion. Wird ihr ein Wert
+  gereicht, der aus einem Objekt stammt, das später eine `useMemo`-Abhängigkeit
+  ist, bricht die Kompilierung ab („Existing memoization could not be
+  preserved"). Namen deshalb außerhalb anhängen:
+  `` `${t('…')} – ${gruppe.name}` `` statt `t('…', { name: gruppe.name })`.
+- Texte mit Auszeichnung (`<strong>`, `<code>`) stehen als Ganzes im
+  Wörterbuch und werden über `i18n/HtmlText.jsx` bzw. `v-html` gesetzt — ein in
+  Bruchstücke zerlegter Satz lässt sich in keiner zweiten Sprache sauber
+  zusammensetzen.
+
+`apps/demo/src/i18n/texte.test.js` und `apps/katalog/src/i18n/texte.test.mjs`
+prüfen, dass jeder verwendete Schlüssel existiert, jeder Eintrag beide Sprachen
+führt und die Platzhalter (`{n}`) in beiden Fassungen dieselben sind.
+
+Nicht übersetzt sind die Beispieldaten: Namen von Schüler:innen, Lerngruppen und
+Teilbereichen, der Materialkatalog und die OpenAPI-Spezifikation. Sie kommen im
+Betrieb aus der Schnittstelle.
 
 ### Base-Pfade
 
@@ -111,6 +168,10 @@ apps/demo/src/hooks/__tests__/useApiDaten.test.jsx       Laden, Fehler, überhol
 apps/demo/src/components/charts/__tests__/…              Übersichtskarten
 apps/demo/src/__tests__/App.test.jsx                     Zusammenspiel: Filter, Reiter, Abfragen
 tools/mock.test.mjs                                      Mock: Schlüssel, Ersatz, Materialfilter
+apps/beispiele/rueckmeldungen.test.mjs                   Rückmeldungsliste: Filter und Optionen
+apps/shared/sprache.test.mjs                             Sprachwahl: Quellen, Merken, Ereignis
+apps/demo/src/i18n/texte.test.js                         Textschlüssel der Demoanwendung
+apps/katalog/src/i18n/texte.test.mjs                     Textschlüssel des Katalogs
 ```
 
 Der App-Test ersetzt `src/services/tba3Api` — das ist die einzige Stelle, an der
@@ -127,6 +188,9 @@ Beschriftungen.
 ## Konventionen
 
 - Neue UI-Komponenten bekommen `data-testid`-Attribute.
+- Sichtbarer Text steht nie in der Komponente, sondern in `i18n/texte.js` des
+  jeweiligen Bereichs — zweisprachig, sonst fällt die fehlende Übersetzung erst
+  im Browser auf.
 - API-Aufrufe der Demo laufen über `apps/demo/src/services/tba3Api.js` — kein
   direktes `fetch`/`axios` in Komponenten.
 - Globaler Zustand der Demo lebt in `FilterContext`; neue globale

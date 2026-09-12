@@ -45,10 +45,13 @@ jobs:
           pruefe / 200
           pruefe /demo/ 200
           pruefe /katalog/ 200
+          pruefe /beispiele/ 200
+          pruefe /beispiele/rueckmeldungen.js 200
           pruefe /schnittstelle/ 200
           pruefe /schnittstelle/tba3-spec.yml 200
           pruefe /schnittstelle/material-spec.yml 200
           pruefe /gemeinsam/tba3-leiste.js 200
+          pruefe /gemeinsam/sprache.js 200
           pruefe /groups/3a-deutsch/competence-levels 200
           pruefe /materials 200
           pruefe /groups/gibtsnicht/items 404

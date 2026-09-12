@@ -8,24 +8,35 @@ import Tag from 'primevue/tag';
 import Drawer from 'primevue/drawer';
 import Button from 'primevue/button';
 import ItemDetailView from './ItemDetailView.vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   rows: { type: Array, required: true },
-  groupLabel: { type: String, default: 'Klasse' },
-  schoolLabel: { type: String, default: 'Schule' },
-  stateLabel:  { type: String, default: 'Bundesland' },
+  // Ohne Angabe stehen hier die Übersetzungen von Klasse/Schule/Bundesland.
+  groupLabel: { type: String, default: null },
+  schoolLabel: { type: String, default: null },
+  stateLabel:  { type: String, default: null },
 });
 
 // ── Global text filter ────────────────────────────────────────────────────────
 const globalFilter = ref('');
 
 // ── Optional columns toggle ───────────────────────────────────────────────────
-const ALL_OPT_COLS = [
-  { key: 'competenceType', header: 'Kompetenztyp' },
-  { key: 'classP',         header: 'Klasse %' },
-  { key: 'schoolP',        header: 'Schule %' },
-  { key: 'stateP',         header: 'Bundesland %' },
+// Beschriftung über texte.js; `header` bleibt als Feld erhalten, weil
+// MultiSelect danach anzeigt — es wird nur bei jedem Sprachwechsel neu gefüllt.
+const OPT_COL_PFADE = [
+  { key: 'competenceType', pfad: 'bausteine.tabelle.kompetenztyp' },
+  { key: 'classP',         pfad: 'bausteine.tabelle.klasseProzent' },
+  { key: 'schoolP',        pfad: 'bausteine.tabelle.schuleProzent' },
+  { key: 'stateP',         pfad: 'bausteine.tabelle.landProzent' },
 ];
+const ALL_OPT_COLS = computed(() =>
+  OPT_COL_PFADE.map(({ key, pfad }) => ({ key, header: t(pfad) }))
+);
+
+const gruppenName = computed(() => props.groupLabel ?? t('vokabular.klasse'));
+const schulName   = computed(() => props.schoolLabel ?? t('vokabular.schule'));
+const landName    = computed(() => props.stateLabel ?? t('vokabular.bundesland'));
 const visibleOptCols = ref([]);
 
 const colVisible = (key) => visibleOptCols.value.some(c => c.key === key);
@@ -59,11 +70,9 @@ const LEVEL_COLORS = {
 };
 const levelColor = (l) => LEVEL_COLORS[l] ?? '#94a3b8';
 
-const DOMAIN_LABELS = {
-  ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch',
-  ma: 'Mathematik',   en: 'Englisch',      fr: 'Französisch',
-};
-const domainLabel = (d) => DOMAIN_LABELS[d] ?? (d?.toUpperCase() ?? '');
+// Kürzel, für die texte.js eine Übersetzung führt (bausteine.domaenen)
+const DOMAIN_CODES = ['ho', 'le', 'sr', 'ma', 'en', 'fr'];
+const domainLabel = (d) => (DOMAIN_CODES.includes(d) ? t(`bausteine.domaenen.${d}`) : (d?.toUpperCase() ?? ''));
 
 const pctLabel = (v) => v == null ? '–' : `${v.toFixed(0)} %`;
 
@@ -85,7 +94,7 @@ const openDetail = (row) => {
         <i class="pi pi-search ist-search-icon" />
         <InputText
           v-model="globalFilter"
-          placeholder="Suchen …"
+          :placeholder="t('bausteine.tabelle.suchen')"
           class="ist-search-input"
           size="small"
         />
@@ -96,7 +105,7 @@ const openDetail = (row) => {
           v-model="visibleOptCols"
           :options="ALL_OPT_COLS"
           option-label="header"
-          placeholder="Spalten"
+          :placeholder="t('bausteine.tabelle.spalten')"
           display="chip"
           class="ist-multiselect"
         >
@@ -121,14 +130,14 @@ const openDetail = (row) => {
       scrollable
     >
       <!-- Kompetenz -->
-      <Column field="domain" header="Kompetenz" :sortable="true" style="min-width:130px">
+      <Column field="domain" :header="t('bausteine.tabelle.kompetenz')" :sortable="true" style="min-width:130px">
         <template #body="{ data }">
           <span class="dom-chip">{{ domainLabel(data.domain) }}</span>
         </template>
       </Column>
 
       <!-- Stufe -->
-      <Column field="competenceLevel" header="Stufe" :sortable="true" style="width:70px;text-align:center">
+      <Column field="competenceLevel" :header="t('bausteine.tabelle.stufe')" :sortable="true" style="width:70px;text-align:center">
         <template #body="{ data }">
           <span class="level-badge" :style="{ background: levelColor(data.competenceLevel) }">
             {{ data.competenceLevel ?? '–' }}
@@ -140,7 +149,7 @@ const openDetail = (row) => {
       <Column
         v-if="colVisible('competenceType')"
         field="competenceType"
-        header="Kompetenztyp"
+        :header="t('bausteine.tabelle.kompetenztyp')"
         :sortable="true"
         style="min-width:120px"
       >
@@ -148,7 +157,7 @@ const openDetail = (row) => {
       </Column>
 
       <!-- Nr. + Aufgabentitel -->
-      <Column field="exercise" header="Nr. + Aufgabentitel" :sortable="true" style="min-width:180px">
+      <Column field="exercise" :header="t('bausteine.tabelle.aufgabentitel')" :sortable="true" style="min-width:180px">
         <template #body="{ data }">
           <span class="ex-id">{{ data.exercise }}</span>
           <span v-if="data.title" class="ex-title"> {{ data.title }}</span>
@@ -159,14 +168,14 @@ const openDetail = (row) => {
       <Column style="min-width:180px">
         <template #header>
           <div class="col-graph-header">
-            <span>Grafik</span>
+            <span>{{ t('bausteine.tabelle.grafik') }}</span>
             <div class="col-legend">
-              <span class="leg-dot" style="background:#f97316" />{{ groupLabel }}
+              <span class="leg-dot" style="background:#f97316" />{{ gruppenName }}
               <template v-if="colVisible('schoolP')">
-                <span class="leg-dot" style="background:#3b82f6" />{{ schoolLabel }}
+                <span class="leg-dot" style="background:#3b82f6" />{{ schulName }}
               </template>
               <template v-if="colVisible('stateP')">
-                <span class="leg-dot" style="background:#94a3b8" />{{ stateLabel }}
+                <span class="leg-dot" style="background:#94a3b8" />{{ landName }}
               </template>
             </div>
           </div>
@@ -232,18 +241,18 @@ const openDetail = (row) => {
             size="small"
             severity="secondary"
             class="detail-btn"
-            aria-label="Details"
+            :aria-label="t('bausteine.tabelle.details')"
             @click="openDetail(data)"
           />
         </template>
       </Column>
 
       <template #empty>
-        <div class="tbl-empty">Keine Aufgaben gefunden.</div>
+        <div class="tbl-empty">{{ t('bausteine.tabelle.keineAufgaben') }}</div>
       </template>
 
       <template #footer>
-        {{ rows.length }} Aufgaben
+        {{ t('bausteine.tabelle.anzahlAufgaben', { n: rows.length }) }}
       </template>
     </DataTable>
 
@@ -251,13 +260,13 @@ const openDetail = (row) => {
     <Drawer
       v-model:visible="drawerVisible"
       position="right"
-      :header="selectedItem?.exercise ?? 'Aufgabe'"
+      :header="selectedItem?.exercise ?? t('bausteine.tabelle.aufgabe')"
       style="width: 480px"
     >
       <ItemDetailView
         v-if="selectedItem"
         :item="selectedItem"
-        :group-label="groupLabel"
+        :group-label="gruppenName"
       />
     </Drawer>
   </div>

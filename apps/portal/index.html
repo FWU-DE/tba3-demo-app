@@ -30,6 +30,13 @@
 
     .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 
+    /* ── Zweisprachig ──────────────────────────────────────── */
+    /* Beide Fassungen stehen im Markup; sichtbar ist die, die <html lang> nennt.
+       Die Sprachwahl sitzt in der Navigationsleiste (apps/shared/sprache.js).
+       Regel im Dokument statt im Modul: sonst blitzt vor dem Laden beides auf. */
+    html[lang="de"] [lang="en"] { display: none; }
+    html[lang="en"] [lang="de"] { display: none; }
+
     /* ── Aufmacher ─────────────────────────────────────────── */
     .hero { padding-block: 72px 40px; max-width: 720px; }
     .hero h1 {
@@ -97,6 +104,33 @@
     .schild-react { background: #eff6ff; color: #1d4ed8; }
     .schild-vue   { background: #ecfdf5; color: #047857; }
     .schild-bald  { background: #f1f5f9; color: var(--grau); }
+
+    /* ── Zielgruppen ───────────────────────────────────────── */
+    .zielgruppen { border-top: 1px solid var(--linie); padding-block: 48px 8px; }
+    .zielgruppen > h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--grau);
+      margin: 0 0 20px;
+      font-weight: 600;
+    }
+    .adressaten {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .adressat {
+      border: 1px solid var(--linie);
+      border-radius: var(--radius);
+      background: var(--flaeche);
+      padding: 22px 24px;
+    }
+    .adressat h3 { margin: 0 0 8px; font-size: 16px; color: var(--tinte); letter-spacing: -0.01em; }
+    .adressat p { margin: 0 0 10px; font-size: 14.5px; }
+    .adressat p:last-child { margin-bottom: 0; }
+    .adressat a { color: var(--blau); text-decoration: none; font-weight: 500; }
+    .adressat a:hover { text-decoration: underline; }
 
     /* ── Schnittstelle ─────────────────────────────────────── */
     .schnittstelle {
@@ -170,15 +204,25 @@
 <main class="wrap">
 
   <section class="hero">
-    <h1>Rückmeldungen aus VERA-Daten — von der Schnittstelle bis zur fertigen Ansicht</h1>
-    <p>
+    <h1 lang="de">Rückmeldungen aus VERA-Daten — von der Schnittstelle bis zur fertigen Ansicht</h1>
+    <h1 lang="en">Reports from VERA data — from the API to the finished view</h1>
+    <p lang="de">
       Die TBA3-Auswertungsschnittstelle liefert Kompetenzstufen, Aufgabenstatistiken und
       Aggregationen auf Lerngruppen-, Schul- und Landesebene. Hier liegt alles, was zeigt,
       was sich daraus bauen lässt: eine vollständige Demoanwendung, die einzelnen
       Visualisierungs-Bausteine und Beispiele fertiger Rückmeldungen.
     </p>
-    <p class="spec-hinweis">
+    <p lang="en">
+      The TBA3 reporting API delivers competence levels, item statistics and aggregations
+      at learning group, school and state level. Everything that shows what can be built
+      from it lives here: a complete demo application, the individual visualisation
+      building blocks, and examples of finished reports.
+    </p>
+    <p class="spec-hinweis" lang="de">
       Alle Ansichten sprechen dieselbe API — <code>/groups</code>, <code>/schools</code>, <code>/states</code>.
+    </p>
+    <p class="spec-hinweis" lang="en">
+      Every view speaks the same API — <code>/groups</code>, <code>/schools</code>, <code>/states</code>.
     </p>
   </section>
 
@@ -186,87 +230,191 @@
 
     <a class="karte" href="/demo">
       <div class="karte-kopf">
-        <h2>Demoanwendung</h2>
+        <h2 lang="de">Demoanwendung</h2>
+        <h2 lang="en">Demo application</h2>
         <span class="schild schild-react">React</span>
       </div>
-      <p>
+      <p lang="de">
         Das vollständige Bild: Filter nach Fach, Klassenstufe und Gruppe, Kompetenzstufen
         und Aufgabenstatistiken, Schülerdetails, Materialzuweisung über MUNDO sowie Export
         als PDF und Common Cartridge.
       </p>
-      <span class="fuss">Anwendung öffnen →</span>
+      <p lang="en">
+        The full picture: filters by subject, grade and group, competence levels and item
+        statistics, student details, material assignment via MUNDO, and export as PDF and
+        Common Cartridge.
+      </p>
+      <span class="fuss" lang="de">Anwendung öffnen →</span>
+      <span class="fuss" lang="en">Open the application →</span>
     </a>
 
     <a class="karte" href="/katalog">
       <div class="karte-kopf">
-        <h2>Komponentenbibliothek</h2>
+        <h2 lang="de">Komponentenbibliothek</h2>
+        <h2 lang="en">Component library</h2>
         <span class="schild schild-vue">Vue 3</span>
       </div>
-      <p>
+      <p lang="de">
         Die Visualisierungen einzeln — von der Kompetenzstufen-Leiste über die
         Perzentilbänder bis zum Vergleich von erwarteter und tatsächlicher Lösungsquote.
         Jede mit Einsatzzweck, genutztem Endpunkt und Quelltext.
       </p>
-      <span class="fuss">Bausteine ansehen →</span>
+      <p lang="en">
+        The visualisations one by one — from the competence level bar and the percentile
+        bands to the comparison of expected and actual solution rates. Each with its
+        purpose, the endpoint it uses, and its source code.
+      </p>
+      <span class="fuss" lang="de">Bausteine ansehen →</span>
+      <span class="fuss" lang="en">View the building blocks →</span>
     </a>
 
-    <div class="karte bald">
+    <a class="karte" href="/beispiele">
       <div class="karte-kopf">
-        <h2>Rückmeldungsbeispiele</h2>
-        <span class="schild schild-bald">in Vorbereitung</span>
+        <h2 lang="de">Rückmeldungsbeispiele</h2>
+        <h2 lang="en">Report examples</h2>
+        <span class="schild schild-bald" lang="de">16 Prototypen</span>
+        <span class="schild schild-bald" lang="en">16 prototypes</span>
       </div>
-      <p>
+      <p lang="de">
         Vollständige Rückmeldungen, wie sie bei Lehrkräften und Schulleitungen ankommen —
-        als Ganzes, nicht als einzelne Komponente.
+        als Ganzes, nicht als einzelne Komponente. Filterbar nach Fach, Klassenstufe und
+        Zielgruppe; jede Rückmeldung liegt in einem eigenen Repository.
       </p>
-      <span class="fuss">folgt in Kürze</span>
-    </div>
+      <p lang="en">
+        Complete reports as they reach teachers and school leaders — as a whole, not as
+        individual components. Filterable by subject, grade and audience; each report
+        lives in its own repository.
+      </p>
+      <span class="fuss" lang="de">Übersicht öffnen →</span>
+      <span class="fuss" lang="en">Open the overview →</span>
+    </a>
 
   </section>
 
+  <section class="zielgruppen" id="fuer-wen">
+    <h2 lang="de">Für wen ist das hier?</h2>
+    <h2 lang="en">Who is this for?</h2>
+    <div class="adressaten">
+
+      <div class="adressat">
+        <h3 lang="de">Ministerien und pädagogische Institute</h3>
+        <h3 lang="en">Ministries and educational institutes</h3>
+        <p lang="de">
+          Zum Anschauen und Anregen lassen: Die Prototypen zeigen, was sich aus VERA-Daten
+          machen lässt, wenn die Auswertung über eine gemeinsame Schnittstelle läuft — von
+          der Kompetenzstufenverteilung einer Klasse bis zur Rückmeldung an die Schulleitung.
+        </p>
+        <p lang="en">
+          For inspiration: the prototypes show what can be made of VERA data once the
+          analysis runs through a shared API — from the competence level distribution of a
+          class to the report that reaches the school leadership.
+        </p>
+        <p lang="de">
+          Nichts davon ist ein fertiges Produkt oder eine Vorgabe. Die Beispiele sind dazu
+          da, im eigenen Haus zu vergleichen, zu diskutieren und weiterzudenken:
+          <a href="/beispiele">Rückmeldungsbeispiele ansehen</a>.
+        </p>
+        <p lang="en">
+          None of it is a finished product or a specification to follow. The examples are
+          there to be compared, discussed and taken further in your own organisation:
+          <a href="/beispiele">view the report examples</a>.
+        </p>
+      </div>
+
+      <div class="adressat">
+        <h3 lang="de">Anbieter und Implementierende von Rückmeldungen</h3>
+        <h3 lang="en">Vendors and implementers of reports</h3>
+        <p lang="de">
+          Zum direkten Nachnutzen: Demoanwendung, Komponentenbibliothek und die einzelnen
+          Rückmeldungen liegen offen auf GitHub — samt Mock-Daten, mit denen sich alles
+          ohne eigenes Backend ausprobieren lässt.
+        </p>
+        <p lang="en">
+          To reuse directly: the demo application, the component library and the individual
+          reports are all on GitHub — including mock data, so everything can be tried out
+          without a backend of your own.
+        </p>
+        <p lang="de">
+          Anpassungen, eigene Visualisierungen und weitere Rückmeldungen sind ausdrücklich
+          erwünscht — als
+          <a href="https://github.com/FWU-DE/tba3-demo-app/issues">GitHub Issue</a> oder
+          <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">Pull Request</a>.
+        </p>
+        <p lang="en">
+          Adaptations, your own visualisations and further reports are expressly welcome —
+          as a <a href="https://github.com/FWU-DE/tba3-demo-app/issues">GitHub issue</a> or a
+          <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">pull request</a>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
   <section class="schnittstelle" id="schnittstelle">
-    <h2>Die Schnittstelle</h2>
+    <h2 lang="de">Die Schnittstelle</h2>
+    <h2 lang="en">The API</h2>
 
     <a class="referenz" href="/schnittstelle">
       <div>
-        <h3>API-Referenz</h3>
-        <p>
+        <h3 lang="de">API-Referenz</h3>
+        <h3 lang="en">API reference</h3>
+        <p lang="de">
           Alle Endpunkte, Parameter und Datenformate der Auswertungsschnittstelle —
           mit „Try it out“ direkt gegen dieselben Demodaten ausprobierbar. Daneben der
           Entwurf für Begleitmaterialien, der noch zur Diskussion steht.
         </p>
+        <p lang="en">
+          All endpoints, parameters and data formats of the reporting API — with
+          “Try it out” running against the same demo data. Alongside it, the draft for
+          accompanying materials, still up for discussion.
+        </p>
       </div>
-      <span class="knopf">Referenz öffnen →</span>
+      <span class="knopf" lang="de">Referenz öffnen →</span>
+      <span class="knopf" lang="en">Open the reference →</span>
     </a>
 
     <div class="verweise">
       <div>
-        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/konzepte.md">Konzepte</a>
-        <div class="erklaerung">Lerngruppe, Bericht, Berichtselement — die Begriffe dahinter</div>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/konzepte.md" lang="de">Konzepte</a>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/konzepte.md" lang="en">Concepts</a>
+        <div class="erklaerung" lang="de">Lerngruppe, Bericht, Berichtselement — die Begriffe dahinter</div>
+        <div class="erklaerung" lang="en">Learning group, report, report element — the terms behind it</div>
       </div>
       <div>
-        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/endpunkt-referenz.md">Endpunkt-Referenz</a>
-        <div class="erklaerung">Konventionen für die offen gestalteten Teile der Spezifikation</div>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/endpunkt-referenz.md" lang="de">Endpunkt-Referenz</a>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/endpunkt-referenz.md" lang="en">Endpoint reference</a>
+        <div class="erklaerung" lang="de">Konventionen für die offen gestalteten Teile der Spezifikation</div>
+        <div class="erklaerung" lang="en">Conventions for the open parts of the specification</div>
       </div>
       <div>
-        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/rezepte.md">Rezepte</a>
-        <div class="erklaerung">Wiederkehrende Aufgaben und wie man sie löst</div>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/rezepte.md" lang="de">Rezepte</a>
+        <a href="https://github.com/indibit-eu/tba3/blob/main/docs/rezepte.md" lang="en">Recipes</a>
+        <div class="erklaerung" lang="de">Wiederkehrende Aufgaben und wie man sie löst</div>
+        <div class="erklaerung" lang="en">Recurring tasks and how to solve them</div>
       </div>
       <div>
-        <a href="https://github.com/indibit-eu/tba3">Spezifikations-Repository</a>
-        <div class="erklaerung">Spezifikation und Mock-Server (indibit-eu/tba3)</div>
+        <a href="https://github.com/indibit-eu/tba3" lang="de">Spezifikations-Repository</a>
+        <a href="https://github.com/indibit-eu/tba3" lang="en">Specification repository</a>
+        <div class="erklaerung" lang="de">Spezifikation und Mock-Server (indibit-eu/tba3)</div>
+        <div class="erklaerung" lang="en">Specification and mock server (indibit-eu/tba3)</div>
       </div>
       <div>
-        <a href="https://github.com/indibit-eu/tba3/pull/54">Materialien-Entwurf</a>
-        <div class="erklaerung">Vorschlag für Begleitmaterialien — offener Pull Request</div>
+        <a href="https://github.com/indibit-eu/tba3/pull/54" lang="de">Materialien-Entwurf</a>
+        <a href="https://github.com/indibit-eu/tba3/pull/54" lang="en">Materials draft</a>
+        <div class="erklaerung" lang="de">Vorschlag für Begleitmaterialien — offener Pull Request</div>
+        <div class="erklaerung" lang="en">Proposal for accompanying materials — open pull request</div>
       </div>
       <div>
-        <a href="https://apps.indibit.eu/tba3-api">Referenz-Backend</a>
-        <div class="erklaerung">Der Mock-Server, den diese Seiten abfragen</div>
+        <a href="https://apps.indibit.eu/tba3-api" lang="de">Referenz-Backend</a>
+        <a href="https://apps.indibit.eu/tba3-api" lang="en">Reference backend</a>
+        <div class="erklaerung" lang="de">Der Mock-Server, den diese Seiten abfragen</div>
+        <div class="erklaerung" lang="en">The mock server these pages query</div>
       </div>
       <div>
-        <a href="https://github.com/FWU-DE/tba3-demo-app">Quelltext</a>
-        <div class="erklaerung">Portal, Demoanwendung und Bibliothek in einem Repository</div>
+        <a href="https://github.com/FWU-DE/tba3-demo-app" lang="de">Quelltext</a>
+        <a href="https://github.com/FWU-DE/tba3-demo-app" lang="en">Source code</a>
+        <div class="erklaerung" lang="de">Portal, Demoanwendung und Bibliothek in einem Repository</div>
+        <div class="erklaerung" lang="en">Portal, demo application and library in one repository</div>
       </div>
     </div>
   </section>
@@ -274,11 +422,28 @@
 </main>
 
 <footer class="wrap">
-  <span>FWU — TBA3-Projekt</span>
-  <span>Prototypen mit Beispieldaten, keine echten Testergebnisse.</span>
+  <span lang="de">FWU — TBA3-Projekt</span>
+  <span lang="en">FWU — TBA3 project</span>
+  <span lang="de">Prototypen mit Beispieldaten, keine echten Testergebnisse.</span>
+  <span lang="en">Prototypes with sample data, not real test results.</span>
 </footer>
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>
+<script type="module">
+  // Titel und Beschreibung stehen in Attributen — die lassen sich nicht wie der
+  // übrige Text über html[lang] umschalten.
+  import { dokumentKopf } from '/gemeinsam/sprache.js';
+  dokumentKopf({
+    titel: {
+      de: 'TBA3 — Rückmeldungen aus VERA-Daten',
+      en: 'TBA3 — reports from VERA data',
+    },
+    beschreibung: {
+      de: 'Demoanwendung, Komponentenbibliothek und Rückmeldungsbeispiele zur TBA3-Auswertungsschnittstelle.',
+      en: 'Demo application, component library and report examples for the TBA3 reporting API.',
+    },
+  });
+</script>
 
 </body>
 </html>

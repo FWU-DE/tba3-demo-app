@@ -8,14 +8,15 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import ItemSolutionTable from '../components/ItemSolutionTable.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
+import { t } from '../i18n';
 
 const DOCS = {
   githubFile: 'ItemSolutionTable.vue',
   propsDocs: [
-    { name: 'rows',        type: 'Array',  required: true,  description: 'Aufgabenzeilen. Jede Zeile enthält iqbId, exercise, title, domain, competenceLevel, competenceType, classP, schoolP, stateP (alle % als 0–100).' },
-    { name: 'groupLabel',  type: 'String', default: "'Klasse'",     description: 'Bezeichnung für die Klassen-Spalte und Legende.' },
-    { name: 'schoolLabel', type: 'String', default: "'Schule'",     description: 'Bezeichnung für die Schul-Spalte.' },
-    { name: 'stateLabel',  type: 'String', default: "'Bundesland'", description: 'Bezeichnung für die Bundesland-Spalte.' },
+    { name: 'rows',        type: 'Array',  required: true,  pfad: 'ansichten.tabelle.props.rows' },
+    { name: 'groupLabel',  type: 'String', default: "'Klasse'",     pfad: 'ansichten.tabelle.props.groupLabel' },
+    { name: 'schoolLabel', type: 'String', default: "'Schule'",     pfad: 'ansichten.tabelle.props.schoolLabel' },
+    { name: 'stateLabel',  type: 'String', default: "'Bundesland'", pfad: 'ansichten.tabelle.props.stateLabel' },
   ],
   dataShape: `// rows-Element
 {
@@ -73,17 +74,25 @@ onMounted(async () => {
   <ItemSolutionTable
     :rows="tableRows"
     group-label="Klasse 3a"
-    school-label="Schule"
-    state-label="Bundesland"
+    :school-label="t('vokabular.schule')"
+    :state-label="t('vokabular.bundesland')"
   />
 </template>`,
   apiEndpoints: [
-    { method: 'GET', path: '/groups/{id}/items',  description: 'Lösungsstatistiken aller Aufgaben der Lerngruppe' },
-    { method: 'GET', path: '/schools/{id}/items', description: 'Schulweite Lösungsstatistiken (Referenz)' },
-    { method: 'GET', path: '/states/{id}/items',  description: 'Bundeslandweite Lösungsstatistiken (Referenz)' },
+    { method: 'GET', path: '/groups/{id}/items',  pfad: 'ansichten.tabelle.endpunkte.gruppe' },
+    { method: 'GET', path: '/schools/{id}/items', pfad: 'ansichten.tabelle.endpunkte.schule' },
+    { method: 'GET', path: '/states/{id}/items',  pfad: 'ansichten.tabelle.endpunkte.land' },
   ],
-  apiNote: 'Alle drei Endpunkte parallel fetchen und per iqbId joinen. descriptiveStatistics.mean ist ein Wert 0–1, muss mit ×100 in Prozent umgerechnet werden.',
+  apiNotePfad: 'ansichten.tabelle.hinweis',
 };
+
+// Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
+const propsDocs = computed(() =>
+  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
+const apiEndpoints = computed(() =>
+  DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+);
 
 const GROUPS = [
   { id: '3a-deutsch',  label: '3a Deutsch',     schoolId: 'gs-musterstadt',    stateId: 'beispielland' },
@@ -191,12 +200,12 @@ const tableRows = computed(() => {
           <div>
             <div class="comp-name-row">
               <code class="comp-name">ItemSolutionTable</code>
-              <Tag value="Neu" severity="contrast" />
+              <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
-              <strong>Lösungsquoten auf Aufgabenebene — Klasse · Schule · Bundesland</strong><br />
+              <strong>{{ t('ansichten.tabelle.titel') }}</strong><br />
               Tabelle mit internen Balkendiagrammen pro Aufgabe. Spaltentoggle, Textsuche,
-              sortierbar. Zeigt Kompetenz, Stufe, Aufgabentitel und Lösungsquoten.
+              {{ t('ansichten.tabelle.beschreibung') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -214,9 +223,9 @@ const tableRows = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
-              placeholder="Gruppe wählen" class="ctrl-select" />
+              :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
         </div>
 
@@ -224,7 +233,7 @@ const tableRows = computed(() => {
           <Skeleton v-for="n in 8" :key="n" height="36px" class="mb-2" />
         </div>
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
-          {{ error }} — Läuft der Mock-Server auf localhost:8000?
+          {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!tableRows.length" severity="info" :closable="false" class="mt-2">
           Keine Daten.
@@ -233,7 +242,7 @@ const tableRows = computed(() => {
         <ItemSolutionTable
           v-else
           :rows="tableRows"
-          :group-label="selectedGroup?.label ?? 'Klasse'"
+          :group-label="selectedGroup?.label ?? t('vokabular.klasse')"
           school-label="Schule"
           state-label="Bundesland"
         />
@@ -241,11 +250,11 @@ const tableRows = computed(() => {
         <ComponentDocs
           component-name="ItemSolutionTable"
           :github-file="DOCS.githubFile"
-          :props-docs="DOCS.propsDocs"
+          :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
-          :api-endpoints="DOCS.apiEndpoints"
-          :api-note="DOCS.apiNote"
+          :api-endpoints="apiEndpoints"
+          :api-note="t(DOCS.apiNotePfad)"
         />
       </template>
     </Card>

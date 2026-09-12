@@ -2,13 +2,9 @@ import { useState, useMemo } from 'react';
 import { useFilters } from '../../context/useFilters';
 import { useCompetenceLevels } from '../../hooks/useCompetenceLevels';
 import { transformCompetenceLevels } from '../../utils/dataTransformers';
-import {
-  EDUCATIONAL_MATERIALS,
-  MATERIAL_TYPES,
-  SUBJECTS,
-  COMPETENCE_LEVELS,
-  GROUPS,
-} from '../../utils/constants';
+import { EDUCATIONAL_MATERIALS, COMPETENCE_LEVELS, GROUPS } from '../../utils/constants';
+import { useKonstanten, useTexte } from '../../i18n';
+import HtmlText from '../../i18n/HtmlText';
 import { loadCustomGroups } from '../../utils/customGroupsStore';
 import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
@@ -46,6 +42,8 @@ const groupMembers = (cg) =>
 // ── Sub-components (unchanged from previous version) ─────────────────────────
 
 const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount }) => {
+  const t = useTexte();
+  const { COMPETENCE_LEVELS } = useKonstanten();
   const cfg = COMPETENCE_LEVELS[levelKey];
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
 
@@ -68,7 +66,7 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
         Stufe {levelKey}
       </div>
       <div className="text-2xl font-bold text-gray-900">{count}</div>
-      <div className="text-xs text-gray-500 mt-0.5">Schüler*innen ({pct}%)</div>
+      <div className="text-xs text-gray-500 mt-0.5">{t('materialien.schuelerAnteil', { pct })}</div>
       <div className="mt-2 h-1.5 rounded-full bg-gray-200 overflow-hidden">
         <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: cfg.color }} />
       </div>
@@ -78,6 +76,8 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
 };
 
 const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels = true }) => {
+  const t = useTexte();
+  const { MATERIAL_TYPES, SUBJECTS } = useKonstanten();
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
   const isExternal = material.source === 'mundo';
@@ -118,7 +118,7 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
         </div>
         <div className="flex-shrink-0 mt-0.5">
           {isAssigned ? (
-            <span className="text-green-600 text-xs font-semibold whitespace-nowrap">✓ Zugewiesen</span>
+            <span className="text-green-600 text-xs font-semibold whitespace-nowrap">{t('materialien.zugewiesen')}</span>
           ) : (
             <span className={`w-5 h-5 rounded border-2 flex items-center justify-center text-xs ${isSelected ? 'border-primary bg-primary text-white' : 'border-gray-300'}`}>
               {isSelected && '✓'}
@@ -167,6 +167,8 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
 };
 
 const AssignedRow = ({ material, onRemove }) => {
+  const t = useTexte();
+  const { MATERIAL_TYPES, SUBJECTS } = useKonstanten();
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
   const isExternal = material.source === 'mundo';
@@ -186,7 +188,7 @@ const AssignedRow = ({ material, onRemove }) => {
           {isExternal ? (
             material.url
               ? <a href={material.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline truncate block">{material.url}</a>
-              : <p className="text-xs text-gray-400">Externes Material</p>
+              : <p className="text-xs text-gray-400">{t('materialien.externesMaterial')}</p>
           ) : (
             <p className="text-xs text-gray-400">{subject?.name} · {material.duration}</p>
           )}
@@ -196,7 +198,7 @@ const AssignedRow = ({ material, onRemove }) => {
         onClick={() => onRemove(material.id)}
         className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 transition-colors flex-shrink-0"
       >
-        Entfernen
+        {t('gemeinsam.entfernen')}
       </button>
     </div>
   );
@@ -208,6 +210,7 @@ const CatalogSection = ({
   assignedIds, catalogMaterials, onAssign, onRemove, title,
   showLevels = true, extraMaterials = [], onMundoClick,
 }) => {
+  const t = useTexte();
   const [selected, setSelected] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -242,7 +245,7 @@ const CatalogSection = ({
       {/* Assigned materials */}
       <Card title={title}>
         {assignedMaterials.length === 0 ? (
-          <p className="text-sm text-gray-400 py-2">Noch keine Materialien zugewiesen.</p>
+          <p className="text-sm text-gray-400 py-2">{t('materialien.keineZugewiesen')}</p>
         ) : (
           assignedMaterials.map((m) => (
             <AssignedRow key={m.id} material={m} onRemove={onRemove} />
@@ -251,39 +254,43 @@ const CatalogSection = ({
       </Card>
 
       {/* Catalog */}
-      <Card title="Materialien auswählen">
+      <Card title={t('materialien.auswaehlenTitel')}>
         {/* Mundo search button */}
         {onMundoClick && (
           <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
             <p className="text-xs text-gray-500">
-              Lokale Materialien oder direkt aus MUNDO suchen:
+              {t('materialien.lokalOderMundo')}
             </p>
             <button
               onClick={onMundoClick}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition-colors"
             >
               <span className="text-sm">🌍</span>
-              MUNDO Suche
+              {t('materialien.mundoSuche')}
             </button>
           </div>
         )}
 
         {catalogMaterials.length === 0 && extraMaterials.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-8">
-            Keine passenden Materialien für diese Auswahl gefunden.
+            {t('materialien.keinePassenden')}
           </p>
         ) : (
           <>
             <p className="text-xs text-gray-400 mb-4">
-              {catalogMaterials.length} lokal · {extraMaterials.length} aus MUNDO
-              {selected.length > 0 && <span className="ml-2 text-primary font-medium">· {selected.length} ausgewählt</span>}
+              {t('materialien.zaehler', { lokal: catalogMaterials.length, mundo: extraMaterials.length })}
+              {selected.length > 0 && (
+                <span className="ml-2 text-primary font-medium">
+                  {t('materialien.ausgewaehltZusatz', { n: selected.length })}
+                </span>
+              )}
             </p>
 
             {/* Local materials */}
             {catalogMaterials.length > 0 && (
               <>
                 {extraMaterials.length > 0 && (
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Lokaler Pool</p>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('materialien.lokalerPool')}</p>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {catalogMaterials.map((m) => (
@@ -333,9 +340,11 @@ const CatalogSection = ({
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {selected.length > 0 ? `${selected.length} Material${selected.length > 1 ? 'ien' : ''} zuweisen` : 'Material auswählen'}
+                {selected.length > 0
+                  ? t(selected.length === 1 ? 'materialien.zuweisenEines' : 'materialien.zuweisenMehrere', { n: selected.length })
+                  : t('materialien.materialWaehlen')}
               </button>
-              {showSuccess && <span className="text-sm text-green-600 font-medium">✓ Erfolgreich zugewiesen!</span>}
+              {showSuccess && <span className="text-sm text-green-600 font-medium">{t('materialien.erfolgreich')}</span>}
             </div>
           </>
         )}
@@ -368,6 +377,7 @@ const PdfIcon = () => (
 // ── Main component ────────────────────────────────────────────────────────────
 
 const EducationalMaterialsPanel = () => {
+  const t = useTexte();
   const { selectedLevel, getSelectedId, selectedSubject, selectedGrade } = useFilters();
   const predefinedGroupId = selectedLevel === 'group' ? getSelectedId() : null;
   const predefinedGroup   = GROUPS.find((g) => g.id === predefinedGroupId);
@@ -503,7 +513,7 @@ const EducationalMaterialsPanel = () => {
       assignments[levelId] = Object.fromEntries(
         LEVEL_KEYS.filter((lk) => (levelAss[lk] ?? []).length > 0).map((lk) => [lk, levelAss[lk]])
       );
-      extraGroups.push({ id: levelId, name: 'Nach Kompetenzstufe', subject: '', grade: '', _type: 'level' });
+      extraGroups.push({ id: levelId, name: t('materialien.modusStufe'), subject: '', grade: '', _type: 'level' });
     }
 
     // Group mode assignments → each custom group, flat under pseudo-level '_all'
@@ -544,7 +554,7 @@ const EducationalMaterialsPanel = () => {
     try {
       const { exportCommonCartridge } = await import('../../utils/commonCartridgeExport');
       const count = await exportCommonCartridge(exp, null, extraGroups, externalMaterials);
-      flashMsg({ type: 'success', message: `${count} Materialien als .imscc exportiert.` });
+      flashMsg({ type: 'success', message: t('materialien.exportiertImscc', { n: count }) });
     } catch (err) {
       flashMsg({ type: 'error', message: err.message });
     } finally { setExportingCC(false); }
@@ -556,7 +566,7 @@ const EducationalMaterialsPanel = () => {
     try {
       const { exportPDF } = await import('../../utils/pdfExport');
       const count = await exportPDF(exp, null, extraGroups, externalMaterials);
-      flashMsg({ type: 'success', message: `${count} Materialien als PDF exportiert.` });
+      flashMsg({ type: 'success', message: t('materialien.exportiertPdf', { n: count }) });
     } catch (err) {
       flashMsg({ type: 'error', message: err.message });
     } finally { setExportingPDF(false); }
@@ -580,8 +590,8 @@ const EducationalMaterialsPanel = () => {
       {/* ── Mode toggle ── */}
       <div className="flex rounded-xl bg-gray-100 p-1 gap-1">
         {[
-          { key: 'level', label: 'Nach Kompetenzstufe', icon: '📊' },
-          { key: 'group', label: 'Nach Gruppe',          icon: '👥' },
+          { key: 'level', label: t('materialien.modusStufe'), icon: '📊' },
+          { key: 'group', label: t('materialien.modusGruppe'), icon: '👥' },
         ].map(({ key, label, icon }) => (
           <button
             key={key}
@@ -603,11 +613,20 @@ const EducationalMaterialsPanel = () => {
       {/* ════════════════════════════════════════════════════════════════════ */}
       {mode === 'level' && (
         <>
-          <Card title={`Kompetenzstufe wählen${predefinedGroup ? ` – ${predefinedGroup.name}` : ''}`}>
+          <Card
+            title={
+              predefinedGroup
+                ? `${t('materialien.stufeWaehlen')} – ${predefinedGroup.name}`
+                : t('materialien.stufeWaehlen')
+            }
+          >
             <p className="text-sm text-gray-500 mb-4">
-              Wählen Sie eine Kompetenzstufe aus und weisen Sie ihr passende Materialien zu.
-              Die Zuweisung gilt global für alle Schüler*innen dieser Stufe.
-              {predefinedGroup && <span className="ml-1 text-gray-400">(Schüleranzahl aus: {predefinedGroup.name})</span>}
+              {t('materialien.stufeEinleitung')}
+              {predefinedGroup && (
+                <span className="ml-1 text-gray-400">
+                  ({t('materialien.schueleranzahlAusLabel')}: {predefinedGroup.name})
+                </span>
+              )}
             </p>
 
             {clLoading && apiLevelCounts.length === 0 ? (
@@ -638,7 +657,7 @@ const EducationalMaterialsPanel = () => {
               catalogMaterials={levelCatalog}
               onAssign={handleLevelAssign}
               onRemove={handleLevelRemove}
-              title={`Zugewiesene Materialien – Stufe ${activeLevel}`}
+              title={`${t('materialien.zugewieseneMaterialien')} – ${t('gemeinsam.stufe', { n: activeLevel })}`}
               extraMaterials={externalMaterials}
               onMundoClick={() => setShowMundo(true)}
             />
@@ -651,11 +670,11 @@ const EducationalMaterialsPanel = () => {
       {/* ════════════════════════════════════════════════════════════════════ */}
       {mode === 'group' && (
         <>
-          <Card title="Gruppe wählen">
+          <Card title={t('materialien.gruppeWaehlen')}>
             {customGroups.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-6 border border-dashed border-gray-200 rounded-lg">
-                Noch keine eigenen Gruppen vorhanden.<br />
-                <span className="text-xs">Im Tab <strong>Schüler*innen</strong> erstellen.</span>
+                {t('materialien.keineGruppen')}<br />
+                <HtmlText als="span" pfad="materialien.keineGruppenZusatz" className="text-xs" />
               </p>
             ) : (
               <div className="space-y-2">
@@ -678,7 +697,7 @@ const EducationalMaterialsPanel = () => {
                         <span className={`flex-1 font-semibold text-sm ${isActive ? 'text-primary' : 'text-gray-800'}`}>
                           {cg.name}
                         </span>
-                        <span className="text-xs text-gray-400">{members.length} Mitgl.</span>
+                        <span className="text-xs text-gray-400">{t('materialien.mitglieder', { n: members.length })}</span>
                         {assigned > 0 && (
                           <span className="text-xs bg-primary text-white font-bold rounded-full px-2 py-0.5">
                             {assigned} Material{assigned !== 1 ? 'ien' : ''}
@@ -703,7 +722,7 @@ const EducationalMaterialsPanel = () => {
               catalogMaterials={groupCatalog}
               onAssign={handleGroupAssign}
               onRemove={handleGroupRemove}
-              title={`Zugewiesene Materialien – ${activeGroup.name}`}
+              title={`${t('materialien.zugewieseneMaterialien')} – ${activeGroup.name}`}
               showLevels={false}
               extraMaterials={externalMaterials}
               onMundoClick={() => setShowMundo(true)}
@@ -713,26 +732,26 @@ const EducationalMaterialsPanel = () => {
       )}
 
       {/* ── Export ── */}
-      <Card title="Export">
+      <Card title={t('materialien.exportTitel')}>
         <p className="text-sm text-gray-500 mb-4">
-          Exportiert alle zugewiesenen Materialien (beide Modi) als IMS Common Cartridge oder PDF.
+          {t('materialien.exportEinleitung')}
         </p>
 
         {/* Summary */}
         <div className="flex gap-3 mb-5">
           <div className="flex-1 bg-gray-50 rounded-lg px-4 py-3 text-center">
             <div className="text-xl font-bold text-gray-900">{totalLevelAss}</div>
-            <div className="text-xs text-gray-500 mt-0.5">nach Kompetenzstufe</div>
+            <div className="text-xs text-gray-500 mt-0.5">{t('materialien.nachStufe')}</div>
           </div>
           <div className="flex-1 bg-gray-50 rounded-lg px-4 py-3 text-center">
             <div className="text-xl font-bold text-gray-900">{totalGroupAss}</div>
-            <div className="text-xs text-gray-500 mt-0.5">nach Gruppe</div>
+            <div className="text-xs text-gray-500 mt-0.5">{t('materialien.nachGruppe')}</div>
           </div>
         </div>
 
         {!hasAnyAssigned && (
           <p className="text-sm text-gray-400 mb-4">
-            Noch keine Materialien zugewiesen.
+            {t('materialien.keineZugewiesen')}
           </p>
         )}
 
@@ -746,7 +765,7 @@ const EducationalMaterialsPanel = () => {
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
-            {exportingCC ? <><SpinnerIcon />Exportiere…</> : <><DownloadIcon />Alle als .imscc{hasAnyAssigned && <span className="opacity-75 ml-1">({totalLevelAss + totalGroupAss})</span>}</>}
+            {exportingCC ? <><SpinnerIcon />{t('materialien.exportiere')}</> : <><DownloadIcon />{t('materialien.alleImscc')}{hasAnyAssigned && <span className="opacity-75 ml-1">({totalLevelAss + totalGroupAss})</span>}</>}
           </button>
 
           <button
@@ -758,7 +777,7 @@ const EducationalMaterialsPanel = () => {
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
             }`}
           >
-            {exportingPDF ? <><SpinnerIcon />Exportiere…</> : <><PdfIcon />Alle als PDF{hasAnyAssigned && <span className="opacity-75 ml-1">({totalLevelAss + totalGroupAss})</span>}</>}
+            {exportingPDF ? <><SpinnerIcon />{t('materialien.exportiere')}</> : <><PdfIcon />{t('materialien.allePdf')}{hasAnyAssigned && <span className="opacity-75 ml-1">({totalLevelAss + totalGroupAss})</span>}</>}
           </button>
 
           {exportMsg && (

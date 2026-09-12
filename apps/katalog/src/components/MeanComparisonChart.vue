@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   /**
@@ -15,7 +16,8 @@ const props = defineProps({
   rows: { type: Array, required: true },
   title: { type: String, default: '' },
   domain: { type: String, default: '' },
-  xLabel: { type: String, default: 'Mittlere Lösungsquote (%)' },
+  // Ohne Angabe steht hier die übersetzte Achsenbeschriftung.
+  xLabel: { type: String, default: null },
 });
 
 const LABEL_W = 170;
@@ -151,7 +153,7 @@ const legendY = computed(() =>
         <text :x="LABEL_W + CHART_W / 2" :y="svgHeight - 4"
               text-anchor="middle" font-size="10" fill="#64748b"
               font-family="system-ui,sans-serif">
-          {{ xLabel }}
+          {{ xLabel ?? t('bausteine.mittelwert.achse') }}
         </text>
 
       </svg>

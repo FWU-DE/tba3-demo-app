@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rückmeldungsbeispiele — TBA3</title>
+  <meta name="description" content="16 prototypische Rückmeldungen aus VERA-Daten, filterbar nach Fach, Klassenstufe und Zielgruppe." />
+  <style>
+    :root {
+      --blau: #2563eb;
+      --blau-dunkel: #1d4ed8;
+      --tinte: #0f172a;
+      --text: #334155;
+      --grau: #64748b;
+      --linie: #e2e8f0;
+      --flaeche: #f8fafc;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Zweisprachig ──────────────────────────────────────── */
+    /* Beide Fassungen stehen im Markup; sichtbar ist die, die <html lang> nennt.
+       Die Sprachwahl sitzt in der Navigationsleiste (apps/shared/sprache.js).
+       Regel im Dokument statt im Modul: sonst blitzt vor dem Laden beides auf.
+       Die Karten entstehen dagegen im Skript und werden dort übersetzt. */
+    html[lang="de"] [lang="en"] { display: none; }
+    html[lang="en"] [lang="de"] { display: none; }
+
+    .hero { padding-block: 56px 28px; max-width: 720px; }
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.022em;
+      color: var(--tinte);
+      margin: 0 0 16px;
+    }
+    .hero p { font-size: 17px; margin: 0 0 12px; }
+
+    .hinweis {
+      border: 1px solid #fde68a;
+      background: #fffbeb;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #854d0e;
+      margin-bottom: 28px;
+    }
+
+    /* ── Filter ────────────────────────────────────────────── */
+    .filter {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      border: 1px solid var(--linie);
+      border-radius: var(--radius);
+      background: var(--flaeche);
+      margin-bottom: 20px;
+    }
+    .feld { display: flex; flex-direction: column; gap: 5px; min-width: 160px; flex: 1 1 160px; }
+    .feld label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--grau);
+    }
+    .feld select {
+      font: inherit;
+      font-size: 14.5px;
+      color: var(--tinte);
+      background: #fff;
+      border: 1px solid var(--linie);
+      border-radius: 10px;
+      padding: 9px 11px;
+      width: 100%;
+    }
+    .feld select:focus-visible { outline: 2px solid var(--blau); outline-offset: 1px; }
+
+    .zuruecksetzen {
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blau);
+      background: none;
+      border: none;
+      padding: 9px 4px;
+      cursor: pointer;
+    }
+    .zuruecksetzen:hover { color: var(--blau-dunkel); text-decoration: underline; }
+    .zuruecksetzen[hidden] { display: none; }
+
+    .anzahl { font-size: 14px; color: var(--grau); margin-bottom: 20px; }
+
+    /* ── Karten ────────────────────────────────────────────── */
+    .liste {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+      padding-bottom: 24px;
+      margin: 0;
+      padding-inline: 0;
+      list-style: none;
+    }
+    .karte {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid var(--linie);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      background: #fff;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    a.karte:hover {
+      border-color: #bfdbfe;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
+      transform: translateY(-2px);
+    }
+    .karte h2 { font-size: 16px; font-weight: 650; color: var(--tinte); margin: 0 0 10px; letter-spacing: -0.01em; }
+    .karte p { font-size: 14px; margin: 0 0 16px; }
+    .karte.offen { background: var(--flaeche); }
+
+    .schilder { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .schild {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .03em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .schild-fach { background: #eff6ff; color: #1d4ed8; }
+
+    .fuss {
+      margin-top: auto;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--blau);
+    }
+    a.karte:hover .fuss { color: var(--blau-dunkel); }
+    .karte.offen .fuss { color: var(--grau); font-weight: 500; }
+
+    .leer {
+      border: 1px dashed var(--linie);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      color: var(--grau);
+      font-size: 14.5px;
+    }
+
+    footer {
+      border-top: 1px solid var(--linie);
+      margin-top: 32px;
+      padding-block: 24px 40px;
+      font-size: 13.5px;
+      color: var(--grau);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    footer a { color: var(--grau); }
+  </style>
+</head>
+<body>
+
+<tba3-leiste aktiv="beispiele"></tba3-leiste>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1 lang="de">Rückmeldungsbeispiele</h1>
+    <h1 lang="en">Report examples</h1>
+    <p lang="de">
+      16 prototypische Rückmeldungen aus VERA-Daten — vollständige Ansichten, wie sie bei
+      Lehrkräften und Schulleitungen ankommen, nicht einzelne Bausteine. Jede liegt in
+      einem eigenen Repository und wird über GitHub Pages ausgeliefert.
+    </p>
+    <p lang="en">
+      16 prototype reports built from VERA data — complete views as they reach teachers and
+      school leaders, not individual building blocks. Each one lives in its own repository
+      and is served through GitHub Pages.
+    </p>
+  </section>
+
+  <p class="hinweis" data-testid="platzhalter-hinweis">
+    <span lang="de">
+      Aufbau im Gang: Titel, Beschreibungen und Zuordnungen sind noch Platzhalter, die
+      Verweise folgen, sobald die einzelnen Rückmeldungen veröffentlicht sind.
+    </span>
+    <span lang="en">
+      Work in progress: titles, descriptions and classifications are still placeholders;
+      the links follow as soon as the individual reports are published.
+    </span>
+  </p>
+
+  <form class="filter" id="filter" data-testid="filter">
+    <!-- Die Felder entstehen aus FILTER in rueckmeldungen.js -->
+    <button type="button" class="zuruecksetzen" id="zuruecksetzen" data-testid="filter-zuruecksetzen" hidden></button>
+  </form>
+
+  <p class="anzahl" id="anzahl" data-testid="anzahl" aria-live="polite"></p>
+
+  <ul class="liste" id="liste" data-testid="liste"></ul>
+
+</main>
+
+<footer class="wrap">
+  <span lang="de">FWU — TBA3-Projekt</span>
+  <span lang="en">FWU — TBA3 project</span>
+  <span lang="de">Prototypen mit Beispieldaten, keine echten Testergebnisse.</span>
+  <span lang="en">Prototypes with sample data, not real test results.</span>
+</footer>
+
+<script type="module" src="/gemeinsam/tba3-leiste.js"></script>
+<script type="module">
+  import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, FAECHER, STUFEN, filtern, optionen } from './rueckmeldungen.js';
+  import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
+
+  dokumentKopf({
+    titel: { de: 'Rückmeldungsbeispiele — TBA3', en: 'Report examples — TBA3' },
+    beschreibung: {
+      de: '16 prototypische Rückmeldungen aus VERA-Daten, filterbar nach Fach, Klassenstufe und Zielgruppe.',
+      en: '16 prototype reports built from VERA data, filterable by subject, grade and audience.',
+    },
+  });
+
+  const WORTE = {
+    alle: { de: 'Alle', en: 'All' },
+    zuruecksetzen: { de: 'Filter zurücksetzen', en: 'Reset filters' },
+    inVorbereitung: { de: 'in Vorbereitung', en: 'in preparation' },
+    oeffnen: { de: 'Rückmeldung öffnen →', en: 'Open report →' },
+    leer: {
+      de: 'Zu dieser Auswahl gibt es keine Rückmeldung.',
+      en: 'No report matches this selection.',
+    },
+    alleAnzahl: {
+      de: (n) => `${n} Rückmeldungen`,
+      en: (n) => `${n} reports`,
+    },
+    teilAnzahl: {
+      de: (n, gesamt) => `${n} von ${gesamt} Rückmeldungen`,
+      en: (n, gesamt) => `${n} of ${gesamt} reports`,
+    },
+  };
+
+  const formular = document.getElementById('filter');
+  const knopf = document.getElementById('zuruecksetzen');
+  const anzahl = document.getElementById('anzahl');
+  const liste = document.getElementById('liste');
+
+  // Die Auswahl steht in der Adresse (?fach=DE) — so lässt sich eine gefilterte
+  // Ansicht verschicken und der Zurück-Knopf des Browsers tut das Erwartete.
+  // Gespeichert werden Kürzel, nicht Beschriftungen: die Auswahl übersteht
+  // damit einen Sprachwechsel.
+  const ausAdresse = () => {
+    const p = new URLSearchParams(location.search);
+    return Object.fromEntries(FILTER.map(({ feld }) => [feld, p.get(feld) ?? '']));
+  };
+
+  const felder = FILTER.map(({ feld }) => {
+    const huelle = document.createElement('div');
+    huelle.className = 'feld';
+    const beschriftung = document.createElement('label');
+    beschriftung.htmlFor = `filter-${feld}`;
+    const auswahl = document.createElement('select');
+    auswahl.id = `filter-${feld}`;
+    auswahl.name = feld;
+    auswahl.dataset.testid = `filter-${feld}`;
+    huelle.append(beschriftung, auswahl);
+    formular.insertBefore(huelle, knopf);
+    return { feld, beschriftung, auswahl };
+  });
+
+  // Beschriftungen hängen an der Sprache, die Auswahl nicht — deshalb werden die
+  // Felder neu beschriftet statt neu gebaut.
+  const beschriften = (gewaehlt) => {
+    for (const { feld, beschriftung, auswahl } of felder) {
+      const { text: name } = FILTER.find((f) => f.feld === feld);
+      beschriftung.textContent = text(name, gewaehlt);
+      const gemerkt = auswahl.value;
+      auswahl.replaceChildren(new Option(text(WORTE.alle, gewaehlt), ''));
+      for (const { wert, text: t } of optionen(RUECKMELDUNGEN, feld)) {
+        auswahl.append(new Option(text(t, gewaehlt), wert));
+      }
+      auswahl.value = gemerkt;
+    }
+    knopf.textContent = text(WORTE.zuruecksetzen, gewaehlt);
+  };
+
+  const karte = (r, gewaehlt) => {
+    const eintrag = document.createElement('li');
+    const offen = !r.url;
+    const kachel = document.createElement(offen ? 'div' : 'a');
+    kachel.className = offen ? 'karte offen' : 'karte';
+    kachel.dataset.testid = `rueckmeldung-${r.id}`;
+    if (!offen) {
+      kachel.href = r.url;
+      kachel.target = '_blank';
+      kachel.rel = 'noopener';
+    }
+
+    const schilder = document.createElement('div');
+    schilder.className = 'schilder';
+    for (const [woerterbuch, klasse] of [
+      [FAECHER[r.fach], 'schild-fach'],
+      [STUFEN[r.stufe], ''],
+      [ZIELGRUPPEN[r.zielgruppe], ''],
+    ]) {
+      const schild = document.createElement('span');
+      schild.className = `schild ${klasse}`.trim();
+      schild.textContent = text(woerterbuch, gewaehlt);
+      schilder.append(schild);
+    }
+
+    const titel = document.createElement('h2');
+    titel.textContent = text(r.titel, gewaehlt);
+    const beschreibung = document.createElement('p');
+    beschreibung.textContent = text(r.beschreibung, gewaehlt);
+    const fuss = document.createElement('span');
+    fuss.className = 'fuss';
+    fuss.textContent = text(offen ? WORTE.inVorbereitung : WORTE.oeffnen, gewaehlt);
+
+    kachel.append(schilder, titel, beschreibung, fuss);
+    eintrag.append(kachel);
+    return eintrag;
+  };
+
+  const zeichnen = () => {
+    const gewaehlt = sprache();
+    const auswahl = ausAdresse();
+    beschriften(gewaehlt);
+    for (const { feld, auswahl: element } of felder) element.value = auswahl[feld] ?? '';
+    knopf.hidden = !FILTER.some(({ feld }) => auswahl[feld]);
+
+    const treffer = filtern(RUECKMELDUNGEN, auswahl);
+    anzahl.textContent = treffer.length === RUECKMELDUNGEN.length
+      ? text(WORTE.alleAnzahl, gewaehlt)(RUECKMELDUNGEN.length)
+      : text(WORTE.teilAnzahl, gewaehlt)(treffer.length, RUECKMELDUNGEN.length);
+
+    liste.replaceChildren(...treffer.map((r) => karte(r, gewaehlt)));
+    if (treffer.length === 0) {
+      const leer = document.createElement('li');
+      leer.className = 'leer';
+      leer.dataset.testid = 'leer';
+      leer.textContent = text(WORTE.leer, gewaehlt);
+      liste.append(leer);
+    }
+  };
+
+  const merken = () => {
+    const p = new URLSearchParams();
+    for (const { feld, auswahl } of felder) if (auswahl.value) p.set(feld, auswahl.value);
+    const ziel = p.size ? `?${p}` : location.pathname;
+    history.pushState(null, '', ziel);
+    zeichnen();
+  };
+
+  formular.addEventListener('change', merken);
+  knopf.addEventListener('click', () => {
+    for (const { auswahl } of felder) auswahl.value = '';
+    merken();
+  });
+  addEventListener('popstate', zeichnen);
+  beiSprachwechsel(zeichnen);
+
+  zeichnen();
+</script>
+
+</body>
+</html>

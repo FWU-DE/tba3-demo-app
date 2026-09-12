@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { t } from '../i18n';
 
 const props = defineProps({
   componentName: { type: String, required: true },
@@ -43,32 +44,32 @@ const copyCode = () => {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
         </svg>
-        Quellcode (GitHub)
+        {{ t('doku.quellcode') }}
       </a>
       <a v-if="apiEndpoints.length" :href="API_SPEC_URL" target="_blank" rel="noopener" class="docs-link docs-link-api">
         <i class="pi pi-server" />
-        TBA3 API Spec
+        {{ t('doku.apiSpec') }}
       </a>
     </div>
 
     <!-- Props table -->
     <div v-if="propsDocs.length" class="docs-section">
-      <h3 class="docs-heading">Props</h3>
+      <h3 class="docs-heading">{{ t('doku.props') }}</h3>
       <div class="props-table-wrap">
         <table class="props-table">
           <thead>
             <tr>
-              <th>Prop</th>
-              <th>Typ</th>
-              <th>Default</th>
-              <th>Beschreibung</th>
+              <th>{{ t('doku.spalteProp') }}</th>
+              <th>{{ t('doku.spalteTyp') }}</th>
+              <th>{{ t('doku.spalteDefault') }}</th>
+              <th>{{ t('doku.spalteBeschreibung') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="p in propsDocs" :key="p.name">
               <td>
                 <code class="prop-name">{{ p.name }}</code>
-                <span v-if="p.required" class="req-badge">required</span>
+                <span v-if="p.required" class="req-badge">{{ t('doku.pflicht') }}</span>
               </td>
               <td><code class="prop-type">{{ p.type }}</code></td>
               <td><code v-if="p.default !== undefined" class="prop-default">{{ p.default }}</code><span v-else class="na">—</span></td>
@@ -81,17 +82,17 @@ const copyCode = () => {
 
     <!-- Data shape -->
     <div v-if="dataShape" class="docs-section">
-      <h3 class="docs-heading">Datenstruktur</h3>
+      <h3 class="docs-heading">{{ t('doku.datenstruktur') }}</h3>
       <pre class="code-block code-data"><code>{{ dataShape }}</code></pre>
     </div>
 
     <!-- Code example -->
     <div v-if="codeExample" class="docs-section">
       <div class="code-header">
-        <h3 class="docs-heading" style="margin:0">Verwendungsbeispiel</h3>
+        <h3 class="docs-heading" style="margin:0">{{ t('doku.verwendungsbeispiel') }}</h3>
         <button class="copy-btn" @click="copyCode">
           <i :class="copied ? 'pi pi-check' : 'pi pi-copy'" />
-          {{ copied ? 'Kopiert' : 'Kopieren' }}
+          {{ copied ? t('doku.kopiert') : t('doku.kopieren') }}
         </button>
       </div>
       <pre class="code-block"><code>{{ codeExample }}</code></pre>
@@ -99,7 +100,7 @@ const copyCode = () => {
 
     <!-- API endpoints -->
     <div v-if="apiEndpoints.length" class="docs-section">
-      <h3 class="docs-heading">TBA3 API Endpunkte</h3>
+      <h3 class="docs-heading">{{ t('doku.endpunkte') }}</h3>
       <p v-if="apiNote" class="api-note">{{ apiNote }}</p>
       <div class="endpoint-list">
         <div v-for="ep in apiEndpoints" :key="ep.path" class="endpoint-row">
