@@ -24,9 +24,13 @@ Alles steht in [`rueckmeldungen.js`](./rueckmeldungen.js) — eine Datei, sonst 
 ```
 
 Ohne `url` erscheint der Eintrag als „in Vorbereitung“ und ist nicht klickbar;
-sobald die Seite steht, wird er verlinkt. Titel, Beschreibungen und die Zuordnung
-zu Fach, Klassenstufe und Zielgruppe sind derzeit **Platzhalter** (4 Fächer ×
-2 Klassenstufen × 2 Zielgruppen), damit die Filter sichtbar arbeiten.
+sobald die Seite steht, wird er verlinkt.
+
+Die 16 Einträge sind **ausformulierte Beispiele** — so könnten die Rückmeldungen
+heißen und zugeschnitten sein; verbindlich ist daran nichts. Die Zuschnitte
+folgen VERA: Klasse 3 mit Deutsch und Mathematik, Klasse 8 zusätzlich mit
+Englisch und Französisch. Alle vier Zielgruppen sind belegt (Lehrkraft,
+Schulleitung, Eltern, Schüler:in), damit die Filter sichtbar arbeiten.
 
 ## Filter
 
