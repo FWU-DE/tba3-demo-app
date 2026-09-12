@@ -73,7 +73,9 @@ Rückmeldungen liegen je in einem eigenen Repository und werden über GitHub Pag
 ausgeliefert. Hier steht nur die filterbare Übersicht. Alles Inhaltliche steckt in
 `apps/beispiele/rueckmeldungen.js`: Liste, Vokabular (Fach, Klassenstufe,
 Zielgruppe) und die Filterlogik. Ohne `url` gilt ein Eintrag als „in Vorbereitung“
-und wird nicht verlinkt. Die Auswahl steht in der Adresse (`?fach=DE`), damit sich
+und wird nicht verlinkt. Die Einträge sind ausformulierte Beispiele, keine
+Zusagen — die Zuschnitte folgen VERA (Klasse 3: Deutsch, Mathematik; Klasse 8
+zusätzlich Englisch und Französisch). Die Auswahl steht in der Adresse (`?fach=DE`), damit sich
 eine gefilterte Ansicht verschicken lässt.
 
 ### Zweisprachigkeit

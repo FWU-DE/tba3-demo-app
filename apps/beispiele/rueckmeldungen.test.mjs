@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { FILTER, RUECKMELDUNGEN, filtern, optionen } from './rueckmeldungen.js';
+import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, filtern, optionen } from './rueckmeldungen.js';
 import { SPRACHEN, text } from '../shared/sprache.js';
 
 describe('Rückmeldungen', () => {
@@ -31,11 +31,25 @@ describe('Filtern', () => {
   });
 
   it('schränkt je Feld ein und kombiniert die Felder', () => {
-    expect(filtern(RUECKMELDUNGEN, { fach: 'DE' })).toHaveLength(4);
-    expect(filtern(RUECKMELDUNGEN, { fach: 'DE', stufe: 'V3' })).toHaveLength(2);
-    const einzeln = filtern(RUECKMELDUNGEN, { fach: 'DE', stufe: 'V3', zielgruppe: 'lehrkraft' });
-    expect(einzeln).toHaveLength(1);
-    expect(einzeln[0].fach).toBe('DE');
+    const nurDeutsch = filtern(RUECKMELDUNGEN, { fach: 'DE' });
+    expect(nurDeutsch.length).toBeGreaterThan(0);
+    expect(nurDeutsch.every((r) => r.fach === 'DE')).toBe(true);
+
+    const deutschKlasse3 = filtern(RUECKMELDUNGEN, { fach: 'DE', stufe: 'V3' });
+    expect(deutschKlasse3.length).toBeLessThan(nurDeutsch.length);
+    expect(deutschKlasse3.every((r) => r.fach === 'DE' && r.stufe === 'V3')).toBe(true);
+
+    const fuerEltern = filtern(RUECKMELDUNGEN, { fach: 'DE', stufe: 'V3', zielgruppe: 'eltern' });
+    expect(fuerEltern).toHaveLength(1);
+    expect(fuerEltern[0].id).toBe('de-v3-elternbrief');
+  });
+
+  it('kennt Englisch und Französisch nur in Klasse 8', () => {
+    // So wird VERA erhoben — die Liste soll das nicht verwischen.
+    for (const fach of ['EN', 'FR']) {
+      expect(filtern(RUECKMELDUNGEN, { fach, stufe: 'V3' })).toHaveLength(0);
+      expect(filtern(RUECKMELDUNGEN, { fach, stufe: 'V8' }).length).toBeGreaterThan(0);
+    }
   });
 
   it('ignoriert Felder, die kein Filter sind', () => {
@@ -51,9 +65,17 @@ describe('Filtern', () => {
 describe('Optionen', () => {
   it('bietet nur Werte an, die auch vorkommen', () => {
     const zielgruppen = optionen(RUECKMELDUNGEN, 'zielgruppe').map((o) => o.wert);
-    expect(zielgruppen).toContain('lehrkraft');
-    // Eltern und Schüler:innen stehen im Vokabular, haben aber noch keine Rückmeldung.
-    expect(zielgruppen).not.toContain('eltern');
+    // Alle vier Zielgruppen sind belegt; kommt eine ohne Rückmeldung dazu, darf
+    // sie nicht in der Auswahl stehen.
+    expect(zielgruppen).toEqual(['lehrkraft', 'schulleitung', 'lernende', 'eltern']);
+    expect(optionen(RUECKMELDUNGEN.filter((r) => r.zielgruppe !== 'eltern'), 'zielgruppe'))
+      .not.toContainEqual(expect.objectContaining({ wert: 'eltern' }));
+  });
+
+  it('deckt jede Zielgruppe mit mindestens einer Rückmeldung ab', () => {
+    for (const zielgruppe of Object.keys(ZIELGRUPPEN)) {
+      expect(filtern(RUECKMELDUNGEN, { zielgruppe }).length, zielgruppe).toBeGreaterThan(0);
+    }
   });
 
   it('behält die Reihenfolge des Vokabulars bei', () => {
