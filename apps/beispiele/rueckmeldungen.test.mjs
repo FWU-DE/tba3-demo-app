@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, filtern, optionen } from './rueckmeldungen.js';
 import { SPRACHEN, text } from '../shared/sprache.js';
 
@@ -90,5 +91,21 @@ describe('Optionen', () => {
 
   it('gibt für ein unbekanntes Feld nichts zurück', () => {
     expect(optionen(RUECKMELDUNGEN, 'erfunden')).toEqual([]);
+  });
+});
+
+describe('Seite', () => {
+  // Die Seite ist unter /beispiele und /beispiele/ erreichbar — Vercel leitet
+  // nicht um. Ein relativer Verweis löst ohne Schrägstrich gegen / auf und geht
+  // ins Leere; die Seite bliebe dann ohne Filter und ohne Karten stehen.
+  it('verweist ausschließlich über absolute Pfade', () => {
+    const seite = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+    const verweise = [
+      ...[...seite.matchAll(/\b(?:src|href)="([^"]+)"/g)].map((m) => m[1]),
+      ...[...seite.matchAll(/\bfrom\s+'([^']+)'/g)].map((m) => m[1]),
+    ].filter((ziel) => !/^(https?:|#|mailto:|data:)/.test(ziel));
+
+    expect(verweise.length).toBeGreaterThan(0);
+    expect(verweise.filter((ziel) => !ziel.startsWith('/'))).toEqual([]);
   });
 });

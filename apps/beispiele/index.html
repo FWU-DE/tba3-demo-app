@@ -234,7 +234,10 @@
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>
 <script type="module">
-  import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, FAECHER, STUFEN, filtern, optionen } from './rueckmeldungen.js';
+  // Absoluter Pfad, nicht './rueckmeldungen.js': Die Seite ist unter /beispiele
+  // und /beispiele/ erreichbar, und ohne Schrägstrich löst der Browser relativ
+  // gegen / auf — das Modul käme nicht an und die Liste bliebe leer.
+  import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, FAECHER, STUFEN, filtern, optionen } from '/beispiele/rueckmeldungen.js';
   import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
 
   dokumentKopf({

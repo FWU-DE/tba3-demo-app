@@ -102,10 +102,14 @@ const server = createServer(async (req, res) => {
   if (isFile(candidate)) return sendFile(res, candidate);
   if (isFile(join(candidate, 'index.html'))) return sendFile(res, join(candidate, 'index.html'));
 
-  // 4. SPA-Fallback des jeweiligen Bereichs, sonst Portal
+  // 4. SPA-Fallback des jeweiligen Bereichs, sonst Portal — aber nur für
+  // Seitenpfade. Eine fehlende Datei (.js, .css, .yml …) muss auch hier 404
+  // sein, sonst kommt statt des Moduls stillschweigend HTML zurück und ein
+  // falscher Pfad fällt erst im Deployment auf.
+  const wirktWieDatei = extname(pathname) !== '';
   const spaRoot = SPA_ROOTS.find((p) => pathname.startsWith(`${p}/`));
   const fallback = join(dist, spaRoot ? `${spaRoot}/index.html` : 'index.html');
-  if (isFile(fallback)) return sendFile(res, fallback);
+  if (!wirktWieDatei && isFile(fallback)) return sendFile(res, fallback);
 
   res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
   res.end('404 — nicht gefunden. Wurde `npm run build` ausgeführt?\n');
