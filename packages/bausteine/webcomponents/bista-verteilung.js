@@ -9,6 +9,7 @@
 import { STANDARD, geometrie } from '../kern/bista-verteilung.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { stufenFlaeche, stufenSchrift } from '../kern/thema.js';
 
 const STIL = `
 .buehne { position: relative; }
@@ -20,7 +21,7 @@ const STIL = `
 .kopf { cursor: pointer; }
 .kopf circle { stroke: var(--tba3-_farbe-grund); stroke-width: 2; }
 .kopf:hover circle, .kopf:focus-visible circle { stroke: var(--tba3-_farbe-text); }
-.initialen { font-size: 10px; font-weight: 700; fill: var(--tba3-_farbe-text-invers); pointer-events: none; }
+.initialen { font-size: 10px; font-weight: 700; pointer-events: none; }
 
 .achse { stroke: var(--tba3-_farbe-linie); }
 .achsenschrift { font-size: 11px; fill: var(--tba3-_farbe-text-gedaempft); }
@@ -42,6 +43,9 @@ const STIL = `
   border: 1px dashed var(--tba3-_farbe-linie); border-radius: var(--tba3-_radius);
 }
 `;
+
+/** Die Avatare wechseln reihenweise den Ton, damit ein Stapel lesbar bleibt. */
+const stufe = (schueler) => Math.min(5, 2 + (schueler.reihe % 3));
 
 function aufbauen(wurzel, zustand, el) {
   const g = geometrie(zustand);
@@ -125,11 +129,11 @@ function aufbauen(wurzel, zustand, el) {
     }, [
       s('circle', {
         cx: schueler.x, cy: schueler.y, r: g.radius,
-        fill: `var(--tba3-_stufe-${Math.min(5, 2 + (schueler.reihe % 3))})`,
+        fill: stufenFlaeche(stufe(schueler)),
       }),
       s('text', {
         class: 'initialen', x: schueler.x, y: schueler.y + 3.5, 'text-anchor': 'middle',
-        text: schueler.initialen,
+        fill: stufenSchrift(stufe(schueler)), text: schueler.initialen,
       }),
     ]);
 

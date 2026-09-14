@@ -181,6 +181,12 @@
       --tba3-farbe-flaeche: #ffffff;
       --tba3-stufe-1: #9b1c1c; --tba3-stufe-2: #b45309;
       --tba3-stufe-3: #854d0e; --tba3-stufe-4: #15803d; --tba3-stufe-5: #14532d;
+      /* Wer die Stufen dunkler macht, muss die Beschriftung darauf mitnehmen:
+         die helle Vorgabe ist dunkle Schrift, und die verschwindet hier.
+         `themen.test.mjs` rechnet jedes Paar nach. */
+      --tba3-stufe-1-text: #ffffff; --tba3-stufe-2-text: #ffffff;
+      --tba3-stufe-3-text: #ffffff; --tba3-stufe-4-text: #ffffff;
+      --tba3-stufe-5-text: #ffffff;
       --tba3-farbe-ueber: #14532d; --tba3-farbe-unter: #9b1c1c;
       --tba3-schrift-groesse: 14px;
     }
@@ -545,6 +551,17 @@
   function themaSetzen() {
     const klasse = themaWahl.value;
     document.body.className = klasse;
+
+    // Diese Seite hat keinen eigenen Dunkelmodus — sie ist immer hell. Die
+    // Bausteine folgen ohne Zutun aber `prefers-color-scheme`, und dann stünde
+    // heller Text auf hellem Grund, sobald jemand sein System dunkel gestellt
+    // hat. Der Modus gehört hier also an die Elemente, und er folgt der Wahl
+    // im Feld daneben, nicht dem Betriebssystem.
+    const modus = klasse === 'thema-dunkel' ? 'dunkel' : 'hell';
+    for (const { el } of elemente) el.dataset.thema = modus;
+    for (const kasten of document.querySelectorAll('.vorschau > *')) {
+      kasten.dataset.thema = modus;
+    }
   }
 
   const fassungWahl = document.getElementById('fassung');

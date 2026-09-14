@@ -10,6 +10,7 @@
 import { SPALTEN, STANDARD, naechsteSortierung, zeilen } from '../kern/aufgaben-tabelle.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { stufenFlaeche, stufenNummer, stufenSchrift, v } from '../kern/thema.js';
 
 const STIL = `
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
@@ -42,7 +43,7 @@ th[aria-sort] .pfeil { opacity: 1; color: var(--tba3-_farbe-marke); }
 .stufe {
   display: inline-block; min-width: 26px; text-align: center;
   padding: 1px 6px; border-radius: var(--tba3-_radius);
-  color: var(--tba3-_farbe-text-invers); font-size: 0.85em; font-weight: 700;
+  font-size: 0.85em; font-weight: 700;
 }
 .balken { position: relative; display: block; height: 14px; border-radius: 2px;
   background: var(--tba3-_farbe-flaeche); min-width: 60px; }
@@ -61,8 +62,14 @@ th[aria-sort] .pfeil { opacity: 1; color: var(--tba3-_farbe-marke); }
 `;
 
 const STUFENFARBE = (stufe) => {
-  const nr = { I: 1, II: 2, III: 3, IV: 4, V: 5 }[stufe];
-  return nr ? `var(--tba3-_stufe-${nr})` : 'var(--tba3-_farbe-text-gedaempft)';
+  const nr = stufenNummer(stufe);
+  return nr ? stufenFlaeche(nr) : v('farbe-text-gedaempft');
+};
+
+/** Paarweise zur Fläche: was auf dieser Stufe lesbar bleibt. */
+const STUFENSCHRIFT = (stufe) => {
+  const nr = stufenNummer(stufe);
+  return nr ? stufenSchrift(nr) : v('farbe-text-invers');
 };
 
 function aufbauen(wurzel, zustand, el) {
@@ -109,7 +116,11 @@ function aufbauen(wurzel, zustand, el) {
     tr.append(h('td', { text: zeile.exercise ?? '' }));
     tr.append(
       h('td', {}, [
-        h('span', { class: 'stufe', text: zeile.level ?? '—' , style: `background:${STUFENFARBE(zeile.level)}` }),
+        h('span', {
+          class: 'stufe',
+          text: zeile.level ?? '—',
+          style: `background:${STUFENFARBE(zeile.level)};color:${STUFENSCHRIFT(zeile.level)}`,
+        }),
       ]),
     );
 

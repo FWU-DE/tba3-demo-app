@@ -3,6 +3,7 @@
 import { MASSE, STANDARD, geometrie } from '../kern/erwartet-tatsaechlich.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { stufenFlaeche, stufenNummer, stufenSchrift, v } from '../kern/thema.js';
 
 const STIL = `
 .legende { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 10px;
@@ -28,8 +29,14 @@ const BEWERTUNGSFARBE = {
 };
 
 const STUFENFARBE = (stufe) => {
-  const nr = { I: 1, II: 2, III: 3, IV: 4, V: 5 }[stufe];
-  return nr ? `var(--tba3-_stufe-${nr})` : 'var(--tba3-_farbe-text-gedaempft)';
+  const nr = stufenNummer(stufe);
+  return nr ? stufenFlaeche(nr) : v('farbe-text-gedaempft');
+};
+
+/** Paarweise zur Fläche: was auf dieser Stufe lesbar bleibt. */
+const STUFENSCHRIFT = (stufe) => {
+  const nr = stufenNummer(stufe);
+  return nr ? stufenSchrift(nr) : v('farbe-text-invers');
 };
 
 function aufbauen(wurzel, zustand, el) {
@@ -103,7 +110,7 @@ function aufbauen(wurzel, zustand, el) {
       s('text', {
         x: MASSE.labelBreite + 11, y: zeile.y + 11, 'text-anchor': 'middle',
         'dominant-baseline': 'middle', 'font-size': 8.5, 'font-weight': 700,
-        fill: 'var(--tba3-_farbe-text-invers)', text: zeile.level,
+        fill: STUFENSCHRIFT(zeile.level), text: zeile.level,
       }),
       s('rect', {
         x: MASSE.chartX, y: zeile.y, width: MASSE.chartBreite, height: MASSE.zeilenHoehe,

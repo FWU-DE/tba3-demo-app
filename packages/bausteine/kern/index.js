@@ -10,7 +10,26 @@
 // Der Kern ist jetzt der Teil, der nicht driften darf; das Zeichnen liegt bei
 // den Elementen.
 
-export { THEMA, themaCss, v } from './thema.js';
+export {
+  THEMA,
+  themaCss,
+  v,
+  stufenFlaeche,
+  stufenNummer,
+  stufenSchrift,
+} from './thema.js';
+
+// Ob ein Thema lesbar ist, lässt sich ausrechnen — auch von außen, für ein
+// eigenes Thema. `pruefeThema()` gibt zurück, welches Paar durchfällt.
+export {
+  PAARE as KONTRAST_PAARE,
+  SCHWELLE as KONTRAST_SCHWELLE,
+  farbe,
+  kontrast,
+  leuchtkraft,
+  lesbareSchrift,
+  pruefeThema,
+} from './kontrast.js';
 
 export {
   NAME as LEISTE_NAME,
