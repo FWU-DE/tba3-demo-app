@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+.claude/settings.local.json
+
+# Playwright
+e2e/.ergebnisse
+e2e/.bericht

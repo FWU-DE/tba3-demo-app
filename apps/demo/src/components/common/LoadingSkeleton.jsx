@@ -5,6 +5,7 @@ const LoadingSkeleton = ({ height = '400px', className = '' }) => {
 
   return (
     <div
+      data-testid="laden"
       className={`animate-pulse bg-gray-200 rounded-lg ${className}`}
       style={{ height }}
     >

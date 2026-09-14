@@ -153,7 +153,7 @@ const CompetenceDeltaView = () => {
 
   if (loading) {
     return (
-      <Card title={t('vergleich.titel')}>
+      <Card title={t('vergleich.titel')} testid="ansicht-vergleich">
         <LoadingSkeleton height="420px" />
       </Card>
     );
@@ -161,7 +161,7 @@ const CompetenceDeltaView = () => {
 
   if (error) {
     return (
-      <Card title={t('vergleich.titel')}>
+      <Card title={t('vergleich.titel')} testid="ansicht-vergleich">
         <ErrorMessage error={error} />
       </Card>
     );
@@ -169,7 +169,7 @@ const CompetenceDeltaView = () => {
 
   if (!data) {
     return (
-      <Card title={t('vergleich.titel')}>
+      <Card title={t('vergleich.titel')} testid="ansicht-vergleich">
         <div className="text-gray-500 text-center py-8">{t('vergleich.keineGruppe')}</div>
       </Card>
     );
@@ -239,7 +239,7 @@ const CompetenceDeltaView = () => {
   ];
 
   return (
-    <Card>
+    <Card testid="ansicht-vergleich">
       {/* Header: group name + domain tabs */}
       <div className="flex items-center justify-between mb-4">
         <span className="font-bold text-xl text-gray-900" data-testid="group-label">

@@ -265,11 +265,12 @@ const StudentDetailView = ({ student, onBack }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6" data-testid="schueler-datenblatt">
 
       {/* ── Back + actions bar ── */}
       <div className="flex items-center justify-between">
         <button
+          data-testid="datenblatt-zurueck"
           onClick={onBack}
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors group"
         >
@@ -283,6 +284,7 @@ const StudentDetailView = ({ student, onBack }) => {
         </button>
 
         <button
+          data-testid="datenblatt-pdf"
           onClick={handleDownloadPDF}
           disabled={pdfLoading}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm ${

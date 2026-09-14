@@ -15,6 +15,8 @@ npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
+npm run e2e            # Playwright gegen den gebauten Stand (baut und startet selbst)
+npm run e2e:ui         # dasselbe mit Oberfläche zum Nachvollziehen
 npm run lint           # ESLint über apps/demo
 ```
 
@@ -22,6 +24,8 @@ npm run lint           # ESLint über apps/demo
 ```bash
 npm run lint && npm test && npm run build
 ```
+
+Vor einer Änderung an der Oberfläche zusätzlich `npm run e2e`.
 
 Alle drei laufen ohne Befund; bitte sauber halten. `.github/workflows/ci.yml`
 führt sie bei jedem Push und Pull Request aus und prüft anschließend den
@@ -247,6 +251,29 @@ apps/shared/container.test.mjs                           Eine Spalte: Maße, Ein
 apps/demo/src/i18n/texte.test.js                         Textschlüssel der Demoanwendung
 apps/katalog/src/i18n/texte.test.mjs                     Textschlüssel des Katalogs
 ```
+
+Dazu die E2E-Tests unter `e2e/` (Playwright, `npm run e2e`):
+
+```
+e2e/demo-grundgeruest.spec.js   Laden, Leiste, Übersichtskarten, alle sieben Reiter, Deeplinks
+e2e/demo-filter.spec.js         Ebene, Lerngruppe, Fach, Klassenstufe, Datentyp — je gegen die Abfrage
+e2e/demo-schueler.spec.js       Suche, Filter, Datenblatt, eigene Gruppen (localStorage)
+e2e/demo-materialien.spec.js    Stufe wählen, zuweisen, Export als .imscc und .pdf
+e2e/demo-vergleich.spec.js      Teilbereiche, Vergleiche hinzunehmen, gesperrte Vergleiche
+e2e/demo-sprache.spec.js        Umschalten, Merken, über Bereiche hinweg, ?lang= beim ersten Rendern
+e2e/demo-fehler.spec.js         Abfrage scheitert, erneut versuchen, Fehler bleibt im Reiter
+e2e/demo-mobil.spec.js          Filter-Umschalter, Bedienbarkeit und kein seitlicher Überlauf bei 390 px
+```
+
+Gelaufen wird gegen `npm run preview`, nicht gegen den Dev-Server: Base-Pfade,
+Rewrites und der eigene Mock verhalten sich erst dort wie im Deployment.
+`playwright.config.js` baut und startet das selbst; gegen einen schon laufenden
+Server geht es mit `E2E_BASE_URL=http://localhost:4173 npm run e2e` ohne Bauen.
+
+Zwei Regeln für neue E2E-Tests: adressiert wird über `data-testid`, und geprüft
+wird, was die Anwendung tatsächlich abruft (`page.waitForRequest`) — eine
+Ansicht, die sich verändert, ohne die richtige Abfrage zu stellen, hat nichts
+gezeigt.
 
 Der App-Test ersetzt `src/services/tba3Api` — das ist die einzige Stelle, an der
 die Anwendung mit dem Backend spricht, und genügt deshalb, um Filter, Reiter und

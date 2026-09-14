@@ -1,4 +1,4 @@
-name: Lint, Tests & Build
+name: Lint, Tests, E2E & Build
 
 on:
   push:
@@ -62,3 +62,36 @@ jobs:
           pruefe /groups/3a-deutsch/competence-levels 200
           pruefe /materials 200
           pruefe /groups/gibtsnicht/items 404
+
+  # Die E2E-Tests laufen gegen den ausgelieferten Stand (npm run build &&
+  # npm run preview besorgt playwright.config.js selbst) — als eigener Job,
+  # damit sie neben Lint und Unit-Tests laufen statt hinter ihnen.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Browser holen
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E-Tests
+        run: npm run e2e
+
+      # Bei einem Fehlschlag hängen Spur, Bild und Video am Lauf — ohne sie
+      # ist ein Fehler, der nur in der CI auftritt, nicht zu greifen.
+      - name: Bericht sichern
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-bericht
+          path: |
+            e2e/.bericht
+            e2e/.ergebnisse
+          retention-days: 7

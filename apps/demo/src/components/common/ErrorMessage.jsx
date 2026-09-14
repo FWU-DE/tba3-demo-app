@@ -4,7 +4,7 @@ const ErrorMessage = ({ error, retry }) => {
   const t = useTexte();
 
   return (
-    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center" data-testid="fehlermeldung">
       <div className="text-red-600 font-semibold mb-2">
         {t('gemeinsam.fehlerTitel')}
       </div>
@@ -13,6 +13,7 @@ const ErrorMessage = ({ error, retry }) => {
       </div>
       {retry && (
         <button
+          data-testid="erneut-versuchen"
           onClick={retry}
           className="btn-primary"
         >
