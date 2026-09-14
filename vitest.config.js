@@ -7,6 +7,7 @@ import react from '@vitejs/plugin-react';
 //   apps/beispiele → Node, statischer Bereich ohne Build
 //   apps/shared    → jsdom, gemeinsame Sprachwahl
 //   apps/katalog   → Node, Textschlüssel des Katalogs
+//   packages/      → jsdom, die Bausteine in allen drei Fassungen
 export default defineConfig({
   plugins: [react()],
   test: {
@@ -51,6 +52,16 @@ export default defineConfig({
           globals: true,
           environment: 'node',
           include: ['tools/**/*.test.mjs'],
+        },
+      },
+      {
+        // jsdom, weil die Web-Component-Fassung customElements und Shadow DOM
+        // braucht; Vue und React werden hier serverseitig gerendert.
+        test: {
+          name: 'bausteine',
+          globals: true,
+          environment: 'jsdom',
+          include: ['packages/**/*.test.{js,jsx,mjs}'],
         },
       },
     ],

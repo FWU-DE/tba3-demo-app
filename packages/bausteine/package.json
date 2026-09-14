@@ -1,0 +1,30 @@
+{
+  "name": "@tba3/bausteine",
+  "version": "0.1.0",
+  "description": "Die TBA3-Visualisierungen als Web Component, Vue- und React-Komponente — eine Implementierung, drei Fassungen",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "kern",
+    "vue",
+    "react",
+    "webcomponents",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./kern/index.js",
+    "./kern": "./kern/index.js",
+    "./vue": "./vue/index.js",
+    "./react": "./react/index.js",
+    "./webcomponents": "./webcomponents/index.js"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "vue": ">=3.4"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "vue": { "optional": true }
+  }
+}

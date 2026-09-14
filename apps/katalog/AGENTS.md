@@ -51,6 +51,31 @@ npm run dev:katalog
 
 ---
 
+## Wo eine Komponente lebt
+
+Die Visualisierungen wandern nach `packages/bausteine` (`@tba3/bausteine`).
+Dort steht jede einmal als framework-freier Kern; Web Component, Vue- und
+React-Fassung entstehen daraus. Vier sind umgezogen:
+
+| Katalog-Ansicht | Baustein |
+|---|---|
+| `CompetenceLevelsView` | `KompetenzstufenLeiste` |
+| `MeanComparisonView` | `MittelwertVergleich` |
+| `ItemExpectedActualView` | `ErwartetTatsaechlich` |
+| `PercentileBandView` | `Perzentilbaender` |
+
+Die Ansichten importieren sie aus `@tba3/bausteine/vue` und benennen sie beim
+Import auf den alten Namen um — die Ansicht selbst bleibt unverändert.
+
+Die übrigen Komponenten liegen weiter unter `src/components/`: sie bringen
+Sortierung, Tooltips oder Auswahl mit, und dafür braucht der Kern erst eine
+Ereignisschicht. Siehe `packages/bausteine/README.md`.
+
+**Neue Visualisierung?** In `packages/bausteine/kern/` anlegen, nicht hier —
+dann gibt es sie gleich in allen drei Fassungen.
+
+---
+
 ## Eine Komponente hinzufügen
 
 1. Komponente in `src/components/` anlegen.

@@ -6,7 +6,7 @@ import Card from 'primevue/card';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
-import ItemExpectedActualChart from '../components/ItemExpectedActualChart.vue';
+import { ErwartetTatsaechlich as ItemExpectedActualChart } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 

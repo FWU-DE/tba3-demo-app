@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@primevue/themes": "^4.3.0",
+    "@tba3/bausteine": "*",
     "axios": "^1.7.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.0",
