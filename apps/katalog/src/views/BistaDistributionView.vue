@@ -1,57 +1,61 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Select from 'primevue/select';
 import Card from 'primevue/card';
 import Tag from 'primevue/tag';
-import BistaDistributionChart from '../components/BistaDistributionChart.vue';
+import { BistaVerteilung } from '@tba3/bausteine/vue';
 import StudentTooltip from '../components/StudentTooltip.vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'BistaDistributionChart.vue',
+  githubFile: 'bista-verteilung.js',
+  githubPath: 'packages/bausteine/webcomponents/bista-verteilung.js',
   propsDocs: [
-    { name: 'students',   type: 'Array',  required: true,  pfad: 'ansichten.bista.props.students' },
-    { name: 'subject',    type: 'String', default: "''",   pfad: 'ansichten.bista.props.subject' },
-    { name: 'groupClass', type: 'String', default: "''",   pfad: 'ansichten.bista.props.groupClass' },
-    { name: 'title',      type: 'String', default: 'null', pfad: 'ansichten.bista.props.title' },
-    { name: 'scoreMax',   type: 'Number', default: '565',  pfad: 'ansichten.bista.props.scoreMax' },
-    { name: 'zones',      type: 'Array',  default: '[KS I, KS II, KS III]', pfad: 'ansichten.bista.props.zones' },
+    { name: 'schueler',   type: 'Array',  required: true, pfad: 'ansichten.bista.props.schueler' },
+    { name: 'title',      type: 'String', default: "''",  pfad: 'ansichten.bista.props.title' },
+    { name: 'zonen',      type: 'Array',  default: '[KS I, KS II, KS III]', pfad: 'ansichten.bista.props.zonen' },
+    { name: 'punkteMin',  type: 'Number', default: '300', pfad: 'ansichten.bista.props.punkteMin' },
+    { name: 'punkteMax',  type: 'Number', default: '565', pfad: 'ansichten.bista.props.punkteMax' },
+    { name: 'mittelwert', type: 'Number', default: 'null', pfad: 'ansichten.bista.props.mittelwert' },
   ],
-  dataShape: `// students-Element
+  dataShape: `// schueler-Element
 {
-  id:               1,
-  name:             'Emma Fischer',
-  bistaScore:       391,          // BISTA-Punktwert (0–scoreMax)
-  yFrac:            0.30,         // vertikale Position im Streifen (0=oben, 1=unten)
-  emoji:            '👧',
-  ringColor:        '#3b82f6',    // Rahmenfarbe des Avatars
-  // Wird vom StudentTooltip genutzt (optional):
-  zone:             'KS II',
-  competencyLevel:  'Mindeststandard',
-  competencyDesc:   'Grundlegende Kompetenzen vorhanden.',
-}`,
+  id:        1,
+  name:      'Emma Fischer',
+  initialen: 'EF',        // fehlt sie, bildet der Baustein sie aus dem Namen
+  punkte:    391,         // BISTA-Punktwert, zwischen punkteMin und punkteMax
+}
+
+// zonen-Element
+{ id: 'ks2', label: 'KS II', von: 430, bis: 500, farbe: '#e0f2fe' }`,
   codeExample: `<script setup>
 import { ref } from 'vue';
-import BistaDistributionChart from './components/BistaDistributionChart.vue';
+import { BistaVerteilung } from '@tba3/bausteine/vue';
 
-// Schülerdaten kommen aus dem Backend /groups/{id} mit BISTA-Werten
-// Die yFrac-Position wird für die visuelle Streuung benötigt (z. B. zufällig oder nach Score)
-const students = ref([
-  { id: 1, name: 'Leon B.',   bistaScore: 342, yFrac: 0.55, emoji: '👦', ringColor: '#f43f5e', zone: 'KS I' },
-  { id: 2, name: 'Emma F.',   bistaScore: 391, yFrac: 0.30, emoji: '👧', ringColor: '#3b82f6', zone: 'KS II' },
-  { id: 3, name: 'Paul S.',   bistaScore: 325, yFrac: 0.65, emoji: '👦', ringColor: '#f43f5e', zone: 'KS I' },
-  { id: 4, name: 'Mia L.',    bistaScore: 449, yFrac: 0.75, emoji: '👩', ringColor: '#14b8a6', zone: 'KS II' },
-  { id: 5, name: 'Jonas K.',  bistaScore: 469, yFrac: 0.20, emoji: '🧒', ringColor: '#14b8a6', zone: 'KS III' },
+// Die Schwellen hängen an Fach und Jahrgang und kommen deshalb von außen.
+const zonen = [
+  { id: 'ks1', label: 'KS I',   von: 300, bis: 430 },
+  { id: 'ks2', label: 'KS II',  von: 430, bis: 500 },
+  { id: 'ks3', label: 'KS III', von: 500, bis: 565 },
+];
+
+const schueler = ref([
+  { id: 1, name: 'Leon Braun',   punkte: 342 },
+  { id: 2, name: 'Emma Fischer', punkte: 391 },
+  { id: 3, name: 'Paul Schmidt', punkte: 325 },
+  { id: 4, name: 'Mia Lange',    punkte: 449 },
+  { id: 5, name: 'Jonas Koch',   punkte: 469 },
 ]);
 <\/script>
 
 <template>
-  <BistaDistributionChart
-    :students="students"
-    subject="Deutsch"
-    group-class="8a"
-    :score-max="565"
+  <BistaVerteilung
+    :schueler="schueler"
+    :zonen="zonen"
+    title="8a Deutsch"
+    :mittelwert="395"
+    @schueler-gewaehlt="s => console.log(s)"
   />
 </template>`,
   apiEndpoints: [
@@ -127,6 +131,31 @@ const students = computed(() => {
   }));
 });
 
+// Für den Baustein: Name und Punktwert reichen, die Initialen bildet er selbst.
+// Die vertikale Streuung (yFrac) fällt weg — wer denselben Wert hat, steht
+// beim Baustein übereinander statt zufällig verteilt, und das ist die
+// ehrlichere Anordnung.
+const schuelerFuerBaustein = computed(() =>
+  students.value.map(({ id, name, bistaScore }) => ({ id, name, punkte: bistaScore })),
+);
+
+// Die Schwellen der Kompetenzstufen gehören zur Auswertung, nicht zum
+// Baustein — deshalb stehen sie hier und nicht dort.
+const ZONEN = [
+  { id: 'ks1', label: 'KS I', von: 300, bis: 430 },
+  { id: 'ks2', label: 'KS II', von: 430, bis: 500 },
+  { id: 'ks3', label: 'KS III', von: 500, bis: 565 },
+];
+
+const mittelwert = computed(() => {
+  const liste = schuelerFuerBaustein.value;
+  if (!liste.length) return null;
+  return liste.reduce((s, x) => s + x.punkte, 0) / liste.length;
+});
+
+const gewaehlt = ref(null);
+watch(() => selectedGroup.value, () => { gewaehlt.value = null; });
+
 // Three example students for the standalone StudentTooltip demo
 const DEMO_ZONE_DATA = {
   'KS I':   { zone: 'KS I',   competencyLevel: 'Unter Mindeststandard', competencyDesc: 'Grundlegende Kompetenzen noch nicht gesichert.' },
@@ -148,7 +177,7 @@ const tooltipDemos = computed(() => [
         <div class="card-header">
           <div>
             <div class="comp-name-row">
-              <code class="comp-name">BistaDistributionChart</code>
+              <code class="comp-name">&lt;tba3-bista-verteilung&gt;</code>
               <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
@@ -192,15 +221,25 @@ const tooltipDemos = computed(() => [
         </div>
 
         <!-- ── Chart ───────────────────────────────────────────────────────── -->
-        <BistaDistributionChart
-          :students="students"
-          :subject="selectedGroup?.subject"
-          :group-class="selectedGroup?.groupClass"
-        />
+        <div class="diagramm-flaeche">
+          <BistaVerteilung
+            :schueler="schuelerFuerBaustein"
+            :zonen="ZONEN"
+            :title="selectedGroup?.label"
+            :mittelwert="mittelwert"
+            @schueler-gewaehlt="(s) => (gewaehlt = s)"
+            @zone-gewaehlt="() => (gewaehlt = null)"
+          />
+        </div>
+        <p v-if="gewaehlt" class="gewaehlt-hinweis" data-testid="schueler-gewaehlt">
+          <i class="pi pi-user" />
+          {{ t('ansichten.bista.gewaehlt', { name: gewaehlt.name, punkte: Math.round(gewaehlt.punkte ?? 0) }) }}
+        </p>
 
         <ComponentDocs
-          component-name="BistaDistributionChart"
+          component-name="tba3-bista-verteilung"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
@@ -220,6 +259,13 @@ const tooltipDemos = computed(() => [
 }
 
 .catalog-card { border-radius: 10px; }
+
+.diagramm-flaeche { max-width: 760px; }
+.gewaehlt-hinweis {
+  display: flex; align-items: center; gap: 6px; margin: 12px 0 0;
+  font-size: 0.82rem; color: #0369a1; background: #f0f9ff;
+  border: 1px solid #bae6fd; border-radius: 5px; padding: 6px 10px;
+}
 
 .card-header {
   display: flex; align-items: flex-start; justify-content: space-between;

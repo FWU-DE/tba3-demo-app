@@ -1,13 +1,16 @@
 <script setup>
 import { t } from '../i18n';
 
-const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-catalog/src/components/';
+// Alle Ansichten des Katalogs laufen inzwischen über @tba3/bausteine. Der
+// Quelltext-Link zeigt deshalb dorthin und nicht mehr auf eine Kopie im
+// Katalog — sonst führte er an dem Code vorbei, der hier tatsächlich zeichnet.
+const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/packages/bausteine/webcomponents/';
 
 const COMPONENTS = [
   {
     name: 'ItemExpectedActualChart',
     route: '/item-expected-actual',
-    githubFile: 'ItemExpectedActualChart.vue',
+    baustein: 'erwartet-tatsaechlich',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups/{id}/items',
@@ -16,7 +19,7 @@ const COMPONENTS = [
   {
     name: 'MeanComparisonChart',
     route: '/mean-comparison',
-    githubFile: 'MeanComparisonChart.vue',
+    baustein: 'mittelwert-vergleich',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups, /schools, /states (items)',
@@ -25,7 +28,7 @@ const COMPONENTS = [
   {
     name: 'BistaDistributionChart',
     route: '/bista-distribution',
-    githubFile: 'BistaDistributionChart.vue',
+    baustein: 'bista-verteilung',
     tag: 'SVG',
     tagSeverity: 'info',
     api: 'Schülerdaten mit BISTA-Werten',
@@ -34,7 +37,7 @@ const COMPONENTS = [
   {
     name: 'CompetencyOverviewCards',
     route: '/competency-overview',
-    githubFile: 'CompetencyOverviewCards.vue',
+    baustein: 'uebersichtskarten',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups (competence-levels)',
@@ -43,7 +46,7 @@ const COMPONENTS = [
   {
     name: 'PercentileBandChart',
     route: '/percentile-band',
-    githubFile: 'PercentileBandChart.vue',
+    baustein: 'perzentilbaender',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups, /schools, /states',
@@ -52,7 +55,7 @@ const COMPONENTS = [
   {
     name: 'CompetenceLevelBar',
     route: '/competence-levels',
-    githubFile: 'CompetenceLevelBar.vue',
+    baustein: 'kompetenzstufen-leiste',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups, /schools, /states (competence-levels)',
@@ -61,7 +64,7 @@ const COMPONENTS = [
   {
     name: 'StudentSolutionTable',
     route: '/student-solution-table',
-    githubFile: 'StudentSolutionTable.vue',
+    baustein: 'schueler-tabelle',
     tag: 'Tabelle',
     tagSeverity: 'secondary',
     api: '/groups (items?type=students)',
@@ -70,7 +73,7 @@ const COMPONENTS = [
   {
     name: 'ItemSolutionTable',
     route: '/item-solution-table',
-    githubFile: 'ItemSolutionTable.vue',
+    baustein: 'aufgaben-tabelle',
     tag: 'Tabelle',
     tagSeverity: 'secondary',
     api: '/groups, /schools, /states (items)',
@@ -79,7 +82,7 @@ const COMPONENTS = [
   {
     name: 'StudentScatterPlot',
     route: '/student-scatter',
-    githubFile: 'StudentScatterPlot.vue',
+    baustein: 'streudiagramm',
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups (items?type=students)',
@@ -415,6 +418,8 @@ const COMPONENTS = [
             <code class="card-name">{{ comp.name }}</code>
             <span class="card-api-badge">{{ comp.api }}</span>
           </div>
+          <!-- Was die Ansicht tatsächlich rendert: der Baustein aus dem Paket. -->
+          <code class="card-element">&lt;tba3-{{ comp.baustein }}&gt;</code>
           <p class="card-desc">{{ t(`komponenten.${comp.name}.beschreibung`) }}</p>
           <ul class="card-use-cases">
             <li v-for="fall in t(`komponenten.${comp.name}.faelle`)" :key="fall">{{ fall }}</li>
@@ -423,8 +428,8 @@ const COMPONENTS = [
 
         <div class="card-footer">
           <a
-            v-if="comp.githubFile"
-            :href="GH_BASE + comp.githubFile"
+            v-if="comp.baustein"
+            :href="`${GH_BASE}${comp.baustein}.js`"
             target="_blank"
             rel="noopener"
             class="card-gh-link"
@@ -505,6 +510,17 @@ const COMPONENTS = [
   background: #eff6ff;
   padding: 2px 7px;
   border-radius: 4px;
+}
+.card-element {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: ui-monospace, monospace;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
 .card-api-badge {
   font-size: 0.7rem;

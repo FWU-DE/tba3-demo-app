@@ -56,42 +56,63 @@ export const ZUORDNUNG = [
     katalog: 'ItemSolutionTable',
     anzeige: 'Lösungshäufigkeiten je Aufgabe',
     baustein: 'aufgaben-tabelle',
-    stand: 'offen',
+    stand: 'umgezogen',
     hinweis:
-      'Der Baustein steht bereits und kann sortieren; die Katalog-Ansicht nutzt ihn noch nicht.',
+      'Eine Tabelle je Domäne; welche Ebene die Erwartung stellt — Schule oder Bundesland —, wählt die Ansicht.',
   },
   {
     katalog: 'StudentSolutionTable',
     anzeige: 'Lösungen je Schüler:in',
-    baustein: null,
-    stand: 'offen',
-    hinweis: 'Tabelle mit Auswahl — braucht noch eine Auswahl-Schnittstelle im Baustein.',
+    baustein: 'schueler-tabelle',
+    stand: 'umgezogen',
+    hinweis: 'Die Auswahl hält die Ansicht, der Baustein meldet sie nur.',
   },
   {
     katalog: 'CompetencyOverview',
     anzeige: 'Übersichtskarten',
-    baustein: null,
-    stand: 'offen',
-    hinweis: 'Karten statt Diagramm; aufklappbare Details.',
+    baustein: 'uebersichtskarten',
+    stand: 'umgezogen',
+    hinweis: 'Aus zwei Karten wurden drei: die Verteilung und die beiden Aussagen dazu.',
   },
   {
     katalog: 'StudentScatter',
     anzeige: 'Streudiagramm der Schüler:innen',
-    baustein: null,
-    stand: 'offen',
-    hinweis: 'Tooltip folgt dem Zeiger — braucht eine Überlagerung außerhalb des SVG.',
+    baustein: 'streudiagramm',
+    stand: 'umgezogen',
+    hinweis:
+      'Ohne das K-Means-Clustering der alten Ansicht — Gruppen zu bilden ist Auswertung und gehört nicht in den Baustein.',
   },
   {
     katalog: 'BistaDistribution',
     anzeige: 'BISTA-Verteilung',
-    baustein: null,
-    stand: 'offen',
-    hinweis: 'Avatare mit Tooltip, wie beim Streudiagramm.',
+    baustein: 'bista-verteilung',
+    stand: 'umgezogen',
+    hinweis:
+      'Gleiche Werte stapeln sich, statt zufällig zu streuen; die Schwellen der Kompetenzstufen kommen aus der Ansicht.',
   },
 ];
 
 /** Bausteine ohne Katalog-Ansicht — die Bibliothek ist nicht nur eine Teilmenge. */
-export const NUR_BAUSTEIN = [];
+export const NUR_BAUSTEIN = [
+  {
+    baustein: 'lernstands-verlauf',
+    anzeige: 'Lernstands-Verlauf',
+    grund:
+      'Mehrere Erhebungen nebeneinander — der Katalog zeigt immer eine. Wer den Baustein einbaut, hat die Zeitreihe meist schon.',
+  },
+  {
+    baustein: 'aufgaben-heatmap',
+    anzeige: 'Aufgaben-Heatmap',
+    grund:
+      'Aufgaben gegen Lerngruppen: die Sicht der Schulleitung, nicht die der Lehrkraft — und deshalb keine Ansicht der Schau.',
+  },
+  {
+    baustein: 'kennzahl-kachel',
+    anzeige: 'Kennzahl-Kachel',
+    grund:
+      'Eine einzelne Zahl mit Vergleich und kleinem Verlauf. Zu klein für eine eigene Ansicht, zu oft gebraucht, um sie wegzulassen.',
+  },
+];
 
 export const ZAHLEN = {
   get umgezogen() {

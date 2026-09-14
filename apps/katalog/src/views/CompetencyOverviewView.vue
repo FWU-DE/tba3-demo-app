@@ -6,67 +6,89 @@ import Card from 'primevue/card';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
-import CompetencyOverviewCards from '../components/CompetencyOverviewCards.vue';
+import { Uebersichtskarten } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'CompetencyOverviewCards.vue',
+  githubFile: 'uebersichtskarten.js',
+  githubPath: 'packages/bausteine/webcomponents/uebersichtskarten.js',
   // Beschreibungen kommen aus i18n/texte.js — der Rest ist Technik.
   propsDocs: [
-    { name: 'chartData', type: 'Array',  required: true, pfad: 'ansichten.uebersicht.props.chartData' },
-    { name: 'stats',     type: 'Object', required: true, pfad: 'ansichten.uebersicht.props.stats' },
-    { name: 'subject',   type: 'String', default: "''",  pfad: 'ansichten.uebersicht.props.subject' },
+    { name: 'karten',    type: 'Array',  required: true, pfad: 'ansichten.uebersicht.props.karten' },
+    { name: 'title',     type: 'String', default: "''",  pfad: 'ansichten.uebersicht.props.title' },
+    { name: 'geoeffnet', type: 'Array',  default: '[]',  pfad: 'ansichten.uebersicht.props.geoeffnet' },
+    { name: 'spalten',   type: 'Number', default: '3',   pfad: 'ansichten.uebersicht.props.spalten' },
   ],
-  dataShape: `// chartData-Element
-{ level: 'III', count: 8, percentage: 0.32, color: '#eab308', name: 'Regelstandard' }
-
-// stats
-{ total: 25, belowStandard: 0.12, atStandard: 0.60, aboveStandard: 0.28 }`,
+  dataShape: `// karten-Element
+{
+  id:      'ab-mindest',
+  label:   'Mindeststandard und darüber',
+  wert:    88,                    // Zahl im Ring
+  einheit: '%',
+  anteile: [                      // ergibt den Ring; Summe ist die Grundlinie
+    { label: 'erreicht',       wert: 22, farbe: '#22c55e' },
+    { label: 'nicht erreicht', wert: 3,  farbe: '#ef4444' },
+  ],
+  details: [                      // aufklappbar; fehlt es, ist die Karte flach
+    { label: 'Schüler*innen', wert: 25 },
+  ],
+}`,
   codeExample: `<script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import CompetencyOverviewCards from './components/CompetencyOverviewCards.vue';
+import { Uebersichtskarten } from '@tba3/bausteine/vue';
 
-const LEVEL_COLORS = { I: '#ef4444', II: '#f97316', III: '#eab308', IV: '#22c55e', V: '#15803d' };
-const LEVEL_NAMES  = { I: 'Unter Mindeststandard', II: 'Mindeststandard', III: 'Regelstandard', IV: 'Regelstandard+', V: 'Optimalstandard' };
-const LEVEL_ORDER  = ['I','II','III','IV','V'];
+const FARBEN = { I: '#ef4444', II: '#f97316', III: '#eab308', IV: '#22c55e', V: '#15803d' };
+const STUFEN = ['I', 'II', 'III', 'IV', 'V'];
 
-const chartData = ref([]);
-const stats     = ref(null);
+const karten    = ref([]);
+const geoeffnet = ref([]);
 
 onMounted(async () => {
   const { data } = await axios.get('/groups/3a-deutsch/competence-levels');
-  const vgs = [].concat(data);
-  const counts = {};
-  let total = 0;
-  vgs.forEach(vg => {
-    (vg.competenceLevels ?? []).forEach(cl => {
+
+  const anzahl = {};
+  let gesamt = 0;
+  for (const vg of [].concat(data)) {
+    for (const cl of vg.competenceLevels ?? []) {
       const f = cl.descriptiveStatistics?.frequency ?? 0;
-      counts[cl.nameShort] = (counts[cl.nameShort] ?? 0) + f;
-      total += f;
-    });
-  });
-  chartData.value = LEVEL_ORDER.map(ns => ({
-    level: ns, count: counts[ns] ?? 0,
-    percentage: total > 0 ? (counts[ns] ?? 0) / total : 0,
-    color: LEVEL_COLORS[ns], name: LEVEL_NAMES[ns],
-  }));
-  const get = ns => counts[ns] ?? 0;
-  stats.value = {
-    total,
-    belowStandard: get('I') / total,
-    atStandard:   (get('II') + get('III')) / total,
-    aboveStandard:(get('IV') + get('V')) / total,
-  };
+      anzahl[cl.nameShort] = (anzahl[cl.nameShort] ?? 0) + f;
+      gesamt += f;
+    }
+  }
+  const n = (stufe) => anzahl[stufe] ?? 0;
+  const abMindest = gesamt - n('I');
+
+  karten.value = [
+    {
+      id: 'verteilung',
+      label: 'Kompetenzstufen',
+      wert: gesamt,
+      einheit: '',
+      anteile: STUFEN.map(st => ({ label: st, wert: n(st), farbe: FARBEN[st] })),
+      details: STUFEN.map(st => ({ label: \`Stufe \${st}\`, wert: n(st) })),
+    },
+    {
+      id: 'ab-mindest',
+      label: 'Mindeststandard und darüber',
+      wert: gesamt ? Math.round((abMindest / gesamt) * 100) : 0,
+      einheit: '%',
+      anteile: [
+        { label: 'erreicht', wert: abMindest, farbe: '#22c55e' },
+        { label: 'nicht erreicht', wert: n('I'), farbe: '#ef4444' },
+      ],
+      details: [{ label: 'Schüler*innen', wert: abMindest }],
+    },
+  ];
 });
 <\/script>
 
 <template>
-  <CompetencyOverviewCards
-    :chart-data="chartData"
-    :stats="stats"
-    subject="Deutsch"
+  <Uebersichtskarten
+    :karten="karten"
+    :geoeffnet="geoeffnet"
+    @karte-geoeffnet="e => (geoeffnet = e.geoeffnet)"
   />
 </template>`,
   apiEndpoints: [
@@ -139,19 +161,60 @@ const chartData = computed(() => {
   }));
 });
 
-const stats = computed(() => {
-  const total = chartData.value.reduce((s, d) => s + d.count, 0);
-  if (total === 0) return null;
-  const get = (ns) => (chartData.value.find((d) => d.level === ns)?.count ?? 0);
-  return {
-    total,
-    belowStandard: get('I') / total,
-    atStandard: (get('II') + get('III')) / total,
-    aboveStandard: (get('IV') + get('V')) / total,
-  };
+// Aus den Stufen werden drei Karten: die Verteilung selbst und die beiden
+// Aussagen, auf die es in der Rückmeldung ankommt — erreicht und nicht
+// erreicht. Der Ring trägt die Anteile, die Kennzahl steht in seinem Kern.
+const karten = computed(() => {
+  const gesamt = chartData.value.reduce((s, d) => s + d.count, 0);
+  if (gesamt === 0) return [];
+  const anzahl = (ns) => chartData.value.find((d) => d.level === ns)?.count ?? 0;
+  const unter = anzahl('I');
+  const ab = gesamt - unter;
+  const anteil = (n) => Math.round((n / gesamt) * 100);
+
+  return [
+    {
+      id: 'verteilung',
+      label: t('ansichten.uebersicht.karten.verteilung'),
+      wert: gesamt,
+      einheit: '',
+      anteile: chartData.value.map((d) => ({ label: d.level, wert: d.count, farbe: d.color })),
+      details: chartData.value.map((d) => ({ label: `${d.level} · ${d.name}`, wert: d.count })),
+    },
+    {
+      id: 'ab-mindeststandard',
+      label: t('bausteine.uebersicht.abMindeststandard'),
+      wert: anteil(ab),
+      einheit: '%',
+      anteile: [
+        { label: t('bausteine.uebersicht.abMindeststandard'), wert: ab, farbe: LEVEL_COLORS.IV },
+        { label: t('bausteine.uebersicht.unterMindeststandard'), wert: unter, farbe: '#e2e8f0' },
+      ],
+      details: [
+        { label: t('bausteine.uebersicht.abMindeststandardZusatz', { n: ab }), wert: `${anteil(ab)} %` },
+      ],
+    },
+    {
+      id: 'unter-mindeststandard',
+      label: t('bausteine.uebersicht.unterMindeststandard'),
+      wert: anteil(unter),
+      einheit: '%',
+      anteile: [
+        { label: t('bausteine.uebersicht.unterMindeststandard'), wert: unter, farbe: LEVEL_COLORS.I },
+        { label: t('bausteine.uebersicht.abMindeststandard'), wert: ab, farbe: '#e2e8f0' },
+      ],
+      details: [
+        { label: t('bausteine.uebersicht.unterMindeststandardZusatz', { n: unter }), wert: `${anteil(unter)} %` },
+      ],
+    },
+  ];
 });
 
-const hasData = computed(() => stats.value !== null);
+const hasData = computed(() => karten.value.length > 0);
+
+// Welche Karten aufgeklappt sind, hält die Ansicht — das Element meldet nur.
+const geoeffnet = ref([]);
+watch(() => selectedGroup.value, () => { geoeffnet.value = []; });
 </script>
 
 <template>
@@ -161,7 +224,7 @@ const hasData = computed(() => stats.value !== null);
         <div class="card-header">
           <div>
             <div class="comp-name-row">
-              <code class="comp-name">CompetencyOverviewCards</code>
+              <code class="comp-name">&lt;tba3-uebersichtskarten&gt;</code>
               <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
@@ -206,16 +269,18 @@ const hasData = computed(() => stats.value !== null);
           {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
-        <CompetencyOverviewCards
+        <Uebersichtskarten
           v-else
-          :chart-data="chartData"
-          :stats="stats"
-          :subject="selectedGroup?.subject"
+          :karten="karten"
+          :title="selectedGroup?.subject"
+          :geoeffnet="geoeffnet"
+          @karte-geoeffnet="(e) => (geoeffnet = e.geoeffnet)"
         />
 
         <ComponentDocs
-          component-name="CompetencyOverviewCards"
+          component-name="tba3-uebersichtskarten"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"

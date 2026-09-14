@@ -22,7 +22,7 @@ th, td {
 th { font-weight: 600; white-space: nowrap; }
 td.zahl, th.zahl { text-align: right; }
 tbody tr { cursor: pointer; }
-tbody tr:hover, tbody tr:focus-within { background: var(--tba3-_farbe-hervorhebung)); }
+tbody tr:hover, tbody tr:focus-within { background: var(--tba3-_farbe-hervorhebung); }
 thead th { border-bottom: 2px solid var(--tba3-_farbe-linie); }
 
 .sortknopf {

@@ -73,6 +73,20 @@ Test fehl.
 | `<tba3-mittelwert-vergleich>` | Diamant-Marker auf gemeinsamer Skala, mit Konfidenzintervall | `/groups`, `/schools`, `/states` | `zeile-gewaehlt` |
 | `<tba3-erwartet-tatsaechlich>` | Tatsächliche gegen erwartete Lösungsquote je Aufgabe | `/groups/{id}/items` | `aufgabe-gewaehlt` |
 | `<tba3-perzentilbaender>` | Mittlerer Bereich je Teilbereich, dazu der Wert einer Schüler:in | `/groups/{id}/aggregations` | `bereich-gewaehlt` |
+| `<tba3-schueler-tabelle>` | Lösungsanteile je Schüler:in und Teilbereich, sortierbar, mit Auswahl | `/groups/{id}/items?type=students` | `sortiert`, `schueler-gewaehlt`, `auswahl-geaendert` |
+| `<tba3-uebersichtskarten>` | Karten mit Ring, Kennzahl und aufklappbaren Details | `/groups/{id}/aggregations` | `karte-gewaehlt`, `karte-geoeffnet` |
+| `<tba3-streudiagramm>` | Schüler:innen als Punktwolke, Tooltip außerhalb des SVG | `/groups/{id}/items?type=students` | `punkt-gewaehlt`, `punkt-betreten`, `punkt-verlassen` |
+| `<tba3-bista-verteilung>` | Avatare auf der Punkteskala, Zonen von außen gesetzt | `/groups/{id}/aggregations` | `schueler-gewaehlt`, `zone-gewaehlt` |
+| `<tba3-lernstands-verlauf>` | Mehrere Erhebungen als Linie, mit Band und Vergleichslinie | `/groups/{id}/aggregations` | `zeitpunkt-gewaehlt` |
+| `<tba3-aufgaben-heatmap>` | Aufgaben gegen Lerngruppen, gefärbt nach Abweichung oder Wert | `/groups/{id}/items` | `zelle-gewaehlt` |
+| `<tba3-kennzahl-kachel>` | Eine Zahl mit Vergleich und kleinem Verlauf | `/groups/{id}/aggregations` | `kachel-gewaehlt` |
+
+Die letzten drei haben **keine** Katalog-Ansicht: der Verlauf braucht mehrere
+Erhebungen, die Heatmap die Sicht über Lerngruppen hinweg, und die Kachel ist zu
+klein für eine eigene Seite. Die Bibliothek ist eben nicht die Teilmenge der
+Schau — `NUR_BAUSTEIN` in
+[`zuordnung.js`](../../apps/portal/bausteine/zuordnung.js) hält das mit Grund
+fest, und ein Test prüft, dass dort kein Baustein fehlt.
 
 ---
 
@@ -245,8 +259,17 @@ Quelltext, vier Anmutungen.
 2. `webcomponents/<name>.js`: `BAUPLAN` mit `name`, `titel`, `endpunkt`,
    `standard`, `ereignisse`, `stil` und `aufbauen(wurzel, zustand, el)`.
    `elementKlasse(BAUPLAN)` macht daraus das Custom Element.
-3. In `webcomponents/index.js` unter `BAUPLAENE` eintragen.
-4. Beispieldaten in `__tests__/bausteine.test.jsx` unter `DATEN` ergänzen.
+3. In `webcomponents/index.js` unter `BAUPLAENE` und `ELEMENTE` eintragen, die
+   öffentlichen Namen in `kern/index.js` weiterreichen und den Komponentennamen
+   in `vue/index.js` und `react/index.js` mit ausschreiben.
+4. Beispieldaten in `__tests__/bausteine.test.jsx` unter `DATEN` ergänzen und in
+   `apps/portal/bausteine/demodaten.js` für **jeden** Datensatz.
+5. In `apps/portal/bausteine/zuordnung.js` eintragen: entweder bei der
+   Katalog-Ansicht, die ihn zeigt, oder unter `NUR_BAUSTEIN` mit Grund.
+
+Die Schritte 3 bis 5 sind nicht Fleiß, sondern Prüfungen: `bausteine.test.jsx`,
+`demodaten.test.mjs` und `zuordnung.test.mjs` schlagen fehl, solange einer
+fehlt.
 
 Vue- und React-Fassung entstehen daraus von selbst — die Adapter lesen nur
 `BAUPLAENE`. Die Tests prüfen, dass alle drei übereinstimmen.
@@ -255,7 +278,13 @@ Vue- und React-Fassung entstehen daraus von selbst — die Adapter lesen nur
 
 ## Stand
 
-Fünf Bausteine, alle in drei Fassungen. Vier davon tragen bereits eine
-Katalog-Ansicht; die übrigen Katalog-Ansichten warten noch (siehe die Tabelle
-auf `/bausteine`). Was ihnen fehlt, steht dort je Zeile — meist eine
-Auswahl-Schnittstelle oder eine Tooltip-Überlagerung außerhalb des SVG.
+Zwölf Bausteine, alle in drei Fassungen. **Alle neun Katalog-Ansichten laufen
+über das Paket** — was die Schau zeigt, ist damit derselbe Quelltext, den auch
+ein fremdes Projekt bekommt. Drei Bausteine stehen ohne Ansicht daneben
+(Verlauf, Heatmap, Kachel).
+
+Zwei Dinge sind beim Umzug bewusst liegen geblieben und stehen als Hinweis in
+der Zuordnungstabelle: das K-Means-Clustering des alten Streudiagramms — Gruppen
+zu bilden ist Auswertung und gehört nicht in einen Baustein — und die zufällige
+vertikale Streuung der BISTA-Verteilung; gleiche Werte stapeln sich jetzt, was
+die ehrlichere Anordnung ist.

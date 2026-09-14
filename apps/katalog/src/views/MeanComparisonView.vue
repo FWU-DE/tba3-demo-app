@@ -12,7 +12,8 @@ import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'MeanComparisonChart.vue',
+  githubFile: 'mittelwert-vergleich.js',
+  githubPath: 'packages/bausteine/webcomponents/mittelwert-vergleich.js',
   propsDocs: [
     { name: 'rows',   type: 'Array',  required: true,  pfad: 'ansichten.mittelwert.props.rows' },
     { name: 'title',  type: 'String', default: "''",    pfad: 'ansichten.mittelwert.props.title' },
@@ -31,7 +32,7 @@ const DOCS = {
   codeExample: `<script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import MeanComparisonChart from './components/MeanComparisonChart.vue';
+import { MittelwertVergleich as MeanComparisonChart } from '@tba3/bausteine/vue';
 
 const rows = ref([]);
 
@@ -244,6 +245,7 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="MeanComparisonChart"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"

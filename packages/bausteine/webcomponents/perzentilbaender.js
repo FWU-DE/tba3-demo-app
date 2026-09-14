@@ -16,10 +16,10 @@ const STIL = `
 
 // Eigene Themenvariablen mit zurückhaltenden Vorgaben — das Band ist kein
 // Markenelement, es soll die Raute tragen, nicht überstrahlen.
-const BAND = 'var(--tba3-_band))';
-const BAND_KANTE = 'var(--tba3-_band-kante))';
-const UNTEN = 'var(--tba3-_band-unten))';
-const OBEN = 'var(--tba3-_band-oben))';
+const BAND = 'var(--tba3-_band)';
+const BAND_KANTE = 'var(--tba3-_band-kante)';
+const UNTEN = 'var(--tba3-_band-unten)';
+const OBEN = 'var(--tba3-_band-oben)';
 const GRUND = 'var(--tba3-_band-grund)';
 const MARKER = 'var(--tba3-_band-marker)';
 
@@ -123,9 +123,9 @@ function aufbauen(wurzel, zustand, el) {
 
   svg.append(
     s('g', { transform: `translate(${MASSE.labelBreite + 8}, ${g.legendeY})` }, [
-      eintrag(0, 'var(--tba3-_band-unten))', 'unterdurchschnittlich'),
+      eintrag(0, UNTEN, 'unterdurchschnittlich'),
       eintrag(152, BAND, g.bandLabel),
-      eintrag(350, 'var(--tba3-_band-oben))', 'überdurchschnittlich'),
+      eintrag(350, OBEN, 'überdurchschnittlich'),
       eintrag(500, null, g.markerLabel, true),
     ]),
     s('text', {

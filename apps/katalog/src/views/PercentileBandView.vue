@@ -11,7 +11,8 @@ import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'PercentileBandChart.vue',
+  githubFile: 'perzentilbaender.js',
+  githubPath: 'packages/bausteine/webcomponents/perzentilbaender.js',
   propsDocs: [
     { name: 'items',       type: 'Array',  required: true,  pfad: 'ansichten.band.props.items' },
     { name: 'title',       type: 'String', default: "''",   pfad: 'ansichten.band.props.title' },
@@ -31,7 +32,7 @@ const DOCS = {
   codeExample: `<script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import PercentileBandChart from './components/PercentileBandChart.vue';
+import { Perzentilbaender as PercentileBandChart } from '@tba3/bausteine/vue';
 
 const items = ref([]);
 
@@ -84,7 +85,7 @@ onMounted(async () => {
     { method: 'GET', path: '/groups/{id}/items',              pfad: 'ansichten.band.endpunkte.gruppe' },
     { method: 'GET', path: '/schools/{id}/items',             pfad: 'ansichten.band.endpunkte.schule' },
     { method: 'GET', path: '/states/{id}/items',              pfad: 'ansichten.band.endpunkte.land' },
-    { method: 'GET', path: '/groups/{id}/items?type=students','description': 'Schülerdaten für Perzentilrang-Modus (Schüler:in vs. Klasse)' },
+    { method: 'GET', path: '/groups/{id}/items?type=students', pfad: 'ansichten.band.endpunkte.schueler' },
   ],
   apiNotePfad: 'ansichten.band.hinweis',
 };
@@ -505,6 +506,7 @@ const s3Items = computed(() => {
         <ComponentDocs
           component-name="PercentileBandChart"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"

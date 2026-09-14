@@ -11,7 +11,8 @@ import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'ItemExpectedActualChart.vue',
+  githubFile: 'erwartet-tatsaechlich.js',
+  githubPath: 'packages/bausteine/webcomponents/erwartet-tatsaechlich.js',
   propsDocs: [
     { name: 'items',  type: 'Array',  required: true,  pfad: 'ansichten.erwartung.props.items' },
     { name: 'title',  type: 'String', default: "''",   pfad: 'ansichten.erwartung.props.title' },
@@ -32,7 +33,7 @@ const DOCS = {
   codeExample: `<script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import ItemExpectedActualChart from './components/ItemExpectedActualChart.vue';
+import { ErwartetTatsaechlich as ItemExpectedActualChart } from '@tba3/bausteine/vue';
 
 const LEVEL_ORDER = ['I', 'II', 'III', 'IV', 'V'];
 
@@ -237,6 +238,7 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="ItemExpectedActualChart"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"

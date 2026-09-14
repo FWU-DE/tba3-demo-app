@@ -123,6 +123,39 @@
     }
     .marke-umgezogen { background: var(--farbe-erfolg); color: var(--farbe-erfolg-text); }
     .marke-offen { background: var(--farbe-warnung); color: var(--farbe-warnung-text); }
+    .nur-baustein { list-style: none; margin: var(--abstand-md) 0 0; padding: 0; }
+    .nur-baustein li {
+      display: flex; gap: var(--abstand-md); align-items: flex-start;
+      padding: var(--abstand-sm) 0; border-bottom: 1px solid var(--farbe-linie);
+      font-size: var(--text-sm);
+    }
+    .nur-baustein li:last-child { border-bottom: 0; }
+    .nur-baustein .grund {
+      display: block; color: var(--farbe-text-gedaempft); font-size: var(--text-xs);
+    }
+
+    /* ── Vorschau ────────────────────────────────────────────
+       Ein Elementname sagt nicht, was der Baustein zeigt. Die Vorschau ist
+       dasselbe Element mit denselben Daten wie unten, nur verkleinert und
+       nicht bedienbar: sie soll erkennen lassen, worum es geht, und dann aus
+       dem Weg gehen. Wer sie anfassen will, folgt dem Link daneben. */
+    .vorschau {
+      flex: none; width: 240px; height: 104px; overflow: hidden;
+      border: 1px solid var(--farbe-linie); border-radius: var(--radius-m);
+      background: var(--farbe-grund); pointer-events: none;
+    }
+    /* 820px, weil die älteren Bausteine eine feste Breite haben und in einem
+       schmaleren Kasten nicht schrumpfen, sondern scrollen — die Vorschau
+       zeigte davon sonst nur das linke Fünftel. Der Faktor ist 240/820. */
+    .vorschau > * {
+      display: block; width: 820px;
+      transform: scale(0.2927); transform-origin: top left;
+    }
+    .zuordnung-baustein { display: flex; flex-direction: column; gap: var(--abstand-xs); }
+    @media (max-width: 720px) {
+      .nur-baustein li { flex-direction: column; }
+      .vorschau { width: 100%; max-width: 280px; }
+    }
 
     /* ── Themen zum Durchprobieren ──────────────────────────── */
     /* Die Bausteine bringen kein Design mit: das hier sind Beispiel-Themen,
@@ -279,6 +312,16 @@
         <tbody></tbody>
       </table>
     </div>
+    <p lang="de">
+      Umgekehrt ist die Bibliothek keine Teilmenge der Schau: diese Bausteine
+      haben keine Katalog-Ansicht, weil sie aus einer anderen Frage entstehen.
+    </p>
+    <p lang="en">
+      The other way round, the library is not a subset of the showcase: these
+      building blocks have no catalogue view, because they answer a different
+      question.
+    </p>
+    <ul id="nur-baustein" class="nur-baustein"></ul>
   </section>
 
   <div id="bausteine"></div>
@@ -317,7 +360,7 @@
   // /demodaten.js — 404, leere Zuordnungstabelle, kein einziger Baustein.
   import { BAUPLAENE, PRAEFIX, registrieren } from '/bausteine/webcomponents/index.js';
   import { DEMODATEN } from '/bausteine/demodaten.js';
-  import { ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
+  import { NUR_BAUSTEIN, ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
 
   registrieren();
 
@@ -345,7 +388,10 @@
         a.href = '#' + z.baustein;
         a.className = 'mono';
         a.textContent = '<' + PRAEFIX + z.baustein + '>';
-        baustein.append(a);
+        const spalte = document.createElement('div');
+        spalte.className = 'zuordnung-baustein';
+        spalte.append(a, vorschau(z.baustein));
+        baustein.append(spalte);
       } else {
         baustein.textContent = '—';
       }
@@ -361,6 +407,22 @@
     }
     document.getElementById('stand').textContent =
       `Stand: ${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten laufen über Bausteine.`;
+
+    const liste = document.getElementById('nur-baustein');
+    for (const n of NUR_BAUSTEIN) {
+      const li = document.createElement('li');
+      const text = document.createElement('div');
+      const a = document.createElement('a');
+      a.href = '#' + n.baustein;
+      a.className = 'mono';
+      a.textContent = '<' + PRAEFIX + n.baustein + '>';
+      const grund = document.createElement('span');
+      grund.className = 'grund';
+      grund.textContent = n.grund;
+      text.append(a, ' — ' + n.anzeige, grund);
+      li.append(vorschau(n.baustein), text);
+      liste.append(li);
+    }
   }
 
   const wurzel = document.getElementById('bausteine');
@@ -413,6 +475,25 @@
     return sektion;
   }
 
+  /**
+   * Eine Vorschau des Bausteins: dasselbe Element, dieselben Daten, nur klein.
+   *
+   * Die Funktion steht als Deklaration, damit die Zuordnungstabelle sie oben
+   * schon aufrufen kann. Die Daten setzt `fuellen()` — es sammelt die
+   * Vorschauen über die Klasse ein, statt eine zweite Liste zu führen, die
+   * beim nächsten Baustein wieder vergessen würde.
+   */
+  function vorschau(name) {
+    const kasten = document.createElement('div');
+    kasten.className = 'vorschau';
+    kasten.dataset.vorschau = name;
+    // Für Vorlesesoftware ist die Vorschau eine Dopplung: derselbe Baustein
+    // steht weiter unten vollständig und bedienbar.
+    kasten.setAttribute('aria-hidden', 'true');
+    kasten.append(document.createElement(PRAEFIX + name));
+    return kasten;
+  }
+
   function chip(text) {
     const span = document.createElement('span');
     span.className = 'code-chip mono';
@@ -454,6 +535,10 @@
     const satz = daten();
     for (const { el, bauplan } of elemente) {
       el.props = satz[bauplan.name] ?? {};
+    }
+    for (const kasten of document.querySelectorAll('.vorschau')) {
+      const el = kasten.firstElementChild;
+      if (el) el.props = satz[kasten.dataset.vorschau] ?? {};
     }
   }
 

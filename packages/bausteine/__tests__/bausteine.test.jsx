@@ -62,6 +62,87 @@ const DATEN = {
       { label: 'Zuhören', bandLeft: 40, bandRight: 75, studentScore: null },
     ],
   },
+  'schueler-tabelle': {
+    title: 'Lösungen je Schüler:in',
+    rows: [
+      { id: 's1', name: 'Anna B.', domains: {
+        total: { pctCorrect: 72, pctOmitted: 4, pctIncorrect: 24 },
+        reading: { pctCorrect: 80, pctOmitted: 0, pctIncorrect: 20 },
+        listening: { pctCorrect: 64, pctOmitted: 8, pctIncorrect: 28 },
+      } },
+      { id: 's2', name: 'Ben C.', domains: {
+        total: { pctCorrect: 48, pctOmitted: 12, pctIncorrect: 40 },
+        reading: { pctCorrect: 55, pctOmitted: 10, pctIncorrect: 35 },
+        listening: { pctCorrect: 41, pctOmitted: 14, pctIncorrect: 45 },
+      } },
+      // Abwesend: keine Werte, muss trotzdem eine Zeile ergeben
+      { id: 's3', name: 'Cem D.', absent: true, absentMessage: 'entschuldigt', domains: {} },
+    ],
+  },
+  uebersichtskarten: {
+    title: 'Teilbereiche im Überblick',
+    karten: [
+      { id: 'lesen', label: 'Lesen', wert: 68, einheit: '%',
+        anteile: [
+          { label: 'gelöst', wert: 68 },
+          { label: 'falsch', wert: 24 },
+          { label: 'ausgelassen', wert: 8 },
+        ],
+        details: [{ label: 'Aufgaben', wert: 12 }, { label: 'Erwartet', wert: '62 %' }] },
+      { id: 'zuhoeren', label: 'Zuhören', wert: 54, einheit: '%',
+        anteile: [
+          { label: 'gelöst', wert: 54 },
+          { label: 'falsch', wert: 38 },
+          { label: 'ausgelassen', wert: 8 },
+        ] },
+    ],
+  },
+  streudiagramm: {
+    title: 'Schüler:innen nach Stufe und Lösungsquote',
+    mittelwert: 62,
+    punkte: [
+      { id: 's1', name: 'Anna B.', x: 4, y: 78, details: [{ label: 'Lesen', wert: '80 %' }] },
+      { id: 's2', name: 'Ben C.', x: 2, y: 41 },
+      // Gleicher Rasterplatz wie s2 — muss versetzt werden, nicht verdeckt
+      { id: 's3', name: 'Cem D.', x: 2, y: 41 },
+    ],
+  },
+  'bista-verteilung': {
+    title: 'BISTA-Punkte der Lerngruppe',
+    mittelwert: 468,
+    schueler: [
+      { id: 's1', name: 'Anna B.', punkte: 512 },
+      { id: 's2', name: 'Ben C.', punkte: 421 },
+      { id: 's3', name: 'Cem D.', punkte: 470 },
+    ],
+  },
+  'lernstands-verlauf': {
+    title: 'Lernstand über drei Erhebungen',
+    punkte: [
+      { label: 'Herbst', mean: 54, ciLow: 47, ciHigh: 61, n: 25 },
+      { label: 'Winter', mean: 61, ciLow: 55, ciHigh: 67, n: 25 },
+      { label: 'Frühjahr', mean: 66, ciLow: 60, ciHigh: 72, n: 24 },
+    ],
+    vergleich: [{ mean: 52 }, { mean: 56 }, { mean: 59 }],
+  },
+  'aufgaben-heatmap': {
+    title: 'Aufgaben nach Lerngruppe',
+    zeilen: [{ id: 'le-026', label: 'LE-026' }, { id: 'le-027', label: 'LE-027' }],
+    spalten: [{ id: '3a', label: '3a' }, { id: '3b', label: '3b' }],
+    werte: [
+      { zeile: 'le-026', spalte: '3a', wert: 41, erwartet: 63 },
+      { zeile: 'le-026', spalte: '3b', wert: 66, erwartet: 63 },
+      { zeile: 'le-027', spalte: '3a', wert: 88, erwartet: 72 },
+      // 'le-027'/'3b' fehlt mit Absicht: eine leere Zelle ist kein Nullwert
+    ],
+  },
+  'kennzahl-kachel': {
+    label: 'Mittlere Lösungsquote',
+    wert: 62,
+    vergleich: 58,
+    verlauf: [54, 57, 59, 62],
+    hinweis: '25 Schüler:innen',
+  },
 };
 
 const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());
@@ -82,11 +163,18 @@ const klicken = (el) => el.dispatchEvent(new MouseEvent('click', { bubbles: true
 /** Auf das zusammengefasste Neuzeichnen warten (queueMicrotask). */
 const gezeichnet = () => new Promise((r) => queueMicrotask(r));
 
-/** Vergleichbares Abbild: Struktur und sichtbarer Text, ohne Schreibweisen. */
+/** Vergleichbares Abbild: Struktur und sichtbarer Text, ohne Schreibweisen.
+ *
+ *  Verglichen wird, was der Baustein selbst baut — also alles im Shadow DOM
+ *  außer dem Stilblock. Eine feste Liste von Wurzelelementen wäre hier falsch:
+ *  die Kachel ist ein <button>, die Heatmap gibt Tabelle und Skala nebeneinander
+ *  aus, und beides ist Absicht. */
 function abbild(wurzel) {
-  const ziel = wurzel.querySelector('figure, table, div');
-  const knoten = ziel ?? wurzel;
-  return knoten.outerHTML.replace(/\s+/g, ' ').trim();
+  const knoten = [...wurzel.children].filter((k) => k.tagName !== 'STYLE');
+  const markup = knoten.length
+    ? knoten.map((k) => k.outerHTML).join('')
+    : wurzel.innerHTML;
+  return markup.replace(/\s+/g, ' ').trim();
 }
 
 beforeEach(() => {
@@ -304,6 +392,42 @@ describe('Thema — neutral, überschreibbar, mit Dark Mode', () => {
       expect(roh, `${b.name} zeichnet mit einem öffentlichen Namen`).toEqual([]);
       el.remove();
     }
+  });
+
+  // Eine Klammer zu viel macht aus `var(--x))` einen ungültigen Wert — und ein
+  // ungültiger Wert ist in SVG nicht leer, sondern schwarz. Genau so stand
+  // `<tba3-perzentilbaender>` eine Weile als schwarzer Block auf `/bausteine`:
+  // kein Fehler in der Konsole, kein fehlschlagender Test, nur ein Baustein,
+  // der aussah wie ein Loch. Geprüft wird beides — die Attribute im
+  // gezeichneten DOM und die Deklarationen im Stilblock.
+  it('lässt keine unausgeglichene Klammer in einem Wert stehen', async () => {
+    const unausgeglichen = (wert) => {
+      let tiefe = 0;
+      for (const zeichen of wert) {
+        if (zeichen === '(') tiefe += 1;
+        else if (zeichen === ')') tiefe -= 1;
+        if (tiefe < 0) return true;
+      }
+      return tiefe !== 0;
+    };
+
+    const befunde = [];
+    for (const b of BAUPLAENE) {
+      const el = element(b.name, DATEN[b.name]);
+      await gezeichnet();
+      const stil = el.shadowRoot.querySelector('style').textContent;
+      const markup = el.shadowRoot.innerHTML.replace(/<style>[\s\S]*?<\/style>/, '');
+
+      for (const treffer of markup.matchAll(/="([^"]*var\([^"]*)"/g)) {
+        if (unausgeglichen(treffer[1])) befunde.push(`${b.name}: ${treffer[1]}`);
+      }
+      for (const treffer of stil.matchAll(/:\s*([^;{}]*var\([^;{}]*)/g)) {
+        if (unausgeglichen(treffer[1])) befunde.push(`${b.name}: ${treffer[1].trim()}`);
+      }
+      el.remove();
+    }
+
+    expect(befunde).toEqual([]);
   });
 
   it('bringt einen Dark-Mode-Block mit', async () => {
