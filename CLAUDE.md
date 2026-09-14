@@ -11,6 +11,7 @@ npm run dev:demo       # Demoanwendung      → http://localhost:5173/demo/
 npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 npm run build          # alle Bereiche → dist/
 npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
+npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba3 holen
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
@@ -33,6 +34,9 @@ Monorepo mit fünf Bereichen, die zu **einem** Deployment zusammengesetzt werden
 
 ```
 apps/portal/        Startseite (/) und API-Referenz (/schnittstelle) — statisches HTML
+apps/portal/dokumentation/
+                    Markdown-Kopien der erklärenden Texte (npm run docs:update),
+                    gerendert unter /dokumentation
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
 apps/beispiele/     Rückmeldungsbeispiele — statisches HTML, unter /beispiele
@@ -43,13 +47,17 @@ data/material-fixtures.mjs
                     Beispiele des Materialien-Entwurfs (npm run material-spec:update)
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
                     eigener Lockfile, eigener Docker-Kontext)
+tools/dokumente.mjs    Verzeichnis, Rendern und Seitenvorlage für /dokumentation
 tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + beispiele/ + schnittstelle/
+                       + dokumentation/
 tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
 ```
 
 Wer einen Bereich hinzufügt, fasst vier Stellen an: `tools/build-site.mjs`
 (Zusammenbau), `vercel.json` und `nginx.conf` (Fallback), `apps/portal/index.html`
-(Verlinkung) und `BEREICHE` in `apps/shared/tba3-leiste.js` (Navigationsleiste).
+(Verlinkung) und `BEREICHE` in `apps/shared/tba3-leiste.js` (Navigationsleiste). Ein
+statischer Bereich mit eigenen Verzeichnissen braucht keinen SPA-Fallback —
+`/dokumentation` fasst deshalb nur drei dieser vier Stellen an.
 
 ### Gemeinsame Navigationsleiste
 
@@ -65,6 +73,38 @@ PrimeVue aus den Stilen heraus. Eingebunden wird sie zur Laufzeit per
 `document.createElement` — ein `<script src="/gemeinsam/…">` im Markup würde Vite
 auflösen und mitbündeln wollen. Im Dev-Server liefert
 `apps/shared/vite-plugin-gemeinsam.js` die Datei aus, im Build `tools/build-site.mjs`.
+
+### Dokumentation
+
+Die erklärenden Texte zur Schnittstelle — Konzepte, Endpunkt-Referenz, Rezepte —
+stehen im Quell-Repository `indibit-eu/tba3` als Markdown. Statt dorthin zu
+verlinken, liegen sie **als eingecheckte Kopie** unter
+`apps/portal/dokumentation/` und werden beim Build zu Seiten unter
+`/dokumentation/<slug>` gerendert. Dasselbe Muster wie bei der
+OpenAPI-Spezifikation: die Seite hängt an nichts Externem, und der Stand ist
+sichtbar statt stillschweigend.
+
+Nachgezogen wird mit `npm run docs:update` — der Diff ist die eigentliche
+Ausgabe des Skripts: er zeigt, was sich oben geändert hat. Eine Fehlerseite oder
+eine leere Antwort überschreibt die Kopie nicht. `stand.json` hält das
+Abrufdatum, das auf jeder Seite steht.
+
+`tools/dokumente.mjs` führt drei Dinge zusammen, die sonst auseinanderlaufen:
+das Verzeichnis `DOKUMENTE`, das Rendern (`marked`) und die Seitenvorlage. Zwei
+Entscheidungen stecken darin:
+
+- **Sprungmarken werden gebildet wie auf GitHub**, Umlaute eingeschlossen
+  (`#gruppierung-nach-domäne-wann-sinnvoll`). Die Dokumente verlinken
+  untereinander auf diese Form; eine eigene Form hieße, jeden Querverweis zu
+  brechen. `tools/dokumente.test.mjs` prüft, dass jeder Verweis zwischen den
+  Dokumenten einen Abschnitt trifft — ein falscher Anker ist kein 404 und fiele
+  sonst niemandem auf.
+- **Verweise auf ein Nachbardokument zeigen hierher**, nicht nach GitHub. Was
+  hier nicht geführt wird, bleibt der externe Link, der es ist; `docs:update`
+  meldet solche Fälle, der Test lässt sie nicht durch.
+
+Wer ein Dokument aufnimmt, trägt es in `DOKUMENTE` ein und ruft `docs:update` —
+Übersicht, Navigation und Build ziehen daraus nach.
 
 ### Rückmeldungsbeispiele
 
@@ -170,6 +210,7 @@ apps/demo/src/hooks/__tests__/useApiDaten.test.jsx       Laden, Fehler, überhol
 apps/demo/src/components/charts/__tests__/…              Übersichtskarten
 apps/demo/src/__tests__/App.test.jsx                     Zusammenspiel: Filter, Reiter, Abfragen
 tools/mock.test.mjs                                      Mock: Schlüssel, Ersatz, Materialfilter
+tools/dokumente.test.mjs                                 Dokumentseiten: Rendern, Anker, Querverweise
 apps/beispiele/rueckmeldungen.test.mjs                   Rückmeldungsliste: Filter und Optionen
 apps/shared/sprache.test.mjs                             Sprachwahl: Quellen, Merken, Ereignis
 apps/demo/src/i18n/texte.test.js                         Textschlüssel der Demoanwendung

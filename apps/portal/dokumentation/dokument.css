@@ -1,0 +1,260 @@
+/* Stil der Dokumentationsseiten unter /dokumentation.
+   Die Seiten selbst entstehen beim Build aus den Markdown-Kopien nebenan
+   (tools/dokumente.mjs) — hier steht alles Sichtbare außer dem Text.
+   Farben und Maße wie im Portal (apps/portal/index.html). */
+
+:root {
+  --blau: #2563eb;
+  --blau-dunkel: #1d4ed8;
+  --tinte: #0f172a;
+  --text: #334155;
+  --grau: #64748b;
+  --linie: #e2e8f0;
+  --flaeche: #f8fafc;
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+/* Zweisprachig: beide Fassungen stehen im Markup, sichtbar ist die, die
+   <html lang> nennt — umgeschaltet in der Leiste (apps/shared/sprache.js).
+   Die Dokumente selbst bleiben in ihrer Originalsprache. */
+html[lang="de"] [lang="en"] { display: none; }
+html[lang="en"] [lang="de"] { display: none; }
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+a { color: var(--blau); }
+a:hover { color: var(--blau-dunkel); }
+
+/* ── Kopf der Dokumentseite ──────────────────────────────── */
+.brotkrumen {
+  padding-top: 28px;
+  font-size: 13.5px;
+  color: var(--grau);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.brotkrumen a { text-decoration: none; }
+.brotkrumen a:hover { text-decoration: underline; }
+
+.dokument-kopf { padding-block: 12px 8px; border-bottom: 1px solid var(--linie); }
+.dokument-kopf h1 {
+  font-size: clamp(27px, 4.2vw, 38px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--tinte);
+  margin: 0 0 12px;
+}
+.herkunft { font-size: 14px; color: var(--grau); margin: 0 0 24px; }
+.herkunft code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.92em;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+
+/* ── Zwei Spalten: Gliederung und Text ───────────────────── */
+.dokument-koerper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 232px;
+  gap: 48px;
+  align-items: start;
+  padding-block: 32px 16px;
+}
+
+.gliederung {
+  order: 2;
+  position: sticky;
+  top: 72px; /* Höhe der Leiste plus Luft */
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  font-size: 13.5px;
+  border-left: 1px solid var(--linie);
+  padding-left: 18px;
+}
+.gliederung h2 {
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--grau);
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+.gliederung ul { list-style: none; margin: 0; padding: 0; }
+.gliederung li { margin-bottom: 6px; line-height: 1.4; }
+.gliederung li.t3 { padding-left: 12px; font-size: 13px; }
+.gliederung a { color: var(--grau); text-decoration: none; }
+.gliederung a:hover { color: var(--blau); }
+.gliederung code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+
+.inhalt { order: 1; min-width: 0; font-size: 16px; }
+
+/* ── Der gerenderte Text ─────────────────────────────────── */
+.inhalt h2, .inhalt h3, .inhalt h4 {
+  color: var(--tinte);
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+  scroll-margin-top: 72px;
+}
+.inhalt h2 {
+  font-size: 24px;
+  margin: 44px 0 14px;
+  padding-top: 22px;
+  border-top: 1px solid var(--linie);
+}
+.inhalt h3 { font-size: 19px; margin: 32px 0 10px; }
+.inhalt h4 { font-size: 16.5px; margin: 24px 0 8px; }
+.inhalt > *:first-child { margin-top: 0; }
+
+.inhalt p { margin: 0 0 16px; }
+.inhalt ul, .inhalt ol { margin: 0 0 16px; padding-left: 22px; }
+.inhalt li { margin-bottom: 6px; }
+.inhalt li > ul, .inhalt li > ol { margin-top: 6px; }
+.inhalt strong { color: var(--tinte); font-weight: 620; }
+.inhalt hr { border: 0; border-top: 1px solid var(--linie); margin: 32px 0; }
+
+.inhalt blockquote {
+  margin: 0 0 16px;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid #bfdbfe;
+  color: var(--grau);
+}
+
+/* Die Sprungmarke neben der Überschrift bleibt unsichtbar, bis die Überschrift
+   berührt wird — sichtbar ist sie nur Zierde, gebraucht wird sie zum Verlinken. */
+.sprungmarke {
+  margin-left: 8px;
+  color: var(--linie);
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity .12s;
+}
+h2:hover .sprungmarke, h3:hover .sprungmarke, h4:hover .sprungmarke,
+.sprungmarke:focus { opacity: 1; }
+
+/* ── Code ────────────────────────────────────────────────── */
+.inhalt code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: 6px;
+  padding: 1px 5px;
+  overflow-wrap: break-word;
+}
+.inhalt pre {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+  overflow-x: auto;
+  line-height: 1.55;
+}
+.inhalt pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 13.5px;
+  color: var(--tinte);
+  white-space: pre;
+}
+
+/* ── Tabellen ────────────────────────────────────────────── */
+/* Die Endpunkt-Referenz hat breite Tabellen: eigener Rollbereich, damit die
+   Seite auf dem Telefon nicht als Ganzes seitwärts läuft. */
+.tabelle {
+  overflow-x: auto;
+  margin: 0 0 20px;
+  border: 1px solid var(--linie);
+  border-radius: 12px;
+}
+.tabelle table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+.tabelle th, .tabelle td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--linie);
+  vertical-align: top;
+}
+.tabelle thead th { background: var(--flaeche); color: var(--tinte); font-weight: 600; white-space: nowrap; }
+.tabelle tbody tr:last-child td { border-bottom: 0; }
+.tabelle code { white-space: nowrap; }
+
+/* ── Fuß ─────────────────────────────────────────────────── */
+.dokument-fuss {
+  border-top: 1px solid var(--linie);
+  margin-top: 24px;
+  padding-block: 24px 56px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 14px;
+}
+.dokument-fuss a { text-decoration: none; font-weight: 550; }
+.dokument-fuss a:hover { text-decoration: underline; }
+
+/* ── Übersichtsseite ─────────────────────────────────────── */
+.uebersicht-kopf { padding-block: 56px 8px; max-width: 720px; }
+.uebersicht-kopf h1 {
+  font-size: clamp(30px, 5vw, 42px);
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  color: var(--tinte);
+  margin: 0 0 16px;
+}
+.uebersicht-kopf p { font-size: 17px; margin: 0; }
+
+.karten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding-block: 36px 72px;
+}
+.karten .karte {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.karten .karte:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
+  transform: translateY(-2px);
+}
+.karten .karte h2 { font-size: 17px; font-weight: 650; color: var(--tinte); margin: 0 0 12px; letter-spacing: -0.01em; }
+.karten .karte p { font-size: 14.5px; margin: 0 0 18px; }
+.karten .karte .fuss { margin-top: auto; font-size: 13.5px; font-weight: 600; color: var(--blau); }
+
+/* ── Schmale Fenster ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .dokument-koerper { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .gliederung {
+    order: 0;
+    position: static;
+    max-height: none;
+    border-left: 0;
+    border: 1px solid var(--linie);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .wrap { padding: 0 16px; }
+}
