@@ -245,7 +245,7 @@ const gewaehlteAufgabe = ref(null);
           <div class="ctrl-field">
             <label class="ctrl-label">{{ t('ansichten.tabelle.referenz') }}</label>
             <Select v-model="referenz" :options="referenzen" option-label="label"
-              option-value="id" class="ctrl-select" />
+              option-value="id" class="ctrl-select" data-testid="referenz-wahl" />
           </div>
         </div>
 
@@ -269,7 +269,7 @@ const gewaehlteAufgabe = ref(null);
             richtung="auf"
             @aufgabe-gewaehlt="(a) => (gewaehlteAufgabe = a)"
           />
-          <p v-if="gewaehlteAufgabe" class="gewaehlt">
+          <p v-if="gewaehlteAufgabe" class="gewaehlt" data-testid="aufgabe-gewaehlt">
             <i class="pi pi-arrow-right" />
             {{ t('ansichten.tabelle.gewaehlt', {
               aufgabe: gewaehlteAufgabe.label,

@@ -276,7 +276,7 @@ watch(() => selectedGroup.value, () => { auswahl.value = []; });
           :auswahl="auswahl"
           @auswahl-geaendert="(e) => (auswahl = e.auswahl)"
         />
-        <p v-if="auswahl.length" class="auswahl-hinweis">
+        <p v-if="auswahl.length" class="auswahl-hinweis" data-testid="auswahl-hinweis">
           <i class="pi pi-check-square" />
           {{ t('ansichten.schuelerTabelle.ausgewaehlt', { n: auswahl.length }) }}
         </p>

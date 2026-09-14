@@ -231,7 +231,7 @@ const tooltipDemos = computed(() => [
             @zone-gewaehlt="() => (gewaehlt = null)"
           />
         </div>
-        <p v-if="gewaehlt" class="gewaehlt-hinweis">
+        <p v-if="gewaehlt" class="gewaehlt-hinweis" data-testid="schueler-gewaehlt">
           <i class="pi pi-user" />
           {{ t('ansichten.bista.gewaehlt', { name: gewaehlt.name, punkte: Math.round(gewaehlt.punkte ?? 0) }) }}
         </p>

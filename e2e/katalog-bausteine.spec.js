@@ -84,3 +84,32 @@ test.describe('Bausteine — der Demonstrator', () => {
     }
   });
 });
+
+test.describe('Katalog — die Naht zwischen Ansicht und Baustein', () => {
+  test('ein Klick im Shadow DOM erreicht die Ansicht', async ({ page }) => {
+    // Die Auswahl hält die Ansicht, das Element meldet sie nur. Dieser Weg —
+    // Kästchen im Shadow DOM, CustomEvent, Vue-Hülle, Zustand der Ansicht —
+    // ist beim Umzug neu entstanden und in keinem Unit-Test ganz enthalten.
+    await page.goto('/katalog/?lang=de#/student-solution-table');
+
+    const kaestchen = page.locator('tba3-schueler-tabelle input[type="checkbox"]').first();
+    await expect(kaestchen).toBeVisible();
+    await expect(page.getByTestId('auswahl-hinweis')).toHaveCount(0);
+
+    await kaestchen.check();
+    await expect(page.getByTestId('auswahl-hinweis')).toContainText('1');
+  });
+
+  test('die gewählte Referenz ändert die Erwartung in der Tabelle', async ({ page }) => {
+    await page.goto('/katalog/?lang=de#/item-solution-table');
+
+    const erwartet = page.locator('tba3-aufgaben-tabelle tbody tr').first().locator('td').nth(4);
+    await expect(erwartet).toContainText('%');
+    const vorher = await erwartet.innerText();
+
+    await page.getByTestId('referenz-wahl').click();
+    await page.getByRole('option', { name: 'Bundesland' }).click();
+
+    await expect(erwartet).not.toHaveText(vorher);
+  });
+});

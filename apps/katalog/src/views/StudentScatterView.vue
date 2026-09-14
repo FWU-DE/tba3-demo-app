@@ -271,7 +271,7 @@ watch(() => selectedGroup.value, () => { gewaehlterPunkt.value = null; });
             @punkt-gewaehlt="(p) => (gewaehlterPunkt = p)"
           />
         </div>
-        <p v-if="gewaehlterPunkt" class="gewaehlt">
+        <p v-if="gewaehlterPunkt" class="gewaehlt" data-testid="punkt-gewaehlt">
           <i class="pi pi-user" />
           {{ t('ansichten.scatter.gewaehlt', {
             name: gewaehlterPunkt.name,
