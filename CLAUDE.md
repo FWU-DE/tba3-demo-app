@@ -310,6 +310,10 @@ Beschriftungen.
 
 ## Task Workflow
 
+Der vollständige Weg einer Änderung — Ticket, Branch, Commit-Stil, PR,
+Abbruchbedingungen für Agenten — steht in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 Task-Tickets liegen in `docs/tasks/todo/{slug}.md`. Eine neue Datei dort löst
 über GitHub Actions den Claude-Code-Agenten aus. Vollständiger Ablauf:
 `skills/ai-first-webapp-gitops/01-requirements.md` (Repository FWU-DE/skills).
