@@ -2,6 +2,22 @@ import { useState, useEffect } from 'react';
 import { GROUPS } from '../utils/constants';
 import { FilterContext } from './filterKontext';
 
+// Die Parameter, die dieser Kontext in der Adresszeile führt. Alles andere
+// dort gehört jemand anderem und bleibt unangetastet.
+const EIGENE_PARAMETER = [
+  'level',
+  'group',
+  'school',
+  'state',
+  'subject',
+  'grade',
+  'type',
+  'gender',
+  'languageAtHome',
+  'comparison',
+  'districtComparison',
+];
+
 // Helper to get initial value from URL or default
 const getUrlParam = (param, defaultValue) => {
   const params = new URLSearchParams(window.location.search);
@@ -25,8 +41,17 @@ export const FilterProvider = ({ children }) => {
   const [observerMode, setObserverMode] = useState(false);
 
   // Update URL when filters change
+  //
+  // Die Filter sind nicht die einzigen Parameter in der Adresszeile: `lang`
+  // steht dort auch, und die gemeinsame Leiste liest es von dort. Deshalb von
+  // den vorhandenen Parametern ausgehen und nur die eigenen austauschen — ein
+  // frisches URLSearchParams() würde alles Fremde wegwerfen. Die Leiste wird
+  // zur Laufzeit nachgeladen und käme dann zu spät: `?lang=de` wäre weg, sie
+  // fiele auf die Browsersprache zurück und stünde in der anderen Sprache da
+  // als der Inhalt daneben.
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
+    EIGENE_PARAMETER.forEach((schluessel) => params.delete(schluessel));
 
     params.set('level', selectedLevel);
 

@@ -126,6 +126,28 @@ describe('Demoanwendung', () => {
     expect(screen.getByTestId('reiter-items')).toHaveAttribute('aria-current', 'page');
   });
 
+  it('lässt fremde Parameter in der Adresse stehen, wenn die Filter sie schreiben', async () => {
+    // `lang` gehört der gemeinsamen Leiste, nicht den Filtern. Die Leiste wird
+    // zur Laufzeit nachgeladen und liest die Adresse erst danach — wirft der
+    // Filter-Kontext den Parameter beim ersten Rendern weg, steht die Leiste
+    // in der Browsersprache da, während der Inhalt daneben deutsch bleibt.
+    window.history.replaceState({}, '', '/?lang=de');
+    render(<App />);
+
+    await waitFor(() => expect(api.getGroupCompetenceLevels).toHaveBeenCalled());
+    await waitFor(() => {
+      const params = new URLSearchParams(window.location.search);
+      expect(params.get('level')).toBe('group');
+      expect(params.get('lang')).toBe('de');
+    });
+
+    // Auch nach einem Filterwechsel, nicht nur beim ersten Schreiben
+    await userEvent.click(screen.getByTestId('ebene-school'));
+
+    await waitFor(() => expect(api.getSchoolCompetenceLevels).toHaveBeenCalled());
+    expect(new URLSearchParams(window.location.search).get('lang')).toBe('de');
+  });
+
   it('klappt die Filter auf schmalen Schirmen auf und zu', async () => {
     render(<App />);
     await waitFor(() => expect(api.getGroupCompetenceLevels).toHaveBeenCalled());
