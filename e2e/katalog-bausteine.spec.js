@@ -138,3 +138,42 @@ test.describe('Katalog — die Naht zwischen Ansicht und Baustein', () => {
     await expect(erwartet).not.toHaveText(vorher);
   });
 });
+
+test.describe('Dunkles System, helle Seite', () => {
+  // Der Fall, der ohne Zutun schiefgeht: die Bausteine folgen
+  // `prefers-color-scheme`, Katalog und Demonstrator haben aber keinen eigenen
+  // Dunkelmodus. Wer sein System dunkel gestellt hat, bekäme hellen Text auf
+  // hellem Grund — lesbar bleibt es nur, weil beide Seiten `data-thema`
+  // setzen. Ohne das Attribut schlagen diese beiden Tests fehl.
+  test.use({ colorScheme: 'dark' });
+
+  /** Heller Text (Leuchtkraft über 0,5) auf heller Seite wäre der Fehler. */
+  const textIstDunkel = (page, auswahl) =>
+    page.evaluate((a) => {
+      const el = document.querySelector(a);
+      const [r, g, b] = getComputedStyle(el).color.match(/\d+/g).map(Number);
+      const kanal = (w) => {
+        const anteil = w / 255;
+        return anteil <= 0.03928 ? anteil / 12.92 : ((anteil + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * kanal(r) + 0.7152 * kanal(g) + 0.0722 * kanal(b);
+    }, auswahl);
+
+  test('der Katalog stimmt seine Bausteine hell', async ({ page }) => {
+    await page.goto('/katalog/?lang=de#/competence-levels');
+    await expect(page.locator('tba3-kompetenzstufen-leiste').first()).toBeAttached();
+    expect(await textIstDunkel(page, 'tba3-kompetenzstufen-leiste')).toBeLessThan(0.5);
+  });
+
+  test('der Demonstrator folgt seinem eigenen Auswahlfeld', async ({ page }) => {
+    await page.goto('/bausteine?lang=de');
+    await expect(page.locator('section.baustein').first()).toBeVisible();
+    expect(await textIstDunkel(page, '#kompetenzstufen-leiste .buehne > *')).toBeLessThan(0.5);
+
+    // Und andersherum: wählt jemand „dunkel", gilt das auch bei hellem System.
+    await page.selectOption('#thema', 'thema-dunkel');
+    await expect
+      .poll(() => textIstDunkel(page, '#kompetenzstufen-leiste .buehne > *'))
+      .toBeGreaterThan(0.5);
+  });
+});

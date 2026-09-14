@@ -197,13 +197,31 @@ Baustein `prefers-color-scheme` — im dunklen Systemthema werden Flächen,
 Linien und Text dunkel, und die Kompetenzstufen bekommen angehobene Töne, damit
 sie auf dunklem Grund nicht absaufen.
 
-Erzwingen lässt sich der Modus über `data-thema`, am Element oder weiter oben:
+Erzwingen lässt sich der Modus über `data-thema` — **am Element selbst**, nicht
+weiter oben im Baum: die Regel dahinter ist `:host([data-thema="dunkel"])`, und
+`:host()` prüft nur das Wirtselement.
 
 ```html
 <tba3-aufgaben-tabelle data-thema="dunkel"></tba3-aufgaben-tabelle>
 ```
 
 Eine Seite, die eine Variable selbst setzt, gewinnt in beiden Modi.
+
+### Seiten ohne eigenen Dunkelmodus müssen das tun
+
+Die Vorgabe „folge dem System" stimmt nur, solange die **umgebende Seite** das
+auch tut. Eine Seite, die immer hell ist, bekommt sonst hellen Text auf hellem
+Grund, sobald jemand sein Betriebssystem dunkel gestellt hat — der Baustein
+wechselt, die Seite nicht. Genau das war im Komponentenkatalog der Fall.
+
+```html
+<!-- immer helle Seite -->
+<tba3-kompetenzstufen-leiste data-thema="hell"></tba3-kompetenzstufen-leiste>
+```
+
+Zwei E2E-Tests in `e2e/katalog-bausteine.spec.js` öffnen Katalog und
+Demonstrator mit dunkel gestelltem System und prüfen, dass der Text dunkel
+bleibt.
 
 ### Warum die Vorgaben nicht am `:host` stehen
 
@@ -234,6 +252,7 @@ Namen zeichnen.
 | Text | `--tba3-farbe-text`, `--tba3-farbe-text-gedaempft`, `--tba3-farbe-text-invers` |
 | Interaktion | `--tba3-farbe-marke`, `--tba3-farbe-fokus`, `--tba3-farbe-hervorhebung` |
 | Kompetenzstufen | `--tba3-stufe-1` … `--tba3-stufe-5` |
+| Schrift **auf** einer Stufe | `--tba3-stufe-1-text` … `--tba3-stufe-5-text` |
 | Bewertung | `--tba3-farbe-ueber`, `--tba3-farbe-im-rahmen`, `--tba3-farbe-unter` |
 | Maße | `--tba3-radius`, `--tba3-abstand` |
 
@@ -244,6 +263,39 @@ einer bestimmten Seite** steht.
 Die Kompetenzstufen haben absichtlich einen Rot-Grün-Verlauf als Vorgabe und
 keine beliebige Palette: die Stufen tragen eine Ordnung (unter / im / über
 Standard), die ohne Verlauf verloren ginge.
+
+### Wer die Stufenfarben ändert, ändert die Beschriftung mit
+
+Auf jeder Stufenfarbe steht Text — das Kürzel im Balken, das Abzeichen in der
+Tabelle, die Initialen im Avatar. Eine einzige Inversfarbe reicht dafür nicht:
+Weiß auf dem Gelb der Stufe 3 hat ein Kontrastverhältnis von **2,0**, lesbar
+ist ab **4,5**. Deshalb trägt jede Stufe ihre Beschriftungsfarbe selbst:
+
+```css
+tba3-kompetenzstufen-leiste {
+  --tba3-stufe-3: #854d0e;        /* dunkler als die Vorgabe … */
+  --tba3-stufe-3-text: #ffffff;   /* … also helle Schrift darauf */
+}
+```
+
+**Ausrechnen statt raten** — die Rechnung steckt im Paket:
+
+```js
+import { pruefeThema } from '@tba3/bausteine';
+
+const befunde = pruefeThema({ 'stufe-3': '#854d0e' }, { modus: 'hell' });
+// [{ was: 'Beschriftung auf Kompetenzstufe 3', verhaeltnis: 2.54, … }]
+```
+
+`pruefeThema()` geht jedes Paar durch, an dem ein Baustein wirklich Text auf
+Fläche legt, und gibt zurück, was unter 4,5 bleibt. Zwei Tests lassen sie
+laufen: `__tests__/thema.test.mjs` über die Vorgaben der Bibliothek und
+`apps/portal/bausteine/themen.test.mjs` über die vier Beispiel-Themen des
+Demonstrators — ohne die Beschriftungsfarben fällt „hoher Kontrast" durch.
+
+Kommt die Farbe als **Daten** herein (`levels: [{ nameShort, pct, color }]`),
+rechnet der Baustein selbst: `lesbareSchrift()` wählt hell oder dunkel nach dem
+Kontrast, weil dort ein echter Farbwert steht und keine Variable.
 
 Zum Ausprobieren: der [Demonstrator](https://tba3.vercel.app/bausteine) hat
 einen Theme-Umschalter mit FWU, neutral, hohem Kontrast und dunkel — derselbe

@@ -8,6 +8,9 @@
 // Der Kern ist rein: keine Abhängigkeit, kein DOM, auf dem Server lauffähig.
 // Er ist der Teil, der nicht driften darf; das Zeichnen ist austauschbar.
 
+import { lesbareSchrift } from './kontrast.js';
+import { stufenSchrift } from './thema.js';
+
 export const NAME = 'kompetenzstufen-leiste';
 
 export const STANDARD = {
@@ -77,6 +80,11 @@ export function geometrie(props = {}) {
         nameShort: lvl.nameShort ?? '',
         pct: lvl.pct,
         farbe: stufenFarbe(j, lvl.color),
+        // Die Beschriftung steht im Segment, also braucht sie die Farbe, die
+        // auf dieser Stufe lesbar ist — nicht die eine Inversfarbe. Gibt der
+        // Aufrufer eine eigene Farbe mit, ist die Vorgabe des Themas nicht
+        // mehr die passende Antwort: dann wird gerechnet.
+        schrift: (lvl.color && lesbareSchrift(lvl.color)) || stufenSchrift(j + 1),
         // Beschriftung nur, wenn das Segment sie trägt — sonst steht die Stufe
         // über der Nachbarfarbe und ist nicht mehr zuzuordnen.
         beschriftbar: breite > 24,

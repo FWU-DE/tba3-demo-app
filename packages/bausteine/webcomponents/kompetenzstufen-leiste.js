@@ -17,7 +17,11 @@ const STIL = `
 .balken-segment { cursor: pointer; transition: opacity var(--tba3-_dauer); }
 .balken-segment:hover, .balken-segment:focus-visible { opacity: 0.78; }
 .balken-segment:focus-visible { outline: 2px solid var(--tba3-_farbe-fokus); outline-offset: 1px; }
-.zeile-fair .balken-segment { opacity: 0.8; }
+/* Der faire Vergleich war blasser als die übrigen Zeilen — hübsch, aber die
+   Beschriftung steht mitten darin: Weiß auf einem zu 80 Prozent gedeckten Rot
+   fällt von 4,7 auf 3,6 und damit unter die Schwelle. Die Zeile ist ohnehin
+   deutlich genug markiert, durch den gestrichelten Rahmen und die Beschriftung
+   in der Markenfarbe. */
 .leer {
   padding: calc(var(--tba3-_abstand) * 3);
   text-align: center;
@@ -126,7 +130,7 @@ function aufbauen(wurzel, zustand, el) {
           s('text', {
             x: seg.x + seg.breite / 2, y: zeile.y + 14,
             'text-anchor': 'middle', 'dominant-baseline': 'middle',
-            'font-size': 10, 'font-weight': 600, fill: 'var(--tba3-_farbe-text-invers)',
+            'font-size': 10, 'font-weight': 600, fill: seg.schrift,
             'pointer-events': 'none', text: seg.nameShort,
           }),
         );
