@@ -169,6 +169,7 @@ const rahmen = ({ titel, beschreibung, koerper, klasse = '' }) => `<!DOCTYPE htm
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${schuetze(titel.de)}</title>
   <meta name="description" content="${schuetze(beschreibung.de)}" />
+  <link rel="stylesheet" href="/gemeinsam/tokens.css" />
   <link rel="stylesheet" href="/gemeinsam/container.css" />
   <link rel="stylesheet" href="/dokumentation/dokument.css" />
 </head>

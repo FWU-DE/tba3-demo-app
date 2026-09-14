@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Design-Tokens aus dem VIDIS Design System (Figma HsHyINjx5Ll6uJfzwlBNUn) als
+  `/gemeinsam/tokens.css`: Farben, Abstandsraster, Typo-Skala, Radien, Schatten
+  und ein einheitlicher Fokusring. Dieselbe Quelle, aus der sich anbieterportal
+  und vidis-portal-new bedienen.
+
+### Changed
+- Portal, Rückmeldungen, Dokumentation und die gemeinsame Navigationsleiste
+  nutzen diese Tokens statt eigener Paletten. Sichtbarster Unterschied: die
+  Markenfarbe ist jetzt das VIDIS-Blau #0000c4 statt Tailwind-Standard #2563eb.
+
+### Added
 - `@tba3/bausteine`: die Visualisierungen als **Web Component, Vue- und
   React-Komponente**. Ein framework-freier Kern je Baustein, darüber drei dünne
   Adapter — dieselbe Implementierung, drei Fassungen. Vier Bausteine portiert

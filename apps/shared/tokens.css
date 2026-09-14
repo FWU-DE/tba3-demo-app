@@ -1,0 +1,112 @@
+/* Design-Tokens für die ganze Seite.
+ *
+ * Quelle: das VIDIS Design System in Figma, Datei HsHyINjx5Ll6uJfzwlBNUn
+ * ("01 VIDIS Design System: Tokens & Components"), Collection "3. Mode",
+ * Modus Light. Dieselbe Datei, aus der sich anbieterportal und
+ * vidis-portal-new bedienen — dort steht sie in
+ * services/frontend/tailwind.config.ts als Tailwind-Theme.
+ *
+ * Warum hier CSS-Variablen statt eines Tailwind-Themes: Portal,
+ * Rückmeldungen und Dokumentation sind statisches HTML ohne Build. Eine
+ * Variable erreicht sie alle, ein Tailwind-Theme nur die beiden Apps.
+ *
+ * ── Abweichung, die beim Abgleich auffiel ─────────────────────────────────
+ * Die Portale führen in ihrer tailwind.config.ts für Text und Rahmen andere
+ * Werte als Figma:
+ *
+ *   Token            Figma (Quelle)   Portale (Code)
+ *   text/default     #0a0a0a          #333333
+ *   text/muted       #727272          #666666
+ *   border/default   #e5e5e5          #DDDDDD
+ *   border/ring      #747ff5          #0000C4
+ *
+ * Die Portale kommentieren diese Gruppe selbst als "legacy/generic values,
+ * not yet confirmed 1:1 against Figma's semantic layer" (figma-reference.md,
+ * P1 findings). Hier steht deshalb Figma — die erklärte Quelle der Wahrheit.
+ * Der Unterschied ist mit bloßem Auge kaum zu sehen; die Markenfarbe, die den
+ * Eindruck trägt, ist in beiden identisch.
+ * ──────────────────────────────────────────────────────────────────────────
+ */
+
+:root {
+  /* ── Farben: Flächen ─────────────────────────────────────── */
+  --farbe-grund: #ffffff;           /* background/default */
+  --farbe-grund-zart: #fafafa;      /* background/subtle */
+  --farbe-grund-gedaempft: #f7f7fd; /* background/muted */
+  --farbe-karte: #ffffff;           /* surface/card */
+
+  /* ── Farben: Text ────────────────────────────────────────── */
+  --farbe-text: #0a0a0a;            /* text/default */
+  --farbe-text-gedaempft: #727272;  /* text/muted */
+  --farbe-text-invers: #fafafa;     /* text/on-primary */
+
+  /* ── Farben: Aktion und Marke ────────────────────────────── */
+  --farbe-marke: #0000c4;           /* action/primary */
+  --farbe-marke-tief: #0001da;      /* text/overline — dunklere Marke */
+  --farbe-marke-zart: #f7f7fd;      /* action/accent */
+  --farbe-auf-akzent: #0000c4;      /* text/on-accent */
+  --farbe-sekundaer: #f5f5f5;       /* action/secondary */
+  --farbe-akzent: #ef7b20;          /* icon/accent — das VIDIS-Orange */
+
+  /* ── Farben: Linien ──────────────────────────────────────── */
+  --farbe-linie: #e5e5e5;           /* border/default */
+  --farbe-fokus: #747ff5;           /* border/ring */
+
+  /* ── Farben: Rückmeldung ─────────────────────────────────── */
+  --farbe-fehler: #fef2f2;          --farbe-fehler-text: #b91c1c;
+  --farbe-warnung: #fffbeb;         --farbe-warnung-text: #b45309;
+  --farbe-info: #f0f9ff;            --farbe-info-text: #0369a1;
+  --farbe-erfolg: #f0fdfa;          --farbe-erfolg-text: #0f766e;
+
+  /* ── Abstände: 4px-Raster ────────────────────────────────── */
+  --abstand-3xs: 2px;
+  --abstand-2xs: 4px;
+  --abstand-xs: 8px;
+  --abstand-sm: 12px;
+  --abstand-md: 16px;
+  --abstand-lg: 24px;
+  --abstand-xl: 32px;
+  --abstand-2xl: 40px;
+  --abstand-3xl: 48px;
+  --abstand-4xl: 64px;
+  --abstand-5xl: 80px;
+
+  /* ── Radien ──────────────────────────────────────────────── */
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --radius-karte: 16px;
+
+  /* ── Schatten ────────────────────────────────────────────── */
+  --schatten-karte: 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 1px 3px rgb(0 0 0 / 0.1);
+  --schatten-karte-hover: 0 4px 8px -2px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --schatten-menue: 0 4px 12px rgb(0 0 0 / 0.08);
+
+  /* ── Schrift ─────────────────────────────────────────────── */
+  --schrift: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --schrift-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Typo-Skala aus der Tailwind-Konfiguration der Portale.
+     Überschriften tragen ihr Gewicht (600) im Token, Fließtext nicht. */
+  --text-4xl: 2.25rem;   --zeile-4xl: 2.75rem;
+  --text-3xl: 1.875rem;  --zeile-3xl: 2.5rem;
+  --text-2xl: 1.5rem;    --zeile-2xl: 2rem;
+  --text-xl: 1.25rem;    --zeile-xl: 1.75rem;
+  --text-lg: 1.125rem;   --zeile-lg: 1.75rem;
+  --text-base: 1rem;     --zeile-base: 1.5rem;
+  --text-sm: 0.875rem;   --zeile-sm: 1.25rem;
+  --text-xs: 0.75rem;    --zeile-xs: 1rem;
+  --gewicht-ueberschrift: 600;
+
+  /* ── Bewegung ────────────────────────────────────────────── */
+  --dauer-schnell: 150ms;
+  --dauer-normal: 200ms;
+}
+
+/* Ein sichtbarer, einheitlicher Fokusring für die ganze Seite. Die Portale
+   führen ihn als border/ring; ohne ihn ist Tastaturbedienung Ratearbeit. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--farbe-fokus);
+  outline-offset: 2px;
+  border-radius: var(--radius-s);
+}

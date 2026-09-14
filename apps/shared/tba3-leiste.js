@@ -41,7 +41,7 @@ const STIL = `
     /* Eigener Grund, damit darunterliegende Inhalte beim Scrollen nicht durchscheinen */
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--farbe-linie, #e5e5e5);
   }
 
   .leiste {
@@ -64,7 +64,7 @@ const STIL = `
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: #0f172a;
+    color: var(--farbe-text, #0a0a0a);
     font-weight: 700;
     font-size: 14px;
     letter-spacing: -0.01em;
@@ -74,7 +74,7 @@ const STIL = `
     width: 24px;
     height: 24px;
     border-radius: 7px;
-    background: #2563eb;
+    background: var(--farbe-marke, #0000c4);
     color: #fff;
     display: grid;
     place-items: center;
@@ -98,15 +98,15 @@ const STIL = `
     padding: 6px 10px;
     border-radius: 8px;
     font-size: 13.5px;
-    color: #64748b;
+    color: var(--farbe-text-gedaempft, #727272);
     text-decoration: none;
     white-space: nowrap;
     transition: color .12s, background-color .12s;
   }
-  nav a:hover { color: #2563eb; background: #f1f5f9; }
+  nav a:hover { color: var(--farbe-marke, #0000c4); background: var(--farbe-sekundaer, #f5f5f5); }
   nav a[aria-current="page"] {
-    color: #1d4ed8;
-    background: #eff6ff;
+    color: var(--farbe-marke-tief, #0001da);
+    background: var(--farbe-marke-zart, #f7f7fd);
     font-weight: 600;
   }
 
@@ -122,10 +122,10 @@ const STIL = `
     align-items: center;
     gap: 5px;
     font-size: 12.5px;
-    color: #94a3b8;
+    color: var(--farbe-text-gedaempft, #727272);
     text-decoration: none;
   }
-  .quelle:hover { color: #2563eb; }
+  .quelle:hover { color: var(--farbe-marke, #0000c4); }
   .quelle svg { width: 14px; height: 14px; }
 
   .sprachen {
@@ -133,25 +133,25 @@ const STIL = `
     align-items: center;
     gap: 1px;
     padding: 2px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--farbe-linie, #e5e5e5);
     border-radius: 8px;
-    background: #f8fafc;
+    background: var(--farbe-grund-zart, #fafafa);
   }
   .sprachen button {
     font: inherit;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: .02em;
-    color: #64748b;
+    color: var(--farbe-text-gedaempft, #727272);
     background: none;
     border: none;
     border-radius: 6px;
     padding: 3px 8px;
     cursor: pointer;
   }
-  .sprachen button:hover { color: #2563eb; }
+  .sprachen button:hover { color: var(--farbe-marke, #0000c4); }
   .sprachen button[aria-pressed="true"] {
-    color: #1d4ed8;
+    color: var(--farbe-marke-tief, #0001da);
     background: #fff;
     box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
   }
