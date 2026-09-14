@@ -12,6 +12,10 @@
       --tinte: #0f172a;
       --grau: #64748b;
       --linie: #e2e8f0;
+      /* Eine Spalte für alles: Leiste, Hinweis, Reiter und die Spezifikation
+         selbst — Swagger UI bringt sonst seine eigenen 1460px mit. */
+      --breite: 1200px;
+      --rand: 20px;
     }
     * { box-sizing: border-box; }
 
@@ -27,10 +31,22 @@
       background: #fff;
     }
 
+    .hinweis,
+    .reiter,
+    #laedt,
+    #ladefehler,
+    .swagger-ui .wrapper {
+      max-width: var(--breite);
+      margin-inline: auto;
+      padding-inline: var(--rand);
+    }
+
+    @media (max-width: 640px) {
+      :root { --rand: 12px; }
+    }
+
     .hinweis {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 18px 24px 0;
+      padding-top: 18px;
       font-size: 14.5px;
       color: var(--grau);
       line-height: 1.6;
@@ -39,9 +55,7 @@
     .hinweis a { color: var(--blau); }
 
     .reiter {
-      max-width: 1200px;
-      margin: 18px auto 0;
-      padding: 0 24px;
+      margin-top: 18px;
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
@@ -78,9 +92,7 @@
     }
 
     #laedt {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 24px;
+      margin-block: 40px;
       font-size: 15px;
       color: var(--grau);
       display: flex;
@@ -98,9 +110,8 @@
 
     #ladefehler {
       display: none;
-      max-width: 1200px;
-      margin: 24px auto;
-      padding: 16px 20px;
+      margin-block: 24px;
+      padding-block: 16px;
       border: 1px solid #fecaca;
       background: #fef2f2;
       border-radius: 12px;
@@ -112,6 +123,7 @@
     /* Swagger UI etwas ruhiger stellen */
     .swagger-ui .topbar { display: none; }
     .swagger-ui .info { margin: 24px 0; }
+    .swagger-ui .scheme-container { box-shadow: none; border-bottom: 1px solid var(--linie); }
     .swagger-ui { font-family: inherit; }
   </style>
 </head>
