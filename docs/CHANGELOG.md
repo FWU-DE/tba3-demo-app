@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- Illustration im Aufmacher des Portals: ein Endpunkt der Schnittstelle geht
+  rein, eine Kompetenzstufenverteilung kommt raus. Reines SVG mit
+  CSS-Animation, kein Skript und kein Bild; die Balken stehen auch ohne
+  laufende Animation vollständig da.
+- Impressum und Datenschutz im Fuß von Portal und Rückmeldungen, verlinkt auf
+  softwarehub.schule.
+
 ### Fixed
 - Die Sprachwahl überlebt das erste Rendern der Demoanwendung: `FilterContext`
   schrieb die Adresszeile aus einem frischen `URLSearchParams` und warf dabei
