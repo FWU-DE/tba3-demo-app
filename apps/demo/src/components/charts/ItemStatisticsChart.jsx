@@ -53,7 +53,7 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   if (loading) {
     return (
-      <Card title={t('itemDiagramm.titel')}>
+      <Card title={t('itemDiagramm.titel')} testid="ansicht-aufgaben">
         <LoadingSkeleton height="600px" />
       </Card>
     );
@@ -61,7 +61,7 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   if (error) {
     return (
-      <Card title={t('itemDiagramm.titel')}>
+      <Card title={t('itemDiagramm.titel')} testid="ansicht-aufgaben">
         <ErrorMessage error={error} retry={refetch} />
       </Card>
     );
@@ -71,7 +71,7 @@ const ItemStatisticsChart = ({ level, id }) => {
 
   if (allItems.length === 0) {
     return (
-      <Card title={t('itemDiagramm.titel')}>
+      <Card title={t('itemDiagramm.titel')} testid="ansicht-aufgaben">
         <div className="text-gray-500 text-center py-8">
           {t('itemDiagramm.keineDaten')}
         </div>
@@ -86,7 +86,7 @@ const ItemStatisticsChart = ({ level, id }) => {
   const chartHeight = Math.max(600, chartData.length * 30);
 
   return (
-    <Card title={t('itemDiagramm.titel')}>
+    <Card title={t('itemDiagramm.titel')} testid="ansicht-aufgaben">
       <div className="mb-4">
         <p className="text-sm text-gray-600">
           {t('itemDiagramm.einleitung')}

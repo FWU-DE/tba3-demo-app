@@ -348,6 +348,7 @@ const LocalDataSection = ({ students, levelCounts, group, subject, grade }) => {
 
   return (
     <Card
+      testid="ansicht-aggregationen"
       title={t('aggregationen.verteilungTitel', {
         auswahl:
           group?.name ??

@@ -27,7 +27,7 @@ const HelpView = () => {
   ];
 
   return (
-    <div className="space-y-8 max-w-3xl">
+    <div className="space-y-8 max-w-3xl" data-testid="ansicht-hilfe">
       <div>
         <h2 className="text-xl font-bold text-gray-900 mb-1">{t('hilfe.titel')}</h2>
         <HtmlText pfad="hilfe.einleitung" className="text-gray-600 text-sm" />

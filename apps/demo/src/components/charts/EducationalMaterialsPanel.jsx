@@ -49,6 +49,7 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
 
   return (
     <button
+      data-testid={`materialien-stufe-${levelKey}`}
       onClick={onClick}
       className={`relative flex-1 min-w-0 rounded-xl border-2 p-4 text-left transition-all ${
         isActive
@@ -84,6 +85,7 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
 
   return (
     <div
+      data-testid={`material-${material.id}`}
       onClick={() => !isAssigned && onToggle(material.id)}
       className={`rounded-lg p-4 transition-all ${
         isExternal
@@ -332,6 +334,7 @@ const CatalogSection = ({
 
             <div className="mt-6 pt-4 border-t border-gray-100 flex items-center gap-4">
               <button
+                data-testid="materialien-zuweisen"
                 onClick={handleAssign}
                 disabled={selected.length === 0}
                 className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all ${
@@ -577,7 +580,7 @@ const EducationalMaterialsPanel = () => {
   // ── Render ──
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="ansicht-materialien">
 
       {/* MUNDO modal */}
       {showMundo && (
@@ -595,6 +598,7 @@ const EducationalMaterialsPanel = () => {
         ].map(({ key, label, icon }) => (
           <button
             key={key}
+            data-testid={`materialien-modus-${key}`}
             onClick={() => switchMode(key)}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
               mode === key
@@ -757,6 +761,7 @@ const EducationalMaterialsPanel = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           <button
+            data-testid="export-imscc"
             onClick={handleExportCC}
             disabled={busy || !hasAnyAssigned}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all ${
@@ -769,6 +774,7 @@ const EducationalMaterialsPanel = () => {
           </button>
 
           <button
+            data-testid="export-pdf"
             onClick={handleExportPDF}
             disabled={busy || !hasAnyAssigned}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all ${

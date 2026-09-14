@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- **E2E-Tests für die Demoanwendung** (Playwright, `npm run e2e`): 47 Tests
+  über Reiter und Deeplinks, Filter — jeweils gegen die Abfrage, die dabei
+  herauskommt —, Schülerliste mit Datenblatt und eigenen Gruppen, Materialien
+  samt Export nach `.imscc` und `.pdf`, Vergleichsauswertung, Sprachwahl,
+  Fehlerfälle und den schmalen Schirm. Gelaufen wird gegen `npm run preview`,
+  also gegen den ausgelieferten Stand, nicht gegen den Dev-Server. Eigener
+  Job in der CI.
 - **`@tba3/bausteine`** — die Visualisierungen als **native Web Component,
   Vue- und React-Komponente**. Die Web Component ist die eine echte
   Implementierung (echtes DOM, echte Ereignis-Empfänger, Shadow DOM), Vue und
@@ -38,6 +45,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   softwarehub.schule.
 
 ### Changed
+- Die Legende der Kompetenzstufen bricht auf schmalen Schirmen um (zwei, drei
+  und ab 1024 px fünf Spalten). Vorher standen fünf Spalten fest: auf dem
+  Telefon blieben je 52 px, in denen „Unter Mindeststandard" nicht umbrechen
+  kann — der Text lief rechts aus der Seite und zog die ganze Demoanwendung
+  26 px in die Breite.
 - Portal, Rückmeldungen, Dokumentation und die gemeinsame Navigationsleiste
   nutzen die Design-Tokens statt eigener Paletten. Sichtbarster Unterschied: die
   Markenfarbe ist jetzt das VIDIS-Blau `#0000c4` statt Tailwind-Standard

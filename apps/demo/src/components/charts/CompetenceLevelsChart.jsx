@@ -37,7 +37,7 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   if (loading) {
     return (
-      <Card title={t('kompetenzstufenDiagramm.titel')}>
+      <Card title={t('kompetenzstufenDiagramm.titel')} testid="ansicht-kompetenzstufen">
         <LoadingSkeleton height="400px" />
       </Card>
     );
@@ -45,7 +45,7 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   if (error) {
     return (
-      <Card title={t('kompetenzstufenDiagramm.titel')}>
+      <Card title={t('kompetenzstufenDiagramm.titel')} testid="ansicht-kompetenzstufen">
         <ErrorMessage error={error} retry={refetch} />
       </Card>
     );
@@ -53,7 +53,7 @@ const CompetenceLevelsChart = ({ level, id }) => {
 
   if (!data) {
     return (
-      <Card title={t('kompetenzstufenDiagramm.titel')}>
+      <Card title={t('kompetenzstufenDiagramm.titel')} testid="ansicht-kompetenzstufen">
         <div className="text-gray-500 text-center py-8">
           {t('kompetenzstufenDiagramm.keineDaten')}
         </div>
@@ -65,7 +65,7 @@ const CompetenceLevelsChart = ({ level, id }) => {
   const stats = calculateSummaryStats(data);
 
   return (
-    <Card title={t('kompetenzstufenDiagramm.titel')}>
+    <Card title={t('kompetenzstufenDiagramm.titel')} testid="ansicht-kompetenzstufen">
       {/* Summary Statistics */}
       {stats && (
         <div className="grid grid-cols-3 gap-4 mb-6">
@@ -115,7 +115,11 @@ const CompetenceLevelsChart = ({ level, id }) => {
       </ResponsiveContainer>
 
       {/* Legend with descriptions */}
-      <div className="mt-6 grid grid-cols-5 gap-3">
+      {/* Fünf Spalten trägt erst ein breiter Schirm: auf dem Telefon bleiben je
+          Spalte 52 px, in denen „Unter Mindeststandard" nicht umbrechen kann —
+          der Text lief rechts aus der Seite und zog die ganze Seite 26 px in
+          die Breite. Geprüft von e2e/demo-mobil.spec.js. */}
+      <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {Object.values(COMPETENCE_LEVELS).map((level) => (
           <div key={level.level} className="flex items-start space-x-2">
             <div
