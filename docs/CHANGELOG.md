@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   `NUR_BAUSTEIN` in `zuordnung.js` hält mit Grund fest, was ohne Ansicht
   bleibt, und drei Tests halten Zuordnung, Beispieldaten und die drei Fassungen
   beieinander.
+- **Vorschauen in der Zuordnung auf `/bausteine`**: jede Zeile der Tabelle und
+  jeder Eintrag der Liste darunter zeigt den Baustein in klein — dieselben
+  Daten wie unten, nicht bedienbar und für Vorlesesoftware ausgeblendet. Ein
+  Elementname allein sagt niemandem, was der Baustein zeigt.
 - **E2E-Tests für die Demoanwendung** (Playwright, `npm run e2e`): 47 Tests
   über Reiter und Deeplinks, Filter — jeweils gegen die Abfrage, die dabei
   herauskommt —, Schülerliste mit Datenblatt und eigenen Gruppen, Materialien
@@ -72,6 +76,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Perzentilbänder), haben jetzt Platz.
 
 ### Fixed
+- **Die Perzentilbänder waren schwarz.** `var(--tba3-_band))` — eine
+  schließende Klammer zu viel in vier Konstanten und zwei Aufrufen. Ein
+  ungültiger Farbwert ist in SVG nicht leer, sondern schwarz; derselbe
+  Tippfehler hatte in der Aufgaben-Tabelle still das Zeilen-Hover
+  ausgeschaltet. Ein Test zählt jetzt die Klammern in jedem Wert, der `var(`
+  enthält.
+- **`/katalog#/percentile-band` war eine weiße Seite.** Ein Endpunkt-Eintrag
+  trug `description` statt `pfad`; `t(undefined)` warf, und Vue riss das Setup
+  der Ansicht ab. `t()` gibt bei fehlendem Pfad jetzt einen leeren Text zurück,
+  statt eine ganze Ansicht mitzunehmen.
 - **`/bausteine` ohne abschließenden Schrägstrich lud nichts.** Die Seite
   importierte `./demodaten.js` und `./zuordnung.js` relativ; unter `/bausteine`
   löst der Browser das gegen `/` auf, beide Module kamen als 404 zurück — die

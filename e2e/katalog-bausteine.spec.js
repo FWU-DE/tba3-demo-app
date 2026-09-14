@@ -26,6 +26,17 @@ const ANSICHTEN = [
   ['/bista-distribution', 'tba3-bista-verteilung'],
 ];
 
+/**
+ * Zählt im Licht-DOM der Seite.
+ *
+ * Playwrights CSS-Selektoren durchdringen offene Shadow Roots: `#zuordnung
+ * tbody tr` fände auch die Zeilen, die eine Vorschau in ihrem eigenen Schatten
+ * zeichnet. `document.querySelectorAll` tut das nicht — und hier ist genau das
+ * gemeint.
+ */
+const anzahl = (page, auswahl) =>
+  page.evaluate((a) => document.querySelectorAll(a).length, auswahl);
+
 /** Hat das Element wirklich gezeichnet — oder steht nur die Hülle da? */
 const gezeichnet = (page, tag) =>
   page.evaluate((t) => {
@@ -63,15 +74,29 @@ test.describe('Bausteine — der Demonstrator', () => {
     const fehler = [];
     page.on('pageerror', (e) => fehler.push(e.message));
 
-    // Ohne Schrägstrich am Ende: genau so steht der Link im Portal, und genau
-    // so lösten die relativen Modulimporte einmal ins Leere.
+    // Dass die Seite unter beiden Formen der Adresse überhaupt lädt, prüft
+    // `bausteine.spec.js` nebenan; hier geht es um ihren Inhalt.
     await page.goto('/bausteine?lang=de');
 
-    await expect(page.locator('section.baustein')).toHaveCount(12);
-    await expect(page.locator('#zuordnung tbody tr')).toHaveCount(9);
-    await expect(page.locator('#nur-baustein li')).toHaveCount(3);
+    await expect.poll(() => anzahl(page, 'section.baustein')).toBe(12);
+    await expect.poll(() => anzahl(page, '#zuordnung tbody tr')).toBe(9);
+    await expect.poll(() => anzahl(page, '#nur-baustein li')).toBe(3);
     await expect(page.locator('#stand')).toContainText('9 von 9');
     expect(fehler).toEqual([]);
+  });
+
+  test('zeigt zu jedem Baustein eine Vorschau, die auch etwas zeigt', async ({ page }) => {
+    await page.goto('/bausteine?lang=de');
+
+    // Die Zuordnungstabelle und die Liste darunter nennen sonst nur
+    // Elementnamen. Eine Vorschau, die leer bleibt, wäre schlimmer als keine.
+    await expect.poll(() => anzahl(page, '.vorschau')).toBe(12);
+
+    const gezeichnet = await page.evaluate(() =>
+      [...document.querySelectorAll('.vorschau')]
+        .filter((k) => k.firstElementChild?.shadowRoot?.children.length > 1).length,
+    );
+    expect(gezeichnet).toBe(12);
   });
 
   test('zeigt jeden Baustein in allen drei Fassungen', async ({ page }) => {
