@@ -114,4 +114,6 @@ wird zusätzlich als eigenes Image gebaut (`FWU-DE/tba3-demo-app-mcp`).
 - [`apps/demo/README.md`](apps/demo/README.md) — Demoanwendung im Detail
 - [`apps/katalog/AGENTS.md`](apps/katalog/AGENTS.md) — Komponentenbibliothek
 - [`apps/beispiele/README.md`](apps/beispiele/README.md) — wie die Beispiele eingehängt werden
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — der Weg einer Änderung: Ticket, Branch, Commit, PR
 - [`CLAUDE.md`](CLAUDE.md) — Konventionen und Task-Workflow
+- [`DEFINITION_OF_DONE.md`](DEFINITION_OF_DONE.md) — die Checkliste für jeden PR
