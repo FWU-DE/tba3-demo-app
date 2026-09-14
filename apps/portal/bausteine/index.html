@@ -312,9 +312,12 @@
 <script type="module">
   // Der Demonstrator lädt die Bausteine so, wie es jede fremde Seite täte:
   // ein Modul-Import, kein Build, kein Paketmanager.
+  // Absolut, nicht relativ: die Seite ist unter /bausteine und unter
+  // /bausteine/ erreichbar, und './demodaten.js' zeigt im ersten Fall auf
+  // /demodaten.js — 404, leere Zuordnungstabelle, kein einziger Baustein.
   import { BAUPLAENE, PRAEFIX, registrieren } from '/bausteine/webcomponents/index.js';
-  import { DEMODATEN } from './demodaten.js';
-  import { ZAHLEN, ZUORDNUNG } from './zuordnung.js';
+  import { DEMODATEN } from '/bausteine/demodaten.js';
+  import { ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
 
   registrieren();
 

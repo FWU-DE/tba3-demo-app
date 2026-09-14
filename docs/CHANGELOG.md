@@ -61,6 +61,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Perzentilbänder), haben jetzt Platz.
 
 ### Fixed
+- **`/bausteine` ohne abschließenden Schrägstrich lud nichts.** Die Seite
+  importierte `./demodaten.js` und `./zuordnung.js` relativ; unter `/bausteine`
+  löst der Browser das gegen `/` auf, beide Module kamen als 404 zurück — die
+  Zuordnungstabelle blieb leer und kein einziger Baustein wurde registriert,
+  ohne sichtbare Fehlermeldung. Die Navigationsleiste verweist genau auf diese
+  Form. Jetzt absolut wie der Import daneben, und `e2e/bausteine.spec.js` prüft
+  beide Formen der Adresse.
 - Die Sprachwahl überlebt das erste Rendern der Demoanwendung: `FilterContext`
   schrieb die Adresszeile aus einem frischen `URLSearchParams` und warf dabei
   `?lang=` weg. Die nachgeladene Navigationsleiste fiel dadurch auf die
