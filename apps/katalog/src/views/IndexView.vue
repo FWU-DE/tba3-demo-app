@@ -93,6 +93,7 @@ const COMPONENTS = [
     <div class="index-intro">
       <h2 class="intro-heading">{{ t('index.ueberschrift') }}</h2>
       <p class="intro-text">{{ t('index.einleitung') }}</p>
+      <p class="intro-stack">{{ t('huelle.stack') }}</p>
     </div>
 
     <div class="index-grid">
@@ -451,6 +452,9 @@ const COMPONENTS = [
 .index-intro { margin-bottom: 28px; }
 .intro-heading { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
 .intro-text { font-size: 0.88rem; color: #475569; max-width: 600px; }
+/* Stand bis eben im Kopfbalken des Katalogs — er sagt etwas über den Katalog
+   als Ganzes und gehört deshalb auf seine Übersicht, nicht über jede Ansicht. */
+.intro-stack { margin-top: 8px; font-size: 0.75rem; color: #94a3b8; }
 
 .index-grid {
   display: grid;

@@ -28,23 +28,14 @@ watchEffect(() => {
 
 <template>
   <div class="shell">
-    <header class="shell-header">
-      <div class="shell-header-inner">
-        <div class="header-brand">
-          <RouterLink to="/" class="header-title">{{ t('huelle.titel') }}</RouterLink>
-          <template v-if="componentName">
-            <span class="header-sep">/</span>
-            <span class="header-breadcrumb">{{ componentName }}</span>
-          </template>
-        </div>
-        <div class="header-right">
-          <!-- GitHub führt die gemeinsame Leiste; hier bleibt der Stack-Hinweis -->
-          <span class="header-sub">{{ t('huelle.stack') }}</span>
-        </div>
-      </div>
-    </header>
+    <!-- Kein eigener Kopf mehr: Der Katalog ist in der gemeinsamen Leiste
+         markiert, die Brotkrumen darunter nennen die Komponente, und jede
+         Ansicht trägt ihren Namen noch einmal im Kartenkopf. Ein dritter
+         Balken sagte dasselbe ein viertes Mal — und tat es als einziger
+         Bereich in einer eigenen Farbe. Der Stack-Hinweis steht jetzt auf
+         der Übersicht, wo er hingehört. -->
 
-    <!-- Breadcrumb bar — visible on all component detail pages -->
+    <!-- Brotkrumen — auf allen Detailseiten, nicht auf der Übersicht -->
     <nav v-if="!isHome" class="breadcrumb-bar">
       <div class="breadcrumb-inner">
         <RouterLink to="/" class="bc-home">
@@ -73,26 +64,7 @@ a { text-decoration: none; color: inherit; }
 
 .shell { min-height: 100vh; }
 
-/* ── Header ──────────────────────────────────────────────────────────────── */
-.shell-header { background: #1e3a5f; padding: 12px var(--rand); }
-.shell-header-inner {
-  max-width: var(--breite); margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-
-.header-brand { display: flex; align-items: center; gap: 8px; }
-.header-title { font-size: 1rem; font-weight: 700; color: #fff; }
-.header-title:hover { color: #93c5fd; }
-.header-sep { color: rgba(255,255,255,0.3); }
-.header-breadcrumb {
-  color: rgba(255,255,255,0.65); font-size: 0.88rem;
-  font-family: ui-monospace, monospace;
-}
-
-.header-right { display: flex; align-items: center; gap: 16px; }
-.header-sub { font-size: 0.72rem; color: rgba(255,255,255,0.38); }
-
-/* ── Breadcrumb bar ──────────────────────────────────────────────────────── */
+/* ── Brotkrumen ──────────────────────────────────────────────────────── */
 .breadcrumb-bar {
   background: #fff; border-bottom: 1px solid #e2e8f0;
   padding: 9px var(--rand);
