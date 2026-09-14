@@ -45,9 +45,14 @@ const STIL = `
   }
 
   .leiste {
-    max-width: 1200px;
+    /* Dieselbe Spalte wie der Inhalt darunter. Die Werte kommen aus
+       /gemeinsam/container.css — benutzerdefinierte Eigenschaften vererben
+       sich auch über die Schattengrenze. Der Ersatzwert daneben ist kein
+       zweiter Ort für die Zahl, sondern die Zusage, dass die Leiste auch in
+       einem Bereich steht, der das Stylesheet (noch) nicht einbindet. */
+    max-width: var(--breite, 1200px);
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 var(--rand, 20px);
     height: 48px;
     display: flex;
     align-items: center;
@@ -153,7 +158,7 @@ const STIL = `
 
   /* Auf Telefonen weicht der GitHub-Verweis, Bereiche und Sprachwahl zählen mehr */
   @media (max-width: 640px) {
-    .leiste { padding: 0 12px; gap: 10px; }
+    .leiste { gap: 10px; }   /* der Rand kommt über --rand mit */
     .quelle span { display: none; }
     .sprachen button { padding: 3px 6px; }
   }

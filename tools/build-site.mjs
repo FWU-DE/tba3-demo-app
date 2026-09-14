@@ -91,13 +91,13 @@ for (const dok of DOKUMENTE) {
 writeFileSync(join(dist, 'dokumentation/index.html'), uebersicht(DOKUMENTE, standDaten));
 console.log(`✓ ${DOKUMENTE.length} Dokumente gerendert → dist/dokumentation/`);
 
-// Die gemeinsamen Dateien — Navigationsleiste und Sprachwahl — liegen unter
+// Die gemeinsamen Dateien — Navigationsleiste, Sprachwahl und Containerregel — liegen unter
 // /gemeinsam/ und werden von allen Bereichen eingebunden, auch von denen, die
 // React bzw. Vue nutzen. Die Vite-Erweiterung daneben gehört nicht dazu: sie
 // liefert dieselben Dateien im Dev-Server aus.
 mkdirSync(join(dist, 'gemeinsam'), { recursive: true });
 const gemeinsam = readdirSync(join(root, 'apps/shared'))
-  .filter((datei) => datei.endsWith('.js') && !datei.startsWith('vite-plugin-'));
+  .filter((datei) => /\.(js|css)$/.test(datei) && !datei.startsWith('vite-plugin-') && !datei.endsWith('.test.mjs'));
 for (const datei of gemeinsam) {
   copyFileSync(join(root, 'apps/shared', datei), join(dist, 'gemeinsam', datei));
 }
