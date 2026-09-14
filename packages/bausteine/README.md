@@ -1,11 +1,31 @@
 # @tba3/bausteine
 
-Die TBA3-Visualisierungen als **Web Component, Vue-Komponente und React-Komponente** —
-eine Implementierung, drei Fassungen.
+Die TBA3-Visualisierungen als **native Web Component, Vue- und React-Komponente**.
+Eine Implementierung, drei Fassungen. Ohne Abhängigkeiten, ohne Design.
 
-Wer nur die Kompetenzstufen-Leiste braucht, nimmt nur die. Wer sie in einer
-React-App braucht, bekommt eine React-Komponente. Wer gar kein Framework
-einsetzt, bindet ein Custom Element ein. Der Quelltext dahinter ist derselbe.
+**Demonstrator:** [`/bausteine`](https://tba3.vercel.app/bausteine) — alle
+Bausteine in allen drei Fassungen nebeneinander, mit Theme-Umschalter.
+
+---
+
+## Katalog und Bausteine — der Unterschied
+
+Zwei Bereiche zeigen Visualisierungen. Das verwirrt zu Recht:
+
+| | `/katalog` | `/bausteine` |
+|---|---|---|
+| Was | die **Schau** | die **Bibliothek** |
+| Daten | echte Antworten der Schnittstelle | Beispieldaten |
+| Zweck | anschauen, verstehen, Quelltext lesen | einbauen, mitnehmen |
+| Form | Vue-Ansichten mit Filtern und Doku | Paket in drei Fassungen |
+
+Der Katalog ist älter. Seine Ansichten ziehen nach und nach auf die Bausteine
+um — eine umgezogene Ansicht zeigt dann denselben Quelltext, den auch ein
+fremdes Projekt bekommt. Die Übersicht steht in
+[`apps/portal/bausteine/zuordnung.js`](../../apps/portal/bausteine/zuordnung.js),
+wird auf `/bausteine` als Tabelle gezeigt und von
+`zuordnung.test.mjs` gegen die Wirklichkeit geprüft — eine Zuordnungstabelle,
+die niemand nachzieht, ist schlimmer als keine.
 
 ---
 
@@ -15,30 +35,44 @@ Drei Fassungen von Hand hieße dreimal pflegen und dreimal auseinanderdriften.
 Stattdessen:
 
 ```
-kern/            reine Funktionen: Daten rein, SVG-Zeichenkette raus.
-                 Keine Abhängigkeit, kein DOM, überall lauffähig.
-webcomponents/   Custom Elements um den Kern
-vue/             Vue-Komponenten um den Kern
-react/           React-Komponenten um den Kern
+kern/            reine Berechnung: Daten rein, Geometrie raus.
+                 Zahlen und Objekte, keine Zeichenketten.
+                 Keine Abhängigkeit, kein DOM, auf dem Server lauffähig.
+webcomponents/   die eine echte Implementierung: echtes DOM, echte
+                 Ereignis-Empfänger, Shadow DOM.
+vue/             Hülle um das Custom Element
+react/           Hülle um das Custom Element
 ```
 
-Die Adapter lesen das Verzeichnis in `kern/index.js`. Ein neuer Baustein dort
-bekommt automatisch alle drei Fassungen — kein Adapter muss angefasst werden.
+**Der erste Entwurf gab fertiges SVG als Zeichenkette aus.** Das ließ sich zwar
+in drei Frameworks einsetzen, aber nicht bedienen: an eine per `innerHTML`
+eingesetzte Zeichenkette lassen sich keine Ereignisse hängen, und Tabellen und
+Karten sind damit gar nicht zu bauen. Deshalb der Umbau — jetzt baut jeder
+Baustein echte Knoten, und Tooltips, Sortierung, Klick und Tastaturbedienung
+funktionieren.
 
-`packages/bausteine/__tests__/bausteine.test.jsx` vergleicht für jeden Baustein
-das SVG aus allen drei Fassungen Zeichen für Zeichen. Driftet eine, schlägt der
+Die Hüllen tun genau zwei Dinge, die Vue und React sonst falsch machen:
+
+1. **Objekte und Arrays als Eigenschaft setzen, nicht als Attribut.** Sonst
+   käme ein Array als `"[object Object]"` an.
+2. **`CustomEvent` in die Framework-Welt übersetzen** — `@stufe-gewaehlt` in
+   Vue, `onStufeGewaehlt` in React.
+
+`__tests__/bausteine.test.jsx` rendert jeden Baustein in allen drei Fassungen
+und vergleicht das erzeugte DOM Knoten für Knoten. Driftet eine, schlägt der
 Test fehl.
 
 ---
 
 ## Bausteine
 
-| Name | Zweck | Endpunkt |
-|---|---|---|
-| `kompetenzstufen-leiste` | Gestapelte Balken je Bezugsgruppe, optional mit fairem Vergleich | `/groups/{id}/competence-levels` |
-| `mittelwert-vergleich` | Diamant-Marker auf gemeinsamer Skala, optional mit Konfidenzintervall | `/groups`, `/schools`, `/states` (items) |
-| `erwartet-tatsaechlich` | Tatsächliche gegen erwartete Lösungsquote je Aufgabe | `/groups/{id}/items` |
-| `perzentilbaender` | Mittlerer Bereich je Teilbereich, dazu der Wert einer Schüler:in | `/groups/{id}/aggregations` |
+| Element | Zweck | Endpunkt | Ereignisse |
+|---|---|---|---|
+| `<tba3-kompetenzstufen-leiste>` | Gestapelte Balken je Bezugsgruppe, optional mit fairem Vergleich | `/groups/{id}/competence-levels` | `stufe-gewaehlt`, `stufe-betreten`, `stufe-verlassen` |
+| `<tba3-aufgaben-tabelle>` | Sortierbare Tabelle der Aufgaben mit Abweichung zur Erwartung | `/groups/{id}/items` | `sortiert`, `aufgabe-gewaehlt` |
+| `<tba3-mittelwert-vergleich>` | Diamant-Marker auf gemeinsamer Skala, mit Konfidenzintervall | `/groups`, `/schools`, `/states` | `zeile-gewaehlt` |
+| `<tba3-erwartet-tatsaechlich>` | Tatsächliche gegen erwartete Lösungsquote je Aufgabe | `/groups/{id}/items` | `aufgabe-gewaehlt` |
+| `<tba3-perzentilbaender>` | Mittlerer Bereich je Teilbereich, dazu der Wert einer Schüler:in | `/groups/{id}/aggregations` | `bereich-gewaehlt` |
 
 ---
 
@@ -48,28 +82,28 @@ Ohne Build, ohne Framework, ohne Paketmanager:
 
 ```html
 <script type="module">
-  import { registrieren } from 'https://<host>/bausteine/webcomponents/index.js';
+  import { registrieren } from 'https://tba3.vercel.app/bausteine/webcomponents/index.js';
   registrieren();
 </script>
 
 <tba3-kompetenzstufen-leiste id="leiste" title="3a Deutsch"></tba3-kompetenzstufen-leiste>
 
 <script type="module">
-  document.getElementById('leiste').rows = [
+  const el = document.getElementById('leiste');
+  el.rows = [
     { label: 'Klasse 3a', total: 25, levels: [
-      { nameShort: 'I', pct: 8, color: '#ef4444' },
-      { nameShort: 'II', pct: 22, color: '#f97316' },
-      { nameShort: 'III', pct: 34, color: '#eab308' },
-      { nameShort: 'IV', pct: 24, color: '#22c55e' },
-      { nameShort: 'V', pct: 12, color: '#15803d' },
+      { nameShort: 'I', pct: 8 }, { nameShort: 'II', pct: 22 },
+      { nameShort: 'III', pct: 34 }, { nameShort: 'IV', pct: 24 },
+      { nameShort: 'V', pct: 12 },
     ]},
   ];
+  el.addEventListener('stufe-gewaehlt', (e) => console.log(e.detail));
 </script>
 ```
 
-Daten kommen über Eigenschaften (`el.rows = …`). Einfache Angaben gehen auch als
-Attribut; Attribute mit JSON-Inhalt nehmen ebenfalls Daten entgegen, für Seiten,
-die kein eigenes Skript ausführen sollen:
+Daten kommen über **Eigenschaften** (`el.rows = …`). Einfache Angaben gehen auch
+als Attribut; Attribute mit JSON-Inhalt nehmen ebenfalls Daten entgegen, für
+Seiten, die kein eigenes Skript ausführen sollen:
 
 ```html
 <tba3-perzentilbaender
@@ -77,10 +111,8 @@ die kein eigenes Skript ausführen sollen:
 </tba3-perzentilbaender>
 ```
 
-Jedes Element bringt seine Stile im Shadow DOM mit — es gibt nichts einzubinden
-und nichts, was mit den Stilen der umgebenden Seite kollidiert.
-
----
+Mehrere Zuweisungen hintereinander zeichnen **einmal** neu, nicht dreimal —
+das Element sammelt sie in einem Microtask.
 
 ## Vue
 
@@ -89,10 +121,11 @@ import { KompetenzstufenLeiste } from '@tba3/bausteine/vue';
 ```
 
 ```vue
-<KompetenzstufenLeiste :rows="zeilen" title="3a Deutsch" domain="Lesen" />
+<KompetenzstufenLeiste :rows="zeilen" title="3a Deutsch" @stufe-gewaehlt="zeigen" />
 ```
 
-Oder alle auf einmal:
+Oder alle auf einmal — das Plugin meldet nebenbei die Custom Elements bei Vue an,
+sonst warnt es bei jedem Rendern:
 
 ```js
 import { bausteine } from '@tba3/bausteine/vue';
@@ -102,41 +135,87 @@ app.use(bausteine);
 ## React
 
 ```jsx
-import { KompetenzstufenLeiste } from '@tba3/bausteine/react';
+import { AufgabenTabelle } from '@tba3/bausteine/react';
 
-<KompetenzstufenLeiste rows={zeilen} title="3a Deutsch" domain="Lesen" />
+<AufgabenTabelle items={items} onAufgabeGewaehlt={(detail) => zeigen(detail)} />
 ```
 
-## Ohne Framework, nur das SVG
+## Nur die Berechnung
 
-Für PDF-Erzeugung, E-Mail oder Serverrendern:
+Für PDF-Erzeugung, Serverrendern oder eine eigene Darstellung:
 
 ```js
-import { kompetenzstufenLeiste } from '@tba3/bausteine';
+import { leisteGeometrie, tabellenZeilen } from '@tba3/bausteine';
 
-const { svg, breite, hoehe } = kompetenzstufenLeiste({ rows: zeilen });
+const { breite, hoehe, zeilen } = leisteGeometrie({ rows });
 ```
+
+---
+
+## Theming — die Bausteine bringen kein Design mit
+
+Sie lesen CSS-Variablen und haben für jede einen **neutralen** Rückfallwert.
+Steht ein Baustein in einer Seite mit eigenen Tokens, übernimmt er deren
+Aussehen; steht er allein, sieht er unauffällig aus statt kaputt.
+
+So lässt sich derselbe Baustein im FWU-Portal, bei einem Land mit eigenem Design
+und in einer fremden Anwendung einsetzen, **ohne ihn zu forken**. Genau das ist
+der Punkt der Nachnutzung.
+
+```css
+tba3-kompetenzstufen-leiste,
+tba3-aufgaben-tabelle {
+  --tba3-farbe-marke: #0000c4;
+  --tba3-farbe-text: #0a0a0a;
+  --tba3-stufe-3: #eab308;
+  --tba3-schrift: Inter, sans-serif;
+}
+```
+
+Die Namen sind bewusst eigenständig (`--tba3-*`) statt an die Tokens einer
+bestimmten Seite gebunden: ein Baustein darf nicht davon abhängen, dass gerade
+diese Seite ihn umgibt.
+
+| Gruppe | Variablen |
+|---|---|
+| Schrift | `--tba3-schrift`, `--tba3-schrift-mono`, `--tba3-schrift-groesse` |
+| Flächen | `--tba3-farbe-grund`, `--tba3-farbe-flaeche` |
+| Linien | `--tba3-farbe-linie`, `--tba3-farbe-raster` |
+| Text | `--tba3-farbe-text`, `--tba3-farbe-text-gedaempft`, `--tba3-farbe-text-invers` |
+| Interaktion | `--tba3-farbe-marke`, `--tba3-farbe-fokus`, `--tba3-farbe-hervorhebung` |
+| Kompetenzstufen | `--tba3-stufe-1` … `--tba3-stufe-5` |
+| Bewertung | `--tba3-farbe-ueber`, `--tba3-farbe-im-rahmen`, `--tba3-farbe-unter` |
+| Maße | `--tba3-radius`, `--tba3-abstand` |
+
+Die vollständige Liste mit Vorgaben steht in
+[`kern/thema.js`](kern/thema.js). Ein Test prüft, dass dort **keine Markenfarbe
+einer bestimmten Seite** steht.
+
+Die Kompetenzstufen haben absichtlich einen Rot-Grün-Verlauf als Vorgabe und
+keine beliebige Palette: die Stufen tragen eine Ordnung (unter / im / über
+Standard), die ohne Verlauf verloren ginge.
 
 ---
 
 ## Einen Baustein hinzufügen
 
-1. `kern/<name>.js` anlegen: `STANDARD` exportieren und eine Funktion, die
-   `{ breite, hoehe, svg, html }` liefert.
-2. In `kern/index.js` unter `BAUSTEINE` eintragen.
-3. Beispieldaten in `__tests__/bausteine.test.jsx` unter `DATEN` ergänzen.
+1. `kern/<name>.js`: `STANDARD` exportieren und eine Funktion, die aus den
+   Eigenschaften Geometrie bzw. aufbereitete Zeilen macht — Zahlen und Objekte,
+   kein Markup.
+2. `webcomponents/<name>.js`: `BAUPLAN` mit `name`, `titel`, `endpunkt`,
+   `standard`, `ereignisse`, `stil` und `aufbauen(wurzel, zustand, el)`.
+   `elementKlasse(BAUPLAN)` macht daraus das Custom Element.
+3. In `webcomponents/index.js` unter `BAUPLAENE` eintragen.
+4. Beispieldaten in `__tests__/bausteine.test.jsx` unter `DATEN` ergänzen.
 
-Die drei Fassungen entstehen daraus von selbst; die Tests prüfen, dass sie
-übereinstimmen.
+Vue- und React-Fassung entstehen daraus von selbst — die Adapter lesen nur
+`BAUPLAENE`. Die Tests prüfen, dass alle drei übereinstimmen.
 
 ---
 
 ## Stand
 
-Vier der zwölf Visualisierungen des Katalogs sind portiert — die vier ohne
-eigenen Zustand. Die übrigen acht (`ItemSolutionTable`, `StudentScatterPlot`,
-`CompetencyOverviewCards`, `BistaDistributionChart`, `StudentSolutionTable`,
-`StudentTooltip`, `ItemDetailView`, `ComponentDocs`) bringen Sortierung,
-Tooltips oder Auswahl mit. Für sie reicht eine SVG-Zeichenkette nicht; sie
-brauchen im Kern eine kleine Ereignisschicht, bevor sie denselben Weg gehen
-können.
+Fünf Bausteine, alle in drei Fassungen. Vier davon tragen bereits eine
+Katalog-Ansicht; die übrigen Katalog-Ansichten warten noch (siehe die Tabelle
+auf `/bausteine`). Was ihnen fehlt, steht dort je Zeile — meist eine
+Auswahl-Schnittstelle oder eine Tooltip-Überlagerung außerhalb des SVG.

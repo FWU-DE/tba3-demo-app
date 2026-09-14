@@ -43,7 +43,9 @@ export default defineConfig({
           name: 'shared',
           globals: true,
           environment: 'jsdom',
-          include: ['apps/shared/**/*.test.mjs'],
+          // apps/portal: der Zuordnungstest lädt die Custom Elements und
+          // braucht deshalb ein DOM.
+          include: ['apps/shared/**/*.test.mjs', 'apps/portal/**/*.test.mjs'],
         },
       },
       {

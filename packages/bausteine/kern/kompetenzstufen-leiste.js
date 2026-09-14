@@ -1,206 +1,113 @@
-// Kompetenzstufen-Leiste — gestapelte Balken je Bezugsgruppe.
+// Kompetenzstufen-Leiste — Berechnung.
 //
-// Portiert aus apps/katalog/src/components/CompetenceLevelBar.vue. Die Maße und
-// Farben sind unverändert übernommen, damit die Vue-Fassung im Katalog und die
-// neuen Adapter dasselbe Bild zeigen.
-
-import { SCHRIFT, el, esc, kurz, leer, zusammen } from './svg.js';
+// Dieser Kern liefert **Geometrie, keine Zeichenkette**: Zahlen und Objekte,
+// aus denen jede Fassung ihr eigenes DOM baut. Das ist der Unterschied zum
+// ersten Entwurf, der fertiges SVG ausgab — daran ließen sich keine Ereignisse
+// hängen, weil das Framework den Inhalt nicht kannte.
+//
+// Der Kern ist rein: keine Abhängigkeit, kein DOM, auf dem Server lauffähig.
+// Er ist der Teil, der nicht driften darf; das Zeichnen ist austauschbar.
 
 export const NAME = 'kompetenzstufen-leiste';
 
-/** Voreinstellungen — auch die Grundlage für die Attribute des Custom Elements. */
 export const STANDARD = {
+  /** [{ label, total?, fair?, levels: [{ nameShort, pct, color? }] }] */
   rows: [],
   title: '',
   domain: '',
 };
 
-const LABEL_W = 160;
-const BAR_W = 560;
-const BAR_H = 28;
-const GAP = 12;
-const PAD_TOP = 28;
-const PAD_BOTTOM = 40;
-// 16 wie im Original reichte nicht: die n=-Angabe beginnt bei 725 und wurde
-// vom rechten Rand des SVG abgeschnitten. In einer Bibliothek, die andere
-// einbetten, ist eine halbe Beschriftung schlimmer als etwas Luft.
-const PAD_RIGHT = 48;
-const SVG_W = LABEL_W + BAR_W + PAD_RIGHT;
-const TICKS = [0, 25, 50, 75, 100];
+export const MASSE = {
+  labelBreite: 160,
+  balkenBreite: 560,
+  balkenHoehe: 28,
+  luecke: 12,
+  oben: 28,
+  unten: 40,
+  rechts: 48,
+  get breite() {
+    return this.labelBreite + this.balkenBreite + this.rechts;
+  },
+};
 
-const xPx = (pct) => LABEL_W + (pct / 100) * BAR_W;
+export const TEILSTRICHE = [0, 25, 50, 75, 100];
 
-/**
- * Segmente einer Zeile. Anteile unter 0.1 % fallen weg: sie wären schmaler als
- * ein Pixel und würden die Fuge zwischen zwei sichtbaren Segmenten aufreißen.
- */
-function segmente(levels = []) {
-  const segs = [];
-  let x = 0;
-  for (const lvl of levels) {
-    if (!(lvl.pct >= 0.1)) continue;
-    const w = (lvl.pct / 100) * BAR_W;
-    segs.push({ x, w, ...lvl });
-    x += w;
-  }
-  return segs;
+/** Stufe 1–5 auf die Themenvariable abbilden, wenn die Daten keine Farbe nennen. */
+export function stufenFarbe(index, eigene) {
+  if (eigene) return eigene;
+  return `var(--tba3-stufe-${Math.min(index + 1, 5)})`;
 }
 
 /**
- * @param {{rows?: Array, title?: string, domain?: string}} props
- * @returns {{breite: number, hoehe: number, svg: string, html: string}}
+ * Die vollständige Geometrie einer Leiste.
+ *
+ * @returns {{
+ *   breite: number, hoehe: number, balkenBlock: number,
+ *   teilstriche: {pct: number, x: number}[],
+ *   zeilen: {
+ *     label: string, total: (number|string), fair: boolean, y: number,
+ *     segmente: {x: number, breite: number, nameShort: string, pct: number,
+ *                farbe: string, beschriftbar: boolean}[],
+ *   }[],
+ *   legende: {nameShort: string, farbe: string, x: number}[],
+ *   legendeY: number,
+ * }}
  */
-export function kompetenzstufenLeiste(props = {}) {
-  const { rows, title, domain } = { ...STANDARD, ...props };
-  const zeilen = Array.isArray(rows) ? rows : [];
+export function geometrie(props = {}) {
+  const { rows, title } = { ...STANDARD, ...props };
+  const zeilenDaten = Array.isArray(rows) ? rows : [];
+  const m = MASSE;
 
-  const balkenBlock = zeilen.length * (BAR_H + GAP) - GAP;
-  const hoehe = PAD_TOP + Math.max(balkenBlock, 0) + PAD_BOTTOM;
-  const barY = (i) => PAD_TOP + i * (BAR_H + GAP);
+  const balkenBlock = Math.max(zeilenDaten.length * (m.balkenHoehe + m.luecke) - m.luecke, 0);
+  const hoehe = m.oben + balkenBlock + m.unten;
+  const x = (pct) => m.labelBreite + (pct / 100) * m.balkenBreite;
 
-  const raster = zeilen.length
-    ? el(
-        'g',
-        {},
-        zusammen(
-          TICKS.map((t) =>
-            zusammen(
-              leer('line', {
-                x1: xPx(t), y1: PAD_TOP - 8,
-                x2: xPx(t), y2: PAD_TOP + balkenBlock,
-                stroke: '#e2e8f0', 'stroke-width': 1,
-              }),
-              el(
-                'text',
-                {
-                  x: xPx(t), y: PAD_TOP - 11, 'text-anchor': 'middle',
-                  'font-size': 10, fill: '#94a3b8', 'font-family': SCHRIFT,
-                },
-                `${t}%`,
-              ),
-            ),
-          ),
-        ),
-      )
-    : '';
-
-  const balken = zeilen.map((row, i) => {
-    const y = barY(i);
-    const fair = Boolean(row.fair);
-
-    const beschriftung = el(
-      'text',
-      {
-        x: fair ? LABEL_W - 22 : LABEL_W - 8,
-        y: y + BAR_H / 2,
-        'text-anchor': 'end', 'dominant-baseline': 'middle',
-        'font-size': 12, fill: fair ? '#0f766e' : '#374151', 'font-family': SCHRIFT,
-      },
-      esc(row.label ?? ''),
-    );
-
-    const waage = fair
-      ? el(
-          'text',
-          {
-            x: LABEL_W - 8, y: y + BAR_H / 2,
-            'text-anchor': 'end', 'dominant-baseline': 'middle',
-            'font-size': 11, 'font-family': SCHRIFT,
-          },
-          '⚖',
-        )
-      : '';
-
-    const stuecke = segmente(row.levels).map((seg) =>
-      zusammen(
-        leer('rect', {
-          x: LABEL_W + seg.x, y, width: seg.w, height: BAR_H,
-          fill: seg.color, rx: 0, opacity: fair ? 0.8 : 1,
-        }),
+  const zeilen = zeilenDaten.map((row, i) => {
+    const y = m.oben + i * (m.balkenHoehe + m.luecke);
+    const segmente = [];
+    let lauf = 0;
+    (row.levels ?? []).forEach((lvl, j) => {
+      // Anteile unter 0.1 % wären schmaler als ein Pixel und rissen nur eine
+      // Fuge zwischen zwei sichtbaren Segmenten auf.
+      if (!(lvl.pct >= 0.1)) return;
+      const breite = (lvl.pct / 100) * m.balkenBreite;
+      segmente.push({
+        x: m.labelBreite + lauf,
+        breite,
+        nameShort: lvl.nameShort ?? '',
+        pct: lvl.pct,
+        farbe: stufenFarbe(j, lvl.color),
         // Beschriftung nur, wenn das Segment sie trägt — sonst steht die Stufe
         // über der Nachbarfarbe und ist nicht mehr zuzuordnen.
-        seg.w > 24
-          ? el(
-              'text',
-              {
-                x: LABEL_W + seg.x + seg.w / 2, y: y + BAR_H / 2,
-                'text-anchor': 'middle', 'dominant-baseline': 'middle',
-                'font-size': 10, fill: 'rgba(255,255,255,0.92)',
-                'font-weight': 600, 'font-family': SCHRIFT,
-              },
-              esc(seg.nameShort ?? ''),
-            )
-          : '',
-      ),
-    );
-
-    const rahmen = fair
-      ? leer('rect', {
-          x: LABEL_W, y, width: BAR_W, height: BAR_H,
-          fill: 'none', stroke: '#0d9488', 'stroke-width': 2,
-          'stroke-dasharray': '6,3', rx: 0,
-        })
-      : '';
-
-    const anzahl = el(
-      'text',
-      {
-        x: LABEL_W + BAR_W + 5, y: y + BAR_H / 2,
-        'dominant-baseline': 'middle', 'font-size': 10,
-        fill: '#64748b', 'font-family': SCHRIFT,
-      },
-      `n=${esc(row.total ?? '?')}`,
-    );
-
-    return el('g', {}, zusammen(beschriftung, waage, stuecke, rahmen, anzahl));
+        beschriftbar: breite > 24,
+      });
+      lauf += breite;
+    });
+    return {
+      label: row.label ?? '',
+      total: row.total ?? '?',
+      fair: Boolean(row.fair),
+      y,
+      segmente,
+    };
   });
 
-  const legendeY = PAD_TOP + Math.max(balkenBlock, 0) + 10;
-  const legende = el(
-    'g',
-    { transform: `translate(${LABEL_W}, ${kurz(legendeY)})` },
-    zusammen(
-      (zeilen[0]?.levels ?? []).map((lvl, i) =>
-        el(
-          'g',
-          { transform: `translate(${i * 90}, 0)` },
-          zusammen(
-            leer('rect', { x: 0, y: 0, width: 12, height: 12, fill: lvl.color, rx: 2 }),
-            el(
-              'text',
-              { x: 15, y: 10, 'font-size': 10, fill: '#475569', 'font-family': SCHRIFT },
-              `Stufe ${esc(lvl.nameShort ?? '')}`,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  const svg = el(
-    'svg',
-    {
-      width: SVG_W, height: hoehe, viewBox: `0 0 ${SVG_W} ${kurz(hoehe)}`,
-      xmlns: 'http://www.w3.org/2000/svg', role: 'img',
-      'aria-label': esc(title || 'Kompetenzstufenverteilung'),
-    },
-    zusammen(raster, balken, legende),
-  );
-
-  const kopf = title
-    ? el(
-        'figcaption',
-        { class: 'tba3-titel' },
-        zusammen(esc(title), domain ? el('span', { class: 'tba3-domain' }, ` — ${esc(domain)}`) : ''),
-      )
-    : '';
+  const ersteStufen = zeilenDaten[0]?.levels ?? [];
 
   return {
-    breite: SVG_W,
+    breite: m.breite,
     hoehe,
-    svg,
-    html: el('figure', { class: 'tba3-figur' }, zusammen(kopf, el('div', { class: 'tba3-scroll' }, svg))),
+    balkenBlock,
+    titel: title,
+    teilstriche: TEILSTRICHE.map((pct) => ({ pct, x: x(pct) })),
+    zeilen,
+    legende: ersteStufen.map((lvl, i) => ({
+      nameShort: lvl.nameShort ?? '',
+      farbe: stufenFarbe(i, lvl.color),
+      x: i * 90,
+    })),
+    legendeY: m.oben + balkenBlock + 10,
   };
 }
 
-export default kompetenzstufenLeiste;
+export default geometrie;

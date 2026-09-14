@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Bausteine auf echtes DOM umgebaut.** Der erste Entwurf gab fertiges SVG als
+  Zeichenkette aus; daran ließen sich keine Ereignisse hängen, und Tabellen und
+  Karten waren gar nicht zu bauen. Jetzt ist die Web Component die eine echte
+  Implementierung (echte Knoten, echte Listener, Shadow DOM), Vue und React sind
+  Hüllen darum. Tooltips, Sortierung, Klick und Tastaturbedienung funktionieren.
+- Der Kern liefert **Berechnung statt Markup** — Geometrie und aufbereitete
+  Zeilen, kein SVG.
+- Die Bausteine bringen **kein Design mehr mit**: alle Farben, Schriften und
+  Maße kommen über `--tba3-*`-Variablen mit neutralen Vorgaben. Ein Test
+  verhindert, dass eine Markenfarbe ins Paket rutscht.
+
+### Added
+- `<tba3-aufgaben-tabelle>`: sortierbare HTML-Tabelle mit echter
+  Tabellensemantik — der Baustein, der mit dem alten Ansatz nicht ging.
+- Demonstrator unter `/bausteine`: alle Bausteine in allen drei Fassungen
+  nebeneinander, mit Theme-Umschalter (FWU, neutral, hoher Kontrast, dunkel),
+  Datensatz-Wechsel und Ereignis-Protokoll.
+- Übersicht **Katalog ↔ Bausteine** auf `/bausteine`, gegen die Wirklichkeit
+  geprüft von `zuordnung.test.mjs`.
+
 ### Added
 - Design-Tokens aus dem VIDIS Design System (Figma HsHyINjx5Ll6uJfzwlBNUn) als
   `/gemeinsam/tokens.css`: Farben, Abstandsraster, Typo-Skala, Radien, Schatten

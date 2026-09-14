@@ -1,63 +1,58 @@
-// Der Anspruch des Pakets ist, dass es jede Visualisierung in drei Fassungen
-// gibt und alle drei dasselbe zeigen. Genau das prüfen diese Tests — sonst
-// driften die Fassungen auseinander und niemand merkt es.
+// Der Anspruch des Pakets: jede Visualisierung gibt es als Web Component,
+// Vue- und React-Komponente, alle drei zeigen dasselbe und reagieren gleich.
+//
+// Gegenüber dem ersten Entwurf prüfen diese Tests nicht mehr Zeichenketten,
+// sondern **gerendertes DOM und Verhalten** — Klicks, Tastatur, Sortierung,
+// Ereignisse. Genau das war der Grund für den Umbau.
 
-import { describe, it, expect } from 'vitest';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act } from 'react';
+import { createRoot } from 'react-dom/client';
 import { createElement } from 'react';
-import { renderToString } from 'vue/server-renderer';
-import { createSSRApp, h } from 'vue';
+import { createApp, h } from 'vue';
 
-import { BAUSTEINE, baustein } from '../kern/index.js';
-import { KOMPONENTEN as VUE } from '../vue/index.js';
+import { BAUPLAENE, ELEMENTE, PRAEFIX, registrieren } from '../webcomponents/index.js';
+import { KOMPONENTEN as VUE, bausteine } from '../vue/index.js';
 import { KOMPONENTEN as REACT } from '../react/index.js';
-import { ELEMENTE, registrieren } from '../webcomponents/index.js';
+import { THEMA } from '../kern/thema.js';
+import { naechsteSortierung, zeilen as tabellenZeilen } from '../kern/aufgaben-tabelle.js';
+import { geometrie as leisteGeometrie } from '../kern/kompetenzstufen-leiste.js';
 
-// Beispieldaten je Baustein — genug, um jeden Zweig einmal zu treffen
-// (faire Vergleiche, Konfidenzintervalle, Abweichungen über der Schwelle).
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+const STUFEN = [
+  { nameShort: 'I', pct: 8 }, { nameShort: 'II', pct: 22 }, { nameShort: 'III', pct: 34 },
+  { nameShort: 'IV', pct: 24 }, { nameShort: 'V', pct: 12 },
+];
+
 const DATEN = {
   'kompetenzstufen-leiste': {
     title: '3a Deutsch',
-    domain: 'Lesen',
     rows: [
-      {
-        label: 'Klasse 3a',
-        total: 25,
-        levels: [
-          { nameShort: 'I', pct: 8, color: '#ef4444' },
-          { nameShort: 'II', pct: 22, color: '#f97316' },
-          { nameShort: 'III', pct: 34, color: '#eab308' },
-          { nameShort: 'IV', pct: 24, color: '#22c55e' },
-          { nameShort: 'V', pct: 12, color: '#15803d' },
-        ],
-      },
-      {
-        label: 'Fairer Vergleich',
-        total: 480,
-        fair: true,
-        levels: [
-          { nameShort: 'I', pct: 10, color: '#ef4444' },
-          { nameShort: 'II', pct: 20, color: '#f97316' },
-          { nameShort: 'III', pct: 35, color: '#eab308' },
-          { nameShort: 'IV', pct: 25, color: '#22c55e' },
-          { nameShort: 'V', pct: 10, color: '#15803d' },
-        ],
-      },
+      { label: 'Klasse 3a', total: 25, levels: STUFEN },
+      { label: 'Fairer Vergleich', total: 480, fair: true, levels: STUFEN },
+    ],
+  },
+  'aufgaben-tabelle': {
+    title: 'Aufgaben',
+    items: [
+      { label: 'LE-026', exercise: 'Geheimsache', level: 'II', actual: 41, expected: 63 },
+      { label: 'LE-027', exercise: 'Ausflug', level: 'IV', actual: 88, expected: 72 },
+      { label: 'LE-028', exercise: 'Brief', level: 'III', actual: 60, expected: 58 },
     ],
   },
   'mittelwert-vergleich': {
-    title: 'Mittlere Lösungsquote',
+    title: 'Mittelwerte',
     rows: [
       { label: 'Klasse 3a', mean: 62, ciLow: 55, ciHigh: 69, n: 25 },
       { label: 'Fairer Vergleich', mean: 58, fair: true, n: 480 },
     ],
   },
   'erwartet-tatsaechlich': {
-    title: 'Aufgaben im Vergleich zur Erwartung',
+    title: 'Erwartung',
     items: [
       { label: 'LE-026', level: 'II', actual: 41, expected: 63 },
       { label: 'LE-027', level: 'IV', actual: 88, expected: 72 },
-      { label: 'LE-028', level: 'III', actual: 60, expected: 58 },
     ],
   },
   perzentilbaender: {
@@ -65,163 +60,344 @@ const DATEN = {
     items: [
       { label: 'Lesen', bandLeft: 35, bandRight: 70, studentScore: 52 },
       { label: 'Zuhören', bandLeft: 40, bandRight: 75, studentScore: null },
-      { label: 'Orthografie', bandLeft: 30, bandRight: 65, studentScore: 81 },
     ],
   },
 };
 
-/**
- * Nur das SVG vergleichen: die Umhüllung unterscheidet sich je Adapter.
- *
- * Alle drei Fassungen laufen durch dieselbe DOM-Normalisierung. Ohne das
- * vergliche man Schreibweisen statt Inhalt: der Weg über innerHTML (Web
- * Component) macht aus `<rect/>` ein `<rect></rect>`, Vue setzt
- * Kommentaranker, React lässt Leerzeichen anders stehen — alles Unterschiede,
- * die im gerenderten Bild nicht vorkommen.
- */
-const nurSvg = (markup) => {
-  const treffer = String(markup).match(/<svg[\s\S]*<\/svg>/);
-  if (!treffer) return '';
-  const huelle = document.createElement('div');
-  huelle.innerHTML = treffer[0].replace(/<!--[\s\S]*?-->/g, '');
-  return huelle.innerHTML.replace(/\s+/g, ' ').trim();
-};
+const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());
 
-describe('Bausteine — Verzeichnis', () => {
-  it('führt jeden Baustein mit Namen, Titel, Endpunkt und Bauplan', () => {
-    expect(BAUSTEINE.length).toBeGreaterThan(0);
-    for (const b of BAUSTEINE) {
+/** Ein Element anlegen, in den Baum hängen und Eigenschaften setzen. */
+function element(name, props) {
+  registrieren();
+  const el = document.createElement(PRAEFIX + name);
+  document.body.append(el);
+  if (props) el.props = props;
+  return el;
+}
+
+/** Klick auslösen. SVG-Elemente haben in jsdom kein .click(); im Browser
+ *  schon — deshalb hier immer das echte Ereignis. */
+const klicken = (el) => el.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+
+/** Auf das zusammengefasste Neuzeichnen warten (queueMicrotask). */
+const gezeichnet = () => new Promise((r) => queueMicrotask(r));
+
+/** Vergleichbares Abbild: Struktur und sichtbarer Text, ohne Schreibweisen. */
+function abbild(wurzel) {
+  const ziel = wurzel.querySelector('figure, table, div');
+  const knoten = ziel ?? wurzel;
+  return knoten.outerHTML.replace(/\s+/g, ' ').trim();
+}
+
+beforeEach(() => {
+  document.body.replaceChildren();
+});
+
+describe('Verzeichnis', () => {
+  it('führt jeden Baustein mit Namen, Titel, Endpunkt, Standard und Bauplan', () => {
+    expect(BAUPLAENE.length).toBeGreaterThanOrEqual(5);
+    for (const b of BAUPLAENE) {
       expect(b.name).toMatch(/^[a-zäöüß]+(-[a-zäöüß]+)*$/);
       expect(b.titel).toBeTruthy();
       expect(b.endpunkt).toBeTruthy();
-      expect(typeof b.bauen).toBe('function');
       expect(b.standard).toBeTypeOf('object');
+      expect(b.aufbauen).toBeTypeOf('function');
+      expect(Array.isArray(b.ereignisse)).toBe(true);
     }
-  });
-
-  it('meldet einen unbekannten Namen, statt undefined zurückzugeben', () => {
-    expect(() => baustein('gibt-es-nicht')).toThrow(/Unbekannter Baustein/);
   });
 
   it('hat für jeden Baustein alle drei Fassungen', () => {
-    for (const b of BAUSTEINE) {
-      const pascal = b.name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());
-      expect(VUE[pascal], `Vue: ${b.name}`).toBeTypeOf('object');
-      expect(REACT[pascal], `React: ${b.name}`).toBeTypeOf('function');
-      expect(ELEMENTE[`tba3-${b.name}`], `Web Component: ${b.name}`).toBeTypeOf('function');
+    for (const b of BAUPLAENE) {
+      const name = pascal(b.name);
+      expect(VUE[name], `Vue: ${b.name}`).toBeTypeOf('object');
+      expect(REACT[name], `React: ${b.name}`).toBeTypeOf('function');
+      expect(ELEMENTE[PRAEFIX + b.name], `Web Component: ${b.name}`).toBeTypeOf('function');
+    }
+  });
+
+  it('hat für jeden Baustein Beispieldaten im Test', () => {
+    for (const b of BAUPLAENE) expect(DATEN[b.name], b.name).toBeDefined();
+  });
+});
+
+describe('Kern — reine Berechnung', () => {
+  it('liefert Geometrie, keine Zeichenkette', () => {
+    const g = leisteGeometrie(DATEN['kompetenzstufen-leiste']);
+    expect(g.breite).toBeGreaterThan(0);
+    expect(g.zeilen).toHaveLength(2);
+    expect(g.zeilen[0].segmente).toHaveLength(5);
+    // Segmente liegen lückenlos nebeneinander
+    const s = g.zeilen[0].segmente;
+    for (let i = 1; i < s.length; i++) {
+      expect(s[i].x).toBeCloseTo(s[i - 1].x + s[i - 1].breite, 5);
+    }
+  });
+
+  it('sortiert stabil und schiebt leere Werte ans Ende', () => {
+    const daten = {
+      items: [
+        { label: 'A', actual: 50, expected: 50 },
+        { label: 'B', actual: 90 },
+        { label: 'C', actual: 50, expected: 30 },
+      ],
+      sortierung: 'delta', richtung: 'ab',
+    };
+    const z = tabellenZeilen(daten);
+    expect(z.map((r) => r.label)).toEqual(['C', 'A', 'B']);
+    expect(z.at(-1).delta).toBeNull();
+  });
+
+  it('schaltet die Sortierrichtung sinnvoll um', () => {
+    // Zahlen zuerst absteigend — „die auffälligsten zuerst" ist beim Klick
+    // auf eine Kennzahl fast immer gemeint.
+    expect(naechsteSortierung('position', 'auf', 'actual')).toEqual({ sortierung: 'actual', richtung: 'ab' });
+    expect(naechsteSortierung('position', 'auf', 'exercise')).toEqual({ sortierung: 'exercise', richtung: 'auf' });
+    expect(naechsteSortierung('actual', 'ab', 'actual')).toEqual({ sortierung: 'actual', richtung: 'auf' });
+  });
+
+  it('kommt ohne Daten aus, statt zu werfen', () => {
+    for (const b of BAUPLAENE) {
+      const el = element(b.name);
+      expect(el.shadowRoot.textContent).toBeTruthy();
+      el.remove();
     }
   });
 });
 
-describe('Bausteine — Kern', () => {
-  for (const b of BAUSTEINE) {
-    it(`${b.name}: liefert Maße und wohlgeformtes SVG`, () => {
-      const { breite, hoehe, svg, html } = b.bauen(DATEN[b.name]);
-      expect(breite).toBeGreaterThan(0);
-      expect(hoehe).toBeGreaterThan(0);
-      expect(svg.startsWith('<svg ')).toBe(true);
-      expect(svg.endsWith('</svg>')).toBe(true);
-      expect(html).toContain('<figure');
-      // Keine offenen Platzhalter, keine NaN-Koordinaten
-      expect(svg).not.toMatch(/NaN|undefined|\[object/);
-    });
-
-    it(`${b.name}: kommt ohne Daten aus, statt zu werfen`, () => {
-      expect(() => b.bauen()).not.toThrow();
-      expect(() => b.bauen({})).not.toThrow();
-      const { svg } = b.bauen({});
-      expect(svg).not.toMatch(/NaN|undefined/);
-    });
-  }
-
-  it('entschärft Text aus den Daten, statt ihn als Markup zu setzen', () => {
-    const { svg } = baustein('kompetenzstufen-leiste').bauen({
-      rows: [{ label: '<script>böse()</script>', total: 1, levels: [] }],
-    });
-    expect(svg).not.toContain('<script>');
-    expect(svg).toContain('&lt;script&gt;');
+describe('Web Component — echtes DOM statt Zeichenkette', () => {
+  it('baut echte Knoten, an denen Ereignisse hängen können', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const segmente = el.shadowRoot.querySelectorAll('.balken-segment');
+    expect(segmente.length).toBe(10); // 2 Zeilen × 5 Stufen
+    expect(segmente[0].namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect(segmente[0].getAttribute('tabindex')).toBe('0');
   });
-});
 
-describe('Bausteine — die drei Fassungen zeigen dasselbe', () => {
-  for (const b of BAUSTEINE) {
-    const pascal = b.name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());
+  it('meldet einen Klick auf ein Segment nach außen', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const gehoert = vi.fn();
+    el.addEventListener('stufe-gewaehlt', (e) => gehoert(e.detail));
+    klicken(el.shadowRoot.querySelectorAll('.balken-segment')[2]);
+    expect(gehoert).toHaveBeenCalledOnce();
+    expect(gehoert.mock.calls[0][0]).toMatchObject({ zeile: 0, index: 2, nameShort: 'III' });
+  });
 
-    it(`${b.name}: Vue, React und Web Component rendern dasselbe SVG`, async () => {
-      const daten = DATEN[b.name];
-      const erwartet = nurSvg(b.bauen(daten).html);
-      expect(erwartet).not.toBe('');
+  it('lässt sich mit der Tastatur bedienen', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const gehoert = vi.fn();
+    el.addEventListener('stufe-gewaehlt', gehoert);
+    el.shadowRoot.querySelector('.balken-segment')
+      .dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(gehoert).toHaveBeenCalledOnce();
+  });
 
-      // React
-      const react = nurSvg(renderToStaticMarkup(createElement(REACT[pascal], daten)));
+  it('sortiert die Tabelle beim Klick auf eine Spalte', async () => {
+    const el = element('aufgaben-tabelle', DATEN['aufgaben-tabelle']);
+    await gezeichnet();
+    const kennungen = () =>
+      [...el.shadowRoot.querySelectorAll('tbody .kennung')].map((td) => td.textContent);
 
-      // Vue
-      const app = createSSRApp({ render: () => h(VUE[pascal], daten) });
-      const vue = nurSvg(await renderToString(app));
+    expect(kennungen()).toEqual(['LE-026', 'LE-027', 'LE-028']);
 
-      // Web Component
-      registrieren();
-      const el = document.createElement(`tba3-${b.name}`);
-      document.body.appendChild(el);
-      el.props = daten;
-      const web = nurSvg(el.shadowRoot.innerHTML);
-      el.remove();
+    const gehoert = vi.fn();
+    el.addEventListener('sortiert', (e) => gehoert(e.detail));
+    // Spalte „Lösungsquote" — Index 3
+    el.shadowRoot.querySelectorAll('thead .sortknopf')[3].click();
+    await gezeichnet();
 
-      expect(react, 'React weicht ab').toBe(erwartet);
-      expect(vue, 'Vue weicht ab').toBe(erwartet);
-      expect(web, 'Web Component weicht ab').toBe(erwartet);
-    });
-  }
-});
+    expect(gehoert).toHaveBeenCalledWith({ sortierung: 'actual', richtung: 'ab' });
+    expect(kennungen()).toEqual(['LE-027', 'LE-028', 'LE-026']);
 
-describe('Bausteine — Web Component', () => {
-  it('nimmt Daten über Eigenschaften entgegen und zeichnet neu', () => {
-    registrieren();
-    const el = document.createElement('tba3-kompetenzstufen-leiste');
-    document.body.appendChild(el);
+    el.shadowRoot.querySelectorAll('thead .sortknopf')[3].click();
+    await gezeichnet();
+    expect(kennungen()).toEqual(['LE-026', 'LE-028', 'LE-027']);
+  });
 
-    expect(el.shadowRoot.innerHTML).toContain('<svg');
+  it('gibt der Tabelle echte Tabellensemantik', async () => {
+    const el = element('aufgaben-tabelle', { ...DATEN['aufgaben-tabelle'], sortierung: 'actual' });
+    await gezeichnet();
+    expect(el.shadowRoot.querySelector('table')).toBeTruthy();
+    expect(el.shadowRoot.querySelectorAll('th[scope="col"]').length).toBeGreaterThan(0);
+    expect(el.shadowRoot.querySelector('th[aria-sort]')).toBeTruthy();
+  });
 
+  it('fasst mehrere Zuweisungen zu einem Zeichnen zusammen', async () => {
+    const el = element('kompetenzstufen-leiste');
+    await gezeichnet();
+    const vorher = el.shadowRoot.querySelector('figure');
     el.rows = DATEN['kompetenzstufen-leiste'].rows;
-    expect(el.shadowRoot.innerHTML).toContain('n=25');
-
-    el.rows = [{ label: 'Andere', total: 7, levels: [] }];
-    expect(el.shadowRoot.innerHTML).toContain('n=7');
-    expect(el.shadowRoot.innerHTML).not.toContain('n=25');
-
-    el.remove();
-  });
-
-  it('liest einfache Angaben auch aus Attributen', () => {
-    registrieren();
-    const el = document.createElement('tba3-kompetenzstufen-leiste');
-    el.setAttribute('title', 'Aus dem Attribut');
-    document.body.appendChild(el);
-    expect(el.shadowRoot.innerHTML).toContain('Aus dem Attribut');
-    el.remove();
+    el.title = 'Neu';
+    el.domain = 'Lesen';
+    // Noch nicht neu gezeichnet — erst im Microtask
+    expect(el.shadowRoot.querySelector('figure')).toBe(vorher);
+    await gezeichnet();
+    expect(el.shadowRoot.querySelector('figcaption').textContent).toContain('Neu');
   });
 
   it('nimmt Daten als JSON im Attribut, für Seiten ohne eigenes Skript', () => {
     registrieren();
     const el = document.createElement('tba3-perzentilbaender');
     el.setAttribute('items', JSON.stringify([{ label: 'Lesen', bandLeft: 10, bandRight: 90 }]));
-    document.body.appendChild(el);
-    expect(el.shadowRoot.innerHTML).toContain('Lesen');
-    el.remove();
+    document.body.append(el);
+    expect(el.shadowRoot.textContent).toContain('Lesen');
   });
 
   it('überlebt ungültiges JSON im Attribut', () => {
     registrieren();
     const el = document.createElement('tba3-perzentilbaender');
     el.setAttribute('items', '{kaputt');
-    expect(() => document.body.appendChild(el)).not.toThrow();
-    expect(el.shadowRoot.innerHTML).toContain('<svg');
-    el.remove();
+    expect(() => document.body.append(el)).not.toThrow();
+    expect(el.shadowRoot.querySelector('svg, .leer')).toBeTruthy();
+  });
+
+  it('setzt Text als Text, nicht als Markup', async () => {
+    const el = element('kompetenzstufen-leiste', {
+      rows: [{ label: '<script>böse()</script>', total: 1, levels: [] }],
+    });
+    await gezeichnet();
+    expect(el.shadowRoot.querySelector('script')).toBeNull();
+    expect(el.shadowRoot.textContent).toContain('<script>');
   });
 
   it('lässt sich mehrfach registrieren, ohne zu werfen', () => {
     registrieren();
     expect(() => registrieren()).not.toThrow();
     expect(registrieren()).toEqual([]);
+  });
+});
+
+describe('Thema — neutral und überschreibbar', () => {
+  it('bringt für jede Variable einen Rückfallwert mit', () => {
+    for (const [name, wert] of Object.entries(THEMA)) {
+      expect(name.startsWith('--tba3-'), name).toBe(true);
+      expect(String(wert).length).toBeGreaterThan(0);
+    }
+  });
+
+  it('enthält keine Markenfarbe einer bestimmten Seite', () => {
+    // Die Bausteine sollen überall einsetzbar sein — VIDIS-Blau gehört in die
+    // umgebende Seite, nicht in die Bibliothek.
+    const werte = Object.values(THEMA).join(' ').toLowerCase();
+    expect(werte).not.toContain('#0000c4');
+  });
+
+  it('schreibt die Rückfallwerte ins Shadow DOM, wo die Seite sie überschreiben kann', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const stil = el.shadowRoot.querySelector('style').textContent;
+    expect(stil).toContain('--tba3-stufe-1');
+    expect(stil).toContain(':host');
+  });
+});
+
+describe('Die drei Fassungen zeigen dasselbe', () => {
+  for (const bauplan of BAUPLAENE) {
+    it(`${bauplan.name}: Web Component, Vue und React rendern gleich`, async () => {
+      const daten = DATEN[bauplan.name];
+      const name = pascal(bauplan.name);
+
+      // Web Component
+      const direkt = element(bauplan.name, daten);
+      await gezeichnet();
+      const erwartet = abbild(direkt.shadowRoot);
+      expect(erwartet.length).toBeGreaterThan(50);
+
+      // Vue
+      const vueHost = document.createElement('div');
+      document.body.append(vueHost);
+      const app = createApp({ render: () => h(VUE[name], daten) });
+      app.use(bausteine);
+      app.mount(vueHost);
+      await gezeichnet();
+      const vueEl = vueHost.querySelector(PRAEFIX + bauplan.name);
+      expect(abbild(vueEl.shadowRoot), 'Vue weicht ab').toBe(erwartet);
+
+      // React
+      const reactHost = document.createElement('div');
+      document.body.append(reactHost);
+      const root = createRoot(reactHost);
+      await act(async () => {
+        root.render(createElement(REACT[name], daten));
+      });
+      await gezeichnet();
+      const reactEl = reactHost.querySelector(PRAEFIX + bauplan.name);
+      expect(abbild(reactEl.shadowRoot), 'React weicht ab').toBe(erwartet);
+
+      app.unmount();
+      await act(async () => root.unmount());
+    });
+  }
+});
+
+describe('Die Hüllen reichen Ereignisse durch', () => {
+  it('Vue: @stufe-gewaehlt kommt an', async () => {
+    const gehoert = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({
+      render: () =>
+        h(VUE.KompetenzstufenLeiste, {
+          ...DATEN['kompetenzstufen-leiste'],
+          onStufeGewaehlt: gehoert,
+        }),
+    });
+    app.use(bausteine);
+    app.mount(host);
+    await gezeichnet();
+
+    klicken(host.querySelector('tba3-kompetenzstufen-leiste')
+      .shadowRoot.querySelector('.balken-segment'));
+
+    expect(gehoert).toHaveBeenCalledOnce();
+    expect(gehoert.mock.calls[0][0]).toMatchObject({ nameShort: 'I' });
+    app.unmount();
+  });
+
+  it('React: onAufgabeGewaehlt kommt an', async () => {
+    const gehoert = vi.fn();
+    const host = document.createElement('div');
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () => {
+      root.render(
+        createElement(REACT.AufgabenTabelle, {
+          ...DATEN['aufgaben-tabelle'],
+          onAufgabeGewaehlt: gehoert,
+        }),
+      );
+    });
+    await gezeichnet();
+
+    host.querySelector('tba3-aufgaben-tabelle')
+      .shadowRoot.querySelector('tbody tr').click();
+
+    expect(gehoert).toHaveBeenCalledOnce();
+    expect(gehoert.mock.calls[0][0]).toMatchObject({ label: 'LE-026' });
+    await act(async () => root.unmount());
+  });
+
+  it('Vue: geänderte Daten erreichen das Element als Eigenschaft, nicht als Attribut', async () => {
+    const host = document.createElement('div');
+    document.body.append(host);
+    const zustand = { rows: DATEN['kompetenzstufen-leiste'].rows };
+    const app = createApp({
+      data: () => zustand,
+      render() {
+        return h(VUE.KompetenzstufenLeiste, { rows: this.rows });
+      },
+    });
+    app.use(bausteine);
+    app.mount(host);
+    await gezeichnet();
+
+    const el = host.querySelector('tba3-kompetenzstufen-leiste');
+    // Als Attribut wäre daraus "[object Object]" geworden
+    expect(el.getAttribute('rows')).toBeNull();
+    expect(Array.isArray(el.rows)).toBe(true);
+    expect(el.shadowRoot.querySelectorAll('.balken-segment').length).toBe(10);
+    app.unmount();
   });
 });
