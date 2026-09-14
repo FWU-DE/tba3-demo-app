@@ -180,6 +180,8 @@
       flex-wrap: wrap;
     }
     footer a { color: var(--grau); }
+    footer a:hover { color: var(--tinte); }
+    footer .rechtliches { display: flex; gap: 16px; }
   </style>
 </head>
 <body>
@@ -231,6 +233,14 @@
   <span lang="en">FWU — TBA3 project</span>
   <span lang="de">Prototypen mit Beispieldaten, keine echten Testergebnisse.</span>
   <span lang="en">Prototypes with sample data, not real test results.</span>
+  <!-- Impressum und Datenschutz liegen beim Betreiber auf softwarehub.schule;
+       diese Seite führt keine eigenen. -->
+  <span class="rechtliches">
+    <a href="https://softwarehub.schule/impressum" lang="de">Impressum</a>
+    <a href="https://softwarehub.schule/impressum" lang="en">Legal notice</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="de">Datenschutz</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="en">Privacy</a>
+  </span>
 </footer>
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>

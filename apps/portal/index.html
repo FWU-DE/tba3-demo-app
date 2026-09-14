@@ -39,7 +39,19 @@
     html[lang="en"] [lang="de"] { display: none; }
 
     /* ── Aufmacher ─────────────────────────────────────────── */
-    .hero { padding-block: 72px 40px; max-width: 720px; }
+    .hero {
+      padding-block: 72px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 660px) minmax(0, 1fr);
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-text { max-width: 720px; }
+    /* Unter 900px steht die Illustration unter dem Text statt daneben; ganz
+       weglassen wäre schade, sie erklärt die Seite in einem Blick. */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 32px; }
+    }
     .hero h1 {
       font-size: clamp(30px, 5vw, 44px);
       line-height: 1.15;
@@ -56,6 +68,86 @@
       border: 1px solid var(--linie);
       border-radius: 6px;
       padding: 1px 6px;
+    }
+
+    /* ── Illustration im Aufmacher ─────────────────────────
+     *
+     * Zeigt in einem Bild, worum es auf der Seite geht: ein Endpunkt der
+     * Schnittstelle geht rein, eine Kompetenzstufenverteilung kommt raus.
+     * Die Balken wechseln zwischen zwei echten Verteilungen aus den
+     * Beispieldaten — es soll nach Daten aussehen, nicht nach Dekoration.
+     *
+     * Reines SVG mit CSS-Animation, kein Skript und kein Bild: die Seite
+     * lädt nichts nach und die Illustration bleibt bei jeder Breite scharf.
+     */
+    .hero-bild { width: 100%; }
+    .hero-bild svg { width: 100%; height: auto; display: block; }
+
+    .ill-karte { fill: #fff; stroke: var(--linie); }
+    .ill-chip { fill: var(--flaeche); stroke: var(--linie); }
+    .ill-pfad {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      fill: var(--blau);
+    }
+    .ill-titel { font-size: 13px; font-weight: 650; fill: var(--tinte); }
+    .ill-achse { stroke: var(--linie); }
+    .ill-marke { font-size: 11px; fill: var(--grau); }
+
+    .ill-leitung { stroke: var(--linie); stroke-width: 2; fill: none; }
+    .ill-tropfen { fill: var(--blau); animation: ill-fliessen 2.1s linear infinite; }
+    .ill-tropfen:nth-of-type(2) { animation-delay: .7s; }
+    .ill-tropfen:nth-of-type(3) { animation-delay: 1.4s; }
+
+    @keyframes ill-fliessen {
+      0%   { transform: translateY(0);    opacity: 0; }
+      12%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(52px); opacity: 0; }
+    }
+
+    /* Die Balken wachsen beim Laden auf und wechseln dann zwischen zwei
+       Verteilungen. transform-box: fill-box lässt scaleY an der Grundlinie
+       ansetzen, ohne dass je Balken ein eigener transform-origin nötig wäre. */
+    .ill-balken rect {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: 14s ease-in-out infinite;
+    }
+    /* Die Höhe steht auch ohne Animation da: läuft sie nicht — abgestellte
+       Bewegung, älterer Browser, Screenshot-Werkzeug — steht trotzdem eine
+       vollständige Verteilung im Bild statt einer leeren Grundlinie. */
+    .ill-balken rect:nth-of-type(1) { fill: #ef4444; transform: scaleY(.24); animation-name: ill-s1; }
+    .ill-balken rect:nth-of-type(2) { fill: #f97316; transform: scaleY(.65); animation-name: ill-s2; animation-delay: .08s; }
+    .ill-balken rect:nth-of-type(3) { fill: #eab308; transform: scaleY(1);   animation-name: ill-s3; animation-delay: .16s; }
+    .ill-balken rect:nth-of-type(4) { fill: #22c55e; transform: scaleY(.71); animation-name: ill-s4; animation-delay: .24s; }
+    .ill-balken rect:nth-of-type(5) { fill: #16a34a; transform: scaleY(.35); animation-name: ill-s5; animation-delay: .32s; }
+
+    @keyframes ill-s1 {
+      0% { transform: scaleY(0); } 10%, 42% { transform: scaleY(.24); }
+      54%, 86% { transform: scaleY(.18); } 96%, 100% { transform: scaleY(.24); }
+    }
+    @keyframes ill-s2 {
+      0% { transform: scaleY(0); } 10%, 42% { transform: scaleY(.65); }
+      54%, 86% { transform: scaleY(.44); } 96%, 100% { transform: scaleY(.65); }
+    }
+    @keyframes ill-s3 {
+      0% { transform: scaleY(0); } 10%, 42% { transform: scaleY(1); }
+      54%, 86% { transform: scaleY(.94); } 96%, 100% { transform: scaleY(1); }
+    }
+    @keyframes ill-s4 {
+      0% { transform: scaleY(0); } 10%, 42% { transform: scaleY(.71); }
+      54%, 86% { transform: scaleY(1); } 96%, 100% { transform: scaleY(.71); }
+    }
+    @keyframes ill-s5 {
+      0% { transform: scaleY(0); } 10%, 42% { transform: scaleY(.35); }
+      54%, 86% { transform: scaleY(.63); } 96%, 100% { transform: scaleY(.35); }
+    }
+
+    /* Wer Bewegung abgestellt hat, bekommt dasselbe Bild ohne Animation. */
+    @media (prefers-reduced-motion: reduce) {
+      .ill-tropfen { animation: none; opacity: .55; }
+      .ill-balken rect { animation: none; }
     }
 
     /* ── Karten ────────────────────────────────────────────── */
@@ -196,6 +288,8 @@
       flex-wrap: wrap;
     }
     footer a { color: var(--grau); }
+    footer a:hover { color: var(--tinte); }
+    footer .rechtliches { display: flex; gap: 16px; }
   </style>
 </head>
 <body>
@@ -205,6 +299,7 @@
 <main class="wrap">
 
   <section class="hero">
+   <div class="hero-text">
     <h1 lang="de">Rückmeldungen aus VERA-Daten — von der Schnittstelle bis zur fertigen Ansicht</h1>
     <h1 lang="en">Reports from VERA data — from the API to the finished view</h1>
     <p lang="de">
@@ -225,6 +320,41 @@
     <p class="spec-hinweis" lang="en">
       Every view speaks the same API — <code>/groups</code>, <code>/schools</code>, <code>/states</code>.
     </p>
+   </div>
+
+   <!-- Illustration: Endpunkt rein, Kompetenzstufenverteilung raus. Rein
+        dekorativ im Sinne der Zugänglichkeit — alles, was sie sagt, steht
+        als Text daneben, deshalb aria-hidden. -->
+   <div class="hero-bild" aria-hidden="true">
+    <svg viewBox="0 0 420 320" role="presentation" focusable="false">
+      <rect class="ill-chip" x="14" y="12" width="330" height="36" rx="10"/>
+      <text class="ill-pfad" x="30" y="35">GET /groups/{id}/competence-levels</text>
+
+      <path class="ill-leitung" d="M 52 48 V 100"/>
+      <circle class="ill-tropfen" cx="52" cy="48" r="3.5"/>
+      <circle class="ill-tropfen" cx="52" cy="48" r="3.5"/>
+      <circle class="ill-tropfen" cx="52" cy="48" r="3.5"/>
+
+      <rect class="ill-karte" x="14" y="100" width="392" height="206" rx="16"/>
+      <text class="ill-titel" x="34" y="128" lang="de">Kompetenzstufen der Lerngruppe</text>
+      <text class="ill-titel" x="34" y="128" lang="en">Competence levels of the group</text>
+
+      <g class="ill-balken">
+        <rect x="42"  y="148" width="44" height="112"/>
+        <rect x="110" y="148" width="44" height="112"/>
+        <rect x="178" y="148" width="44" height="112"/>
+        <rect x="246" y="148" width="44" height="112"/>
+        <rect x="314" y="148" width="44" height="112"/>
+      </g>
+
+      <line class="ill-achse" x1="34" y1="260.5" x2="386" y2="260.5"/>
+      <text class="ill-marke" x="64"  y="280" text-anchor="middle">I</text>
+      <text class="ill-marke" x="132" y="280" text-anchor="middle">II</text>
+      <text class="ill-marke" x="200" y="280" text-anchor="middle">III</text>
+      <text class="ill-marke" x="268" y="280" text-anchor="middle">IV</text>
+      <text class="ill-marke" x="336" y="280" text-anchor="middle">V</text>
+    </svg>
+   </div>
   </section>
 
   <section class="karten">
@@ -446,6 +576,14 @@
   <span lang="en">FWU — TBA3 project</span>
   <span lang="de">Prototypen mit Beispieldaten, keine echten Testergebnisse.</span>
   <span lang="en">Prototypes with sample data, not real test results.</span>
+  <!-- Impressum und Datenschutz liegen beim Betreiber auf softwarehub.schule;
+       diese Seite führt keine eigenen. -->
+  <span class="rechtliches">
+    <a href="https://softwarehub.schule/impressum" lang="de">Impressum</a>
+    <a href="https://softwarehub.schule/impressum" lang="en">Legal notice</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="de">Datenschutz</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="en">Privacy</a>
+  </span>
 </footer>
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>
