@@ -394,6 +394,42 @@ describe('Thema — neutral, überschreibbar, mit Dark Mode', () => {
     }
   });
 
+  // Eine Klammer zu viel macht aus `var(--x))` einen ungültigen Wert — und ein
+  // ungültiger Wert ist in SVG nicht leer, sondern schwarz. Genau so stand
+  // `<tba3-perzentilbaender>` eine Weile als schwarzer Block auf `/bausteine`:
+  // kein Fehler in der Konsole, kein fehlschlagender Test, nur ein Baustein,
+  // der aussah wie ein Loch. Geprüft wird beides — die Attribute im
+  // gezeichneten DOM und die Deklarationen im Stilblock.
+  it('lässt keine unausgeglichene Klammer in einem Wert stehen', async () => {
+    const unausgeglichen = (wert) => {
+      let tiefe = 0;
+      for (const zeichen of wert) {
+        if (zeichen === '(') tiefe += 1;
+        else if (zeichen === ')') tiefe -= 1;
+        if (tiefe < 0) return true;
+      }
+      return tiefe !== 0;
+    };
+
+    const befunde = [];
+    for (const b of BAUPLAENE) {
+      const el = element(b.name, DATEN[b.name]);
+      await gezeichnet();
+      const stil = el.shadowRoot.querySelector('style').textContent;
+      const markup = el.shadowRoot.innerHTML.replace(/<style>[\s\S]*?<\/style>/, '');
+
+      for (const treffer of markup.matchAll(/="([^"]*var\([^"]*)"/g)) {
+        if (unausgeglichen(treffer[1])) befunde.push(`${b.name}: ${treffer[1]}`);
+      }
+      for (const treffer of stil.matchAll(/:\s*([^;{}]*var\([^;{}]*)/g)) {
+        if (unausgeglichen(treffer[1])) befunde.push(`${b.name}: ${treffer[1].trim()}`);
+      }
+      el.remove();
+    }
+
+    expect(befunde).toEqual([]);
+  });
+
   it('bringt einen Dark-Mode-Block mit', async () => {
     const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
     await gezeichnet();
