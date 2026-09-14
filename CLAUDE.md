@@ -41,8 +41,13 @@ apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
 apps/beispiele/     Rückmeldungsbeispiele — statisches HTML, unter /beispiele
 apps/shared/        Navigationsleiste, Sprachwahl, Containerregel → /gemeinsam/
-packages/bausteine/ Die Visualisierungen als Web Component, Vue- und React-Komponente
-                    (@tba3/bausteine) — ein Kern, drei Adapter, → /bausteine/
+apps/portal/bausteine/
+                    Demonstrator: alle Bausteine in allen drei Fassungen, mit
+                    Theme-Umschalter und der Zuordnung Katalog ↔ Bausteine
+packages/bausteine/ Die Visualisierungen als native Web Component, Vue- und
+                    React-Komponente (@tba3/bausteine). Kern = Berechnung,
+                    Web Component = die eine Implementierung, Vue/React = Hüllen.
+                    → /bausteine/
 api/                Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
 data/material-fixtures.mjs

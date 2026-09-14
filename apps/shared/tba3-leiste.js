@@ -20,6 +20,7 @@ const BEREICHE = [
   { id: 'portal',        text: { de: 'Übersicht',     en: 'Overview' },   pfad: '/' },
   { id: 'demo',          text: { de: 'Demoanwendung', en: 'Demo app' },   pfad: '/demo' },
   { id: 'katalog',       text: { de: 'Komponenten',   en: 'Components' }, pfad: '/katalog' },
+  { id: 'bausteine',     text: { de: 'Bausteine',     en: 'Blocks' },     pfad: '/bausteine' },
   { id: 'beispiele',     text: { de: 'Rückmeldungen', en: 'Reports' },    pfad: '/beispiele' },
   { id: 'dokumentation', text: { de: 'Dokumentation', en: 'Docs' },       pfad: '/dokumentation' },
   { id: 'schnittstelle', text: { de: 'Schnittstelle', en: 'API' },        pfad: '/schnittstelle' },

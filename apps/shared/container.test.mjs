@@ -24,6 +24,7 @@ const SEITEN = [
   'apps/portal/schnittstelle/index.html',
   'apps/beispiele/index.html',
   'apps/katalog/index.html',
+  'apps/portal/bausteine/index.html',
 ];
 
 describe('container.css', () => {

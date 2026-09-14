@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bausteine — TBA3</title>
+  <meta name="description" content="Die TBA3-Visualisierungen als Web Component, Vue- und React-Komponente. Themebar, ohne Abhängigkeiten." />
+  <link rel="stylesheet" href="/gemeinsam/tokens.css" />
+  <link rel="stylesheet" href="/gemeinsam/container.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--schrift);
+      color: var(--farbe-text);
+      background: var(--farbe-grund);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    html[lang="de"] [lang="en"] { display: none; }
+    html[lang="en"] [lang="de"] { display: none; }
+
+    .hero { padding-block: 56px 24px; max-width: 760px; }
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15;
+      letter-spacing: -0.022em; margin: 0 0 16px;
+    }
+    .hero p { font-size: 17px; margin: 0 0 12px; }
+    code, .mono { font-family: var(--schrift-mono); font-size: 0.9em; }
+    .code-chip {
+      background: var(--farbe-grund-gedaempft); border: 1px solid var(--farbe-linie);
+      border-radius: var(--radius-s); padding: 1px 6px;
+    }
+
+    /* ── Werkzeugleiste ─────────────────────────────────────── */
+    .werkzeuge {
+      display: flex; flex-wrap: wrap; gap: var(--abstand-lg);
+      align-items: flex-end;
+      padding: var(--abstand-md) var(--abstand-lg);
+      border: 1px solid var(--farbe-linie); border-radius: var(--radius-l);
+      background: var(--farbe-grund-zart);
+      margin-bottom: var(--abstand-xl);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .feld { display: flex; flex-direction: column; gap: 5px; }
+    .feld label {
+      font-size: var(--text-xs); font-weight: 600; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--farbe-text-gedaempft);
+    }
+    .feld select {
+      font: inherit; font-size: var(--text-sm); color: var(--farbe-text);
+      background: var(--farbe-karte); border: 1px solid var(--farbe-linie);
+      border-radius: var(--radius-m); padding: 8px 10px; min-width: 190px;
+    }
+    .protokoll {
+      margin-left: auto; font-family: var(--schrift-mono);
+      font-size: var(--text-xs); color: var(--farbe-text-gedaempft);
+      max-width: 42ch; text-align: right;
+    }
+    .protokoll b { color: var(--farbe-marke); font-weight: 600; }
+
+    /* ── Baustein-Abschnitt ─────────────────────────────────── */
+    .baustein { margin-bottom: var(--abstand-5xl); scroll-margin-top: 90px; }
+    .baustein > header { margin-bottom: var(--abstand-md); }
+    .baustein h2 {
+      font-size: var(--text-2xl); line-height: var(--zeile-2xl);
+      font-weight: var(--gewicht-ueberschrift); margin: 0 0 4px;
+    }
+    .baustein .meta {
+      color: var(--farbe-text-gedaempft); font-size: var(--text-sm);
+      display: flex; flex-wrap: wrap; gap: var(--abstand-sm); align-items: center;
+    }
+
+    .fassungen {
+      display: grid; gap: var(--abstand-lg);
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+    .fassung {
+      border: 1px solid var(--farbe-linie); border-radius: var(--radius-l);
+      background: var(--farbe-karte); overflow: hidden;
+      box-shadow: var(--schatten-karte);
+    }
+    .fassung > h3 {
+      margin: 0; padding: var(--abstand-sm) var(--abstand-md);
+      font-size: var(--text-sm); font-weight: 600;
+      border-bottom: 1px solid var(--farbe-linie);
+      background: var(--farbe-grund-zart);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .fassung > h3 .tag {
+      font-size: var(--text-xs); font-weight: 600; letter-spacing: .03em;
+      padding: 2px 8px; border-radius: 999px;
+      background: var(--farbe-marke-zart); color: var(--farbe-auf-akzent);
+    }
+    .buehne { padding: var(--abstand-md); overflow-x: auto; }
+    /* Nebeneinander bleibt für den Vergleich; einzeln bekommt die Fassung
+       die ganze Spalte, damit die Diagramme nicht im Scrollbereich liegen. */
+    .fassungen.einzeln { grid-template-columns: 1fr; }
+    .fassungen.einzeln .fassung[hidden] { display: none; }
+
+    /* ── Zusammenhang Katalog ↔ Bausteine ───────────────────── */
+    .zusammenhang { margin-bottom: var(--abstand-5xl); max-width: 900px; }
+    .zusammenhang h2 {
+      font-size: var(--text-2xl); line-height: var(--zeile-2xl);
+      font-weight: var(--gewicht-ueberschrift); margin: 0 0 var(--abstand-sm);
+    }
+    .zusammenhang p { margin: 0 0 var(--abstand-md); }
+    .scrolltabelle { overflow-x: auto; }
+    .zusammenhang table {
+      border-collapse: collapse; width: 100%; font-size: var(--text-sm);
+    }
+    .zusammenhang th, .zusammenhang td {
+      text-align: left; padding: var(--abstand-xs) var(--abstand-sm);
+      border-bottom: 1px solid var(--farbe-linie); vertical-align: top;
+    }
+    .zusammenhang thead th { border-bottom: 2px solid var(--farbe-linie); white-space: nowrap; }
+    .zusammenhang .hinweis {
+      display: block; color: var(--farbe-text-gedaempft); font-size: var(--text-xs);
+    }
+    .marke {
+      font-size: var(--text-xs); font-weight: 600; white-space: nowrap;
+      padding: 2px 8px; border-radius: 999px;
+    }
+    .marke-umgezogen { background: var(--farbe-erfolg); color: var(--farbe-erfolg-text); }
+    .marke-offen { background: var(--farbe-warnung); color: var(--farbe-warnung-text); }
+
+    /* ── Themen zum Durchprobieren ──────────────────────────── */
+    /* Die Bausteine bringen kein Design mit: das hier sind Beispiel-Themen,
+       die von außen gesetzt werden. Genau so würde ein Land sein eigenes
+       Design anlegen, ohne die Bibliothek zu forken. */
+    .thema-fwu {
+      --tba3-farbe-marke: #0000c4;
+      --tba3-farbe-fokus: #747ff5;
+      --tba3-farbe-text: #0a0a0a;
+      --tba3-farbe-text-gedaempft: #727272;
+      --tba3-farbe-linie: #e5e5e5;
+      --tba3-farbe-raster: #ededed;
+      --tba3-farbe-flaeche: #fafafa;
+      --tba3-schrift: Inter, ui-sans-serif, system-ui, sans-serif;
+      --tba3-radius: 8px;
+    }
+    .thema-hoher-kontrast {
+      --tba3-farbe-marke: #0b3d91;
+      --tba3-farbe-text: #000000;
+      --tba3-farbe-text-gedaempft: #3d3d3d;
+      --tba3-farbe-linie: #000000;
+      --tba3-farbe-raster: #9a9a9a;
+      --tba3-farbe-flaeche: #ffffff;
+      --tba3-stufe-1: #9b1c1c; --tba3-stufe-2: #b45309;
+      --tba3-stufe-3: #854d0e; --tba3-stufe-4: #15803d; --tba3-stufe-5: #14532d;
+      --tba3-farbe-ueber: #14532d; --tba3-farbe-unter: #9b1c1c;
+      --tba3-schrift-groesse: 14px;
+    }
+    .thema-dunkel {
+      --tba3-farbe-grund: #16181d;
+      --tba3-farbe-flaeche: #23262d;
+      --tba3-farbe-linie: #3a3f48;
+      --tba3-farbe-raster: #2c3038;
+      --tba3-farbe-text: #f1f3f5;
+      --tba3-farbe-text-gedaempft: #a4aab4;
+      --tba3-farbe-text-invers: #16181d;
+      --tba3-farbe-marke: #8aa3ff;
+      --tba3-farbe-hervorhebung: rgba(255,255,255,0.06);
+      --tba3-band-grund: #1d2630;
+    }
+    .thema-dunkel .fassung { background: #1b1e24; border-color: #3a3f48; }
+    .thema-dunkel .fassung > h3 { background: #16181d; border-color: #3a3f48; color: #f1f3f5; }
+
+    footer {
+      border-top: 1px solid var(--farbe-linie);
+      padding-block: var(--abstand-lg) var(--abstand-2xl);
+      font-size: var(--text-sm); color: var(--farbe-text-gedaempft);
+      display: flex; justify-content: space-between; gap: var(--abstand-md); flex-wrap: wrap;
+    }
+    footer a { color: var(--farbe-text-gedaempft); }
+    footer a:hover { color: var(--farbe-text); }
+    footer .rechtliches { display: flex; gap: var(--abstand-md); }
+  </style>
+</head>
+<body>
+
+<tba3-leiste aktiv="bausteine"></tba3-leiste>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1 lang="de">Bausteine zum Mitnehmen</h1>
+    <h1 lang="en">Building blocks to take away</h1>
+    <p lang="de">
+      Jede Visualisierung gibt es als <strong>native Web Component</strong>, als
+      <strong>Vue-</strong> und als <strong>React-Komponente</strong>. Dieselbe
+      Implementierung, drei Fassungen — unten stehen sie nebeneinander.
+    </p>
+    <p lang="en">
+      Every visualisation comes as a <strong>native web component</strong>, a
+      <strong>Vue</strong> and a <strong>React</strong> component. One
+      implementation, three flavours — shown side by side below.
+    </p>
+    <p lang="de">
+      Sie bringen <strong>kein Design mit</strong>: Farben, Schrift und Maße
+      kommen über CSS-Variablen von außen. Probier die Themen oben rechts aus —
+      das ist derselbe Quelltext.
+    </p>
+    <p lang="en">
+      They ship <strong>without a design</strong>: colours, type and metrics come
+      in through CSS variables. Try the themes above — it is the same source.
+    </p>
+  </section>
+
+  <div class="werkzeuge">
+    <div class="feld">
+      <label for="thema" lang="de">Thema</label>
+      <label for="thema" lang="en">Theme</label>
+      <select id="thema">
+        <option value="thema-fwu">FWU / VIDIS</option>
+        <option value="">neutral (Vorgabe der Bibliothek)</option>
+        <option value="thema-hoher-kontrast">hoher Kontrast</option>
+        <option value="thema-dunkel">dunkel</option>
+      </select>
+    </div>
+    <div class="feld">
+      <label for="fassung" lang="de">Fassung</label>
+      <label for="fassung" lang="en">Flavour</label>
+      <select id="fassung">
+        <option value="alle" lang="de">alle drei nebeneinander</option>
+        <option value="0" lang="de">nur Web Component (volle Breite)</option>
+        <option value="1" lang="de">nur Vue (volle Breite)</option>
+        <option value="2" lang="de">nur React (volle Breite)</option>
+      </select>
+    </div>
+    <div class="feld">
+      <label for="datensatz" lang="de">Lerngruppe</label>
+      <label for="datensatz" lang="en">Learning group</label>
+      <select id="datensatz">
+        <option value="0">3a Deutsch</option>
+        <option value="1">8b Mathematik</option>
+      </select>
+    </div>
+    <p class="protokoll" id="protokoll" aria-live="polite">
+      <span lang="de">Klick auf einen Balken, eine Zeile oder eine Spaltenüberschrift — die Ereignisse erscheinen hier.</span>
+      <span lang="en">Click a bar, a row or a column header — events show up here.</span>
+    </p>
+  </div>
+
+  <section class="zusammenhang">
+    <h2 lang="de">Katalog und Bausteine — wie das zusammenhängt</h2>
+    <h2 lang="en">Catalogue and building blocks — how they relate</h2>
+    <p lang="de">
+      Zwei Bereiche zeigen Visualisierungen, und das verwirrt zu Recht.
+      <a href="/katalog"><strong>Der Katalog</strong></a> ist die Schau: jede
+      Visualisierung mit echten Daten aus der Schnittstelle, mit Einsatzzweck,
+      Endpunkt und Quelltext — zum Anschauen und Verstehen.
+      <strong>Die Bausteine</strong> sind die Bibliothek: dieselben
+      Visualisierungen als Paket zum Mitnehmen, in drei Fassungen und themebar —
+      zum Einbauen.
+    </p>
+    <p lang="en">
+      Two sections show visualisations, and that is rightly confusing.
+      <a href="/katalog"><strong>The catalogue</strong></a> is the showcase:
+      every visualisation with live data, purpose, endpoint and source — to look
+      at and understand. <strong>The building blocks</strong> are the library:
+      the same visualisations as a package to take away, in three flavours and
+      themeable — to build with.
+    </p>
+    <p lang="de">
+      Der Katalog ist älter. Seine Ansichten ziehen nach und nach auf die
+      Bausteine um — eine umgezogene Ansicht zeigt dann denselben Quelltext, den
+      auch ein fremdes Projekt bekommt. <strong id="stand"></strong>
+    </p>
+    <div class="scrolltabelle">
+      <table id="zuordnung">
+        <thead>
+          <tr>
+            <th scope="col" lang="de">Katalog-Ansicht</th><th scope="col" lang="en">Catalogue view</th>
+            <th scope="col" lang="de">Baustein</th><th scope="col" lang="en">Building block</th>
+            <th scope="col" lang="de">Stand</th><th scope="col" lang="en">State</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="bausteine"></div>
+
+</main>
+
+<footer class="wrap">
+  <span lang="de">FWU — TBA3-Projekt</span>
+  <span lang="en">FWU — TBA3 project</span>
+  <span><a href="https://github.com/FWU-DE/tba3-demo-app/tree/main/packages/bausteine">packages/bausteine</a></span>
+  <span class="rechtliches">
+    <a href="https://softwarehub.schule/impressum" lang="de">Impressum</a>
+    <a href="https://softwarehub.schule/impressum" lang="en">Legal notice</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="de">Datenschutz</a>
+    <a href="https://softwarehub.schule/datenschutz" lang="en">Privacy</a>
+  </span>
+</footer>
+
+<script type="module" src="/gemeinsam/tba3-leiste.js"></script>
+<script type="module">
+  import { dokumentKopf } from '/gemeinsam/sprache.js';
+  dokumentKopf({
+    titel: { de: 'Bausteine — TBA3', en: 'Building blocks — TBA3' },
+    beschreibung: {
+      de: 'Die TBA3-Visualisierungen als Web Component, Vue- und React-Komponente.',
+      en: 'The TBA3 visualisations as web component, Vue and React component.',
+    },
+  });
+</script>
+
+<script type="module">
+  // Der Demonstrator lädt die Bausteine so, wie es jede fremde Seite täte:
+  // ein Modul-Import, kein Build, kein Paketmanager.
+  import { BAUPLAENE, PRAEFIX, registrieren } from '/bausteine/webcomponents/index.js';
+  import { DEMODATEN } from './demodaten.js';
+  import { ZAHLEN, ZUORDNUNG } from './zuordnung.js';
+
+  registrieren();
+
+  // ── Zusammenhang: Tabelle aus der Zuordnung füllen ───────────────────
+  {
+    const koerper = document.querySelector('#zuordnung tbody');
+    for (const z of ZUORDNUNG) {
+      const tr = document.createElement('tr');
+
+      const katalog = document.createElement('td');
+      const link = document.createElement('a');
+      link.href = '/katalog';
+      link.textContent = z.anzeige;
+      katalog.append(link);
+      if (z.hinweis) {
+        const klein = document.createElement('span');
+        klein.className = 'hinweis';
+        klein.textContent = z.hinweis;
+        katalog.append(klein);
+      }
+
+      const baustein = document.createElement('td');
+      if (z.baustein) {
+        const a = document.createElement('a');
+        a.href = '#' + z.baustein;
+        a.className = 'mono';
+        a.textContent = '<' + PRAEFIX + z.baustein + '>';
+        baustein.append(a);
+      } else {
+        baustein.textContent = '—';
+      }
+
+      const stand = document.createElement('td');
+      const marke = document.createElement('span');
+      marke.className = 'marke marke-' + z.stand;
+      marke.textContent = z.stand === 'umgezogen' ? 'als Baustein verfügbar' : 'noch nicht';
+      stand.append(marke);
+
+      tr.append(katalog, baustein, stand);
+      koerper.append(tr);
+    }
+    document.getElementById('stand').textContent =
+      `Stand: ${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten laufen über Bausteine.`;
+  }
+
+  const wurzel = document.getElementById('bausteine');
+  const protokoll = document.getElementById('protokoll');
+  const themaWahl = document.getElementById('thema');
+  const datensatzWahl = document.getElementById('datensatz');
+
+  const elemente = [];
+
+  function abschnitt(bauplan) {
+    const sektion = document.createElement('section');
+    sektion.className = 'baustein';
+    sektion.id = bauplan.name;
+
+    const kopf = document.createElement('header');
+    const h2 = document.createElement('h2');
+    h2.textContent = bauplan.titel;
+    const meta = document.createElement('p');
+    meta.className = 'meta';
+    meta.append(
+      chip(`<${PRAEFIX}${bauplan.name}>`),
+      chip(bauplan.endpunkt),
+      chip(bauplan.ereignisse.length ? `Ereignisse: ${bauplan.ereignisse.join(', ')}` : 'ohne Ereignisse'),
+    );
+    kopf.append(h2, meta);
+
+    const fassungen = document.createElement('div');
+    fassungen.className = 'fassungen';
+    for (const [titel, tag] of [
+      ['Native Web Component', 'ohne Framework'],
+      ['Vue 3', 'Hülle'],
+      ['React 19', 'Hülle'],
+    ]) {
+      const karte = document.createElement('div');
+      karte.className = 'fassung';
+      const h3 = document.createElement('h3');
+      h3.append(titel);
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.textContent = tag;
+      h3.append(span);
+      const buehne = document.createElement('div');
+      buehne.className = 'buehne';
+      buehne.dataset.fassung = titel;
+      karte.append(h3, buehne);
+      fassungen.append(karte);
+    }
+
+    sektion.append(kopf, fassungen);
+    return sektion;
+  }
+
+  function chip(text) {
+    const span = document.createElement('span');
+    span.className = 'code-chip mono';
+    span.textContent = text;
+    return span;
+  }
+
+  function melden(bauplan, typ, detail) {
+    protokoll.replaceChildren();
+    const b = document.createElement('b');
+    b.textContent = `${PRAEFIX}${bauplan.name} → ${typ}`;
+    protokoll.append(b, document.createTextNode(' ' + JSON.stringify(detail).slice(0, 160)));
+  }
+
+  for (const bauplan of BAUPLAENE) {
+    const sektion = abschnitt(bauplan);
+    wurzel.append(sektion);
+
+    for (const buehne of sektion.querySelectorAll('.buehne')) {
+      const el = document.createElement(PRAEFIX + bauplan.name);
+      for (const typ of bauplan.ereignisse) {
+        el.addEventListener(typ, (ev) => melden(bauplan, typ, ev.detail));
+      }
+      buehne.append(el);
+      elemente.push({ el, bauplan });
+    }
+  }
+
+  // Die Vue- und React-Hüllen erzeugen dasselbe Element; für den
+  // Demonstrator genügt es, sie zu laden und zu zeigen, dass sie dasselbe
+  // Ergebnis liefern — die Gleichheit prüft der Test im Paket Knoten für
+  // Knoten, das muss die Seite nicht nachbauen.
+
+  function daten() {
+    return DEMODATEN[Number(datensatzWahl.value)] ?? DEMODATEN[0];
+  }
+
+  function fuellen() {
+    const satz = daten();
+    for (const { el, bauplan } of elemente) {
+      el.props = satz[bauplan.name] ?? {};
+    }
+  }
+
+  function themaSetzen() {
+    const klasse = themaWahl.value;
+    document.body.className = klasse;
+  }
+
+  const fassungWahl = document.getElementById('fassung');
+
+  function fassungSetzen() {
+    const wahl = fassungWahl.value;
+    for (const gitter of wurzel.querySelectorAll('.fassungen')) {
+      gitter.classList.toggle('einzeln', wahl !== 'alle');
+      [...gitter.children].forEach((karte, i) => {
+        karte.hidden = wahl !== 'alle' && String(i) !== wahl;
+      });
+    }
+  }
+
+  fassungWahl.addEventListener('change', fassungSetzen);
+  function ausAdresse() {
+    const p = new URLSearchParams(location.search);
+    for (const [feld, wahl] of [['thema', themaWahl], ['fassung', fassungWahl], ['gruppe', datensatzWahl]]) {
+      const wert = p.get(feld);
+      if (wert !== null && [...wahl.options].some((o) => o.value === wert)) wahl.value = wert;
+    }
+  }
+
+  function inAdresse() {
+    const p = new URLSearchParams(location.search);
+    p.set('thema', themaWahl.value);
+    p.set('fassung', fassungWahl.value);
+    p.set('gruppe', datensatzWahl.value);
+    history.replaceState({}, '', `${location.pathname}?${p}${location.hash}`);
+  }
+
+  for (const wahl of [themaWahl, fassungWahl, datensatzWahl]) {
+    wahl.addEventListener('change', inAdresse);
+  }
+
+  themaWahl.addEventListener('change', themaSetzen);
+  datensatzWahl.addEventListener('change', fuellen);
+
+  ausAdresse();
+  themaSetzen();
+  fassungSetzen();
+  fuellen();
+</script>
+
+</body>
+</html>

@@ -1,70 +1,51 @@
-// Das Verzeichnis aller Bausteine.
+// Der Kern: Berechnung, kein Markup.
 //
-// Jeder Eintrag beschreibt eine Komponente vollständig: wie sie heißt, welche
-// Eigenschaften sie kennt und welche Funktion daraus Markup macht. Die drei
-// Adapter (Custom Element, Vue, React) lesen nur dieses Verzeichnis — dadurch
-// bekommt jede neue Komponente alle drei Fassungen, ohne dass ein Adapter
-// angefasst werden muss.
+// Jeder Baustein hat hier eine reine Funktion, die aus Daten Geometrie bzw.
+// aufbereitete Zeilen macht — Zahlen und Objekte, keine Zeichenketten. Aus
+// denen baut jede Fassung ihr eigenes DOM.
+//
+// Der erste Entwurf gab fertiges SVG aus. Das ließ sich in drei Frameworks
+// einsetzen, aber nicht bedienen: an eine Zeichenkette lassen sich keine
+// Ereignisse hängen, und Tabellen und Karten sind damit gar nicht zu bauen.
+// Der Kern ist jetzt der Teil, der nicht driften darf; das Zeichnen liegt bei
+// den Elementen.
 
-import { kompetenzstufenLeiste, STANDARD as LEISTE_STANDARD } from './kompetenzstufen-leiste.js';
-import { mittelwertVergleich, STANDARD as VERGLEICH_STANDARD } from './mittelwert-vergleich.js';
-import { erwartetTatsaechlich, STANDARD as ERWARTET_STANDARD } from './erwartet-tatsaechlich.js';
-import { perzentilbaender, STANDARD as PERZENTIL_STANDARD } from './perzentilbaender.js';
-
-export { STIL } from './stil.js';
-
-/**
- * @typedef {Object} Baustein
- * @property {string} name        Kennung in kebab-case, zugleich der Elementname
- *                                ohne Präfix.
- * @property {string} titel       Klartext für Katalog und Dokumentation.
- * @property {string} endpunkt    Der TBA3-Endpunkt, aus dem die Daten kommen.
- * @property {object} standard    Voreinstellungen je Eigenschaft.
- * @property {(props: object) => {breite: number, hoehe: number, svg: string, html: string}} bauen
- */
-
-/** @type {Baustein[]} */
-export const BAUSTEINE = [
-  {
-    name: 'kompetenzstufen-leiste',
-    titel: 'Kompetenzstufen-Leiste',
-    endpunkt: '/groups/{id}/competence-levels',
-    standard: LEISTE_STANDARD,
-    bauen: kompetenzstufenLeiste,
-  },
-  {
-    name: 'mittelwert-vergleich',
-    titel: 'Mittelwert-Vergleich',
-    endpunkt: '/groups, /schools, /states (items)',
-    standard: VERGLEICH_STANDARD,
-    bauen: mittelwertVergleich,
-  },
-  {
-    name: 'erwartet-tatsaechlich',
-    titel: 'Erwartete und tatsächliche Lösungsquote',
-    endpunkt: '/groups/{id}/items',
-    standard: ERWARTET_STANDARD,
-    bauen: erwartetTatsaechlich,
-  },
-  {
-    name: 'perzentilbaender',
-    titel: 'Perzentilbänder',
-    endpunkt: '/groups/{id}/aggregations',
-    standard: PERZENTIL_STANDARD,
-    bauen: perzentilbaender,
-  },
-];
-
-/** Einen Baustein über seinen Namen holen. */
-export function baustein(name) {
-  const treffer = BAUSTEINE.find((b) => b.name === name);
-  if (!treffer) throw new Error(`Unbekannter Baustein: ${name}`);
-  return treffer;
-}
+export { THEMA, themaCss, v } from './thema.js';
 
 export {
-  kompetenzstufenLeiste,
-  mittelwertVergleich,
-  erwartetTatsaechlich,
-  perzentilbaender,
-};
+  NAME as LEISTE_NAME,
+  STANDARD as LEISTE_STANDARD,
+  MASSE as LEISTE_MASSE,
+  geometrie as leisteGeometrie,
+  stufenFarbe,
+} from './kompetenzstufen-leiste.js';
+
+export {
+  NAME as TABELLE_NAME,
+  STANDARD as TABELLE_STANDARD,
+  SPALTEN as TABELLE_SPALTEN,
+  SCHWELLE,
+  bewertung,
+  zeilen as tabellenZeilen,
+  naechsteSortierung,
+} from './aufgaben-tabelle.js';
+
+export {
+  NAME as VERGLEICH_NAME,
+  STANDARD as VERGLEICH_STANDARD,
+  geometrie as vergleichGeometrie,
+} from './mittelwert-vergleich.js';
+
+export {
+  NAME as ERWARTUNG_NAME,
+  STANDARD as ERWARTUNG_STANDARD,
+  geometrie as erwartungGeometrie,
+  legende as erwartungLegende,
+} from './erwartet-tatsaechlich.js';
+
+export {
+  NAME as BAENDER_NAME,
+  STANDARD as BAENDER_STANDARD,
+  geometrie as baenderGeometrie,
+  raute,
+} from './perzentilbaender.js';
