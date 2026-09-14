@@ -9,7 +9,7 @@
 //   <tba3-leiste aktiv="demo"></tba3-leiste>
 //
 // `aktiv` markiert den aktuellen Bereich:
-// portal | demo | katalog | beispiele | schnittstelle
+// portal | demo | katalog | beispiele | dokumentation | schnittstelle
 //
 // Hier sitzt auch die Sprachwahl der ganzen Seite (siehe sprache.js): sie gilt
 // für alle Bereiche, weil die Leiste in allen steht.
@@ -21,6 +21,7 @@ const BEREICHE = [
   { id: 'demo',          text: { de: 'Demoanwendung', en: 'Demo app' },   pfad: '/demo' },
   { id: 'katalog',       text: { de: 'Komponenten',   en: 'Components' }, pfad: '/katalog' },
   { id: 'beispiele',     text: { de: 'Rückmeldungen', en: 'Reports' },    pfad: '/beispiele' },
+  { id: 'dokumentation', text: { de: 'Dokumentation', en: 'Docs' },       pfad: '/dokumentation' },
   { id: 'schnittstelle', text: { de: 'Schnittstelle', en: 'API' },        pfad: '/schnittstelle' },
 ];
 

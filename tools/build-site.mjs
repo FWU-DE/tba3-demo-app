@@ -10,6 +10,7 @@
 import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DOKUMENTE, seite, stand, uebersicht } from './dokumente.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
@@ -70,6 +71,25 @@ writeFileSync(specDatei, spec.replace(serverBlock, `servers:
     description: Referenzserver von indibit (über diese Seite geleitet)
 `));
 console.log('✓ Server der Spezifikation ergänzt');
+
+// Die erklärenden Dokumente der Spezifikation liegen als Markdown-Kopie unter
+// apps/portal/dokumentation (nachgezogen mit `npm run docs:update`) und werden
+// hier zu Seiten gerendert — so stehen Konzepte, Endpunkt-Referenz und Rezepte
+// in der Seite selbst statt nur als Link nach GitHub. Die Markdown-Dateien sind
+// über den Portal-Kopierschritt schon in dist/ und bleiben dort abrufbar.
+const standDaten = stand();
+for (const dok of DOKUMENTE) {
+  const quelle = join(root, 'apps/portal/dokumentation', dok.datei);
+  if (!existsSync(quelle)) {
+    console.error(`✗ apps/portal/dokumentation/${dok.datei} fehlt — \`npm run docs:update\` ausführen`);
+    process.exit(1);
+  }
+  const ziel = join(dist, 'dokumentation', dok.slug);
+  mkdirSync(ziel, { recursive: true });
+  writeFileSync(join(ziel, 'index.html'), seite(dok, readFileSync(quelle, 'utf8'), standDaten));
+}
+writeFileSync(join(dist, 'dokumentation/index.html'), uebersicht(DOKUMENTE, standDaten));
+console.log(`✓ ${DOKUMENTE.length} Dokumente gerendert → dist/dokumentation/`);
 
 // Die gemeinsamen Dateien — Navigationsleiste und Sprachwahl — liegen unter
 // /gemeinsam/ und werden von allen Bereichen eingebunden, auch von denen, die
