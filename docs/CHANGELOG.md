@@ -18,6 +18,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   `NUR_BAUSTEIN` in `zuordnung.js` hält mit Grund fest, was ohne Ansicht
   bleibt, und drei Tests halten Zuordnung, Beispieldaten und die drei Fassungen
   beieinander.
+- **Jede Kompetenzstufe trägt ihre Beschriftungsfarbe selbst**
+  (`--tba3-stufe-1-text` … `--tba3-stufe-5-text`). Eine einzige Inversfarbe
+  reichte nicht: Weiß auf dem Gelb der Stufe 3 hat ein Kontrastverhältnis von
+  2,0, lesbar ist ab 4,5. Wer die Stufenfarben überschreibt, überschreibt die
+  Beschriftung mit — kommt die Farbe als Daten herein, rechnet der Baustein
+  selbst. Neu im Paket: `pruefeThema()` geht jedes Paar durch, an dem ein
+  Baustein Text auf Fläche legt, und sagt, was unter 4,5 bleibt. Zwei Tests
+  lassen sie über die Vorgaben der Bibliothek und über die vier
+  Beispiel-Themen des Demonstrators laufen.
 - **Vorschauen in der Zuordnung auf `/bausteine`**: jede Zeile der Tabelle und
   jeder Eintrag der Liste darunter zeigt den Baustein in klein — dieselben
   Daten wie unten, nicht bedienbar und für Vorlesesoftware ausgeblendet. Ein
@@ -76,6 +85,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Perzentilbänder), haben jetzt Platz.
 
 ### Fixed
+- **Heller Text auf heller Seite bei dunkel gestelltem System.** Die Bausteine
+  folgen `prefers-color-scheme`; Katalog und Demonstrator haben aber keinen
+  eigenen Dunkelmodus. Beide setzen jetzt `data-thema` an den Elementen — der
+  einzige Weg, den Modus festzunageln, denn `:host([data-thema])` prüft nur das
+  Element selbst und nicht den Baum darüber. Der Kommentar im Paket behauptete
+  das Gegenteil.
 - **Die Perzentilbänder waren schwarz.** `var(--tba3-_band))` — eine
   schließende Klammer zu viel in vier Konstanten und zwei Aufrufen. Ein
   ungültiger Farbwert ist in SVG nicht leer, sondern schwarz; derselbe

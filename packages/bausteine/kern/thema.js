@@ -61,11 +61,26 @@ export const THEMA = {
   // eine Ordnung (unter / im / über Standard), die ohne Farbverlauf verloren
   // ginge. Im Dunklen sind die Töne angehoben, damit sie auf dunklem Grund
   // nicht absaufen.
-  'stufe-1': { hell: '#d64545', dunkel: '#f07070' },
+  'stufe-1': { hell: '#cf3f3f', dunkel: '#f07070' },
   'stufe-2': { hell: '#e8833a', dunkel: '#f0a15e' },
   'stufe-3': { hell: '#d9b23a', dunkel: '#e8c65e' },
   'stufe-4': { hell: '#4a9e5c', dunkel: '#6fc785' },
   'stufe-5': { hell: '#2f7a44', dunkel: '#4da86a' },
+
+  // Die Schrift, die **auf** einer Stufe steht: das Kürzel im Balken, das
+  // Abzeichen in der Tabelle, die Initialen im Avatar.
+  //
+  // Eine einzige Inversfarbe reicht dafür nicht. Weiß auf dem Gelb der Stufe 3
+  // hat ein Kontrastverhältnis von 2,0 — lesbar ist ab 4,5 —, und dieselbe
+  // Wahl ist im dunklen Thema wieder falsch herum. Deshalb trägt jede Stufe
+  // ihre Beschriftungsfarbe selbst, und `thema.test.mjs` rechnet für jede das
+  // Verhältnis nach. Wer die Stufenfarben überschreibt, überschreibt diese
+  // hier mit — sonst schlägt die Prüfung fehl.
+  'stufe-1-text': { hell: '#ffffff', dunkel: '#16181d' },
+  'stufe-2-text': { hell: '#1a1a1a', dunkel: '#16181d' },
+  'stufe-3-text': { hell: '#1a1a1a', dunkel: '#16181d' },
+  'stufe-4-text': { hell: '#1a1a1a', dunkel: '#16181d' },
+  'stufe-5-text': { hell: '#ffffff', dunkel: '#16181d' },
 
   // Bewertung gegen einen Erwartungswert
   'farbe-ueber': { hell: '#2f7a44', dunkel: '#6fc785' },
@@ -100,6 +115,22 @@ export const privat = (name) => `--tba3-_${name}`;
 /** Kurzform für Stilregeln: v('farbe-text') → var(--tba3-_farbe-text) */
 export const v = (name) => `var(${privat(name)})`;
 
+/** Kompetenzstufe als Zahl: 'III' → 3. Alles andere ergibt null. */
+export const stufenNummer = (stufe) => ({ I: 1, II: 2, III: 3, IV: 4, V: 5 })[stufe] ?? null;
+
+/** Die Farbe der Stufe 1–5 (außerhalb des Bereichs wird geklemmt). */
+export const stufenFlaeche = (nr) => v(`stufe-${Math.max(1, Math.min(5, nr))}`);
+
+/**
+ * Die Schrift, die auf dieser Stufe lesbar bleibt.
+ *
+ * Immer paarweise mit `stufenFlaeche` benutzen: wer eine Fläche in einer
+ * Stufenfarbe zeichnet und Text hineinsetzt, nimmt hierfür diese Farbe und
+ * nicht `farbe-text-invers` — sonst steht die Beschriftung im hellen Thema
+ * weiß auf Gelb.
+ */
+export const stufenSchrift = (nr) => v(`stufe-${Math.max(1, Math.min(5, nr))}-text`);
+
 /**
  * Die Umleitung als CSS. Kommt in jedes Shadow DOM.
  *
@@ -121,7 +152,11 @@ export function themaCss() {
     ...namen.map((n) => '  ' + zeile(n, 'dunkel')),
     '  }',
     '}',
-    // Wer den Modus erzwingen will, setzt data-thema am Element oder weiter oben.
+    // Wer den Modus erzwingen will, setzt `data-thema` **am Element selbst**:
+    // `:host()` prüft nur das Wirtselement, ein Attribut weiter oben im Baum
+    // greift hier nicht. Nötig ist das auf jeder Seite, die keinen eigenen
+    // Dunkelmodus hat — sonst folgt der Baustein dem System, die Seite bleibt
+    // hell, und heller Text steht auf hellem Grund.
     ':host([data-thema="hell"]) {',
     ...namen.map((n) => zeile(n, 'hell')),
     '}',

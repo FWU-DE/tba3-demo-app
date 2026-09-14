@@ -9,6 +9,7 @@
 //   el.addEventListener('punkt-betreten', (e) => e.detail);
 
 import { MASSE, STANDARD, geometrie } from '../kern/streudiagramm.js';
+import { stufenFlaeche, stufenSchrift } from '../kern/thema.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
 
@@ -17,7 +18,7 @@ const STIL = `
 .punkt { cursor: pointer; }
 .punkt circle { transition: r 90ms ease; }
 .punkt:hover circle, .punkt:focus-visible circle { stroke: var(--tba3-_farbe-text); stroke-width: 2; }
-.initialen { font-size: 10px; font-weight: 700; fill: var(--tba3-_farbe-text-invers); pointer-events: none; }
+.initialen { font-size: 10px; font-weight: 700; pointer-events: none; }
 
 .hinweis {
   position: absolute; z-index: 2; pointer-events: none;
@@ -47,7 +48,9 @@ const STIL = `
 }
 `;
 
-const STUFENFARBE = (wertX) => `var(--tba3-_stufe-${Math.max(1, Math.min(5, Math.round(wertX ?? 1)))})`;
+const stufe = (wertX) => Math.max(1, Math.min(5, Math.round(wertX ?? 1)));
+const STUFENFARBE = (wertX) => stufenFlaeche(stufe(wertX));
+const STUFENSCHRIFT = (wertX) => stufenSchrift(stufe(wertX));
 
 function aufbauen(wurzel, zustand, el) {
   const g = geometrie(zustand);
@@ -146,7 +149,7 @@ function aufbauen(wurzel, zustand, el) {
       s('circle', { cx: punkt.x, cy: punkt.y, r: g.radius, fill: STUFENFARBE(punkt.wertX) }),
       s('text', {
         class: 'initialen', x: punkt.x, y: punkt.y + 3.5, 'text-anchor': 'middle',
-        text: punkt.initialen,
+        fill: STUFENSCHRIFT(punkt.wertX), text: punkt.initialen,
       }),
     ]);
 
