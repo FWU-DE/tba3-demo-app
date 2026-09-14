@@ -75,8 +75,11 @@ abdecken:
   meist nicht der Test falsch.
 - **`npm run build`** — baut alle Bereiche nach `dist/`.
 
+Wer die Oberfläche anfasst, nimmt `npm run e2e` dazu (siehe unten).
+
 `.github/workflows/ci.yml` führt dieselben drei bei jedem Push und Pull Request
-aus und ruft danach über `npm run preview` jede ausgelieferte Seite einzeln ab.
+aus, lässt daneben die E2E-Tests laufen und ruft danach über `npm run preview`
+jede ausgelieferte Seite einzeln ab.
 Ein Bereich, der lokal läuft und im Deployment 404 gibt, fällt dort auf — aber
 später und teurer als bei dir.
 
@@ -228,7 +231,7 @@ Updates bestehender Abhängigkeiten erledigt Renovate (`renovate.json`).
 ```
 Ticket lesen  →  Akzeptanzkriterien auflisten  →  bestehendes Muster suchen
      →  implementieren  →  Test schreiben, der ohne die Änderung fehlschlägt
-     →  npm run lint && npm test && npm run build
+     →  npm run lint && npm test && npm run build  (+ npm run e2e bei UI)
      →  Screenshots  →  Ticket archivieren  →  CHANGELOG  →  Draft-PR
 ```
 
@@ -288,7 +291,25 @@ Zwei Fallen aus der Praxis: `userEvent.hover` erreicht SVG-Elemente in jsdom
 nicht (`fireEvent.mouseEnter` nehmen), und Recharts misst in jsdom keine Fläche —
 prüfe deshalb Daten und Beschriftungen, nicht gezeichnete Balken.
 
-`DEFINITION_OF_DONE.md` nennt zusätzlich E2E-Tests mit Playwright. Playwright ist
-im Repository bisher nicht eingerichtet; bis das geschieht, gilt der Happy Path
-als abgedeckt, wenn er über Vitest und Testing Library geprüft ist — und die
-Screenshots entstehen von Hand aus dem laufenden Dev-Server.
+### E2E-Tests
+
+Die E2E-Tests liegen unter `e2e/` und laufen mit Playwright:
+
+```bash
+npm run e2e        # baut, startet die Vorschau und läuft
+npm run e2e:ui     # dasselbe zum Nachvollziehen
+E2E_BASE_URL=http://localhost:4173 npm run e2e   # gegen einen laufenden Server
+```
+
+Gelaufen wird gegen `npm run preview`, nicht gegen den Dev-Server: Base-Pfade,
+Rewrites und der eigene Mock verhalten sich erst dort wie im Deployment.
+
+Zwei Regeln für einen neuen E2E-Test:
+
+- **Adressiert wird über `data-testid`**, nie über Beschriftungen.
+- **Geprüft wird, was die Anwendung abruft**, nicht nur, was sie zeigt
+  (`page.waitForRequest`). Eine Ansicht, die sich verändert, ohne die richtige
+  Abfrage zu stellen, hat nichts gezeigt.
+
+Die Screenshots für den PR entstehen aus demselben Lauf — ein kurzes Skript
+gegen `npm run preview` genügt, siehe `docs/screenshots/`.
