@@ -6,30 +6,30 @@ import { h, s } from './svg.js';
 
 const STIL = `
 .legende { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 10px;
-  color: var(--tba3-farbe-text-gedaempft); font-size: 0.9em; }
+  color: var(--tba3-_farbe-text-gedaempft); font-size: 0.9em; }
 .legende-eintrag { display: flex; align-items: center; gap: 5px; }
 .punkt { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .linie { width: 16px; height: 0; flex-shrink: 0;
-  border-top: 2px dashed var(--tba3-farbe-text); }
+  border-top: 2px dashed var(--tba3-_farbe-text); }
 .zeile { cursor: pointer; }
 .zeile:hover rect.balken, .zeile:focus-visible rect.balken { opacity: 1; }
-.zeile:focus-visible { outline: 2px solid var(--tba3-farbe-fokus); outline-offset: 1px; }
+.zeile:focus-visible { outline: 2px solid var(--tba3-_farbe-fokus); outline-offset: 1px; }
 .leer {
-  padding: calc(var(--tba3-abstand) * 3); text-align: center;
-  color: var(--tba3-farbe-text-gedaempft);
-  border: 1px dashed var(--tba3-farbe-linie); border-radius: var(--tba3-radius);
+  padding: calc(var(--tba3-_abstand) * 3); text-align: center;
+  color: var(--tba3-_farbe-text-gedaempft);
+  border: 1px dashed var(--tba3-_farbe-linie); border-radius: var(--tba3-_radius);
 }
 `;
 
 const BEWERTUNGSFARBE = {
-  ueber: 'var(--tba3-farbe-ueber)',
-  unter: 'var(--tba3-farbe-unter)',
-  'im-rahmen': 'var(--tba3-farbe-im-rahmen)',
+  ueber: 'var(--tba3-_farbe-ueber)',
+  unter: 'var(--tba3-_farbe-unter)',
+  'im-rahmen': 'var(--tba3-_farbe-im-rahmen)',
 };
 
 const STUFENFARBE = (stufe) => {
   const nr = { I: 1, II: 2, III: 3, IV: 4, V: 5 }[stufe];
-  return nr ? `var(--tba3-stufe-${nr})` : 'var(--tba3-farbe-text-gedaempft)';
+  return nr ? `var(--tba3-_stufe-${nr})` : 'var(--tba3-_farbe-text-gedaempft)';
 };
 
 function aufbauen(wurzel, zustand, el) {
@@ -73,11 +73,11 @@ function aufbauen(wurzel, zustand, el) {
     s('g', {}, g.teilstriche.flatMap((t) => [
       s('line', {
         x1: t.x, y1: MASSE.oben - 10, x2: t.x, y2: MASSE.oben + g.flaeche,
-        stroke: 'var(--tba3-farbe-raster)', 'stroke-width': 1,
+        stroke: 'var(--tba3-_farbe-raster)', 'stroke-width': 1,
       }),
       s('text', {
         x: t.x, y: MASSE.oben - 13, 'text-anchor': 'middle', 'font-size': 9.5,
-        fill: 'var(--tba3-farbe-text-gedaempft)', text: `${t.pct}%`,
+        fill: 'var(--tba3-_farbe-text-gedaempft)', text: `${t.pct}%`,
       }),
     ])),
   );
@@ -93,7 +93,7 @@ function aufbauen(wurzel, zustand, el) {
       s('text', {
         x: MASSE.labelBreite - 4, y: zeile.y + 11, 'text-anchor': 'end',
         'dominant-baseline': 'middle', 'font-size': 10.5,
-        fill: 'var(--tba3-farbe-text)', 'font-family': 'var(--tba3-schrift-mono)',
+        fill: 'var(--tba3-_farbe-text)', 'font-family': 'var(--tba3-_schrift-mono)',
         text: zeile.label,
       }),
       s('rect', {
@@ -103,11 +103,11 @@ function aufbauen(wurzel, zustand, el) {
       s('text', {
         x: MASSE.labelBreite + 11, y: zeile.y + 11, 'text-anchor': 'middle',
         'dominant-baseline': 'middle', 'font-size': 8.5, 'font-weight': 700,
-        fill: 'var(--tba3-farbe-text-invers)', text: zeile.level,
+        fill: 'var(--tba3-_farbe-text-invers)', text: zeile.level,
       }),
       s('rect', {
         x: MASSE.chartX, y: zeile.y, width: MASSE.chartBreite, height: MASSE.zeilenHoehe,
-        fill: 'var(--tba3-farbe-flaeche)', rx: 2,
+        fill: 'var(--tba3-_farbe-flaeche)', rx: 2,
       }),
       s('rect', {
         class: 'balken', x: MASSE.chartX, y: zeile.y + 4,
@@ -130,17 +130,17 @@ function aufbauen(wurzel, zustand, el) {
     gruppe.append(
       s('line', {
         x1: zeile.erwartungX, y1: zeile.y + 1, x2: zeile.erwartungX, y2: zeile.y + MASSE.zeilenHoehe - 1,
-        stroke: 'var(--tba3-farbe-text)', 'stroke-width': 2, 'stroke-dasharray': '3,2',
+        stroke: 'var(--tba3-_farbe-text)', 'stroke-width': 2, 'stroke-dasharray': '3,2',
       }),
       s('text', {
         x: MASSE.chartX + MASSE.chartBreite + 5, y: zeile.y + 7,
         'dominant-baseline': 'middle', 'font-size': 9, 'font-weight': 600,
-        fill: 'var(--tba3-farbe-text)', text: `${Math.round(zeile.actual)}%`,
+        fill: 'var(--tba3-_farbe-text)', text: `${Math.round(zeile.actual)}%`,
       }),
       s('text', {
         x: MASSE.chartX + MASSE.chartBreite + 5, y: zeile.y + 17,
         'dominant-baseline': 'middle', 'font-size': 8.5,
-        fill: 'var(--tba3-farbe-text-gedaempft)', text: `erw. ${Math.round(zeile.expected)}%`,
+        fill: 'var(--tba3-_farbe-text-gedaempft)', text: `erw. ${Math.round(zeile.expected)}%`,
       }),
       s('title', { text: `${zeile.label}: ${Math.round(zeile.actual)} % (erwartet ${Math.round(zeile.expected)} %)` }),
     );
@@ -161,7 +161,7 @@ function aufbauen(wurzel, zustand, el) {
     s('text', {
       x: MASSE.chartX + MASSE.chartBreite / 2, y: g.hoehe - 6,
       'text-anchor': 'middle', 'font-size': 9.5,
-      fill: 'var(--tba3-farbe-text-gedaempft)', text: 'Lösungsquote (%)',
+      fill: 'var(--tba3-_farbe-text-gedaempft)', text: 'Lösungsquote (%)',
     }),
   );
 

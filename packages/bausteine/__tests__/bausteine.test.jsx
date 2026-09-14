@@ -269,27 +269,69 @@ describe('Web Component — echtes DOM statt Zeichenkette', () => {
   });
 });
 
-describe('Thema — neutral und überschreibbar', () => {
-  it('bringt für jede Variable einen Rückfallwert mit', () => {
+describe('Thema — neutral, überschreibbar, mit Dark Mode', () => {
+  it('bringt für jede Variable eine helle und eine dunkle Vorgabe mit', () => {
     for (const [name, wert] of Object.entries(THEMA)) {
-      expect(name.startsWith('--tba3-'), name).toBe(true);
-      expect(String(wert).length).toBeGreaterThan(0);
+      expect(name, name).not.toMatch(/^-|^_/);
+      expect(wert.hell, `${name}.hell`).toBeTruthy();
+      expect(wert.dunkel, `${name}.dunkel`).toBeTruthy();
     }
+  });
+
+  // Der Fehler, den diese Prüfung fängt, hat einmal das ganze Theming
+  // ausgehebelt: standen die Vorgaben als ":host { --tba3-farbe-text: … }"
+  // im Shadow DOM, setzte das Element die Eigenschaft auf sich selbst und
+  // schlug damit jeden Wert, den die Seite vererbt. Im dunklen Thema blieb
+  // der Text schwarz auf schwarz — und zwar nur dort, deshalb fällt so etwas
+  // erst spät auf.
+  it('setzt keinen öffentlichen Namen auf :host, sondern liest ihn nur', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const stil = el.shadowRoot.querySelector('style').textContent;
+    const zuweisungen = [...stil.matchAll(/(--tba3-[a-z0-9-]+)\s*:/g)].map((m) => m[1]);
+    const oeffentlich = zuweisungen.filter((n) => !n.startsWith('--tba3-_'));
+    expect(oeffentlich, 'öffentliche Namen dürfen nur gelesen, nie gesetzt werden').toEqual([]);
+  });
+
+  it('zeichnet ausschließlich über die private Leitung', async () => {
+    for (const b of BAUPLAENE) {
+      const el = element(b.name, DATEN[b.name]);
+      await gezeichnet();
+      const markup = el.shadowRoot.innerHTML;
+      // Jede Verwendung außerhalb des Stilblocks muss --tba3-_ nennen
+      const ohneStil = markup.replace(/<style>[\s\S]*?<\/style>/, '');
+      const roh = [...ohneStil.matchAll(/var\((--tba3-(?!_)[a-z0-9-]+)/g)].map((m) => m[1]);
+      expect(roh, `${b.name} zeichnet mit einem öffentlichen Namen`).toEqual([]);
+      el.remove();
+    }
+  });
+
+  it('bringt einen Dark-Mode-Block mit', async () => {
+    const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
+    await gezeichnet();
+    const stil = el.shadowRoot.querySelector('style').textContent;
+    expect(stil).toContain('prefers-color-scheme: dark');
+    // und einen Weg, den Modus zu erzwingen
+    expect(stil).toContain('data-thema="dunkel"');
   });
 
   it('enthält keine Markenfarbe einer bestimmten Seite', () => {
     // Die Bausteine sollen überall einsetzbar sein — VIDIS-Blau gehört in die
     // umgebende Seite, nicht in die Bibliothek.
-    const werte = Object.values(THEMA).join(' ').toLowerCase();
+    const werte = Object.values(THEMA)
+      .flatMap((w) => [w.hell, w.dunkel])
+      .join(' ')
+      .toLowerCase();
     expect(werte).not.toContain('#0000c4');
   });
 
-  it('schreibt die Rückfallwerte ins Shadow DOM, wo die Seite sie überschreiben kann', async () => {
+  it('lässt die Seite jede Variable überschreiben', async () => {
     const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
     await gezeichnet();
     const stil = el.shadowRoot.querySelector('style').textContent;
-    expect(stil).toContain('--tba3-stufe-1');
-    expect(stil).toContain(':host');
+    for (const name of Object.keys(THEMA)) {
+      expect(stil, name).toContain(`var(--tba3-${name},`);
+    }
   });
 });
 

@@ -176,6 +176,42 @@ Die Namen sind bewusst eigenständig (`--tba3-*`) statt an die Tokens einer
 bestimmten Seite gebunden: ein Baustein darf nicht davon abhängen, dass gerade
 diese Seite ihn umgibt.
 
+### Dark Mode kann jeder Baustein von selbst
+
+Jede Variable hat **zwei** Vorgaben, hell und dunkel. Ohne Zutun folgt ein
+Baustein `prefers-color-scheme` — im dunklen Systemthema werden Flächen,
+Linien und Text dunkel, und die Kompetenzstufen bekommen angehobene Töne, damit
+sie auf dunklem Grund nicht absaufen.
+
+Erzwingen lässt sich der Modus über `data-thema`, am Element oder weiter oben:
+
+```html
+<tba3-aufgaben-tabelle data-thema="dunkel"></tba3-aufgaben-tabelle>
+```
+
+Eine Seite, die eine Variable selbst setzt, gewinnt in beiden Modi.
+
+### Warum die Vorgaben nicht am `:host` stehen
+
+Ein `:host { --tba3-farbe-text: #1a1a1a }` setzt die Eigenschaft **auf dem
+Element selbst** und schlägt damit jeden Wert, den die Seite vererbt — das
+Theme der Seite käme nie an. Daran ist der erste Anlauf gescheitert: im dunklen
+Thema blieb der Text schwarz auf schwarz.
+
+Deshalb die Umleitung über einen privaten Namen:
+
+```css
+:host { --tba3-_farbe-text: var(--tba3-farbe-text, #1a1a1a); }
+@media (prefers-color-scheme: dark) {
+  :host { --tba3-_farbe-text: var(--tba3-farbe-text, #f1f3f5); }
+}
+```
+
+Gezeichnet wird mit `--tba3-_farbe-text`; gesetzt wird von außen
+`--tba3-farbe-text`. Zwei Tests bewachen das: kein öffentlicher Name darf im
+Shadow DOM zugewiesen werden, und kein Baustein darf mit einem öffentlichen
+Namen zeichnen.
+
 | Gruppe | Variablen |
 |---|---|
 | Schrift | `--tba3-schrift`, `--tba3-schrift-mono`, `--tba3-schrift-groesse` |
@@ -194,6 +230,10 @@ einer bestimmten Seite** steht.
 Die Kompetenzstufen haben absichtlich einen Rot-Grün-Verlauf als Vorgabe und
 keine beliebige Palette: die Stufen tragen eine Ordnung (unter / im / über
 Standard), die ohne Verlauf verloren ginge.
+
+Zum Ausprobieren: der [Demonstrator](https://tba3.vercel.app/bausteine) hat
+einen Theme-Umschalter mit FWU, neutral, hohem Kontrast und dunkel — derselbe
+Quelltext, vier Anmutungen.
 
 ---
 

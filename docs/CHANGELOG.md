@@ -6,60 +6,47 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-### Changed
-- **Bausteine auf echtes DOM umgebaut.** Der erste Entwurf gab fertiges SVG als
-  Zeichenkette aus; daran ließen sich keine Ereignisse hängen, und Tabellen und
-  Karten waren gar nicht zu bauen. Jetzt ist die Web Component die eine echte
-  Implementierung (echte Knoten, echte Listener, Shadow DOM), Vue und React sind
-  Hüllen darum. Tooltips, Sortierung, Klick und Tastaturbedienung funktionieren.
-- Der Kern liefert **Berechnung statt Markup** — Geometrie und aufbereitete
-  Zeilen, kein SVG.
-- Die Bausteine bringen **kein Design mehr mit**: alle Farben, Schriften und
-  Maße kommen über `--tba3-*`-Variablen mit neutralen Vorgaben. Ein Test
-  verhindert, dass eine Markenfarbe ins Paket rutscht.
-
 ### Added
-- `<tba3-aufgaben-tabelle>`: sortierbare HTML-Tabelle mit echter
-  Tabellensemantik — der Baustein, der mit dem alten Ansatz nicht ging.
+- **`@tba3/bausteine`** — die Visualisierungen als **native Web Component,
+  Vue- und React-Komponente**. Die Web Component ist die eine echte
+  Implementierung (echtes DOM, echte Ereignis-Empfänger, Shadow DOM), Vue und
+  React sind Hüllen darum; der Kern liefert reine Berechnung. Fünf Bausteine:
+  Kompetenzstufen-Leiste, Aufgaben-Tabelle, Mittelwert-Vergleich, erwartete
+  gegen tatsächliche Lösungsquote, Perzentilbänder. Ausgeliefert als reines ESM
+  unter `/bausteine/`, ohne Build einbindbar.
+- Die Bausteine sind **themebar und bringen kein Design mit**: Farben, Schrift
+  und Maße kommen über `--tba3-*`-Variablen mit neutralen Vorgaben. Ein Test
+  verhindert, dass eine Markenfarbe ins Paket rutscht.
+- **Dark Mode in jedem Baustein.** Jede Variable hat eine helle und eine dunkle
+  Vorgabe; ohne Zutun folgt ein Baustein `prefers-color-scheme`, erzwingen
+  lässt sich der Modus über `data-thema`. Die Kompetenzstufen bekommen im
+  Dunklen angehobene Töne, damit sie auf dunklem Grund nicht absaufen.
 - Demonstrator unter `/bausteine`: alle Bausteine in allen drei Fassungen
   nebeneinander, mit Theme-Umschalter (FWU, neutral, hoher Kontrast, dunkel),
-  Datensatz-Wechsel und Ereignis-Protokoll.
-- Übersicht **Katalog ↔ Bausteine** auf `/bausteine`, gegen die Wirklichkeit
-  geprüft von `zuordnung.test.mjs`.
-
-### Added
-- Design-Tokens aus dem VIDIS Design System (Figma HsHyINjx5Ll6uJfzwlBNUn) als
+  Datensatzwechsel und Ereignis-Protokoll.
+- Übersicht **Katalog ↔ Bausteine** auf `/bausteine` — welche Katalog-Ansicht
+  schon über einen Baustein läuft und was den übrigen fehlt. Gegen die
+  Wirklichkeit geprüft von `zuordnung.test.mjs`.
+- Design-Tokens aus dem VIDIS Design System (Figma `HsHyINjx5Ll6uJfzwlBNUn`) als
   `/gemeinsam/tokens.css`: Farben, Abstandsraster, Typo-Skala, Radien, Schatten
   und ein einheitlicher Fokusring. Dieselbe Quelle, aus der sich anbieterportal
   und vidis-portal-new bedienen.
+- Illustration im Aufmacher des Portals: ein Endpunkt der Schnittstelle geht
+  rein, eine Kompetenzstufenverteilung kommt raus. Reines SVG mit
+  CSS-Animation, kein Skript und kein Bild.
+- Impressum und Datenschutz im Fuß von Portal und Rückmeldungen, verlinkt auf
+  softwarehub.schule.
 
 ### Changed
 - Portal, Rückmeldungen, Dokumentation und die gemeinsame Navigationsleiste
-  nutzen diese Tokens statt eigener Paletten. Sichtbarster Unterschied: die
-  Markenfarbe ist jetzt das VIDIS-Blau #0000c4 statt Tailwind-Standard #2563eb.
-
-### Added
-- `@tba3/bausteine`: die Visualisierungen als **Web Component, Vue- und
-  React-Komponente**. Ein framework-freier Kern je Baustein, darüber drei dünne
-  Adapter — dieselbe Implementierung, drei Fassungen. Vier Bausteine portiert
-  (Kompetenzstufen-Leiste, Mittelwert-Vergleich, erwartete gegen tatsächliche
-  Lösungsquote, Perzentilbänder). Wird als reines ESM unter `/bausteine/`
-  ausgeliefert und lässt sich ohne Build einbinden.
-
-### Changed
-- Der Katalog bezieht diese vier Visualisierungen aus `@tba3/bausteine/vue`
+  nutzen die Design-Tokens statt eigener Paletten. Sichtbarster Unterschied: die
+  Markenfarbe ist jetzt das VIDIS-Blau `#0000c4` statt Tailwind-Standard
+  `#2563eb`.
+- Vier Katalog-Ansichten beziehen ihre Visualisierung aus `@tba3/bausteine/vue`
   statt aus eigenen `.vue`-Dateien.
 - Zwei Beschriftungen, die im Original am rechten SVG-Rand abgeschnitten wurden
   (`n=` in der Kompetenzstufen-Leiste, der letzte Legendeneintrag der
   Perzentilbänder), haben jetzt Platz.
-
-### Added
-- Illustration im Aufmacher des Portals: ein Endpunkt der Schnittstelle geht
-  rein, eine Kompetenzstufenverteilung kommt raus. Reines SVG mit
-  CSS-Animation, kein Skript und kein Bild; die Balken stehen auch ohne
-  laufende Animation vollständig da.
-- Impressum und Datenschutz im Fuß von Portal und Rückmeldungen, verlinkt auf
-  softwarehub.schule.
 
 ### Fixed
 - Die Sprachwahl überlebt das erste Rendern der Demoanwendung: `FilterContext`

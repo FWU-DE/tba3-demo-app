@@ -14,16 +14,16 @@ import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
 
 const STIL = `
-.balken-segment { cursor: pointer; transition: opacity var(--tba3-dauer, 150ms); }
+.balken-segment { cursor: pointer; transition: opacity var(--tba3-_dauer); }
 .balken-segment:hover, .balken-segment:focus-visible { opacity: 0.78; }
-.balken-segment:focus-visible { outline: 2px solid var(--tba3-farbe-fokus); outline-offset: 1px; }
+.balken-segment:focus-visible { outline: 2px solid var(--tba3-_farbe-fokus); outline-offset: 1px; }
 .zeile-fair .balken-segment { opacity: 0.8; }
 .leer {
-  padding: calc(var(--tba3-abstand) * 3);
+  padding: calc(var(--tba3-_abstand) * 3);
   text-align: center;
-  color: var(--tba3-farbe-text-gedaempft);
-  border: 1px dashed var(--tba3-farbe-linie);
-  border-radius: var(--tba3-radius);
+  color: var(--tba3-_farbe-text-gedaempft);
+  border: 1px dashed var(--tba3-_farbe-linie);
+  border-radius: var(--tba3-_radius);
 }
 `;
 
@@ -62,11 +62,11 @@ function aufbauen(wurzel, zustand, el) {
       g.teilstriche.flatMap((t) => [
         s('line', {
           x1: t.x, y1: 20, x2: t.x, y2: 28 + g.balkenBlock,
-          stroke: 'var(--tba3-farbe-raster)', 'stroke-width': 1,
+          stroke: 'var(--tba3-_farbe-raster)', 'stroke-width': 1,
         }),
         s('text', {
           x: t.x, y: 17, 'text-anchor': 'middle', 'font-size': 10,
-          fill: 'var(--tba3-farbe-text-gedaempft)', text: `${t.pct}%`,
+          fill: 'var(--tba3-_farbe-text-gedaempft)', text: `${t.pct}%`,
         }),
       ]),
     ),
@@ -80,7 +80,7 @@ function aufbauen(wurzel, zustand, el) {
       s('text', {
         x: zeile.fair ? 138 : 152, y: zeile.y + 14,
         'text-anchor': 'end', 'dominant-baseline': 'middle', 'font-size': 12,
-        fill: zeile.fair ? 'var(--tba3-farbe-marke)' : 'var(--tba3-farbe-text)',
+        fill: zeile.fair ? 'var(--tba3-_farbe-marke)' : 'var(--tba3-_farbe-text)',
         text: zeile.label,
       }),
     );
@@ -126,7 +126,7 @@ function aufbauen(wurzel, zustand, el) {
           s('text', {
             x: seg.x + seg.breite / 2, y: zeile.y + 14,
             'text-anchor': 'middle', 'dominant-baseline': 'middle',
-            'font-size': 10, 'font-weight': 600, fill: 'var(--tba3-farbe-text-invers)',
+            'font-size': 10, 'font-weight': 600, fill: 'var(--tba3-_farbe-text-invers)',
             'pointer-events': 'none', text: seg.nameShort,
           }),
         );
@@ -137,7 +137,7 @@ function aufbauen(wurzel, zustand, el) {
       gruppe.append(
         s('rect', {
           x: 160, y: zeile.y, width: 560, height: 28, fill: 'none',
-          stroke: 'var(--tba3-farbe-marke)', 'stroke-width': 2,
+          stroke: 'var(--tba3-_farbe-marke)', 'stroke-width': 2,
           'stroke-dasharray': '6,3', 'pointer-events': 'none',
         }),
       );
@@ -146,7 +146,7 @@ function aufbauen(wurzel, zustand, el) {
     gruppe.append(
       s('text', {
         x: 725, y: zeile.y + 14, 'dominant-baseline': 'middle', 'font-size': 10,
-        fill: 'var(--tba3-farbe-text-gedaempft)', text: `n=${zeile.total}`,
+        fill: 'var(--tba3-_farbe-text-gedaempft)', text: `n=${zeile.total}`,
       }),
     );
 
@@ -163,7 +163,7 @@ function aufbauen(wurzel, zustand, el) {
           s('rect', { x: 0, y: 0, width: 12, height: 12, fill: l.farbe, rx: 2 }),
           s('text', {
             x: 15, y: 10, 'font-size': 10,
-            fill: 'var(--tba3-farbe-text-gedaempft)', text: `Stufe ${l.nameShort}`,
+            fill: 'var(--tba3-_farbe-text-gedaempft)', text: `Stufe ${l.nameShort}`,
           }),
         ]),
       ),

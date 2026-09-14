@@ -13,17 +13,17 @@ import { h } from './svg.js';
 
 const STIL = `
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
-caption { text-align: left; padding-bottom: var(--tba3-abstand); }
+caption { text-align: left; padding-bottom: var(--tba3-_abstand); }
 th, td {
-  padding: calc(var(--tba3-abstand) * 0.75) var(--tba3-abstand);
-  border-bottom: 1px solid var(--tba3-farbe-linie);
+  padding: calc(var(--tba3-_abstand) * 0.75) var(--tba3-_abstand);
+  border-bottom: 1px solid var(--tba3-_farbe-linie);
   text-align: left;
 }
 th { font-weight: 600; white-space: nowrap; }
 td.zahl, th.zahl { text-align: right; }
 tbody tr { cursor: pointer; }
-tbody tr:hover, tbody tr:focus-within { background: var(--tba3-farbe-hervorhebung); }
-thead th { border-bottom: 2px solid var(--tba3-farbe-linie); }
+tbody tr:hover, tbody tr:focus-within { background: var(--tba3-_farbe-hervorhebung)); }
+thead th { border-bottom: 2px solid var(--tba3-_farbe-linie); }
 
 .sortknopf {
   all: unset;
@@ -34,35 +34,35 @@ thead th { border-bottom: 2px solid var(--tba3-farbe-linie); }
   font: inherit;
   font-weight: 600;
 }
-.sortknopf:hover { color: var(--tba3-farbe-marke); }
+.sortknopf:hover { color: var(--tba3-_farbe-marke); }
 .pfeil { opacity: 0.35; font-size: 0.85em; }
-th[aria-sort] .pfeil { opacity: 1; color: var(--tba3-farbe-marke); }
+th[aria-sort] .pfeil { opacity: 1; color: var(--tba3-_farbe-marke); }
 
-.kennung { font-family: var(--tba3-schrift-mono); }
+.kennung { font-family: var(--tba3-_schrift-mono); }
 .stufe {
   display: inline-block; min-width: 26px; text-align: center;
-  padding: 1px 6px; border-radius: var(--tba3-radius);
-  color: var(--tba3-farbe-text-invers); font-size: 0.85em; font-weight: 700;
+  padding: 1px 6px; border-radius: var(--tba3-_radius);
+  color: var(--tba3-_farbe-text-invers); font-size: 0.85em; font-weight: 700;
 }
 .balken { position: relative; display: block; height: 14px; border-radius: 2px;
-  background: var(--tba3-farbe-flaeche); min-width: 60px; }
+  background: var(--tba3-_farbe-flaeche); min-width: 60px; }
 .balken > i { position: absolute; inset: 0 auto 0 0; border-radius: 2px; }
-.quote { display: flex; align-items: center; gap: var(--tba3-abstand); justify-content: flex-end; }
+.quote { display: flex; align-items: center; gap: var(--tba3-_abstand); justify-content: flex-end; }
 
-.delta-ueber { color: var(--tba3-farbe-ueber); font-weight: 600; }
-.delta-unter { color: var(--tba3-farbe-unter); font-weight: 600; }
-.delta-im-rahmen { color: var(--tba3-farbe-text-gedaempft); }
+.delta-ueber { color: var(--tba3-_farbe-ueber); font-weight: 600; }
+.delta-unter { color: var(--tba3-_farbe-unter); font-weight: 600; }
+.delta-im-rahmen { color: var(--tba3-_farbe-text-gedaempft); }
 
 .leer {
-  padding: calc(var(--tba3-abstand) * 3); text-align: center;
-  color: var(--tba3-farbe-text-gedaempft);
-  border: 1px dashed var(--tba3-farbe-linie); border-radius: var(--tba3-radius);
+  padding: calc(var(--tba3-_abstand) * 3); text-align: center;
+  color: var(--tba3-_farbe-text-gedaempft);
+  border: 1px dashed var(--tba3-_farbe-linie); border-radius: var(--tba3-_radius);
 }
 `;
 
 const STUFENFARBE = (stufe) => {
   const nr = { I: 1, II: 2, III: 3, IV: 4, V: 5 }[stufe];
-  return nr ? `var(--tba3-stufe-${nr})` : 'var(--tba3-farbe-text-gedaempft)';
+  return nr ? `var(--tba3-_stufe-${nr})` : 'var(--tba3-_farbe-text-gedaempft)';
 };
 
 function aufbauen(wurzel, zustand, el) {

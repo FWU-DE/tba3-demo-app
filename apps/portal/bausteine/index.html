@@ -472,9 +472,30 @@
   }
 
   fassungWahl.addEventListener('change', fassungSetzen);
+  function ausAdresse() {
+    const p = new URLSearchParams(location.search);
+    for (const [feld, wahl] of [['thema', themaWahl], ['fassung', fassungWahl], ['gruppe', datensatzWahl]]) {
+      const wert = p.get(feld);
+      if (wert !== null && [...wahl.options].some((o) => o.value === wert)) wahl.value = wert;
+    }
+  }
+
+  function inAdresse() {
+    const p = new URLSearchParams(location.search);
+    p.set('thema', themaWahl.value);
+    p.set('fassung', fassungWahl.value);
+    p.set('gruppe', datensatzWahl.value);
+    history.replaceState({}, '', `${location.pathname}?${p}${location.hash}`);
+  }
+
+  for (const wahl of [themaWahl, fassungWahl, datensatzWahl]) {
+    wahl.addEventListener('change', inAdresse);
+  }
+
   themaWahl.addEventListener('change', themaSetzen);
   datensatzWahl.addEventListener('change', fuellen);
 
+  ausAdresse();
   themaSetzen();
   fassungSetzen();
   fuellen();

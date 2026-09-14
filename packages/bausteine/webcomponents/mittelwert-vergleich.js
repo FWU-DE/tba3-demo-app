@@ -7,15 +7,15 @@ import { h, s } from './svg.js';
 const STIL = `
 .marker { cursor: pointer; }
 .marker:hover polygon, .marker:focus-visible polygon { stroke-width: 2.5; }
-.marker:focus-visible { outline: 2px solid var(--tba3-farbe-fokus); outline-offset: 2px; }
+.marker:focus-visible { outline: 2px solid var(--tba3-_farbe-fokus); outline-offset: 2px; }
 .leer {
-  padding: calc(var(--tba3-abstand) * 3); text-align: center;
-  color: var(--tba3-farbe-text-gedaempft);
-  border: 1px dashed var(--tba3-farbe-linie); border-radius: var(--tba3-radius);
+  padding: calc(var(--tba3-_abstand) * 3); text-align: center;
+  color: var(--tba3-_farbe-text-gedaempft);
+  border: 1px dashed var(--tba3-_farbe-linie); border-radius: var(--tba3-_radius);
 }
 `;
 
-const farbe = (fair) => (fair ? 'var(--tba3-farbe-marke)' : 'var(--tba3-farbe-marke)');
+const farbe = (fair) => (fair ? 'var(--tba3-_farbe-marke)' : 'var(--tba3-_farbe-marke)');
 
 function aufbauen(wurzel, zustand, el) {
   const g = geometrie(zustand);
@@ -47,13 +47,13 @@ function aufbauen(wurzel, zustand, el) {
       ...g.zonen.map((z) =>
         s('rect', {
           x: z.x, y: MASSE.oben - 20, width: z.breite, height: g.flaeche + 20,
-          fill: `var(${z.variable}, ${z.vorgabe})`,
+          fill: `var(--tba3-_${z.variable})`,
         }),
       ),
       ...g.zonen.map((z) =>
         s('text', {
           x: z.mitte, y: MASSE.oben - 8, 'text-anchor': 'middle', 'font-size': 8.5,
-          fill: 'var(--tba3-farbe-text-gedaempft)', text: z.text,
+          fill: 'var(--tba3-_farbe-text-gedaempft)', text: z.text,
         }),
       ),
     ]),
@@ -64,11 +64,11 @@ function aufbauen(wurzel, zustand, el) {
     s('g', {}, g.teilstriche.flatMap((t) => [
       s('line', {
         x1: t.x, y1: MASSE.oben - 20, x2: t.x, y2: MASSE.oben + g.flaeche,
-        stroke: 'var(--tba3-farbe-raster)', 'stroke-width': 1,
+        stroke: 'var(--tba3-_farbe-raster)', 'stroke-width': 1,
       }),
       s('text', {
         x: t.x, y: MASSE.oben + g.flaeche + 14, 'text-anchor': 'middle',
-        'font-size': 10, fill: 'var(--tba3-farbe-text-gedaempft)', text: `${t.pct}%`,
+        'font-size': 10, fill: 'var(--tba3-_farbe-text-gedaempft)', text: `${t.pct}%`,
       }),
     ])),
   );
@@ -82,12 +82,12 @@ function aufbauen(wurzel, zustand, el) {
       s('line', {
         x1: MASSE.labelBreite, y1: zeile.y,
         x2: MASSE.labelBreite + MASSE.chartBreite, y2: zeile.y,
-        stroke: 'var(--tba3-farbe-raster)', 'stroke-width': 1,
+        stroke: 'var(--tba3-_farbe-raster)', 'stroke-width': 1,
       }),
       s('text', {
         x: MASSE.labelBreite - 10, y: zeile.y, 'text-anchor': 'end',
         'dominant-baseline': 'middle', 'font-size': 12,
-        fill: 'var(--tba3-farbe-text)', text: zeile.label,
+        fill: 'var(--tba3-_farbe-text)', text: zeile.label,
       }),
     );
     if (zeile.fair) {
@@ -124,11 +124,11 @@ function aufbauen(wurzel, zustand, el) {
     }, [
       s('polygon', {
         points: '0,-9 9,0 0,9 -9,0', fill: f,
-        stroke: 'var(--tba3-farbe-text-invers)', 'stroke-width': 1.5,
+        stroke: 'var(--tba3-_farbe-text-invers)', 'stroke-width': 1.5,
       }),
       s('text', {
         y: 1, 'text-anchor': 'middle', 'dominant-baseline': 'middle',
-        'font-size': 7, 'font-weight': 700, fill: 'var(--tba3-farbe-text-invers)',
+        'font-size': 7, 'font-weight': 700, fill: 'var(--tba3-_farbe-text-invers)',
         'pointer-events': 'none', text: String(Math.round(zeile.mean)),
       }),
       s('title', { text: `${zeile.label}: ${Math.round(zeile.mean)} %` }),
@@ -148,7 +148,7 @@ function aufbauen(wurzel, zustand, el) {
         s('text', {
           x: MASSE.labelBreite + MASSE.chartBreite + 8, y: zeile.y,
           'dominant-baseline': 'middle', 'font-size': 10,
-          fill: 'var(--tba3-farbe-text-gedaempft)', text: `n=${zeile.n}`,
+          fill: 'var(--tba3-_farbe-text-gedaempft)', text: `n=${zeile.n}`,
         }),
       );
     }
@@ -160,7 +160,7 @@ function aufbauen(wurzel, zustand, el) {
     s('text', {
       x: MASSE.labelBreite + MASSE.chartBreite / 2, y: g.hoehe - 4,
       'text-anchor': 'middle', 'font-size': 10,
-      fill: 'var(--tba3-farbe-text-gedaempft)', text: g.xLabel,
+      fill: 'var(--tba3-_farbe-text-gedaempft)', text: g.xLabel,
     }),
   );
 

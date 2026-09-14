@@ -152,10 +152,10 @@ export function elementKlasse({ name, standard, stil, aufbauen }) {
 const GRUNDSTIL = `
 :host {
   display: block;
-  font-family: var(--tba3-schrift);
-  font-size: var(--tba3-schrift-groesse);
-  color: var(--tba3-farbe-text);
-  background: var(--tba3-farbe-grund);
+  font-family: var(--tba3-_schrift);
+  font-size: var(--tba3-_schrift-groesse);
+  color: var(--tba3-_farbe-text);
+  background: var(--tba3-_farbe-grund);
 }
 :host([hidden]) { display: none; }
 * { box-sizing: border-box; }
@@ -163,13 +163,13 @@ figure { margin: 0; }
 figcaption {
   font-size: 1.15em;
   font-weight: 600;
-  margin-bottom: calc(var(--tba3-abstand) * 1.5);
+  margin-bottom: calc(var(--tba3-_abstand) * 1.5);
 }
-.gedaempft { color: var(--tba3-farbe-text-gedaempft); font-weight: 400; }
+.gedaempft { color: var(--tba3-_farbe-text-gedaempft); font-weight: 400; }
 .scroll { overflow-x: auto; }
 .scroll svg { display: block; }
 :where(button, [tabindex]):focus-visible {
-  outline: 2px solid var(--tba3-farbe-fokus);
+  outline: 2px solid var(--tba3-_farbe-fokus);
   outline-offset: 2px;
 }
 `;

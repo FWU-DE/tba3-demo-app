@@ -35,7 +35,7 @@ export const TEILSTRICHE = [0, 25, 50, 75, 100];
 /** Stufe 1–5 auf die Themenvariable abbilden, wenn die Daten keine Farbe nennen. */
 export function stufenFarbe(index, eigene) {
   if (eigene) return eigene;
-  return `var(--tba3-stufe-${Math.min(index + 1, 5)})`;
+  return `var(--tba3-_stufe-${Math.min(index + 1, 5)})`;
 }
 
 /**

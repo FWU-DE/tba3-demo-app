@@ -1,78 +1,134 @@
 // Das Thema der Bausteine.
 //
 // Die Bausteine bringen absichtlich **kein** Design mit. Sie lesen
-// CSS-Variablen und haben für jede einen neutralen Rückfallwert. Steht ein
-// Baustein in einer Seite mit eigenen Tokens, übernimmt er deren Aussehen;
-// steht er allein, sieht er unauffällig aus statt kaputt.
-//
-// So lässt sich derselbe Baustein im FWU-Portal, bei einem Land mit eigenem
-// Design und in einer fremden Anwendung einsetzen, ohne ihn zu forken. Genau
-// das ist der Punkt der Nachnutzung.
+// CSS-Variablen und haben für jede eine Vorgabe — einmal hell, einmal dunkel.
+// Steht ein Baustein in einer Seite mit eigenen Tokens, übernimmt er deren
+// Aussehen; steht er allein, sieht er unauffällig aus statt kaputt, und im
+// dunklen Systemthema von selbst dunkel.
 //
 //   tba3-kompetenzstufen-leiste {
 //     --tba3-farbe-marke: #0000c4;
 //     --tba3-stufe-3: #eab308;
 //   }
 //
-// Die Namen sind bewusst eigenständig (`--tba3-*`) statt an die Tokens der
-// FWU-Seite gebunden: ein Baustein darf nicht davon abhängen, dass gerade
-// diese Seite ihn umgibt. Wer die FWU-Tokens hat, verdrahtet sie in einer
-// Zeile — siehe README.
+// ── Warum die Vorgaben nicht einfach auf :host stehen ─────────────────────
+//
+// Ein `:host { --tba3-farbe-text: #1a1a1a }` setzt die Eigenschaft **auf dem
+// Element selbst** — und schlägt damit jeden Wert, den die Seite weiter oben
+// vererbt. Das Thema der Seite käme nie an. Genau daran ist der erste Anlauf
+// gescheitert: im dunklen Thema blieb der Text schwarz.
+//
+// Deshalb die Umleitung über einen privaten Namen:
+//
+//   :host { --tba3-_farbe-text: var(--tba3-farbe-text, #1a1a1a); }
+//   @media (prefers-color-scheme: dark) {
+//     :host { --tba3-_farbe-text: var(--tba3-farbe-text, #f1f3f5); }
+//   }
+//
+// Die Bausteine zeichnen mit `--tba3-_farbe-text`. Setzt die Seite den
+// öffentlichen Namen, gewinnt sie — der private Wert liest ihn ja. Setzt sie
+// nichts, greift die Vorgabe, und die hängt vom Systemthema ab. Den privaten
+// Namen setzt niemand von außen; er ist nur die Leitung dazwischen.
+// ──────────────────────────────────────────────────────────────────────────
 
-/**
- * Jede Variable mit ihrem neutralen Rückfallwert.
- * Die Reihenfolge ist die der Dokumentation.
- */
+/** Jede Variable mit Vorgabe für hell und dunkel. */
 export const THEMA = {
   // Schrift
-  '--tba3-schrift': 'system-ui, sans-serif',
-  '--tba3-schrift-mono': 'ui-monospace, SFMono-Regular, Menlo, monospace',
+  'schrift': { hell: 'system-ui, sans-serif', dunkel: 'system-ui, sans-serif' },
+  'schrift-mono': {
+    hell: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+    dunkel: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+  },
+  'schrift-groesse': { hell: '13px', dunkel: '13px' },
 
   // Flächen und Linien
-  '--tba3-farbe-grund': 'transparent',
-  '--tba3-farbe-flaeche': '#f8f8f8',
-  '--tba3-farbe-linie': '#e0e0e0',
-  '--tba3-farbe-raster': '#ededed',
+  'farbe-grund': { hell: 'transparent', dunkel: 'transparent' },
+  'farbe-flaeche': { hell: '#f8f8f8', dunkel: '#23262d' },
+  'farbe-linie': { hell: '#e0e0e0', dunkel: '#3a3f48' },
+  'farbe-raster': { hell: '#ededed', dunkel: '#2c3038' },
 
   // Text
-  '--tba3-farbe-text': '#1a1a1a',
-  '--tba3-farbe-text-gedaempft': '#6b6b6b',
-  '--tba3-farbe-text-invers': '#ffffff',
+  'farbe-text': { hell: '#1a1a1a', dunkel: '#f1f3f5' },
+  'farbe-text-gedaempft': { hell: '#6b6b6b', dunkel: '#a4aab4' },
+  'farbe-text-invers': { hell: '#ffffff', dunkel: '#16181d' },
 
   // Interaktion
-  '--tba3-farbe-marke': '#3b5bdb',
-  '--tba3-farbe-fokus': '#3b5bdb',
-  '--tba3-farbe-hervorhebung': 'rgba(0, 0, 0, 0.04)',
+  'farbe-marke': { hell: '#3b5bdb', dunkel: '#8aa3ff' },
+  'farbe-fokus': { hell: '#3b5bdb', dunkel: '#8aa3ff' },
+  'farbe-hervorhebung': { hell: 'rgba(0, 0, 0, 0.04)', dunkel: 'rgba(255, 255, 255, 0.06)' },
 
   // Kompetenzstufen I–V. Neutral heißt hier nicht farblos: die Stufen tragen
   // eine Ordnung (unter / im / über Standard), die ohne Farbverlauf verloren
-  // ginge. Die Vorgabe ist ein zurückhaltender Rot-Grün-Verlauf.
-  '--tba3-stufe-1': '#d64545',
-  '--tba3-stufe-2': '#e8833a',
-  '--tba3-stufe-3': '#d9b23a',
-  '--tba3-stufe-4': '#4a9e5c',
-  '--tba3-stufe-5': '#2f7a44',
+  // ginge. Im Dunklen sind die Töne angehoben, damit sie auf dunklem Grund
+  // nicht absaufen.
+  'stufe-1': { hell: '#d64545', dunkel: '#f07070' },
+  'stufe-2': { hell: '#e8833a', dunkel: '#f0a15e' },
+  'stufe-3': { hell: '#d9b23a', dunkel: '#e8c65e' },
+  'stufe-4': { hell: '#4a9e5c', dunkel: '#6fc785' },
+  'stufe-5': { hell: '#2f7a44', dunkel: '#4da86a' },
 
   // Bewertung gegen einen Erwartungswert
-  '--tba3-farbe-ueber': '#2f7a44',
-  '--tba3-farbe-im-rahmen': '#6b6b6b',
-  '--tba3-farbe-unter': '#c2402d',
+  'farbe-ueber': { hell: '#2f7a44', dunkel: '#6fc785' },
+  'farbe-im-rahmen': { hell: '#6b6b6b', dunkel: '#a4aab4' },
+  'farbe-unter': { hell: '#c2402d', dunkel: '#f07a68' },
+
+  // Perzentilbänder — eigene Töne, weil das Band kein Markenelement ist:
+  // es soll die Raute tragen, nicht überstrahlen.
+  'band': { hell: 'rgba(90,155,210,0.50)', dunkel: 'rgba(120,170,220,0.40)' },
+  'band-kante': { hell: 'rgba(60,125,185,0.70)', dunkel: 'rgba(140,185,230,0.60)' },
+  'band-unten': { hell: 'rgba(251,146,60,0.28)', dunkel: 'rgba(230,140,70,0.26)' },
+  'band-oben': { hell: 'rgba(74,222,128,0.28)', dunkel: 'rgba(90,200,130,0.26)' },
+  'band-grund': { hell: '#e8f2f9', dunkel: '#1d2630' },
+  'band-marker': { hell: '#1e3a5f', dunkel: '#cdd9e8' },
+
+  // Zonen im Mittelwert-Vergleich
+  'zone-unten': { hell: '#fdf2f2', dunkel: '#2a1f22' },
+  'zone-mitte': { hell: '#fdfbee', dunkel: '#292620' },
+  'zone-oben': { hell: '#f0f8f2', dunkel: '#1f2a22' },
 
   // Maße
-  '--tba3-radius': '4px',
-  '--tba3-abstand': '8px',
-  '--tba3-schrift-groesse': '13px',
+  'radius': { hell: '4px', dunkel: '4px' },
+  'abstand': { hell: '8px', dunkel: '8px' },
 };
 
-/** Die CSS-Regeln, die die Rückfallwerte setzen. Kommt in jedes Shadow DOM. */
-export function themaCss() {
-  const zeilen = Object.entries(THEMA).map(([name, wert]) => `  ${name}: ${wert};`);
-  return `:host {\n${zeilen.join('\n')}\n}`;
-}
+/** Der öffentliche Name, den eine Seite setzt. */
+export const oeffentlich = (name) => `--tba3-${name}`;
 
-/** Kurzform für den Zugriff in Stilregeln: v('farbe-text') → var(--tba3-farbe-text) */
-export function v(name) {
-  return `var(--tba3-${name})`;
+/** Der private Name, mit dem die Bausteine zeichnen. */
+export const privat = (name) => `--tba3-_${name}`;
+
+/** Kurzform für Stilregeln: v('farbe-text') → var(--tba3-_farbe-text) */
+export const v = (name) => `var(${privat(name)})`;
+
+/**
+ * Die Umleitung als CSS. Kommt in jedes Shadow DOM.
+ *
+ * Zwei Blöcke: der erste bindet jeden privaten Namen an den öffentlichen mit
+ * heller Vorgabe, der zweite tut dasselbe mit dunkler Vorgabe, sobald das
+ * System auf Dunkel steht. Eine Seite, die den öffentlichen Namen setzt,
+ * gewinnt in beiden Fällen.
+ */
+export function themaCss() {
+  const zeile = (name, modus) =>
+    `  ${privat(name)}: var(${oeffentlich(name)}, ${THEMA[name][modus]});`;
+  const namen = Object.keys(THEMA);
+  return [
+    ':host {',
+    ...namen.map((n) => zeile(n, 'hell')),
+    '}',
+    '@media (prefers-color-scheme: dark) {',
+    '  :host {',
+    ...namen.map((n) => '  ' + zeile(n, 'dunkel')),
+    '  }',
+    '}',
+    // Wer den Modus erzwingen will, setzt data-thema am Element oder weiter oben.
+    ':host([data-thema="hell"]) {',
+    ...namen.map((n) => zeile(n, 'hell')),
+    '}',
+    ':host([data-thema="dunkel"]) {',
+    ...namen.map((n) => zeile(n, 'dunkel')),
+    '}',
+  ].join('\n');
 }
 
 export default THEMA;

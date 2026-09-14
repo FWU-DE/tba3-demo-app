@@ -31,9 +31,9 @@ export const TEILSTRICHE = [0, 25, 50, 75, 100];
 // Hintergrundbänder für die Kompetenzzonen — blass, sie sollen den Marker
 // einordnen, nicht mit ihm konkurrieren.
 export const ZONEN = [
-  { von: 0, bis: 30, variable: '--tba3-zone-unten', vorgabe: '#fdf2f2', text: 'KS I–II' },
-  { von: 30, bis: 60, variable: '--tba3-zone-mitte', vorgabe: '#fdfbee', text: 'KS III' },
-  { von: 60, bis: 100, variable: '--tba3-zone-oben', vorgabe: '#f0f8f2', text: 'KS IV–V' },
+  { von: 0, bis: 30, variable: 'zone-unten', text: 'KS I–II' },
+  { von: 30, bis: 60, variable: 'zone-mitte', text: 'KS III' },
+  { von: 60, bis: 100, variable: 'zone-oben', text: 'KS IV–V' },
 ];
 
 export function geometrie(props = {}) {
