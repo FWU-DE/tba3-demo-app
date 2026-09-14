@@ -10,7 +10,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-import { ZUORDNUNG } from './zuordnung.js';
+import { NUR_BAUSTEIN, ZUORDNUNG } from './zuordnung.js';
 
 const HIER = dirname(fileURLToPath(import.meta.url));
 const WURZEL = join(HIER, '..', '..', '..');
@@ -65,6 +65,26 @@ describe('Zuordnung Katalog ↔ Bausteine', () => {
   it('hat für jeden umgezogenen Eintrag einen Baustein', () => {
     for (const z of ZUORDNUNG.filter((x) => x.stand === 'umgezogen')) {
       expect(z.baustein, `${z.katalog} ist umgezogen, nennt aber keinen Baustein`).toBeTruthy();
+    }
+  });
+
+  // Die Bibliothek ist mehr als die Schau: Bausteine ohne Katalog-Ansicht
+  // stehen in NUR_BAUSTEIN, mit Grund. Ohne diese Prüfung fällt ein neuer
+  // Baustein einfach aus der Übersicht heraus, und niemand merkt es.
+  it('führt jeden Baustein entweder bei einer Ansicht oder in NUR_BAUSTEIN', async () => {
+    const namen = await bausteinNamen();
+    const genannt = [
+      ...ZUORDNUNG.map((z) => z.baustein),
+      ...NUR_BAUSTEIN.map((n) => n.baustein),
+    ].filter(Boolean);
+
+    expect([...new Set(genannt)].sort()).toEqual(namen);
+  });
+
+  it('begründet jeden Baustein ohne Ansicht', () => {
+    for (const n of NUR_BAUSTEIN) {
+      expect(n.anzeige, `${n.baustein} ohne Klartextnamen`).toBeTruthy();
+      expect(n.grund, `${n.baustein} ohne Grund`).toBeTruthy();
     }
   });
 });

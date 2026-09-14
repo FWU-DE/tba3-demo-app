@@ -5,6 +5,9 @@ import { t } from '../i18n';
 const props = defineProps({
   componentName: { type: String, required: true },
   githubFile:    { type: String, required: true },  // filename only, e.g. 'ItemSolutionTable.vue'
+  // Voller Pfad im Repository, für Ansichten, die auf @tba3/bausteine
+  // umgezogen sind: dort liegt der Quelltext nicht mehr unter components/.
+  githubPath:    { type: String, default: '' },
   propsDocs: {
     type: Array,
     default: () => [],
@@ -20,10 +23,13 @@ const props = defineProps({
   dataShape:     { type: String, default: '' },
 });
 
-const GITHUB_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/component-catalog/src/components/';
+const GITHUB_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/';
+const KATALOG_KOMPONENTEN = 'apps/katalog/src/components/';
 const API_SPEC_URL = 'https://petstore.swagger.io/?url=https%3A%2F%2Fraw.githubusercontent.com%2Findibit-eu%2Ftba3%2Frefs%2Fheads%2Fmain%2Ftba3-spec.yml';
 
-const githubUrl = computed(() => GITHUB_BASE + props.githubFile);
+const githubUrl = computed(
+  () => GITHUB_BASE + (props.githubPath || KATALOG_KOMPONENTEN + props.githubFile),
+);
 
 const copied = ref(false);
 const copyCode = () => {

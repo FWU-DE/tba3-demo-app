@@ -49,3 +49,70 @@ export {
   geometrie as baenderGeometrie,
   raute,
 } from './perzentilbaender.js';
+
+// Aus dem Katalog umgezogen: die vier Ansichten, die es bisher nur dort gab.
+
+export {
+  NAME as SCHUELER_NAME,
+  STANDARD as SCHUELER_STANDARD,
+  ANTEILE,
+  BALKEN,
+  zeilen as schuelerZeilen,
+  spalten as schuelerSpalten,
+  segmente as schuelerSegmente,
+  auswahlUmschalten,
+  naechsteSortierung as schuelerNaechsteSortierung,
+} from './schueler-tabelle.js';
+
+export {
+  NAME as KARTEN_NAME,
+  STANDARD as KARTEN_STANDARD,
+  RING,
+  REIHENFOLGE as KARTEN_REIHENFOLGE,
+  karten,
+  ringSegment,
+  umschalten as karteUmschalten,
+} from './uebersichtskarten.js';
+
+export {
+  NAME as STREU_NAME,
+  STANDARD as STREU_STANDARD,
+  MASSE as STREU_MASSE,
+  TEILSTRICHE,
+  geometrie as streuGeometrie,
+} from './streudiagramm.js';
+
+export {
+  NAME as BISTA_NAME,
+  STANDARD as BISTA_STANDARD,
+  MASSE as BISTA_MASSE,
+  geometrie as bistaGeometrie,
+} from './bista-verteilung.js';
+
+// Nur in der Bibliothek: drei Bausteine, für die es keine Katalog-Ansicht
+// gibt. Die Zuordnung ist keine Teilmenge — was ein einbauendes Projekt
+// braucht, ist nicht dasselbe wie das, was die Schau zeigt.
+
+export {
+  NAME as VERLAUF_NAME,
+  STANDARD as VERLAUF_STANDARD,
+  MASSE as VERLAUF_MASSE,
+  geometrie as verlaufGeometrie,
+} from './lernstands-verlauf.js';
+
+export {
+  NAME as HEATMAP_NAME,
+  STANDARD as HEATMAP_STANDARD,
+  MASSE as HEATMAP_MASSE,
+  ausschlag,
+  farbe as heatmapFarbe,
+  raster as heatmapRaster,
+} from './aufgaben-heatmap.js';
+
+export {
+  NAME as KACHEL_NAME,
+  STANDARD as KACHEL_STANDARD,
+  MASSE as KACHEL_MASSE,
+  bewertung as kachelBewertung,
+  kachel,
+} from './kennzahl-kachel.js';

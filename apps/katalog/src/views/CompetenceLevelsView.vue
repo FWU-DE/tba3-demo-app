@@ -12,7 +12,8 @@ import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'CompetenceLevelBar.vue',
+  githubFile: 'kompetenzstufen-leiste.js',
+  githubPath: 'packages/bausteine/webcomponents/kompetenzstufen-leiste.js',
   propsDocs: [
     { name: 'rows',   type: 'Array',  required: true,  pfad: 'ansichten.stufen.props.rows' },
     { name: 'title',  type: 'String', default: "''",    pfad: 'ansichten.stufen.props.title' },
@@ -33,7 +34,7 @@ const DOCS = {
   codeExample: `<script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import CompetenceLevelBar from './components/CompetenceLevelBar.vue';
+import { KompetenzstufenLeiste as CompetenceLevelBar } from '@tba3/bausteine/vue';
 
 const LEVEL_COLORS = { I: '#ef4444', II: '#f97316', III: '#eab308', IV: '#22c55e', V: '#15803d' };
 const LEVEL_ORDER  = ['I', 'II', 'III', 'IV', 'V'];
@@ -280,6 +281,7 @@ const domainCharts = computed(() => {
         <ComponentDocs
           component-name="CompetenceLevelBar"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"

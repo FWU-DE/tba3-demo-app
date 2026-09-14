@@ -6,76 +6,67 @@ import Card from 'primevue/card';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
-import ItemSolutionTable from '../components/ItemSolutionTable.vue';
+import { AufgabenTabelle } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'ItemSolutionTable.vue',
+  githubFile: 'aufgaben-tabelle.js',
+  githubPath: 'packages/bausteine/webcomponents/aufgaben-tabelle.js',
   propsDocs: [
-    { name: 'rows',        type: 'Array',  required: true,  pfad: 'ansichten.tabelle.props.rows' },
-    { name: 'groupLabel',  type: 'String', default: "'Klasse'",     pfad: 'ansichten.tabelle.props.groupLabel' },
-    { name: 'schoolLabel', type: 'String', default: "'Schule'",     pfad: 'ansichten.tabelle.props.schoolLabel' },
-    { name: 'stateLabel',  type: 'String', default: "'Bundesland'", pfad: 'ansichten.tabelle.props.stateLabel' },
+    { name: 'items',      type: 'Array',  required: true, pfad: 'ansichten.tabelle.props.items' },
+    { name: 'title',      type: 'String', default: "''",         pfad: 'ansichten.tabelle.props.title' },
+    { name: 'sortierung', type: 'String', default: "'position'", pfad: 'ansichten.tabelle.props.sortierung' },
+    { name: 'richtung',   type: 'String', default: "'auf'",      pfad: 'ansichten.tabelle.props.richtung' },
   ],
-  dataShape: `// rows-Element
+  dataShape: `// items-Element
 {
-  iqbId:           'DE_V3_LE_026',        // IQB-Aufgaben-ID
-  exercise:        'LE-026',              // Aufgabennummer
-  title:           'Bilderbuch',          // optionaler Aufgabentitel
-  domain:          'le',                  // Domänen-Kürzel (ho, le, sr, ma, en, fr)
-  competenceLevel: 'III',                 // Kompetenzstufe (I–V)
-  competenceType:  'Leseverstehen',       // optional
-  classP:          62.4,                  // Klassen-Lösungsquote 0–100
-  schoolP:         58.1,                  // Schul-Lösungsquote (null = ausgeblendet)
-  stateP:          55.0,                  // Bundesland-Lösungsquote (null = ausgeblendet)
+  label:    '1.1',           // Aufgabennummer im Testheft, erste Spalte
+  exercise: 'Geheimsache',   // Name der Aufgabe, zu der das Item gehört
+  level:    'III',           // Kompetenzstufe (I–V)
+  actual:   62.4,            // Lösungsquote der Lerngruppe, 0–100
+  expected: 58.1,            // Referenzquote; null blendet Erwartung und
+                             // Abweichung in dieser Zeile aus
 }`,
   codeExample: `<script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import ItemSolutionTable from './components/ItemSolutionTable.vue';
+import { AufgabenTabelle } from '@tba3/bausteine/vue';
 
-const tableRows = ref([]);
+const items = ref([]);
 
 onMounted(async () => {
-  const [gRes, sRes, stRes] = await Promise.all([
+  const [gRes, sRes] = await Promise.all([
     axios.get('/groups/3a-deutsch/items'),
     axios.get('/schools/gs-musterstadt/items'),
-    axios.get('/states/beispielland/items'),
   ]);
 
-  // Index school + state by iqbId for O(1) lookup
-  const schoolMap = new Map(
+  // Referenz nach iqbId aufschlüsseln, damit der Vergleich O(1) bleibt
+  const referenz = new Map(
     sRes.data.flatMap(vg => vg.items ?? []).map(it => [it.iqbId, it])
   );
-  const stateMap = new Map(
-    stRes.data.flatMap(vg => vg.items ?? []).map(it => [it.iqbId, it])
-  );
+  const quote = it => (it?.descriptiveStatistics?.mean ?? null) != null
+    ? it.descriptiveStatistics.mean * 100
+    : null;
 
-  const mean = it => (it?.descriptiveStatistics?.mean ?? null);
-
-  tableRows.value = gRes.data.flatMap(vg =>
+  items.value = gRes.data.flatMap(vg =>
     (vg.items ?? []).map(item => ({
-      iqbId:           item.iqbId,
-      exercise:        item.exercise?.name ?? item.iqbId,
-      title:           item.exercise?.title ?? null,
-      domain:          item.parameters?.domain ?? vg.domain?.name ?? null,
-      competenceLevel: item.parameters?.competenceLevel?.nameShort ?? null,
-      competenceType:  item.parameters?.competences?.find(c => c.type === 'Kompetenz')?.name ?? null,
-      classP:          mean(item) != null ? mean(item) * 100 : null,
-      schoolP:         mean(schoolMap.get(item.iqbId)) != null ? mean(schoolMap.get(item.iqbId)) * 100 : null,
-      stateP:          mean(stateMap.get(item.iqbId)) != null ? mean(stateMap.get(item.iqbId)) * 100 : null,
+      label:    item.name ?? item.iqbId,
+      exercise: item.exercise?.name ?? '',
+      level:    item.parameters?.competenceLevel?.nameShort ?? null,
+      actual:   quote(item),
+      expected: quote(referenz.get(item.iqbId)),
     }))
   );
 });
 <\/script>
 
 <template>
-  <ItemSolutionTable
-    :rows="tableRows"
-    group-label="Klasse 3a"
-    :school-label="t('vokabular.schule')"
-    :state-label="t('vokabular.bundesland')"
+  <AufgabenTabelle
+    :items="items"
+    title="Leseverstehen"
+    @sortiert="s => console.log(s)"
+    @aufgabe-gewaehlt="a => console.log(a)"
   />
 </template>`,
   apiEndpoints: [
@@ -165,31 +156,56 @@ const meanPct = (item) => {
   return m != null ? m * 100 : null;
 };
 
-// ── Joined table rows ────────────────────────────────────────────────────────
-const tableRows = computed(() => {
-  return groupItems.value.map((it) => {
-    const sIt  = schoolByIqbId.value.get(it.iqbId);
-    const stIt = stateByIqbId.value.get(it.iqbId);
+// Woran die Lösungsquote der Lerngruppe gemessen wird. Der Baustein zeigt
+// eine Erwartungsspalte, nicht drei Ebenen nebeneinander — welche Ebene das
+// ist, entscheidet hier die Wahl statt einer festen Annahme.
+const REFERENZEN = [
+  { id: 'school', pfad: 'ansichten.gemeinsam.schule' },
+  { id: 'state', pfad: 'ansichten.gemeinsam.bundesland' },
+];
+const referenzen = computed(() =>
+  REFERENZEN.map((r) => ({ ...r, label: t(r.pfad) })),
+);
+const referenz = ref(REFERENZEN[0].id);
 
+const DOMAIN_CODES = ['ho', 'le', 'sr', 'ma', 'en', 'fr'];
+const domainLabel = (d) =>
+  (DOMAIN_CODES.includes(d) ? t(`bausteine.domaenen.${d}`) : (d?.toUpperCase() ?? ''));
+
+// ── Zeilen für den Baustein ──────────────────────────────────────────────────
+// Eine Tabelle je Domäne: der Baustein zeigt eine Aufgabenliste, und
+// Leseverstehen und Mathematik in einer Liste zu mischen vergleicht Dinge,
+// die nichts miteinander zu tun haben.
+const tabellenNachDomaene = computed(() => {
+  const nachDomaene = new Map();
+
+  for (const it of groupItems.value) {
     const params = it.parameters ?? {};
-    const competences = params.competences ?? [];
-    const compType = competences.find(c => c.type === 'Kompetenz')?.name
-      ?? competences[0]?.name
-      ?? null;
+    const domain = params.domain ?? it._vgDomain ?? '';
+    const referenzItem = referenz.value === 'state'
+      ? stateByIqbId.value.get(it.iqbId)
+      : schoolByIqbId.value.get(it.iqbId);
 
-    return {
-      iqbId:           it.iqbId ?? '',
-      exercise:        it.exercise?.name ?? it.iqbId ?? '',
-      title:           it.exercise?.title ?? null,
-      domain:          params.domain ?? it._vgDomain ?? null,
-      competenceLevel: params.competenceLevel?.nameShort ?? null,
-      competenceType:  compType,
-      classP:          meanPct(it),
-      schoolP:         meanPct(sIt),
-      stateP:          meanPct(stIt),
-    };
-  });
+    if (!nachDomaene.has(domain)) nachDomaene.set(domain, []);
+    nachDomaene.get(domain).push({
+      // `name` ist die Aufgabennummer im Testheft („1.1"), `exercise.name` der
+      // Name der Aufgabe, zu der mehrere Items gehören („Geheimsache").
+      label: it.name ?? it.iqbId ?? '',
+      exercise: it.exercise?.name ?? '',
+      level: params.competenceLevel?.nameShort ?? null,
+      actual: meanPct(it),
+      expected: meanPct(referenzItem),
+    });
+  }
+
+  return [...nachDomaene].map(([domain, items]) => ({
+    domain,
+    label: domainLabel(domain),
+    items,
+  }));
 });
+
+const gewaehlteAufgabe = ref(null);
 </script>
 
 <template>
@@ -199,12 +215,11 @@ const tableRows = computed(() => {
         <div class="card-header">
           <div>
             <div class="comp-name-row">
-              <code class="comp-name">ItemSolutionTable</code>
+              <code class="comp-name">&lt;tba3-aufgaben-tabelle&gt;</code>
               <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
               <strong>{{ t('ansichten.tabelle.titel') }}</strong><br />
-              Tabelle mit internen Balkendiagrammen pro Aufgabe. Spaltentoggle, Textsuche,
               {{ t('ansichten.tabelle.beschreibung') }}
             </p>
             <div class="use-case-note use-case-api">
@@ -227,6 +242,11 @@ const tableRows = computed(() => {
             <Select v-model="selectedGroup" :options="GROUPS" option-label="label"
               :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
+          <div class="ctrl-field">
+            <label class="ctrl-label">{{ t('ansichten.tabelle.referenz') }}</label>
+            <Select v-model="referenz" :options="referenzen" option-label="label"
+              option-value="id" class="ctrl-select" />
+          </div>
         </div>
 
         <div v-if="loading" class="skeleton-wrap">
@@ -235,21 +255,33 @@ const tableRows = computed(() => {
         <Message v-else-if="error" severity="error" :closable="false" class="mt-2">
           {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
-        <Message v-else-if="!tableRows.length" severity="info" :closable="false" class="mt-2">
-          Keine Daten.
+        <Message v-else-if="!tabellenNachDomaene.length" severity="info" :closable="false" class="mt-2">
+          {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
-        <ItemSolutionTable
-          v-else
-          :rows="tableRows"
-          :group-label="selectedGroup?.label ?? t('vokabular.klasse')"
-          school-label="Schule"
-          state-label="Bundesland"
-        />
+        <div v-else class="tabellen">
+          <AufgabenTabelle
+            v-for="tabelle in tabellenNachDomaene"
+            :key="tabelle.domain"
+            :items="tabelle.items"
+            :title="tabelle.label"
+            sortierung="delta"
+            richtung="auf"
+            @aufgabe-gewaehlt="(a) => (gewaehlteAufgabe = a)"
+          />
+          <p v-if="gewaehlteAufgabe" class="gewaehlt">
+            <i class="pi pi-arrow-right" />
+            {{ t('ansichten.tabelle.gewaehlt', {
+              aufgabe: gewaehlteAufgabe.label,
+              quote: Math.round(gewaehlteAufgabe.actual ?? 0),
+            }) }}
+          </p>
+        </div>
 
         <ComponentDocs
-          component-name="ItemSolutionTable"
+          component-name="tba3-aufgaben-tabelle"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
@@ -299,6 +331,13 @@ const tableRows = computed(() => {
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .ctrl-select { min-width: 210px; }
+
+.tabellen { display: flex; flex-direction: column; gap: 28px; }
+.gewaehlt {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; color: #0369a1; background: #f0f9ff;
+  border: 1px solid #bae6fd; border-radius: 5px; padding: 6px 10px; margin: 0;
+}
 
 .skeleton-wrap { padding: 4px 0; }
 .mb-2 { margin-bottom: 8px; }

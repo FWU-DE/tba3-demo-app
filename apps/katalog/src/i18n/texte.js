@@ -350,6 +350,10 @@ export const TEXTE = {
           de: 'Bundeslandweite Lösungsquoten für Band (Variante 2)',
           en: 'State-wide solution rates for the band (variant 2)',
         },
+        schueler: {
+          de: 'Schülerindividuelle Lösungen — Grundlage des Perzentilrang-Modus (Schüler:in gegen Klasse)',
+          en: 'Per-student answers — the basis of the percentile mode (student against class)',
+        },
       },
       hinweis: {
         de: 'Für den Klasse-vs.-Schule-Modus: Gruppe fetchen (markerY) + Schule fetchen (Band). Für den Schüler:in-Perzentil-Modus: ?type=students fetchen, Rang der ausgewählten Person berechnen.',
@@ -363,21 +367,32 @@ export const TEXTE = {
         en: 'Solution rates at exercise level — class · school · state',
       },
       beschreibung: {
-        de: 'sortierbar. Zeigt Kompetenz, Stufe, Aufgabentitel und Lösungsquoten.',
-        en: 'sortable. Shows competence, level, exercise title and solution rates.',
+        de: 'Eine Tabelle je Domäne, sortierbar nach jeder Spalte: Aufgabennummer, Name der Aufgabe, Kompetenzstufe, Lösungsquote der Lerngruppe und die Abweichung von der gewählten Referenz.',
+        en: 'One table per domain, sortable by any column: exercise number, exercise name, competence level, the learning group’s solution rate and the deviation from the chosen reference.',
       },
       klasseMitName: { de: 'Klasse', en: 'Class' },
+      referenz: { de: 'Erwartung aus', en: 'Expectation from' },
+      gewaehlt: {
+        de: 'Gewählt: Aufgabe {aufgabe} · {quote} % gelöst',
+        en: 'Selected: exercise {aufgabe} · {quote} % solved',
+      },
       props: {
-        rows: {
-          de: 'Aufgabenzeilen. Jede Zeile enthält iqbId, exercise, title, domain, competenceLevel, competenceType, classP, schoolP, stateP.',
-          en: 'Exercise rows. Each row holds iqbId, exercise, title, domain, competenceLevel, competenceType, classP, schoolP, stateP.',
+        items: {
+          de: 'Aufgabenzeilen. Jede Zeile: { label, exercise, level, actual, expected }. Fehlt expected, bleiben Erwartung und Abweichung in dieser Zeile leer.',
+          en: 'Exercise rows. Each row: { label, exercise, level, actual, expected }. Without expected, the expectation and deviation stay empty in that row.',
         },
-        groupLabel: {
-          de: 'Bezeichnung für die Klassen-Spalte und Legende.',
-          en: 'Label for the class column and the legend.',
+        title: {
+          de: 'Optionale Überschrift der Tabelle (hier die Domäne).',
+          en: 'Optional table heading (here the domain).',
         },
-        schoolLabel: { de: 'Bezeichnung für die Schul-Spalte.', en: 'Label for the school column.' },
-        stateLabel: { de: 'Bezeichnung für die Bundesland-Spalte.', en: 'Label for the state column.' },
+        sortierung: {
+          de: 'Spalte, nach der zunächst sortiert wird: position, exercise, level, actual, expected oder delta.',
+          en: 'Column to sort by initially: position, exercise, level, actual, expected or delta.',
+        },
+        richtung: {
+          de: '„auf" oder „ab". Ein Klick auf eine Spalte schaltet um und meldet `sortiert`.',
+          en: '“auf” or “ab”. A click on a column toggles it and emits `sortiert`.',
+        },
       },
       endpunkte: {
         gruppe: {
@@ -405,18 +420,34 @@ export const TEXTE = {
         en: 'Student scatter: competence level × raw score',
       },
       beschreibung: {
-        de: 'Jede Schüler*in als Punkt (Initialen). K-Means-Clustering mit konfigurierbarer Clusteranzahl.',
-        en: 'Every student as a dot (initials). K-means clustering with a configurable number of clusters.',
+        de: 'Jede Schüler*in als Punkt mit Initialen, dazu die Marke des Klassenmittelwerts. Punkte auf demselben Rasterplatz rücken auseinander, statt sich zu verdecken.',
+        en: 'Every student as a dot with initials, plus the marker for the class mean. Dots on the same grid spot move apart instead of hiding each other.',
+      },
+      tooltipHinweis: {
+        de: 'Der Tooltip liegt außerhalb des SVG und wird deshalb am Rand nicht abgeschnitten; ein Klick meldet `punkt-gewaehlt`.',
+        en: 'The tooltip sits outside the SVG and is therefore not clipped at the edge; a click emits `punkt-gewaehlt`.',
+      },
+      gewaehlt: {
+        de: 'Gewählt: {name} · {quote} % gelöst',
+        en: 'Selected: {name} · {quote} % solved',
       },
       keineDaten: { de: 'Keine Schüler*innen-Daten.', en: 'No student data.' },
       props: {
-        students: {
-          de: 'Schülerliste: { id, initials, name, x (Kompetenzstufe 1–5), y (Rohwert % 0–100), details: [{ domain, pct, levelX }] }',
-          en: 'Student list: { id, initials, name, x (competence level 1–5), y (raw score % 0–100), details: [{ domain, pct, levelX }] }',
+        punkte: {
+          de: 'Schülerliste: { id, name, initialen?, x (Kompetenzstufe 1–5), y (Lösungsquote % 0–100), details: [{ label, wert }] }',
+          en: 'Student list: { id, name, initialen?, x (competence level 1–5), y (solution rate % 0–100), details: [{ label, wert }] }',
         },
-        groupLabel: {
-          de: 'Gruppenbezeichnung für den Diagrammtitel.',
-          en: 'Group label for the chart title.',
+        title: {
+          de: 'Überschrift über dem Diagramm (hier die Lerngruppe).',
+          en: 'Heading above the chart (here the learning group).',
+        },
+        stufen: {
+          de: 'Beschriftung der X-Achse. Die Achse teilt sich in so viele Felder, wie hier Stufen stehen.',
+          en: 'Labels of the x axis. The axis is divided into as many slots as there are levels here.',
+        },
+        mittelwert: {
+          de: 'Waagerechte Marke, etwa der Klassenmittelwert. null lässt sie weg.',
+          en: 'Horizontal marker, e.g. the class mean. null omits it.',
         },
       },
       endpunkte: {
@@ -426,8 +457,8 @@ export const TEXTE = {
         },
       },
       hinweis: {
-        de: 'Der ?type=students-Parameter liefert Value-Groups mit type="student". x wird aus dem Gesamtscore → Kompetenzstufe abgeleitet; y ist der rohe Prozentsatz. K-Means-Clustering und Konvex-Hüllen werden komplett clientseitig berechnet.',
-        en: 'The ?type=students parameter returns value groups with type="student". x is derived from the overall score → competence level; y is the raw percentage. K-means clustering and convex hulls are computed entirely on the client.',
+        de: 'Der ?type=students-Parameter liefert Value-Groups mit type="student". x wird aus den BISTA-Punkten der gelösten Aufgaben abgeleitet, y ist die rohe Lösungsquote. Das K-Means-Clustering der früheren Katalog-Ansicht ist mit dem Umzug entfallen: es gehört in die Auswertung, nicht in den Baustein.',
+        en: 'The ?type=students parameter returns value groups with type="student". x is derived from the BISTA points of the solved exercises, y is the raw solution rate. The k-means clustering of the earlier catalogue view is gone with the move: it belongs in the analysis, not in the building block.',
       },
     },
 
@@ -437,8 +468,12 @@ export const TEXTE = {
         en: 'Competence distribution per student — BISTA scale',
       },
       beschreibung: {
-        de: 'Zeigt alle Schüler*innen als Avatar-Icons auf einem horizontalen BISTA-Wertestrahl. Drei farbige Kompetenzstreifen (KS I–III) bilden den Hintergrund. Mouseover öffnet den <code>StudentTooltip</code> mit Detailinformationen.',
-        en: 'Shows every student as an avatar icon on a horizontal BISTA scale. Three coloured competence bands (levels I–III) form the background. Hovering opens the <code>StudentTooltip</code> with the details.',
+        de: 'Zeigt alle Schüler*innen als Avatar mit Initialen auf einem horizontalen BISTA-Wertestrahl; wer denselben Wert hat, steht übereinander. Die Kompetenzstreifen (KS I–III) kommen von außen, weil ihre Schwellen an Fach und Jahrgang hängen. Mouseover öffnet den Hinweis des Bausteins, ein Klick meldet <code>schueler-gewaehlt</code>.',
+        en: 'Shows every student as an avatar with initials on a horizontal BISTA scale; students with the same value stack up. The competence bands (levels I–III) come from outside, because their thresholds depend on subject and year group. Hovering opens the building block’s own hint, a click emits <code>schueler-gewaehlt</code>.',
+      },
+      gewaehlt: {
+        de: 'Gewählt: {name} · {punkte} BISTA-Punkte',
+        en: 'Selected: {name} · {punkte} BISTA points',
       },
       datenhinweis: {
         de: 'Schülerdaten mit BISTA-Werten · Klassen- oder Schulebene',
@@ -449,26 +484,26 @@ export const TEXTE = {
         en: 'Standalone — can be embedded anywhere',
       },
       props: {
-        students: {
-          de: 'Schülerliste: { id, name, bistaScore, yFrac (0–1, vertikale Streuung), emoji, ringColor, zone?, competencyLevel?, competencyDesc? }',
-          en: 'Student list: { id, name, bistaScore, yFrac (0–1, vertical spread), emoji, ringColor, zone?, competencyLevel?, competencyDesc? }',
-        },
-        subject: {
-          de: 'Fachbezeichnung für die Achsenbeschriftung.',
-          en: 'Subject label for the axis caption.',
-        },
-        groupClass: {
-          de: 'Klassenkürzel (z. B. „8a“), wird im Titel angezeigt.',
-          en: 'Class code (e.g. “8a”), shown in the title.',
+        schueler: {
+          de: 'Schülerliste: { id, name, initialen?, punkte }. Fehlen die Initialen, bildet der Baustein sie aus dem Namen.',
+          en: 'Student list: { id, name, initialen?, punkte }. Without initials the building block derives them from the name.',
         },
         title: {
-          de: 'Optionaler Override-Titel. Wird automatisch aus subject + groupClass generiert wenn null.',
-          en: 'Optional override title. Generated from subject + groupClass when null.',
+          de: 'Überschrift über dem Wertestrahl (hier die Lerngruppe).',
+          en: 'Heading above the scale (here the learning group).',
         },
-        scoreMax: { de: 'Maximaler BISTA-Wert (Ende der X-Achse).', en: 'Maximum BISTA value (end of the x axis).' },
-        zones: {
-          de: 'Kompetenzstreifen: [{ id, label, from, to, color }]. color=null aktiviert den KS-I-Farbverlauf.',
-          en: 'Competence bands: [{ id, label, from, to, color }]. color=null switches on the level I gradient.',
+        zonen: {
+          de: 'Kompetenzstreifen: [{ id, label, von, bis, farbe? }]. Ohne Farbe nimmt der Baustein seine eigene Abstufung.',
+          en: 'Competence bands: [{ id, label, von, bis, farbe? }]. Without a colour the building block uses its own shading.',
+        },
+        punkteMin: {
+          de: 'Linker Rand der Skala. Ein Wert darunter rückt an den Rand, statt aus dem Bild zu fallen.',
+          en: 'Left end of the scale. A lower value moves to the edge instead of falling out of the picture.',
+        },
+        punkteMax: { de: 'Rechter Rand der Skala.', en: 'Right end of the scale.' },
+        mittelwert: {
+          de: 'Senkrechte Marke, etwa der Mittelwert der Gruppe. null lässt sie weg.',
+          en: 'Vertical marker, e.g. the group mean. null omits it.',
         },
       },
       endpunkte: {
@@ -478,8 +513,8 @@ export const TEXTE = {
         },
       },
       hinweis: {
-        de: 'Die Komponente benötigt BISTA-Werte pro Schüler:in. Diese werden typischerweise aus dem ?type=students-Endpunkt abgeleitet (Gesamtscore → BISTA-Skala). Die ringColor und zone werden lokal aus dem Score bestimmt.',
-        en: 'The component needs a BISTA value per student. These are typically derived from the ?type=students endpoint (overall score → BISTA scale). ringColor and zone are determined locally from the score.',
+        de: 'Der Baustein benötigt BISTA-Werte pro Schüler:in. Diese werden typischerweise aus dem ?type=students-Endpunkt abgeleitet (Gesamtscore → BISTA-Skala). In welcher Zone ein Wert liegt, ergibt sich aus den übergebenen Schwellen — der Baustein schreibt keine fest.',
+        en: 'The building block needs a BISTA value per student. These are typically derived from the ?type=students endpoint (overall score → BISTA scale). Which band a value falls into follows from the thresholds you pass — the building block fixes none of them.',
       },
     },
 
@@ -489,21 +524,37 @@ export const TEXTE = {
         en: 'Solution frequencies at student level',
       },
       beschreibung: {
-        de: 'Sortierbare Tabelle mit barrierefreien Balken (kein Rot/Grün) pro Schüler:in und Kompetenzbereich. Enthält Verlinkung zu Testheft und SuS-Lösungen sowie Anzeige abwesender Schüler:innen.',
-        en: 'A sortable table with accessible bars (no red/green) per student and competence area. Includes links to the test booklet and the students’ answers, and shows absent students.',
+        de: 'Sortierbare Tabelle mit gestapelten Balken aus richtig, ausgelassen und falsch je Schüler:in und Kompetenzbereich. Zeilen lassen sich auswählen, abwesende Schüler:innen stehen mit Grund am Ende.',
+        en: 'A sortable table with stacked bars of correct, skipped and wrong per student and competence area. Rows can be selected; absent students are listed last, with the reason.',
       },
       merkmale: {
-        de: 'Barrierearm (Blau/Orange) · Sortierbar nach Lösungsquote · Testheft- & Lösungslinks',
-        en: 'Accessible (blue/orange) · sortable by solution rate · booklet and answer links',
+        de: 'Kein Rot gegen Grün — die Balken nehmen Marken- und Bewertungsfarbe des Themas · Sortierbar nach jedem Bereich · Auswahl meldet `auswahl-geaendert`',
+        en: 'No red against green — the bars take the theme’s brand and rating colours · sortable by any area · selection emits `auswahl-geaendert`',
+      },
+      ausgewaehlt: {
+        de: '{n} Schüler:innen ausgewählt — die Ansicht hält die Auswahl, das Element meldet sie nur.',
+        en: '{n} students selected — the view keeps the selection, the element only reports it.',
       },
       props: {
         rows: {
-          de: 'Schüler:innen-Zeilen. Jede Zeile: { id, name, gender, testBooklet: { label, url } | null, solutionUrl: string | null, absent?, domains }',
-          en: 'Student rows. Each row: { id, name, gender, testBooklet: { label, url } | null, solutionUrl: string | null, absent?, domains }',
+          de: 'Schüler:innen-Zeilen. Jede Zeile: { id, name, gender, absent?, absentMessage?, domains }. Weitere Felder bleiben erhalten und stehen im Ereignis wieder zur Verfügung.',
+          en: 'Student rows. Each row: { id, name, gender, absent?, absentMessage?, domains }. Further fields are kept and reappear in the event.',
         },
         domains: {
           de: 'Domänen-Konfiguration: [{ key: string, label: string }]. key muss einem Schlüssel in row.domains entsprechen.',
           en: 'Domain configuration: [{ key: string, label: string }]. key has to match a key in row.domains.',
+        },
+        sortierung: {
+          de: 'Bereichsschlüssel, nach dem sortiert wird, oder „name". Abwesende stehen unabhängig davon am Ende.',
+          en: 'Area key to sort by, or “name”. Absent students stay at the end regardless.',
+        },
+        auswahl: {
+          de: 'Kennungen der ausgewählten Zeilen. Wer sie bindet, behält die Auswahl über Datenwechsel hinweg in der Hand.',
+          en: 'Ids of the selected rows. Binding them keeps the selection under your control across data changes.',
+        },
+        auswaehlbar: {
+          de: 'Auswahlspalte überhaupt zeigen. Ohne Auswahl bleibt die Tabelle eine reine Anzeige.',
+          en: 'Whether to show the selection column at all. Without it the table is display-only.',
         },
       },
       endpunkte: {
@@ -587,25 +638,32 @@ export const TEXTE = {
 
     uebersicht: {
       titel: {
-        de: 'Kompetenzübersicht — Donut-Diagramm & Schlüsselkennzahlen',
-        en: 'Competence overview — donut chart & key figures',
+        de: 'Kompetenzübersicht — Ringe und Schlüsselkennzahlen',
+        en: 'Competence overview — rings and key figures',
+      },
+      karten: {
+        verteilung: { de: 'Kompetenzstufen', en: 'Competence levels' },
       },
       beschreibung: {
-        de: 'Zwei Karten nebeneinander: Links ein SVG-Donut-Diagramm mit Kompetenzstufenverteilung, rechts die Schlüsselkennzahlen „Mindeststandard und darüber“ vs. „Unter Mindeststandard“.',
-        en: 'Two cards side by side: on the left an SVG donut chart of the competence level distribution, on the right the key figures “at or above the minimum standard” vs. “below the minimum standard”.',
+        de: 'Drei Karten nebeneinander: die Verteilung auf die Kompetenzstufen und die beiden Aussagen, auf die es ankommt — „Mindeststandard und darüber“ gegen „Unter Mindeststandard“. Jede Karte trägt ihre Kennzahl im Ring und klappt auf Wunsch die Einzelwerte auf.',
+        en: 'Three cards side by side: the distribution across competence levels and the two figures that matter — “at or above the minimum standard” against “below the minimum standard”. Each card carries its figure inside the ring and unfolds the individual values on demand.',
       },
       props: {
-        chartData: {
-          de: 'Ein Eintrag pro Kompetenzstufe: { level, count, percentage (0–1), color, name }',
-          en: 'One entry per competence level: { level, count, percentage (0–1), color, name }',
+        karten: {
+          de: 'Eine Karte je Eintrag: { id, label, wert, einheit, anteile: [{ label, wert, farbe }], details: [{ label, wert }] }. Die Anteile ergeben den Ring, der Wert steht in seinem Kern.',
+          en: 'One card per entry: { id, label, wert, einheit, anteile: [{ label, wert, farbe }], details: [{ label, wert }] }. The shares make up the ring, the value sits at its centre.',
         },
-        stats: {
-          de: '{ total, belowStandard, atStandard, aboveStandard } — alle als Anteile (0–1)',
-          en: '{ total, belowStandard, atStandard, aboveStandard } — all as shares (0–1)',
+        title: {
+          de: 'Optionale Überschrift über den Karten (hier das Fach).',
+          en: 'Optional heading above the cards (here the subject).',
         },
-        subject: {
-          de: 'Fachbezeichnung, die im Donut-Zentrum angezeigt wird (z. B. „Deutsch“).',
-          en: 'Subject label shown at the centre of the donut (e.g. “German”).',
+        geoeffnet: {
+          de: 'Kennungen der aufgeklappten Karten. Wer sie bindet, behält in der Hand, was offen ist.',
+          en: 'Ids of the unfolded cards. Binding them keeps control over what is open.',
+        },
+        spalten: {
+          de: 'Wie viele Karten nebeneinander passen sollen. Schmale Schirme brechen trotzdem um.',
+          en: 'How many cards should fit side by side. Narrow screens still wrap.',
         },
       },
       endpunkt: {
@@ -613,8 +671,8 @@ export const TEXTE = {
         en: 'Competence level distribution of the learning group (aggregated across all domains)',
       },
       hinweis: {
-        de: 'Die Komponente aggregiert alle Domänen zu einer Gesamtverteilung. Für eine domänenspezifische Ansicht bitte CompetenceLevelBar verwenden.',
-        en: 'The component aggregates all domains into one overall distribution. For a domain-specific view, use CompetenceLevelBar instead.',
+        de: 'Die Ansicht aggregiert alle Domänen zu einer Gesamtverteilung. Für eine domänenspezifische Ansicht bitte <tba3-kompetenzstufen-leiste> verwenden.',
+        en: 'The view aggregates all domains into one overall distribution. For a domain-specific view, use <tba3-kompetenzstufen-leiste> instead.',
       },
     },
   },

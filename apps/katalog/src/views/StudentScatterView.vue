@@ -6,76 +6,82 @@ import Card from 'primevue/card';
 import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
-import StudentScatterPlot from '../components/StudentScatterPlot.vue';
+import { Streudiagramm } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS = {
-  githubFile: 'StudentScatterPlot.vue',
+  githubFile: 'streudiagramm.js',
+  githubPath: 'packages/bausteine/webcomponents/streudiagramm.js',
   propsDocs: [
-    { name: 'students',   type: 'Array',  required: true,  pfad: 'ansichten.scatter.props.students' },
-    { name: 'groupLabel', type: 'String', default: "''",   pfad: 'ansichten.scatter.props.groupLabel' },
+    { name: 'punkte',     type: 'Array',  required: true,        pfad: 'ansichten.scatter.props.punkte' },
+    { name: 'title',      type: 'String', default: "''",         pfad: 'ansichten.scatter.props.title' },
+    { name: 'stufen',     type: 'Array',  default: "['I'…'V']",  pfad: 'ansichten.scatter.props.stufen' },
+    { name: 'mittelwert', type: 'Number', default: 'null',       pfad: 'ansichten.scatter.props.mittelwert' },
   ],
-  dataShape: `// students-Element
+  dataShape: `// punkte-Element
 {
-  id:       'st-3a-deutsch-0',
-  initials: 'LB',           // 2-Buchstaben-Kürzel für den Avatar
-  name:     'Leon Braun',
-  x:        2.3,            // Kompetenzstufen-X (1–5, darf Dezimal sein)
-  y:        47.5,           // Rohwert-Prozent (0–100)
-  details: [
-    { domain: 'le', pct: 52.0, levelX: 2 },
-    { domain: 'ho', pct: 44.0, levelX: 3 },
+  id:        'st-3a-deutsch-0',
+  name:      'Leon Braun',
+  initialen: 'LB',          // fehlt sie, bildet der Baustein sie aus dem Namen
+  x:         2.3,           // Kompetenzstufe 1–5, Dezimalstellen erlaubt
+  y:         47.5,          // Lösungsquote in Prozent (0–100)
+  details: [                // stehen im Tooltip unter den Grundwerten
+    { label: 'Leseverstehen', wert: 52.0 },
+    { label: 'Hörverstehen',  wert: 44.0 },
   ],
 }`,
   codeExample: `<script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import StudentScatterPlot from './components/StudentScatterPlot.vue';
+import { Streudiagramm } from '@tba3/bausteine/vue';
 
-const students = ref([]);
+const punkte = ref([]);
 
-const LEVEL_BREAKS = [0, 0.14, 0.38, 0.73, 0.91, 1.0]; // Grenzwerte Stufen I–V
-
-const scoreToLevel = (pct) => {
-  const frac = pct / 100;
-  return LEVEL_BREAKS.findIndex((b, i) => frac < LEVEL_BREAKS[i + 1]) + 1 || 5;
-};
+// BISTA-Punkte auf die Stufenachse legen: 270 → ganz links, 540 → Stufe V
+const bistaZuStufe = (bista) => Math.max(0, Math.min(5, (bista - 270) / 55));
 
 onMounted(async () => {
   const { data } = await axios.get('/groups/3a-deutsch/items?type=students');
 
-  // data ist Array von Value-Groups mit type='student'
-  const byStudent = new Map();
+  // Value-Groups nach Schüler:in bündeln
+  const nachId = new Map();
   for (const vg of [].concat(data)) {
     if (vg.type !== 'student') continue;
     const id = vg.id ?? vg.studentId;
-    if (!byStudent.has(id)) byStudent.set(id, { id, vgs: [] });
-    byStudent.get(id).vgs.push(vg);
+    if (!nachId.has(id)) nachId.set(id, { id, name: vg.name ?? id, vgs: [] });
+    nachId.get(id).vgs.push(vg);
   }
 
-  students.value = [...byStudent.entries()].map(([id, { vgs }], idx) => {
-    const allMeans = vgs.flatMap(vg =>
-      (vg.items ?? []).map(it => it.descriptiveStatistics?.mean ?? 0)
-    );
-    const overallPct = allMeans.length
-      ? (allMeans.reduce((a, b) => a + b, 0) / allMeans.length) * 100
-      : 0;
-    const initials = (vgs[0]?.name ?? \`S\${idx + 1}\`).split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
-    const details = vgs.map(vg => {
-      const domainMeans = (vg.items ?? []).map(it => it.descriptiveStatistics?.mean ?? 0);
-      const pct = domainMeans.length ? (domainMeans.reduce((a, b) => a + b, 0) / domainMeans.length) * 100 : 0;
-      return { domain: vg.domain?.name ?? vg.domain ?? '', pct, levelX: scoreToLevel(pct) };
-    });
-    return { id, initials, name: vgs[0]?.name ?? id, x: scoreToLevel(overallPct), y: overallPct, details };
+  const quote = (items) =>
+    items.reduce((s, it) => s + (it.descriptiveStatistics?.mean ?? 0), 0) / (items.length || 1) * 100;
+
+  punkte.value = [...nachId.values()].map(({ id, name, vgs }) => {
+    const alle = vgs.flatMap(vg => vg.items ?? []);
+    const geloest = alle.filter(it => (it.descriptiveStatistics?.mean ?? 0) >= 0.5);
+    const mittleresBista = geloest.length
+      ? geloest.reduce((s, it) => s + (it.parameters?.bistaPoints ?? 400), 0) / geloest.length
+      : 400;
+
+    return {
+      id,
+      name,
+      x: bistaZuStufe(mittleresBista),
+      y: quote(alle),
+      details: vgs.map(vg => ({
+        label: vg.domain?.name ?? vg.domain ?? '',
+        wert: quote(vg.items ?? []),
+      })),
+    };
   });
 });
 <\/script>
 
 <template>
-  <StudentScatterPlot
-    :students="students"
-    group-label="Klasse 3a"
+  <Streudiagramm
+    :punkte="punkte"
+    title="3a Deutsch"
+    @punkt-gewaehlt="p => console.log(p)"
   />
 </template>`,
   apiEndpoints: [
@@ -190,11 +196,28 @@ const students = computed(() => {
       details.push({ domain, pct, levelX });
     }
 
-    result.push({ id, name: toName(name), initials: toInitials(name), x, y, details });
+    result.push({
+      id,
+      name: toName(name),
+      initialen: toInitials(name),
+      x,
+      y,
+      details: details.map((d) => ({ label: d.domain, wert: d.pct })),
+    });
   }
 
   return result;
 });
+
+// Die waagerechte Marke: der Mittelwert der Lerngruppe. Ohne sie ist eine
+// Punktwolke nur eine Punktwolke.
+const mittelwert = computed(() => {
+  if (!students.value.length) return null;
+  return students.value.reduce((s, p) => s + p.y, 0) / students.value.length;
+});
+
+const gewaehlterPunkt = ref(null);
+watch(() => selectedGroup.value, () => { gewaehlterPunkt.value = null; });
 </script>
 
 <template>
@@ -204,13 +227,13 @@ const students = computed(() => {
         <div class="card-header">
           <div>
             <div class="comp-name-row">
-              <code class="comp-name">StudentScatterPlot</code>
+              <code class="comp-name">&lt;tba3-streudiagramm&gt;</code>
               <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
               <strong>{{ t('ansichten.scatter.titel') }}</strong><br />
               {{ t('ansichten.scatter.beschreibung') }}
-              Klick auf Punkt zeigt Detailcard mit Gesamtwert und Teilkompetenzen.
+              {{ t('ansichten.scatter.tooltipHinweis') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -240,15 +263,26 @@ const students = computed(() => {
           {{ t('ansichten.scatter.keineDaten') }}
         </Message>
 
-        <StudentScatterPlot
-          v-else
-          :students="students"
-          :group-label="selectedGroup?.label ?? ''"
-        />
+        <div v-else class="diagramm-flaeche">
+          <Streudiagramm
+            :punkte="students"
+            :title="selectedGroup?.label ?? ''"
+            :mittelwert="mittelwert"
+            @punkt-gewaehlt="(p) => (gewaehlterPunkt = p)"
+          />
+        </div>
+        <p v-if="gewaehlterPunkt" class="gewaehlt">
+          <i class="pi pi-user" />
+          {{ t('ansichten.scatter.gewaehlt', {
+            name: gewaehlterPunkt.name,
+            quote: Math.round(gewaehlterPunkt.wertY ?? 0),
+          }) }}
+        </p>
 
         <ComponentDocs
-          component-name="StudentScatterPlot"
+          component-name="tba3-streudiagramm"
           :github-file="DOCS.githubFile"
+          :github-path="DOCS.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS.dataShape"
           :code-example="DOCS.codeExample"
@@ -289,6 +323,12 @@ const students = computed(() => {
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .ctrl-select { min-width: 210px; }
+.diagramm-flaeche { max-width: 760px; }
+.gewaehlt {
+  display: flex; align-items: center; gap: 6px; margin: 12px 0 0;
+  font-size: 0.82rem; color: #0369a1; background: #f0f9ff;
+  border: 1px solid #bae6fd; border-radius: 5px; padding: 6px 10px;
+}
 .skeleton-wrap { padding: 4px 0; }
 .mt-2 { margin-top: 8px; }
 </style>

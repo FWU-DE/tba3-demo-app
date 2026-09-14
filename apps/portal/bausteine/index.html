@@ -123,6 +123,15 @@
     }
     .marke-umgezogen { background: var(--farbe-erfolg); color: var(--farbe-erfolg-text); }
     .marke-offen { background: var(--farbe-warnung); color: var(--farbe-warnung-text); }
+    .nur-baustein { list-style: none; margin: var(--abstand-md) 0 0; padding: 0; }
+    .nur-baustein li {
+      padding: var(--abstand-xs) 0; border-bottom: 1px solid var(--farbe-linie);
+      font-size: var(--text-sm);
+    }
+    .nur-baustein li:last-child { border-bottom: 0; }
+    .nur-baustein .grund {
+      display: block; color: var(--farbe-text-gedaempft); font-size: var(--text-xs);
+    }
 
     /* ── Themen zum Durchprobieren ──────────────────────────── */
     /* Die Bausteine bringen kein Design mit: das hier sind Beispiel-Themen,
@@ -279,6 +288,16 @@
         <tbody></tbody>
       </table>
     </div>
+    <p lang="de">
+      Umgekehrt ist die Bibliothek keine Teilmenge der Schau: diese Bausteine
+      haben keine Katalog-Ansicht, weil sie aus einer anderen Frage entstehen.
+    </p>
+    <p lang="en">
+      The other way round, the library is not a subset of the showcase: these
+      building blocks have no catalogue view, because they answer a different
+      question.
+    </p>
+    <ul id="nur-baustein" class="nur-baustein"></ul>
   </section>
 
   <div id="bausteine"></div>
@@ -317,7 +336,7 @@
   // /demodaten.js — 404, leere Zuordnungstabelle, kein einziger Baustein.
   import { BAUPLAENE, PRAEFIX, registrieren } from '/bausteine/webcomponents/index.js';
   import { DEMODATEN } from '/bausteine/demodaten.js';
-  import { ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
+  import { NUR_BAUSTEIN, ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
 
   registrieren();
 
@@ -361,6 +380,20 @@
     }
     document.getElementById('stand').textContent =
       `Stand: ${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten laufen über Bausteine.`;
+
+    const liste = document.getElementById('nur-baustein');
+    for (const n of NUR_BAUSTEIN) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + n.baustein;
+      a.className = 'mono';
+      a.textContent = '<' + PRAEFIX + n.baustein + '>';
+      const grund = document.createElement('span');
+      grund.className = 'grund';
+      grund.textContent = n.grund;
+      li.append(a, ' — ' + n.anzeige, grund);
+      liste.append(li);
+    }
   }
 
   const wurzel = document.getElementById('bausteine');

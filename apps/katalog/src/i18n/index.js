@@ -32,6 +32,13 @@ const auflösen = (pfad) => pfad.split('.').reduce((wert, teil) => wert?.[teil],
  */
 export function t(pfad, werte) {
   const gewaehlt = aktuelleSprache.value;
+  // Kein Pfad ist derselbe Fall wie ein unbekannter — auffällig, aber harmlos.
+  // Vorher nahm `undefined` die ganze Ansicht mit: `auflösen` warf, und Vue
+  // riss das Setup ab. Eine Seite ohne Text ist besser als eine weiße Seite.
+  if (typeof pfad !== 'string' || pfad === '') {
+    if (import.meta.env?.DEV) console.warn('[i18n] t() ohne Pfad aufgerufen');
+    return '';
+  }
   const eintrag = auflösen(pfad);
   if (eintrag == null) {
     if (import.meta.env?.DEV) console.warn(`[i18n] Kein Text für "${pfad}"`);

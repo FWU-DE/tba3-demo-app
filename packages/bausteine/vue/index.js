@@ -74,6 +74,13 @@ export const {
   MittelwertVergleich,
   ErwartetTatsaechlich,
   Perzentilbaender,
+  SchuelerTabelle,
+  Uebersichtskarten,
+  Streudiagramm,
+  BistaVerteilung,
+  LernstandsVerlauf,
+  AufgabenHeatmap,
+  KennzahlKachel,
 } = gebaut;
 
 /** Alle Komponenten, nach Namen. */

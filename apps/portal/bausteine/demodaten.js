@@ -7,6 +7,11 @@
 // Die Zahlen sind erfunden und folgen dem Zuschnitt der TBA3-Beispieldaten;
 // echte Auswertungen kommen im Betrieb aus der Schnittstelle.
 
+/** Rot nach Grün — dieselbe Ordnung, die auch die Leiste zeigt. */
+const STUFENFARBEN = {
+  I: '#ef4444', II: '#f97316', III: '#eab308', IV: '#22c55e', V: '#15803d',
+};
+
 const stufen = (...anteile) =>
   ['I', 'II', 'III', 'IV', 'V'].map((nameShort, i) => ({ nameShort, pct: anteile[i] }));
 
@@ -63,6 +68,146 @@ export const DEMODATEN = [
         { label: 'Sprachgebrauch', bandLeft: 38, bandRight: 72, studentScore: 44 },
       ],
     },
+    'schueler-tabelle': {
+      title: 'Lösungen je Schüler:in',
+      domains: [
+        { key: 'total', label: 'Insgesamt' },
+        { key: 'reading', label: 'Lesen' },
+        { key: 'listening', label: 'Zuhören' },
+      ],
+      rows: [
+        { id: 's1', name: 'Anna B.', gender: 'f', domains: {
+          total: { pctCorrect: 78, pctOmitted: 2, pctIncorrect: 20 },
+          reading: { pctCorrect: 84, pctOmitted: 0, pctIncorrect: 16 },
+          listening: { pctCorrect: 72, pctOmitted: 4, pctIncorrect: 24 },
+        } },
+        { id: 's2', name: 'Ben C.', gender: 'm', domains: {
+          total: { pctCorrect: 61, pctOmitted: 7, pctIncorrect: 32 },
+          reading: { pctCorrect: 66, pctOmitted: 4, pctIncorrect: 30 },
+          listening: { pctCorrect: 56, pctOmitted: 10, pctIncorrect: 34 },
+        } },
+        { id: 's3', name: 'Cem D.', gender: 'm', domains: {
+          total: { pctCorrect: 44, pctOmitted: 14, pctIncorrect: 42 },
+          reading: { pctCorrect: 48, pctOmitted: 12, pctIncorrect: 40 },
+          listening: { pctCorrect: 40, pctOmitted: 16, pctIncorrect: 44 },
+        } },
+        { id: 's4', name: 'Dilara E.', gender: 'f', domains: {
+          total: { pctCorrect: 88, pctOmitted: 0, pctIncorrect: 12 },
+          reading: { pctCorrect: 91, pctOmitted: 0, pctIncorrect: 9 },
+          listening: { pctCorrect: 85, pctOmitted: 0, pctIncorrect: 15 },
+        } },
+        // Abwesend: steht am Ende, mit Grund statt mit Balken
+        { id: 's5', name: 'Emre F.', gender: 'm', absent: true,
+          absentMessage: 'Am Testtag entschuldigt gefehlt.', domains: {} },
+      ],
+    },
+    uebersichtskarten: {
+      title: 'Kompetenzübersicht 3a Deutsch',
+      karten: [
+        { id: 'verteilung', label: 'Kompetenzstufen', wert: 25, einheit: '',
+          // Die Stufen tragen eine Ordnung: I ist die schwächste. Ohne eigene
+          // Farben liefe die Vorgabe des Bausteins genau andersherum.
+          anteile: [
+            { label: 'I', wert: 2, farbe: STUFENFARBEN.I },
+            { label: 'II', wert: 5, farbe: STUFENFARBEN.II },
+            { label: 'III', wert: 9, farbe: STUFENFARBEN.III },
+            { label: 'IV', wert: 6, farbe: STUFENFARBEN.IV },
+            { label: 'V', wert: 3, farbe: STUFENFARBEN.V },
+          ],
+          details: [
+            { label: 'I · Unter Mindeststandard', wert: 2 },
+            { label: 'II · Mindeststandard', wert: 5 },
+            { label: 'III · Regelstandard', wert: 9 },
+            { label: 'IV · Regelstandard plus', wert: 6 },
+            { label: 'V · Optimalstandard', wert: 3 },
+          ] },
+        // Zwei Aussagen, zwei Farben: die Vorgabe des Bausteins läuft von Grün
+        // nach Rot durch die Kompetenzstufen und würde hier „nicht erreicht"
+        // grün einfärben. Farben, die etwas behaupten, gehören zu den Daten.
+        { id: 'ab-mindest', label: 'Mindeststandard und darüber', wert: 92, einheit: '%',
+          anteile: [
+            { label: 'erreicht', wert: 23, farbe: '#16a34a' },
+            { label: 'nicht erreicht', wert: 2, farbe: '#94a3b8' },
+          ],
+          details: [{ label: 'Schüler:innen', wert: 23 }] },
+        { id: 'unter-mindest', label: 'Unter Mindeststandard', wert: 8, einheit: '%',
+          anteile: [
+            { label: 'betroffen', wert: 2, farbe: '#dc2626' },
+            { label: 'übrige', wert: 23, farbe: '#94a3b8' },
+          ],
+          details: [{ label: 'Schüler:innen', wert: 2 }] },
+      ],
+    },
+    streudiagramm: {
+      title: 'Schüler:innen nach Stufe und Lösungsquote',
+      mittelwert: 62,
+      punkte: [
+        { id: 's1', name: 'Anna B.', x: 4.2, y: 78, details: [{ label: 'Lesen', wert: 84 }, { label: 'Zuhören', wert: 72 }] },
+        { id: 's2', name: 'Ben C.', x: 3.1, y: 61, details: [{ label: 'Lesen', wert: 66 }, { label: 'Zuhören', wert: 56 }] },
+        { id: 's3', name: 'Cem D.', x: 2.4, y: 44, details: [{ label: 'Lesen', wert: 48 }, { label: 'Zuhören', wert: 40 }] },
+        { id: 's4', name: 'Dilara E.', x: 4.8, y: 88, details: [{ label: 'Lesen', wert: 91 }, { label: 'Zuhören', wert: 85 }] },
+        { id: 's6', name: 'Frieda G.', x: 3.1, y: 61, details: [{ label: 'Lesen', wert: 60 }, { label: 'Zuhören', wert: 62 }] },
+        { id: 's7', name: 'Gero H.', x: 1.8, y: 33, details: [{ label: 'Lesen', wert: 36 }, { label: 'Zuhören', wert: 30 }] },
+      ],
+    },
+    'bista-verteilung': {
+      title: 'BISTA-Punkte der 3a Deutsch',
+      mittelwert: 468,
+      schueler: [
+        { id: 's1', name: 'Anna B.', punkte: 512 },
+        { id: 's2', name: 'Ben C.', punkte: 470 },
+        { id: 's3', name: 'Cem D.', punkte: 421 },
+        { id: 's4', name: 'Dilara E.', punkte: 534 },
+        { id: 's6', name: 'Frieda G.', punkte: 470 },
+        { id: 's7', name: 'Gero H.', punkte: 398 },
+        { id: 's8', name: 'Hanna I.', punkte: 470 },
+      ],
+    },
+    'lernstands-verlauf': {
+      title: 'Lernstand über drei Erhebungen',
+      punkte: [
+        { label: 'Herbst', mean: 54, ciLow: 47, ciHigh: 61, n: 25 },
+        { label: 'Winter', mean: 61, ciLow: 55, ciHigh: 67, n: 25 },
+        { label: 'Frühjahr', mean: 66, ciLow: 60, ciHigh: 72, n: 24 },
+      ],
+      vergleich: [{ mean: 52 }, { mean: 56 }, { mean: 59 }],
+    },
+    'aufgaben-heatmap': {
+      title: 'Aufgaben über die Lerngruppen',
+      zeilen: [
+        { id: 'le-026', label: 'LE-026' },
+        { id: 'le-027', label: 'LE-027' },
+        { id: 'le-028', label: 'LE-028' },
+        { id: 'le-031', label: 'LE-031' },
+      ],
+      spalten: [
+        { id: '3a', label: '3a' },
+        { id: '3b', label: '3b' },
+        { id: '3c', label: '3c' },
+      ],
+      werte: [
+        { zeile: 'le-026', spalte: '3a', wert: 41, erwartet: 63 },
+        { zeile: 'le-026', spalte: '3b', wert: 66, erwartet: 63 },
+        { zeile: 'le-026', spalte: '3c', wert: 59, erwartet: 63 },
+        { zeile: 'le-027', spalte: '3a', wert: 88, erwartet: 72 },
+        { zeile: 'le-027', spalte: '3b', wert: 74, erwartet: 72 },
+        { zeile: 'le-027', spalte: '3c', wert: 70, erwartet: 72 },
+        { zeile: 'le-028', spalte: '3a', wert: 60, erwartet: 58 },
+        { zeile: 'le-028', spalte: '3b', wert: 44, erwartet: 58 },
+        // 3c fehlt bei LE-028: die Aufgabe war dort nicht im Testheft
+        { zeile: 'le-031', spalte: '3a', wert: 34, erwartet: 38 },
+        { zeile: 'le-031', spalte: '3b', wert: 39, erwartet: 38 },
+        { zeile: 'le-031', spalte: '3c', wert: 52, erwartet: 38 },
+      ],
+    },
+    'kennzahl-kachel': {
+      label: 'Mittlere Lösungsquote',
+      wert: 62,
+      einheit: '%',
+      vergleich: 58,
+      verlauf: [54, 57, 59, 62],
+      hinweis: '25 Schüler:innen · Leseverstehen',
+    },
   },
   {
     'kompetenzstufen-leiste': {
@@ -115,6 +260,129 @@ export const DEMODATEN = [
         { label: 'Funktionaler Zusammenhang', bandLeft: 25, bandRight: 55, studentScore: 21 },
         { label: 'Daten und Zufall', bandLeft: 35, bandRight: 66, studentScore: 48 },
       ],
+    },
+    'schueler-tabelle': {
+      title: 'Lösungen je Schüler:in',
+      sortierung: 'name',
+      richtung: 'auf',
+      auswaehlbar: false,
+      domains: [
+        { key: 'total', label: 'Insgesamt' },
+        { key: 'arith', label: 'Arithmetik' },
+        { key: 'geo', label: 'Geometrie' },
+      ],
+      rows: [
+        { id: 'm1', name: 'Ilyas K.', gender: 'm', domains: {
+          total: { pctCorrect: 38, pctOmitted: 18, pctIncorrect: 44 },
+          arith: { pctCorrect: 42, pctOmitted: 16, pctIncorrect: 42 },
+          geo: { pctCorrect: 34, pctOmitted: 20, pctIncorrect: 46 },
+        } },
+        { id: 'm2', name: 'Jana L.', gender: 'f', domains: {
+          total: { pctCorrect: 55, pctOmitted: 9, pctIncorrect: 36 },
+          arith: { pctCorrect: 61, pctOmitted: 6, pctIncorrect: 33 },
+          geo: { pctCorrect: 49, pctOmitted: 12, pctIncorrect: 39 },
+        } },
+        { id: 'm3', name: 'Kilian M.', gender: 'm', domains: {
+          total: { pctCorrect: 27, pctOmitted: 25, pctIncorrect: 48 },
+          arith: { pctCorrect: 30, pctOmitted: 22, pctIncorrect: 48 },
+          geo: { pctCorrect: 24, pctOmitted: 28, pctIncorrect: 48 },
+        } },
+      ],
+    },
+    uebersichtskarten: {
+      title: 'Kompetenzübersicht 8b Mathematik',
+      spalten: 2,
+      karten: [
+        { id: 'verteilung', label: 'Kompetenzstufen', wert: 22, einheit: '',
+          anteile: [
+            { label: 'I', wert: 5, farbe: STUFENFARBEN.I },
+            { label: 'II', wert: 7, farbe: STUFENFARBEN.II },
+            { label: 'III', wert: 6, farbe: STUFENFARBEN.III },
+            { label: 'IV', wert: 3, farbe: STUFENFARBEN.IV },
+            { label: 'V', wert: 1, farbe: STUFENFARBEN.V },
+          ],
+          details: [
+            { label: 'I · Unter Mindeststandard', wert: 5 },
+            { label: 'II · Mindeststandard', wert: 7 },
+            { label: 'III · Regelstandard', wert: 6 },
+            { label: 'IV · Regelstandard plus', wert: 3 },
+            { label: 'V · Optimalstandard', wert: 1 },
+          ] },
+        { id: 'unter-mindest', label: 'Unter Mindeststandard', wert: 23, einheit: '%',
+          anteile: [
+            { label: 'betroffen', wert: 5, farbe: '#dc2626' },
+            { label: 'übrige', wert: 17, farbe: '#94a3b8' },
+          ],
+          details: [{ label: 'Schüler:innen', wert: 5 }] },
+      ],
+    },
+    streudiagramm: {
+      title: 'Schüler:innen nach Stufe und Lösungsquote',
+      mittelwert: 41,
+      punkte: [
+        { id: 'm1', name: 'Ilyas K.', x: 2.1, y: 38, details: [{ label: 'Arithmetik', wert: 42 }, { label: 'Geometrie', wert: 34 }] },
+        { id: 'm2', name: 'Jana L.', x: 3.0, y: 55, details: [{ label: 'Arithmetik', wert: 61 }, { label: 'Geometrie', wert: 49 }] },
+        { id: 'm3', name: 'Kilian M.', x: 1.4, y: 27, details: [{ label: 'Arithmetik', wert: 30 }, { label: 'Geometrie', wert: 24 }] },
+        { id: 'm4', name: 'Lara N.', x: 1.4, y: 27, details: [{ label: 'Arithmetik', wert: 26 }, { label: 'Geometrie', wert: 28 }] },
+        { id: 'm5', name: 'Mert O.', x: 4.1, y: 71, details: [{ label: 'Arithmetik', wert: 74 }, { label: 'Geometrie', wert: 68 }] },
+      ],
+    },
+    'bista-verteilung': {
+      title: 'BISTA-Punkte der 8b Mathematik',
+      mittelwert: 424,
+      punkteMin: 280,
+      zonen: [
+        { id: 'ks1', label: 'KS I', von: 280, bis: 415 },
+        { id: 'ks2', label: 'KS II', von: 415, bis: 495 },
+        { id: 'ks3', label: 'KS III', von: 495, bis: 565 },
+      ],
+      schueler: [
+        { id: 'm1', name: 'Ilyas K.', punkte: 408 },
+        { id: 'm2', name: 'Jana L.', punkte: 462 },
+        { id: 'm3', name: 'Kilian M.', punkte: 351 },
+        { id: 'm4', name: 'Lara N.', punkte: 351 },
+        { id: 'm5', name: 'Mert O.', punkte: 508 },
+        { id: 'm6', name: 'Nele P.', punkte: 408 },
+      ],
+    },
+    'lernstands-verlauf': {
+      title: 'Lernstand über drei Erhebungen',
+      yTitel: 'Lösungsquote (%)',
+      punkte: [
+        { label: 'Herbst', mean: 47, ciLow: 39, ciHigh: 55, n: 22 },
+        { label: 'Winter', mean: 44, ciLow: 37, ciHigh: 51, n: 22 },
+        { label: 'Frühjahr', mean: 41, ciLow: 34, ciHigh: 48, n: 22 },
+      ],
+      vergleich: [{ mean: 49 }, { mean: 51 }, { mean: 52 }],
+    },
+    'aufgaben-heatmap': {
+      title: 'Aufgaben über die Lerngruppen',
+      skala: 'wert',
+      zeilen: [
+        { id: 'ma-104', label: 'MA-104' },
+        { id: 'ma-108', label: 'MA-108' },
+        { id: 'ma-112', label: 'MA-112' },
+      ],
+      spalten: [
+        { id: '8a', label: '8a' },
+        { id: '8b', label: '8b' },
+      ],
+      werte: [
+        { zeile: 'ma-104', spalte: '8a', wert: 47 },
+        { zeile: 'ma-104', spalte: '8b', wert: 22 },
+        { zeile: 'ma-108', spalte: '8a', wert: 51 },
+        { zeile: 'ma-108', spalte: '8b', wert: 38 },
+        { zeile: 'ma-112', spalte: '8a', wert: 58 },
+        { zeile: 'ma-112', spalte: '8b', wert: 55 },
+      ],
+    },
+    'kennzahl-kachel': {
+      label: 'Mittlere Lösungsquote',
+      wert: 41,
+      einheit: '%',
+      vergleich: 50,
+      verlauf: [47, 44, 41],
+      hinweis: '22 Schüler:innen · Leitidee Zahl',
     },
   },
 ];

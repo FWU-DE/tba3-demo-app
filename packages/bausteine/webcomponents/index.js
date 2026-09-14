@@ -22,12 +22,28 @@ import { BAUPLAN as TABELLE, AufgabenTabelleElement } from './aufgaben-tabelle.j
 import { BAUPLAN as VERGLEICH, MittelwertVergleichElement } from './mittelwert-vergleich.js';
 import { BAUPLAN as ERWARTUNG, ErwartetTatsaechlichElement } from './erwartet-tatsaechlich.js';
 import { BAUPLAN as BAENDER, PerzentilbaenderElement } from './perzentilbaender.js';
+import { BAUPLAN as SCHUELER, SchuelerTabelleElement } from './schueler-tabelle.js';
+import { BAUPLAN as KARTEN, UebersichtskartenElement } from './uebersichtskarten.js';
+import { BAUPLAN as STREU, StreudiagrammElement } from './streudiagramm.js';
+import { BAUPLAN as BISTA, BistaVerteilungElement } from './bista-verteilung.js';
+import { BAUPLAN as VERLAUF, LernstandsVerlaufElement } from './lernstands-verlauf.js';
+import { BAUPLAN as HEATMAP, AufgabenHeatmapElement } from './aufgaben-heatmap.js';
+import { BAUPLAN as KACHEL, KennzahlKachelElement } from './kennzahl-kachel.js';
 import { elementKlasse } from './baustein-element.js';
 
 export const PRAEFIX = 'tba3-';
 
-/** Alle Baupläne — das Verzeichnis, aus dem sich jede Fassung bedient. */
-export const BAUPLAENE = [LEISTE, TABELLE, VERGLEICH, ERWARTUNG, BAENDER];
+/**
+ * Alle Baupläne — das Verzeichnis, aus dem sich jede Fassung bedient.
+ *
+ * Reihenfolge: erst die fünf aus der ersten Runde, dann die vier aus dem
+ * Katalog umgezogenen, zuletzt die drei, die es nur hier gibt.
+ */
+export const BAUPLAENE = [
+  LEISTE, TABELLE, VERGLEICH, ERWARTUNG, BAENDER,
+  SCHUELER, KARTEN, STREU, BISTA,
+  VERLAUF, HEATMAP, KACHEL,
+];
 
 /** Elementklassen, nach Elementnamen. */
 export const ELEMENTE = {
@@ -36,6 +52,13 @@ export const ELEMENTE = {
   [`${PRAEFIX}${VERGLEICH.name}`]: MittelwertVergleichElement,
   [`${PRAEFIX}${ERWARTUNG.name}`]: ErwartetTatsaechlichElement,
   [`${PRAEFIX}${BAENDER.name}`]: PerzentilbaenderElement,
+  [`${PRAEFIX}${SCHUELER.name}`]: SchuelerTabelleElement,
+  [`${PRAEFIX}${KARTEN.name}`]: UebersichtskartenElement,
+  [`${PRAEFIX}${STREU.name}`]: StreudiagrammElement,
+  [`${PRAEFIX}${BISTA.name}`]: BistaVerteilungElement,
+  [`${PRAEFIX}${VERLAUF.name}`]: LernstandsVerlaufElement,
+  [`${PRAEFIX}${HEATMAP.name}`]: AufgabenHeatmapElement,
+  [`${PRAEFIX}${KACHEL.name}`]: KennzahlKachelElement,
 };
 
 /**

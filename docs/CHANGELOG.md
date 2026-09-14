@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- **Sieben weitere Bausteine, und alle neun Katalog-Ansichten laufen jetzt über
+  das Paket.** Aus dem Katalog umgezogen sind Schüler-Tabelle (mit Auswahl),
+  Übersichtskarten, Streudiagramm und BISTA-Verteilung; dazu drei, die es nur in
+  der Bibliothek gibt, weil die Schau die Frage gar nicht stellt:
+  Lernstands-Verlauf (mehrere Erhebungen), Aufgaben-Heatmap (Aufgaben gegen
+  Lerngruppen) und Kennzahl-Kachel. Damit zeigt jede Katalog-Ansicht denselben
+  Quelltext, den auch ein fremdes Projekt bekommt — der Quelltext-Link führt
+  entsprechend nach `packages/bausteine/` statt auf eine Kopie im Katalog.
+  `NUR_BAUSTEIN` in `zuordnung.js` hält mit Grund fest, was ohne Ansicht
+  bleibt, und drei Tests halten Zuordnung, Beispieldaten und die drei Fassungen
+  beieinander.
 - **E2E-Tests für die Demoanwendung** (Playwright, `npm run e2e`): 47 Tests
   über Reiter und Deeplinks, Filter — jeweils gegen die Abfrage, die dabei
   herauskommt —, Schülerliste mit Datenblatt und eigenen Gruppen, Materialien

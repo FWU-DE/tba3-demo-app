@@ -1,40 +1,43 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Card from 'primevue/card';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import Skeleton from 'primevue/skeleton';
-import StudentSolutionTable from '../components/StudentSolutionTable.vue';
+import { SchuelerTabelle } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
 const DOCS_META = {
-  githubFile: 'StudentSolutionTable.vue',
+  githubFile: 'schueler-tabelle.js',
+  githubPath: 'packages/bausteine/webcomponents/schueler-tabelle.js',
   propsDocs: [
-    { name: 'rows',    type: 'Array', required: true,  pfad: 'ansichten.schuelerTabelle.props.rows' },
-    { name: 'domains', type: 'Array', default: '[Insgesamt, Lesen, Zuhören]', pfad: 'ansichten.schuelerTabelle.props.domains' },
+    { name: 'rows',        type: 'Array',   required: true, pfad: 'ansichten.schuelerTabelle.props.rows' },
+    { name: 'domains',     type: 'Array',   default: '[Insgesamt, Lesen, Zuhören]', pfad: 'ansichten.schuelerTabelle.props.domains' },
+    { name: 'sortierung',  type: 'String',  default: "'total'", pfad: 'ansichten.schuelerTabelle.props.sortierung' },
+    { name: 'auswahl',     type: 'Array',   default: '[]',      pfad: 'ansichten.schuelerTabelle.props.auswahl' },
+    { name: 'auswaehlbar', type: 'Boolean', default: 'true',    pfad: 'ansichten.schuelerTabelle.props.auswaehlbar' },
   ],
   dataShape: `// rows-Element
 {
-  id:           'st-3a-001',
-  name:         'Schülerin 001',
-  gender:       'f',              // 'f' | 'm' | 'd'
-  testBooklet:  { label: 'Testheft B – Lesen & Zuhören', url: '/booklets/b' },
-  solutionUrl:  '/solutions/st-001',
-  absent:       false,
-  absentMessage: null,
-  domains: {
-    total:     { pctCorrect: 71, pctOmitted: 0,  pctIncorrect: 29 },
-    reading:   { pctCorrect: 77, pctOmitted: 0,  pctIncorrect: 23 },
-    listening: { pctCorrect: 65, pctOmitted: 2,  pctIncorrect: 33 },
+  id:            'st-3a-001',
+  name:          'Schülerin 001',
+  gender:        'f',              // 'f' | 'm' | 'd'
+  absent:        false,
+  absentMessage: null,             // Text, wenn absent
+  domains: {                       // Schlüssel wie in der domains-Prop
+    total:     { pctCorrect: 71, pctOmitted: 0, pctIncorrect: 29 },
+    reading:   { pctCorrect: 77, pctOmitted: 0, pctIncorrect: 23 },
+    listening: { pctCorrect: 65, pctOmitted: 2, pctIncorrect: 33 },
   },
 }`,
   codeExample: `<script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import StudentSolutionTable from './components/StudentSolutionTable.vue';
+import { SchuelerTabelle } from '@tba3/bausteine/vue';
 
 const rows    = ref([]);
+const auswahl = ref([]);
 const domains = [
   { key: 'total',     label: 'Insgesamt' },
   { key: 'reading',   label: 'Lesen' },
@@ -45,45 +48,55 @@ onMounted(async () => {
   const { data } = await axios.get('/groups/3a-deutsch/items?type=students');
   const vgs = [].concat(data);
 
-  // Group value-groups by student
-  const byStudent = new Map();
+  // Value-Groups nach Schüler:in bündeln
+  const nachSchueler = new Map();
   for (const vg of vgs) {
     if (vg.type !== 'student') continue;
     const sid = vg.studentId ?? vg.id;
-    if (!byStudent.has(sid)) byStudent.set(sid, { id: sid, name: vg.name ?? sid, gender: vg.gender ?? 'd', vgs: [] });
-    byStudent.get(sid).vgs.push(vg);
+    if (!nachSchueler.has(sid)) {
+      nachSchueler.set(sid, { id: sid, name: vg.name ?? sid, gender: vg.gender ?? 'd', vgs: [] });
+    }
+    nachSchueler.get(sid).vgs.push(vg);
   }
 
-  const domainKey = (vg) => {
+  const bereich = (vg) => {
     const d = vg.domain?.name ?? vg.domain ?? '';
     if (d.includes('Lesen') || d === 'le') return 'reading';
     if (d.includes('Hören') || d.includes('Zuhören') || d === 'ho') return 'listening';
     return 'other';
   };
 
-  const toPcts = (items) => {
-    const correct   = items.filter(it => it.score >= 1).length;
-    const omitted   = items.filter(it => it.score == null).length;
-    const incorrect = items.length - correct - omitted;
-    const total     = items.length || 1;
-    return { pctCorrect: correct/total*100, pctOmitted: omitted/total*100, pctIncorrect: incorrect/total*100 };
+  const anteile = (items) => {
+    const richtig = items.filter(it => it.score >= 1).length;
+    const ausgelassen = items.filter(it => it.score == null).length;
+    const gesamt = items.length || 1;
+    return {
+      pctCorrect: richtig / gesamt * 100,
+      pctOmitted: ausgelassen / gesamt * 100,
+      pctIncorrect: (gesamt - richtig - ausgelassen) / gesamt * 100,
+    };
   };
 
-  rows.value = [...byStudent.values()].map(({ id, name, gender, vgs: svgs }) => {
-    const allItems   = svgs.flatMap(vg => vg.items ?? []);
-    const domainMap  = {};
+  rows.value = [...nachSchueler.values()].map(({ id, name, gender, vgs: svgs }) => {
+    const bereiche = {};
     for (const vg of svgs) {
-      const key = domainKey(vg);
-      if (key !== 'total') domainMap[key] = toPcts(vg.items ?? []);
+      const key = bereich(vg);
+      if (key !== 'total') bereiche[key] = anteile(vg.items ?? []);
     }
-    domainMap.total = toPcts(allItems);
-    return { id, name, gender, testBooklet: null, solutionUrl: null, absent: false, absentMessage: null, domains: domainMap };
+    bereiche.total = anteile(svgs.flatMap(vg => vg.items ?? []));
+    return { id, name, gender, absent: false, domains: bereiche };
   });
 });
 <\/script>
 
 <template>
-  <StudentSolutionTable :rows="rows" :domains="domains" />
+  <SchuelerTabelle
+    :rows="rows"
+    :domains="domains"
+    :auswahl="auswahl"
+    @auswahl-geaendert="e => (auswahl = e.auswahl)"
+    @schueler-gewaehlt="s => console.log(s)"
+  />
 </template>`,
   apiEndpoints: [
     { method: 'GET', path: '/groups/{id}/items?type=students', pfad: 'ansichten.schuelerTabelle.endpunkte.schueler' },
@@ -213,6 +226,11 @@ const selectedGroup = ref(GROUPS[0]);
 
 const domains = computed(() => DOMAINS_BY_SUBJECT[selectedGroup.value.subject]);
 const rows    = computed(() => generateStudents(selectedGroup.value));
+
+// Die Auswahl hält die Ansicht: das Element meldet sie nur, damit ein
+// einbauendes Projekt daraus etwas machen kann (Export, Sammelaktion).
+const auswahl = ref([]);
+watch(() => selectedGroup.value, () => { auswahl.value = []; });
 </script>
 
 <template>
@@ -222,7 +240,7 @@ const rows    = computed(() => generateStudents(selectedGroup.value));
         <div class="card-header">
           <div>
             <div class="comp-name-row">
-              <code class="comp-name">StudentSolutionTable</code>
+              <code class="comp-name">&lt;tba3-schueler-tabelle&gt;</code>
               <Tag :value="t('ansichten.gemeinsam.neu')" severity="contrast" />
             </div>
             <p class="comp-desc">
@@ -252,11 +270,21 @@ const rows    = computed(() => generateStudents(selectedGroup.value));
           </div>
         </div>
 
-        <StudentSolutionTable :rows="rows" :domains="domains" />
+        <SchuelerTabelle
+          :rows="rows"
+          :domains="domains"
+          :auswahl="auswahl"
+          @auswahl-geaendert="(e) => (auswahl = e.auswahl)"
+        />
+        <p v-if="auswahl.length" class="auswahl-hinweis">
+          <i class="pi pi-check-square" />
+          {{ t('ansichten.schuelerTabelle.ausgewaehlt', { n: auswahl.length }) }}
+        </p>
 
         <ComponentDocs
-          component-name="StudentSolutionTable"
+          component-name="tba3-schueler-tabelle"
           :github-file="DOCS_META.githubFile"
+          :github-path="DOCS_META.githubPath"
           :props-docs="propsDocs"
           :data-shape="DOCS_META.dataShape"
           :code-example="DOCS_META.codeExample"
@@ -297,4 +325,10 @@ const rows    = computed(() => generateStudents(selectedGroup.value));
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .ctrl-select { min-width: 220px; }
+
+.auswahl-hinweis {
+  display: flex; align-items: center; gap: 6px; margin: 12px 0 0;
+  font-size: 0.82rem; color: #0369a1; background: #f0f9ff;
+  border: 1px solid #bae6fd; border-radius: 5px; padding: 6px 10px;
+}
 </style>
