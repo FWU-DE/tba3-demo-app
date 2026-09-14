@@ -6,16 +6,18 @@
   <title>TBA3 — Rückmeldungen aus VERA-Daten</title>
   <meta name="description" content="Demoanwendung, Komponentenbibliothek und Rückmeldungsbeispiele zur TBA3-Auswertungsschnittstelle." />
   <!-- Eine Spalte für alle Bereiche, ausgerichtet an der Leiste darüber -->
+  <!-- Design-Tokens aus dem VIDIS Design System, siehe apps/shared/tokens.css -->
+  <link rel="stylesheet" href="/gemeinsam/tokens.css" />
   <link rel="stylesheet" href="/gemeinsam/container.css" />
   <style>
     :root {
-      --blau: #2563eb;
-      --blau-dunkel: #1d4ed8;
-      --tinte: #0f172a;
-      --text: #334155;
-      --grau: #64748b;
-      --linie: #e2e8f0;
-      --flaeche: #f8fafc;
+      --blau: var(--farbe-marke);
+      --blau-dunkel: var(--farbe-marke-tief);
+      --tinte: var(--farbe-text);
+      --text: var(--farbe-text);
+      --grau: var(--farbe-text-gedaempft);
+      --linie: var(--farbe-linie);
+      --flaeche: var(--farbe-grund-zart);
       --radius: 16px;
     }
 
@@ -169,7 +171,7 @@
       transition: border-color .15s, box-shadow .15s, transform .15s;
     }
     a.karte:hover {
-      border-color: #bfdbfe;
+      border-color: var(--farbe-marke-zart);
       box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
       transform: translateY(-2px);
     }
@@ -194,9 +196,9 @@
       border-radius: 999px;
       white-space: nowrap;
     }
-    .schild-react { background: #eff6ff; color: #1d4ed8; }
+    .schild-react { background: var(--farbe-marke-zart); color: var(--farbe-marke-tief); }
     .schild-vue   { background: #ecfdf5; color: #047857; }
-    .schild-bald  { background: #f1f5f9; color: var(--grau); }
+    .schild-bald  { background: var(--farbe-sekundaer); color: var(--grau); }
 
     /* ── Zielgruppen ───────────────────────────────────────── */
     .zielgruppen { border-top: 1px solid var(--linie); padding-block: 48px 8px; }
@@ -254,8 +256,8 @@
       justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
-      border: 1px solid #bfdbfe;
-      background: linear-gradient(180deg, #f8fbff, #eff6ff);
+      border: 1px solid var(--farbe-marke-zart);
+      background: linear-gradient(180deg, #f8fbff, var(--farbe-marke-zart));
       border-radius: var(--radius);
       padding: 22px 24px;
       margin-bottom: 28px;
