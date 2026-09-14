@@ -443,9 +443,9 @@ const COMPONENTS = [
 
 <style scoped>
 .index-main {
-  max-width: 1100px;
+  max-width: var(--breite);
   margin: 32px auto;
-  padding: 0 20px;
+  padding: 0 var(--rand);
 }
 
 .index-intro { margin-bottom: 28px; }

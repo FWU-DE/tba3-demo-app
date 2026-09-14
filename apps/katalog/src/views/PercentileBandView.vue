@@ -519,9 +519,9 @@ const s3Items = computed(() => {
 
 <style scoped>
 .view-main {
-  max-width: 1050px;
+  max-width: var(--breite);
   margin: 28px auto;
-  padding: 0 20px;
+  padding: 0 var(--rand);
   display: flex;
   flex-direction: column;
   gap: 24px;

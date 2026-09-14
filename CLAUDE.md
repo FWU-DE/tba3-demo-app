@@ -40,7 +40,7 @@ apps/portal/dokumentation/
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
 apps/beispiele/     Rückmeldungsbeispiele — statisches HTML, unter /beispiele
-apps/shared/        Navigationsleiste + Sprachwahl (Custom Element) → /gemeinsam/
+apps/shared/        Navigationsleiste, Sprachwahl, Containerregel → /gemeinsam/
 api/                Eigener TBA3-Mock als Vercel-Funktion
 data/fixtures.mjs   Beispieldaten, gepackt (npm run fixtures:update)
 data/material-fixtures.mjs
@@ -53,11 +53,34 @@ tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + beispiele/ + schnitts
 tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
 ```
 
-Wer einen Bereich hinzufügt, fasst vier Stellen an: `tools/build-site.mjs`
+Wer einen Bereich hinzufügt, fasst fünf Stellen an: `tools/build-site.mjs`
 (Zusammenbau), `vercel.json` und `nginx.conf` (Fallback), `apps/portal/index.html`
-(Verlinkung) und `BEREICHE` in `apps/shared/tba3-leiste.js` (Navigationsleiste). Ein
+(Verlinkung), `BEREICHE` in `apps/shared/tba3-leiste.js` (Navigationsleiste) und
+`/gemeinsam/container.css` (dieselbe Spalte wie alle anderen). Ein
 statischer Bereich mit eigenen Verzeichnissen braucht keinen SPA-Fallback —
 `/dokumentation` fasst deshalb nur drei dieser vier Stellen an.
+
+### Eine Spalte für die ganze Seite
+
+`apps/shared/container.css` führt die Maße, unter `/gemeinsam/container.css`
+eingebunden: **1200px breit, 20px Rand, unter 640px 12px**. Die
+Navigationsleiste steht über jedem Bereich und ist damit die Kante, an der sich
+alles ausrichtet — läuft ein Bereich mit eigenen Maßen, springt sein Inhalt
+gegenüber der Leiste ein, und das sieht auf einem breiten Schirm nach Absicht
+aus.
+
+Wer die Spalte braucht, nimmt `.wrap` (Portal, Rückmeldungen, Dokumentation)
+oder `var(--breite)` und `var(--rand)` in eigenen Regeln (Schnittstelle,
+Katalog). Eine eigene Zahl ist ein Bug; `apps/shared/container.test.mjs` sucht
+im ganzen `apps/`-Baum danach.
+
+Zwei Stellen weichen mit Absicht ab: Der Fließtext der Dokumentation bekommt
+ein Lesemaß von 760px — über 105 Zeichen je Zeile findet das Auge nicht zurück
+an den Anfang der nächsten —, und was dabei übrig bleibt, fällt zwischen Text
+und Gliederung, sodass beide bündig mit den Kanten der Leiste stehen. Und die
+Demoanwendung hat keine zentrierte Spalte, sondern eine Seitenleiste mit
+Inhaltsfläche daneben (`max-w-7xl` im `Dashboard`); dort gibt es nichts, was
+sich an der Leiste ausrichten ließe.
 
 ### Gemeinsame Navigationsleiste
 
@@ -213,6 +236,7 @@ tools/mock.test.mjs                                      Mock: Schlüssel, Ersat
 tools/dokumente.test.mjs                                 Dokumentseiten: Rendern, Anker, Querverweise
 apps/beispiele/rueckmeldungen.test.mjs                   Rückmeldungsliste: Filter und Optionen
 apps/shared/sprache.test.mjs                             Sprachwahl: Quellen, Merken, Ereignis
+apps/shared/container.test.mjs                           Eine Spalte: Maße, Einbindung, Ausreißer
 apps/demo/src/i18n/texte.test.js                         Textschlüssel der Demoanwendung
 apps/katalog/src/i18n/texte.test.mjs                     Textschlüssel des Katalogs
 ```

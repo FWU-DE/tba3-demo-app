@@ -74,9 +74,9 @@ a { text-decoration: none; color: inherit; }
 .shell { min-height: 100vh; }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
-.shell-header { background: #1e3a5f; padding: 12px 32px; }
+.shell-header { background: #1e3a5f; padding: 12px var(--rand); }
 .shell-header-inner {
-  max-width: 1100px; margin: 0 auto;
+  max-width: var(--breite); margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 
@@ -95,10 +95,10 @@ a { text-decoration: none; color: inherit; }
 /* ── Breadcrumb bar ──────────────────────────────────────────────────────── */
 .breadcrumb-bar {
   background: #fff; border-bottom: 1px solid #e2e8f0;
-  padding: 9px 32px;
+  padding: 9px var(--rand);
 }
 .breadcrumb-inner {
-  max-width: 1100px; margin: 0 auto;
+  max-width: var(--breite); margin: 0 auto;
   display: flex; align-items: center; gap: 8px;
   font-size: 0.8rem;
 }

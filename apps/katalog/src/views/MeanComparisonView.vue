@@ -256,7 +256,7 @@ const domainCharts = computed(() => {
 </template>
 
 <style scoped>
-.view-main { max-width: 1050px; margin: 28px auto; padding: 0 20px; }
+.view-main { max-width: var(--breite); margin: 28px auto; padding: 0 var(--rand); }
 .catalog-card { border-radius: 10px; }
 .card-header {
   display: flex; align-items: flex-start; justify-content: space-between;

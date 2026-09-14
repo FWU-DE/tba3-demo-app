@@ -56,6 +56,7 @@ jobs:
           pruefe /schnittstelle/ 200
           pruefe /schnittstelle/tba3-spec.yml 200
           pruefe /schnittstelle/material-spec.yml 200
+          pruefe /gemeinsam/container.css 200
           pruefe /gemeinsam/tba3-leiste.js 200
           pruefe /gemeinsam/sprache.js 200
           pruefe /groups/3a-deutsch/competence-levels 200

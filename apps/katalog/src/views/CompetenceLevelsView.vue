@@ -293,9 +293,9 @@ const domainCharts = computed(() => {
 
 <style scoped>
 .view-main {
-  max-width: 1050px;
+  max-width: var(--breite);
   margin: 28px auto;
-  padding: 0 20px;
+  padding: 0 var(--rand);
 }
 
 .catalog-card { border-radius: 10px; }

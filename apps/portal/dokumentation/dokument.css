@@ -31,7 +31,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+/* .wrap kommt aus /gemeinsam/container.css — dieselbe Spalte wie die Leiste. */
 
 a { color: var(--blau); }
 a:hover { color: var(--blau-dunkel); }
@@ -69,7 +69,13 @@ a:hover { color: var(--blau-dunkel); }
 /* ── Zwei Spalten: Gliederung und Text ───────────────────── */
 .dokument-koerper {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 232px;
+  /* Der Text bekommt ein Lesemaß, nicht die ganze Spalte: 1160 − 232 − 48 =
+     880px wären rund 105 Zeichen je Zeile, und aus so einer Zeile findet das
+     Auge nicht zurück an den Anfang der nächsten. Was übrig bleibt, fällt
+     zwischen die beiden Spalten — die Gliederung steht dadurch bündig mit der
+     rechten Kante der Leiste, der Text bündig mit ihrer linken. */
+  grid-template-columns: minmax(0, 760px) 232px;
+  justify-content: space-between;
   gap: 48px;
   align-items: start;
   padding-block: 32px 16px;
@@ -256,5 +262,4 @@ h2:hover .sprungmarke, h3:hover .sprungmarke, h4:hover .sprungmarke,
     border-radius: 12px;
     padding: 16px 18px;
   }
-  .wrap { padding: 0 16px; }
 }
