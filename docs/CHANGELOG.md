@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- `@tba3/bausteine`: die Visualisierungen als **Web Component, Vue- und
+  React-Komponente**. Ein framework-freier Kern je Baustein, darüber drei dünne
+  Adapter — dieselbe Implementierung, drei Fassungen. Vier Bausteine portiert
+  (Kompetenzstufen-Leiste, Mittelwert-Vergleich, erwartete gegen tatsächliche
+  Lösungsquote, Perzentilbänder). Wird als reines ESM unter `/bausteine/`
+  ausgeliefert und lässt sich ohne Build einbinden.
+
+### Changed
+- Der Katalog bezieht diese vier Visualisierungen aus `@tba3/bausteine/vue`
+  statt aus eigenen `.vue`-Dateien.
+- Zwei Beschriftungen, die im Original am rechten SVG-Rand abgeschnitten wurden
+  (`n=` in der Kompetenzstufen-Leiste, der letzte Legendeneintrag der
+  Perzentilbänder), haben jetzt Platz.
+
+### Added
 - Illustration im Aufmacher des Portals: ein Endpunkt der Schnittstelle geht
   rein, eine Kompetenzstufenverteilung kommt raus. Reines SVG mit
   CSS-Animation, kein Skript und kein Bild; die Balken stehen auch ohne

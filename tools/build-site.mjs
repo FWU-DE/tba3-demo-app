@@ -103,6 +103,31 @@ for (const datei of gemeinsam) {
 }
 console.log(`✓ apps/shared/{${gemeinsam.join(', ')}} → dist/gemeinsam/`);
 
+// Die Bausteine liegen als reines ESM vor und werden unverändert nach
+// /bausteine/ kopiert — ohne Build, ohne Bündel. Wer sie nachnutzen will,
+// braucht dann nur eine Zeile:
+//
+//   <script type="module">
+//     import { registrieren } from 'https://<host>/bausteine/webcomponents/index.js';
+//     registrieren();
+//   </script>
+//
+// Die Import-Pfade innerhalb des Pakets sind relativ, deshalb genügt das Kopieren
+// des Verzeichnisbaums; ein Bundler würde hier nur eine Abhängigkeit hinzufügen.
+const bausteineQuelle = join(root, 'packages/bausteine');
+const BAUSTEIN_ORDNER = ['kern', 'webcomponents', 'vue', 'react'];
+let bausteineDateien = 0;
+for (const ordner of BAUSTEIN_ORDNER) {
+  const von = join(bausteineQuelle, ordner);
+  const nach = join(dist, 'bausteine', ordner);
+  mkdirSync(nach, { recursive: true });
+  for (const datei of readdirSync(von).filter((d) => d.endsWith('.js'))) {
+    copyFileSync(join(von, datei), join(nach, datei));
+    bausteineDateien += 1;
+  }
+}
+console.log(`✓ packages/bausteine → dist/bausteine/ (${bausteineDateien} Dateien)`);
+
 // Swagger UI rendert die API-Referenz unter /schnittstelle. Die Dateien kommen aus
 // node_modules statt von einem CDN — sonst hinge das Deployment an fremder Infrastruktur.
 const SWAGGER_DATEIEN = ['swagger-ui-bundle.js', 'swagger-ui.css'];

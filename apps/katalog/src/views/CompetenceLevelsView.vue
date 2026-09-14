@@ -7,7 +7,7 @@ import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import ToggleSwitch from 'primevue/toggleswitch';
-import CompetenceLevelBar from '../components/CompetenceLevelBar.vue';
+import { KompetenzstufenLeiste as CompetenceLevelBar } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
 
