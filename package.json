@@ -25,6 +25,7 @@
     "fixtures:update": "node tools/fetch-fixtures.mjs",
     "docs:update": "node tools/update-docs.mjs",
     "docs:bilder": "node tools/dokumentbilder.mjs",
+    "konsortium:doc": "node tools/konsortium-dokument.mjs",
     "spec:update": "node tools/update-spec.mjs",
     "material-spec:update": "node tools/build-material-spec.mjs"
   },

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rückmeldungsbeispiele — TBA3</title>
-  <meta name="description" content="12 prototypische Rückmeldungen aus VERA-Daten, filterbar nach Fach, Klassenstufe und Zielgruppe." />
+  <title>Rückmeldungen des Konsortiums — TBA3</title>
+  <meta name="description" content="Die Rückmeldungen der vier entwickelnden Einrichtungen mit Demo, Quelltext und Dokumentation — filterbar nach Einrichtung, Fach, Klassenstufe und Zielgruppe." />
   <!-- Eine Spalte für alle Bereiche, ausgerichtet an der Leiste darüber -->
   <!-- Design-Tokens aus dem VIDIS Design System, siehe apps/shared/tokens.css -->
   <link rel="stylesheet" href="/gemeinsam/tokens.css" />
@@ -60,6 +60,7 @@
       color: #854d0e;
       margin-bottom: 28px;
     }
+    .hinweis a { color: inherit; font-weight: 600; }
 
     /* ── Filter ────────────────────────────────────────────── */
     .filter {
@@ -152,14 +153,42 @@
     }
     .schild-fach { background: var(--farbe-marke-zart); color: var(--farbe-marke-tief); }
 
-    .fuss {
+    /* ── Bausteine und Herkunftshinweis ─────────────────────── */
+    .bausteine {
+      font-size: 13px;
+      color: var(--grau);
+      margin: 0 0 14px;
+    }
+    .bausteine b {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 4px;
+    }
+
+    .karten-hinweis {
+      font-size: 13px;
+      color: var(--grau);
+      border-left: 2px solid var(--linie);
+      padding-left: 10px;
+      margin: 0 0 14px;
+    }
+
+    /* ── Verweise am Fuß der Karte ──────────────────────────── */
+    .verweise {
       margin-top: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
       font-size: 13.5px;
       font-weight: 600;
-      color: var(--blau);
+      padding-top: 4px;
     }
-    a.karte:hover .fuss { color: var(--blau-dunkel); }
-    .karte.offen .fuss { color: var(--grau); font-weight: 500; }
+    .verweise a { color: var(--blau); text-decoration: none; }
+    .verweise a:hover { color: var(--blau-dunkel); text-decoration: underline; }
+    .verweise a:focus-visible { outline: 2px solid var(--blau); outline-offset: 2px; border-radius: 4px; }
 
     .leer {
       border: 1px dashed var(--linie);
@@ -193,29 +222,36 @@
 <main class="wrap">
 
   <section class="hero">
-    <h1 lang="de">Rückmeldungsbeispiele</h1>
-    <h1 lang="en">Report examples</h1>
+    <h1 lang="de">Rückmeldungen des Konsortiums</h1>
+    <h1 lang="en">Reports of the consortium</h1>
     <p lang="de">
-      12 prototypische Rückmeldungen aus VERA-Daten — vollständige Ansichten, wie sie bei
-      Lehrkräften und Schulleitungen ankommen, nicht einzelne Bausteine. Jede liegt in
-      einem eigenen Repository und wird über GitHub Pages ausgeliefert.
+      10 Rückmeldungen aus vier Einrichtungen — vollständige Anwendungen, wie sie bei
+      Lehrkräften, Schulleitungen, der Schulaufsicht und Schüler:innen ankommen, nicht
+      einzelne Bausteine. Jede liegt in einem eigenen Repositorium; hier stehen Demo,
+      Quelltext und Dokumentation nebeneinander.
     </p>
     <p lang="en">
-      12 prototype reports built from VERA data — complete views as they reach teachers and
-      school leaders, not individual building blocks. Each one lives in its own repository
-      and is served through GitHub Pages.
+      10 reports from four institutions — complete applications as they reach teachers,
+      school leaders, school supervision and students, not individual building blocks.
+      Each lives in its own repository; here the demo, the source code and the
+      documentation stand side by side.
     </p>
   </section>
 
-  <p class="hinweis" data-testid="platzhalter-hinweis">
+  <p class="hinweis" data-testid="stand-hinweis">
     <span lang="de">
-      Aufbau im Gang: Die Einträge zeigen beispielhaft, wie die Rückmeldungen zugeschnitten
-      sein können — verbindlich ist daran nichts. Die Verweise folgen, sobald die einzelnen
-      Rückmeldungen veröffentlicht sind.
+      Stand vom 15.09.2026, dem Tag der Abschlusssitzung der Steuergruppe. Die Verweise sind
+      vorläufig: das zepf zieht von GitLab auf GitHub um, das ISQ plant den Umzug seines
+      Repositoriums, und der Repositoriumsname von indibit folgt mit der Veröffentlichung.
+      Jede Rückmeldung nennt darunter die Bausteine, die ihr Sachbericht beschreibt —
+      <a href="/dokumentation/bausteine-der-rueckmeldungen">der Katalog dazu steht in der Dokumentation</a>.
     </span>
     <span lang="en">
-      Work in progress: the entries show by example how the reports could be cut — none of
-      it is binding. The links follow as soon as the individual reports are published.
+      As of 15 Sept 2026, the day of the steering group’s closing meeting. The links are
+      provisional: zepf is moving from GitLab to GitHub, ISQ plans to move its repository,
+      and indibit’s repository name follows on publication. Each report names the building
+      blocks its progress report describes —
+      <a href="/dokumentation/bausteine-der-rueckmeldungen">the catalogue is in the documentation</a>.
     </span>
   </p>
 
@@ -247,25 +283,36 @@
 
 <script type="module" src="/gemeinsam/tba3-leiste.js"></script>
 <script type="module">
-  // Absoluter Pfad, nicht './rueckmeldungen.js': Die Seite ist unter /beispiele
+  // Absoluter Pfad, nicht './konsortium.js': Die Seite ist unter /beispiele
   // und /beispiele/ erreichbar, und ohne Schrägstrich löst der Browser relativ
   // gegen / auf — das Modul käme nicht an und die Liste bliebe leer.
-  import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, FAECHER, STUFEN, filtern, optionen } from '/beispiele/rueckmeldungen.js';
+  //
+  // Die Daten liegen unter /gemeinsam/, weil außer dieser Seite auch die
+  // Demoanwendung und der Dokumentationsgenerator sie lesen. Eine zweite Liste
+  // wäre eine Liste, die veraltet.
+  import {
+    EINRICHTUNGEN, FAECHER, FILTER, RUECKMELDUNGEN, STUFEN, ZIELGRUPPEN,
+    bausteineVon, filtern, optionen,
+  } from '/gemeinsam/konsortium.js';
   import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
 
   dokumentKopf({
-    titel: { de: 'Rückmeldungsbeispiele — TBA3', en: 'Report examples — TBA3' },
+    titel: { de: 'Rückmeldungen des Konsortiums — TBA3', en: 'Reports of the consortium — TBA3' },
     beschreibung: {
-      de: '12 prototypische Rückmeldungen aus VERA-Daten, filterbar nach Fach, Klassenstufe und Zielgruppe.',
-      en: '12 prototype reports built from VERA data, filterable by subject, grade and audience.',
+      de: 'Die Rückmeldungen der vier entwickelnden Einrichtungen mit Demo, Quelltext und Dokumentation — filterbar nach Einrichtung, Fach, Klassenstufe und Zielgruppe.',
+      en: 'The reports of the four developing institutions with demo, source code and documentation — filterable by institution, subject, grade and audience.',
     },
   });
 
   const WORTE = {
     alle: { de: 'Alle', en: 'All' },
     zuruecksetzen: { de: 'Filter zurücksetzen', en: 'Reset filters' },
-    inVorbereitung: { de: 'in Vorbereitung', en: 'in preparation' },
-    oeffnen: { de: 'Rückmeldung öffnen →', en: 'Open report →' },
+    fachunabhaengig: { de: 'fachunabhängig', en: 'subject-independent' },
+    alleStufen: { de: 'alle Jahrgänge', en: 'all years' },
+    bausteine: { de: 'Bausteine laut Sachbericht', en: 'Building blocks per progress report' },
+    demo: { de: 'Demo', en: 'Demo' },
+    code: { de: 'Quelltext', en: 'Source code' },
+    doku: { de: 'Dokumentation', en: 'Documentation' },
     leer: {
       de: 'Zu dieser Auswahl gibt es keine Rückmeldung.',
       en: 'No report matches this selection.',
@@ -291,32 +338,32 @@
   // damit einen Sprachwechsel.
   const ausAdresse = () => {
     const p = new URLSearchParams(location.search);
-    return Object.fromEntries(FILTER.map(({ feld }) => [feld, p.get(feld) ?? '']));
+    return Object.fromEntries(FILTER.map(({ param }) => [param, p.get(param) ?? '']));
   };
 
-  const felder = FILTER.map(({ feld }) => {
+  const felder = FILTER.map(({ param }) => {
     const huelle = document.createElement('div');
     huelle.className = 'feld';
     const beschriftung = document.createElement('label');
-    beschriftung.htmlFor = `filter-${feld}`;
+    beschriftung.htmlFor = `filter-${param}`;
     const auswahl = document.createElement('select');
-    auswahl.id = `filter-${feld}`;
-    auswahl.name = feld;
-    auswahl.dataset.testid = `filter-${feld}`;
+    auswahl.id = `filter-${param}`;
+    auswahl.name = param;
+    auswahl.dataset.testid = `filter-${param}`;
     huelle.append(beschriftung, auswahl);
     formular.insertBefore(huelle, knopf);
-    return { feld, beschriftung, auswahl };
+    return { param, beschriftung, auswahl };
   });
 
   // Beschriftungen hängen an der Sprache, die Auswahl nicht — deshalb werden die
   // Felder neu beschriftet statt neu gebaut.
   const beschriften = (gewaehlt) => {
-    for (const { feld, beschriftung, auswahl } of felder) {
-      const { text: name } = FILTER.find((f) => f.feld === feld);
+    for (const { param, beschriftung, auswahl } of felder) {
+      const { text: name } = FILTER.find((f) => f.param === param);
       beschriftung.textContent = text(name, gewaehlt);
       const gemerkt = auswahl.value;
       auswahl.replaceChildren(new Option(text(WORTE.alle, gewaehlt), ''));
-      for (const { wert, text: t } of optionen(RUECKMELDUNGEN, feld)) {
+      for (const { wert, text: t } of optionen(RUECKMELDUNGEN, param)) {
         auswahl.append(new Option(text(t, gewaehlt), wert));
       }
       auswahl.value = gemerkt;
@@ -324,28 +371,44 @@
     knopf.textContent = text(WORTE.zuruecksetzen, gewaehlt);
   };
 
+  /** Ein Schild je Wert — eine leere Liste bekommt ihr eigenes Wort statt gar keines. */
+  const schilderFuer = (werte, woerterbuch, leerWort, gewaehlt, klasse = '') => {
+    if (werte.length === 0) return [{ text: text(leerWort, gewaehlt), klasse }];
+    return werte.map((w) => ({ text: text(woerterbuch[w], gewaehlt), klasse }));
+  };
+
+  // Eine fehlende Adresse bekommt keinen Platzhalter: „Dokumentation folgt"
+  // wäre eine Zusage, die im Sachbericht niemand gegeben hat. Was es gibt,
+  // steht da; was fehlt, fehlt sichtbar, weil die Reihe kürzer ist.
+  const verweis = (url, wort, gewaehlt, testid) => {
+    if (!url) return null;
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.dataset.testid = testid;
+    a.textContent = `${text(wort, gewaehlt)} ↗`;
+    return a;
+  };
+
   const karte = (r, gewaehlt) => {
     const eintrag = document.createElement('li');
-    const offen = !r.url;
-    const kachel = document.createElement(offen ? 'div' : 'a');
-    kachel.className = offen ? 'karte offen' : 'karte';
+    const kachel = document.createElement('article');
+    kachel.className = 'karte';
     kachel.dataset.testid = `rueckmeldung-${r.id}`;
-    if (!offen) {
-      kachel.href = r.url;
-      kachel.target = '_blank';
-      kachel.rel = 'noopener';
-    }
 
     const schilder = document.createElement('div');
     schilder.className = 'schilder';
-    for (const [woerterbuch, klasse] of [
-      [FAECHER[r.fach], 'schild-fach'],
-      [STUFEN[r.stufe], ''],
-      [ZIELGRUPPEN[r.zielgruppe], ''],
-    ]) {
+    const alle = [
+      { text: text(EINRICHTUNGEN[r.einrichtung], gewaehlt), klasse: 'schild-fach' },
+      ...schilderFuer(r.faecher, FAECHER, WORTE.fachunabhaengig, gewaehlt),
+      ...schilderFuer(r.stufen, STUFEN, WORTE.alleStufen, gewaehlt),
+      ...r.zielgruppen.map((z) => ({ text: text(ZIELGRUPPEN[z], gewaehlt), klasse: '' })),
+    ];
+    for (const { text: inhalt, klasse } of alle) {
       const schild = document.createElement('span');
       schild.className = `schild ${klasse}`.trim();
-      schild.textContent = text(woerterbuch, gewaehlt);
+      schild.textContent = inhalt;
       schilder.append(schild);
     }
 
@@ -353,11 +416,36 @@
     titel.textContent = text(r.titel, gewaehlt);
     const beschreibung = document.createElement('p');
     beschreibung.textContent = text(r.beschreibung, gewaehlt);
-    const fuss = document.createElement('span');
-    fuss.className = 'fuss';
-    fuss.textContent = text(offen ? WORTE.inVorbereitung : WORTE.oeffnen, gewaehlt);
 
-    kachel.append(schilder, titel, beschreibung, fuss);
+    kachel.append(schilder, titel, beschreibung);
+
+    const bausteine = bausteineVon(r);
+    if (bausteine.length) {
+      const block = document.createElement('p');
+      block.className = 'bausteine';
+      block.dataset.testid = `bausteine-${r.id}`;
+      const kopf = document.createElement('b');
+      kopf.textContent = text(WORTE.bausteine, gewaehlt);
+      block.append(kopf, bausteine.map((b) => text(b.name, gewaehlt)).join(' · '));
+      kachel.append(block);
+    }
+
+    if (r.hinweis) {
+      const hinweis = document.createElement('p');
+      hinweis.className = 'karten-hinweis';
+      hinweis.textContent = text(r.hinweis, gewaehlt);
+      kachel.append(hinweis);
+    }
+
+    const verweise = document.createElement('div');
+    verweise.className = 'verweise';
+    verweise.append(...[
+      verweis(r.demo, WORTE.demo, gewaehlt, `demo-${r.id}`),
+      verweis(r.code, WORTE.code, gewaehlt, `code-${r.id}`),
+      verweis(r.doku, WORTE.doku, gewaehlt, `doku-${r.id}`),
+    ].filter(Boolean));
+    kachel.append(verweise);
+
     eintrag.append(kachel);
     return eintrag;
   };
@@ -366,8 +454,8 @@
     const gewaehlt = sprache();
     const auswahl = ausAdresse();
     beschriften(gewaehlt);
-    for (const { feld, auswahl: element } of felder) element.value = auswahl[feld] ?? '';
-    knopf.hidden = !FILTER.some(({ feld }) => auswahl[feld]);
+    for (const { param, auswahl: element } of felder) element.value = auswahl[param] ?? '';
+    knopf.hidden = !FILTER.some(({ param }) => auswahl[param]);
 
     const treffer = filtern(RUECKMELDUNGEN, auswahl);
     anzahl.textContent = treffer.length === RUECKMELDUNGEN.length
@@ -386,7 +474,7 @@
 
   const merken = () => {
     const p = new URLSearchParams();
-    for (const { feld, auswahl } of felder) if (auswahl.value) p.set(feld, auswahl.value);
+    for (const { param, auswahl } of felder) if (auswahl.value) p.set(param, auswahl.value);
     const ziel = p.size ? `?${p}` : location.pathname;
     history.pushState(null, '', ziel);
     zeichnen();

@@ -14,6 +14,8 @@ npm run preview        # dist/ ausliefern wie im Deployment → http://localhost
 npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba3 holen
                        #  (eigene Dokumente mit `eigen: true` bleiben unberührt)
 npm run docs:bilder    # Abbildungen der Dokumentseiten neu erzeugen (gegen npm run preview)
+npm run konsortium:doc # /dokumentation/bausteine-der-rueckmeldungen aus
+                       #  apps/shared/konsortium.js neu erzeugen
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
@@ -45,8 +47,12 @@ apps/portal/dokumentation/
                     gerendert unter /dokumentation
 apps/demo/          React 19 + Vite, ausgeliefert unter /demo      (@tba3/demo)
 apps/katalog/       Vue 3 + PrimeVue + Vite, unter /katalog        (@tba3/katalog)
-apps/beispiele/     Rückmeldungsbeispiele — statisches HTML, unter /beispiele
+apps/beispiele/     Die Rückmeldungen des Konsortiums — statisches HTML, unter /beispiele
 apps/shared/        Navigationsleiste, Sprachwahl, Containerregel → /gemeinsam/
+apps/shared/konsortium.js
+                    Die Rückmeldungen des Konsortiums und der Baustein-Katalog —
+                    Daten für /beispiele, den Reiter „Rückmeldeelemente" der
+                    Demoanwendung und das erzeugte Dokument
 apps/portal/bausteine/
                     Demonstrator: alle Bausteine in allen drei Fassungen, mit
                     Theme-Umschalter und der Zuordnung Katalog ↔ Bausteine
@@ -61,6 +67,8 @@ data/material-fixtures.mjs
 mcp-server/         MCP-Server (eigenes Paket, bewusst kein Workspace:
                     eigener Lockfile, eigener Docker-Kontext)
 tools/dokumente.mjs    Verzeichnis, Rendern und Seitenvorlage für /dokumentation
+tools/konsortium-dokument.mjs
+                       erzeugt bausteine-der-rueckmeldungen.md aus konsortium.js
 tools/build-site.mjs   dist/ = portal + demo/ + katalog/ + beispiele/ + schnittstelle/
                        + dokumentation/
 tools/serve-site.mjs   lokaler Server, der die Deployment-Rewrites nachbildet
@@ -165,17 +173,83 @@ neben den Kopien, ohne beim nächsten Nachziehen zu verschwinden. Die Regel daf�
 ist einfach: was die Schnittstelle beschreibt, gehört nach `indibit-eu/tba3`; was
 die Oberfläche beschreibt, gehört hierher.
 
-### Rückmeldungsbeispiele
+### Die Rückmeldungen des Konsortiums
 
-`apps/beispiele/` ist statisches HTML ohne Build — die 12 prototypischen
-Rückmeldungen liegen je in einem eigenen Repository und werden über GitHub Pages
-ausgeliefert. Hier steht nur die filterbare Übersicht. Alles Inhaltliche steckt in
-`apps/beispiele/rueckmeldungen.js`: Liste, Vokabular (Fach, Klassenstufe,
-Zielgruppe) und die Filterlogik. Ohne `url` gilt ein Eintrag als „in Vorbereitung“
-und wird nicht verlinkt. Die Einträge sind ausformulierte Beispiele, keine
-Zusagen — die Zuschnitte folgen VERA (Klasse 3: Deutsch, Mathematik; Klasse 8
-zusätzlich Englisch und Französisch). Die Auswahl steht in der Adresse (`?fach=DE`), damit sich
-eine gefilterte Ansicht verschicken lässt.
+`apps/beispiele/` ist statisches HTML ohne Build — die 10 Rückmeldungen liegen
+bei den vier Einrichtungen, die sie gebaut haben (kompetenztest.de, indibit, ISQ
+Berlin, zepf), mit eigener Demo und eigenem Repositorium. Hier steht nur die
+filterbare Übersicht mit Demo-, Quelltext- und Dokumentationsverweis.
+
+**Die Daten stehen nicht im Bereich, sondern in `apps/shared/konsortium.js`**
+(ausgeliefert als `/gemeinsam/konsortium.js`). Der Grund ist, dass sie drei
+Stellen tragen:
+
+| Stelle | Was sie zeigt |
+|---|---|
+| `/beispiele` | die Rückmeldungen mit ihren Adressen, filterbar |
+| `/demo/?tab=elemente` | den Katalog, gezeichnet mit den Daten der gewählten Ebene |
+| `/dokumentation/bausteine-der-rueckmeldungen` | den Katalog als Text, erzeugt |
+
+Quelle der Angaben ist der Sachbericht der Abschlusssitzung der Steuergruppe vom
+15.09.2026. Was dort nicht steht, steht hier nicht — fehlt einer Rückmeldung die
+Dokumentationsadresse, bleibt das Feld leer, statt eine zu raten.
+
+Fach und Klassenstufe sind **offene** Felder: eine leere Liste heißt „gilt für
+alles", nicht „gilt für nichts". Die Schulrückmeldung von indibit ist
+fachunabhängig — „das Fach ist Filter, keine inhaltliche Festlegung" — und darf
+nicht verschwinden, sobald jemand nach Deutsch filtert. Die Auswahl steht in der
+Adresse (`?einrichtung=zepf&fach=DE`), damit sich eine gefilterte Ansicht
+verschicken lässt.
+
+### Der Baustein-Katalog
+
+`BAUSTEINE` in derselben Datei führt 29 Bausteine in drei Schichten —
+Anzeigebausteine, Rückmeldeelemente, Rahmen. Der Aufbau stammt von indibit (16
+Anzeigekomponenten, 13 Rückmeldeelemente, 3 Rollen-Sichten) und passt auf die
+anderen drei Einrichtungen genauso.
+
+Zwei Regeln halten den Katalog ehrlich, und beide haben einen Test:
+
+- **Zugeordnet ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen
+  Baustein nicht in ihrer Liste hat, zeigt ihn womöglich trotzdem — sie hat ihn
+  nur nicht berichtet. Was allein aus `@tba3/bausteine` kommt und von keinem
+  Bericht genannt wird, steht als solches da.
+- **`quelle` nur, wo es auch einen Baustein gibt.** Das Feld sagt, welche
+  Ressource die Demoanwendung dafür abruft; stünde dort eine ohne zugehörigen
+  Baustein, bliebe die Kachel leer und niemand merkte es. Wo es keine Zeichnung
+  gibt, nennt `reiter` den Reiter der Demoanwendung, der dieselbe Frage sonst
+  beantwortet.
+
+Nach jeder Änderung an den Daten: **`npm run konsortium:doc`**. Die erzeugte
+Datei ist eingecheckt, weil `tools/build-site.mjs` sie auf der Platte erwartet
+und der Stand im Diff sichtbar sein soll; `tools/konsortium-dokument.test.mjs`
+vergleicht beides.
+
+### Der Reiter „Rückmeldeelemente" der Demoanwendung
+
+`apps/demo/src/components/charts/ReportElementsView.jsx` zeichnet den Katalog
+mit den Daten der gewählten Ebene, über `@tba3/bausteine/react` — dasselbe
+Paket, das ein fremdes Projekt bekommt.
+
+Die Ansicht **doppelt mit Absicht**, was andere Reiter schon zeigen: sie ordnet
+nach der fachlichen Frage statt nach der Ressource der Schnittstelle. Wer wissen
+will, wie vier Einrichtungen unabhängig voneinander dieselbe Frage beantwortet
+haben, findet hier alle Antworten nebeneinander.
+
+Die Abbildung von Antwort auf Baustein-Eigenschaften steht in
+`apps/demo/src/utils/reportElements.js`, mit zwei Regeln:
+
+- **Nichts erfinden, was die Antwort nicht hergibt.** Die Schnittstelle liefert
+  kein Konfidenzintervall — also bekommt der Mittelwert-Vergleich keines. Sie
+  trennt „falsch" nicht von „ausgelassen" — also steht der ausgelassene Anteil
+  auf 0, und die Ansicht sagt das dazu.
+- **Beschriftungen kommen von außen.** Das Modul kennt keine Sprache;
+  Domänennamen, Stufenfarben und Hinweise reicht die Ansicht herein.
+
+Ein Baustein ohne Datenweg bleibt nicht leer, sondern sagt, woran es liegt:
+entweder gibt es ihn in der Bibliothek noch nicht, oder die Schnittstelle
+liefert die Daten nicht (der Verlauf über Messzeitpunkte braucht mehrere
+Erhebungen, die Schnittstelle kennt eine).
 
 ### Zweisprachigkeit
 
