@@ -44,6 +44,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   „Bezeichnung“ und hat als Beispiel schon `Schüler 1`. Dazu zwei E2E-Tests, die
   beides prüfen: dass der Name verdeckt ist und dass das Ergebnis daneben noch
   dasteht.
+- **Drittes Rezept: der MCP-Server** — ausdrücklich als Pilot der
+  Machbarkeitsstudie ausgewiesen, nicht als Empfehlung. Beschrieben sind die
+  sieben Werkzeuge und was hinter ihnen steht, die beiden Transporte (stdio für
+  die Entwicklungsumgebung, Streamable HTTP fürs Deployment, derselbe Kern), und
+  wo der Server läuft: im Docker-Abbild hinter `/mcp`, nicht auf dem öffentlichen
+  Deployment — die Hilfe-Ansicht bildet die Adresse aus `window.location.origin`
+  und zeigt dort deshalb ins Leere, solange `VITE_MCP_HTTP_URL` nicht gesetzt ist.
+  Dazu die Fragen, die ein echter Betrieb vor der ersten Zeile Code beantworten
+  müsste: keine Authentifizierung, kein Aufrufer, `type=students` reicht
+  Individualdaten an ein Sprachmodell weiter, kein Test, zwei eingebaute
+  Datenquellen statt abgefragter.
 - **Abbildungen in den Dokumentseiten.** Ein Bild, das allein in seinem Absatz
   steht, wird zu einem `<figure>` mit sichtbarer Unterschrift aus dem
   Markdown-Titel. Die beiden Rezepte zeigen damit, wovon sie reden: die

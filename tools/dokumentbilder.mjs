@@ -110,6 +110,34 @@ const herunterladen = async (seite, testId, name) => {
   await seite.close();
 }
 
+// ── Die Hilfe-Ansicht mit der MCP-Anbindung ──────────────────────────────────
+{
+  const seite = await laden('/demo/?lang=de&tab=help');
+  await seite.getByTestId('ansicht-hilfe').waitFor();
+  await seite.waitForTimeout(300);
+  // Einleitung und Betrieb im Container — und nur die. Der Abschnitt darunter
+  // zeigt die Client-Konfiguration mit einer Adresse aus `window.location.origin`;
+  // in einer Aufnahme stünde dort der Port, unter dem die Vorschau gerade lief.
+  //
+  // Ausgeschnitten wird aus der ganzen Seite statt über das Element: eine
+  // Element-Aufnahme rollt ihr Ziel in den Blick, und dort liegt die
+  // Navigationsleiste darüber.
+  const kasten = await seite.evaluate(() => {
+    const ansicht = document.querySelector('[data-testid="ansicht-hilfe"]');
+    const oben = ansicht.getBoundingClientRect();
+    const zweiter = ansicht.querySelectorAll('section')[1].getBoundingClientRect();
+    return {
+      x: Math.round(oben.left + window.scrollX),
+      y: Math.round(oben.top + window.scrollY),
+      width: Math.round(oben.width),
+      height: Math.round(zweiter.top - oben.top) - 16,
+    };
+  });
+  await seite.screenshot({ path: join(ZIEL, 'mcp-hilfe.png'), fullPage: true, clip: kasten });
+  console.log('✓ mcp-hilfe.png');
+  await seite.close();
+}
+
 await browser.close();
 console.log(`\nFertig → apps/portal/dokumentation/bilder/`);
 console.log('  Stand prüfen: git diff --stat -- apps/portal/dokumentation/bilder/');

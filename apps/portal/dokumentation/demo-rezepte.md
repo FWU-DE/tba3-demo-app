@@ -333,3 +333,135 @@ irgendwann an der falschen Stelle um.
    Daten — die Schleife selbst bleibt synchron und damit lesbar.
 5. **Teilausgabe schlägt Fehlermeldung.** Was schmückt, darf fehlen; was trägt,
    muss da sein.
+
+## Ein Assistent, der die Auswertung lesen kann: der MCP-Server
+
+> **Pilot, kein Produkt.** Was hier steht, ist im Rahmen der Machbarkeitsstudie
+> entstanden und beantwortet eine Frage — *geht das überhaupt, und was wäre dafür
+> nötig?* — und keine andere. Es ist keine Empfehlung für den Betrieb, kein
+> Bestandteil der Schnittstelle und nichts, worauf sich ein Vorhaben stützen
+> sollte, ohne die Fragen im Abschnitt „Was ein echter Betrieb lösen müsste“
+> vorher beantwortet zu haben.
+
+### Die Idee
+
+Eine Auswertungsschnittstelle beantwortet die Fragen, die jemand beim Entwurf der
+Oberfläche vorhergesehen hat. „Welche Aufgabenformate liegen in 8b unter dem
+Landesschnitt, und gibt es dazu Material?“ ist keine davon — die Frage kreuzt drei
+Endpunkte und einen Katalog, und für jede solche Kreuzung eine Ansicht zu bauen,
+hört nie auf.
+
+Das Model Context Protocol dreht die Richtung um: statt die Frage vorwegzunehmen,
+beschreibt man dem Sprachmodell die verfügbaren Abfragen, und es setzt sie
+zusammen. Der Pilot prüft, ob sich die TBA3-Endpunkte so beschreiben lassen, dass
+dabei etwas Brauchbares herauskommt.
+
+### Was der Server anbietet
+
+Sieben Werkzeuge (`mcp-server/server-impl.js`). Wie man sie startet, einbindet
+und welche Umgebungsvariablen es gibt, steht im README des Pakets; hier steht,
+was dahintersteckt:
+
+| Werkzeug | dahinter |
+|---|---|
+| `tba3_list_entities` | Schulen, Lerngruppen, Bundesländer — fest eingebaut, nicht aus der Schnittstelle |
+| `tba3_list_subjects` | die vier Fächer |
+| `tba3_list_grades` | Klasse 3 und Klasse 8 |
+| `tba3_get_competence_levels` | `GET /{ebene}/{id}/competence-levels` |
+| `tba3_get_aggregations` | `GET /{ebene}/{id}/aggregations` |
+| `tba3_get_items` | `GET /{ebene}/{id}/items` |
+| `tba3_list_materials` | ein fest eingebauter Materialkatalog, kein Endpunkt |
+
+Vier beantworten „was gibt es?", drei „wie sieht es aus?". Die Trennung ist der
+Grund, warum das Ganze überhaupt funktioniert: ein Modell, das eine Kennung wie
+`8b-mathe` raten muss, rät — und zwar plausibel und falsch. Die drei
+`get`-Werkzeuge reichen an die Schnittstelle durch, jedes mit `entityType`,
+`entityId` und dem `type`-Parameter.
+
+Die Hilfe-Ansicht der Demoanwendung führt nur sechs davon auf:
+`tba3_list_materials` fehlt in ihrer Tabelle. Zwei Listen, die auseinanderlaufen
+können, sind eine zu viel — wer den Server erweitert, denkt an die Ansicht
+in `apps/demo/src/components/HelpView.jsx` mit.
+
+### Zwei Wege hinein
+
+Derselbe Server (`createMcpServer()`), zwei Transporte:
+
+- **stdio** (`index.js`) — der Weg für eine Entwicklungsumgebung auf demselben
+  Rechner. Der Client startet den Prozess selbst, es gibt keinen Port und keine
+  Netzwerkgrenze.
+- **Streamable HTTP** (`server-http.js`) — der Weg für ein Deployment. `POST /mcp`,
+  bewusst ohne Sitzung (`sessionIdGenerator: undefined`): je Anfrage entsteht eine
+  Server-Instanz, die danach wieder verschwindet. Das macht den Dienst beliebig
+  vervielfachbar und heißt zugleich, dass er sich nichts merkt — auch nichts,
+  woran er einen Aufrufer wiedererkennen könnte.
+
+Dass der Kern von beidem nichts weiß, ist die eigentliche Arbeit an dieser
+Aufteilung: die Werkzeuge werden einmal beschrieben, und welcher Transport sie
+trägt, entscheidet die Betriebsart.
+
+### Wo er läuft — und wo nicht
+
+Im **Docker-Abbild**: `docker-entrypoint.sh` startet ihn auf Port 3000, nginx
+reicht `/mcp` dorthin durch, `TBA3_API_BASE_URL` zeigt standardmäßig auf den Mock
+im selben Container. Das Abbild wird zusätzlich einzeln gebaut
+(`ghcr.io/FWU-DE/tba3-demo-app-mcp`), damit man den Server ohne die Seite
+betreiben kann.
+
+![Der Reiter „Hilfe“ der Demoanwendung: Überschrift „MCP-Server für TBA3-Ergebnisdaten“, darunter ein Kasten „Auf dem Server: MCP-Server in Docker betreiben“ mit dem Beispielaufruf für den Container.](/dokumentation/bilder/mcp-hilfe.png "Der Reiter „Hilfe“ der Demoanwendung erklärt die Anbindung. Darunter — hier abgeschnitten — steht die Client-Konfiguration mit einer Adresse, die aus `window.location.origin` gebildet wird: auf der öffentlichen Seite zeigt sie deshalb ins Leere.")
+
+**Nicht** auf dem öffentlichen Deployment: `vercel.json` kennt keine Route `/mcp`,
+und eine Funktion, die MCP spräche, gibt es dort nicht. Die Hilfe-Ansicht bildet
+die Adresse aber aus `window.location.origin` — auf der öffentlichen Seite zeigt
+sie deshalb eine Adresse, die niemand beantwortet, solange
+`VITE_MCP_HTTP_URL` beim Bauen nicht auf ein echtes Deployment gesetzt wird. Wer
+den Pilot vorführt, führt ihn aus dem Container vor, nicht aus dem Browser.
+
+### Was ein echter Betrieb lösen müsste
+
+Der Pilot beantwortet die technische Frage mit ja. Die Fragen, die er offenlässt,
+sind die schwereren — und sie sind nicht Restarbeit, sondern Vorarbeit:
+
+- **Es gibt keine Authentifizierung.** Wer `/mcp` erreicht, erreicht jede
+  Lerngruppe, jede Schule, jedes Land. Der Pilot steht hinter nichts als der
+  Erreichbarkeit seines Containers.
+- **Es gibt keinen Aufrufer.** Der Server spricht die Schnittstelle ohne jede
+  Identität an. Er könnte also gar nicht auf „Ihre Klasse“ einschränken, selbst
+  wenn er wollte — eine Rollen- und Rechteschicht fehlt nicht, sie ist nicht
+  vorgesehen.
+- **Individualdaten gehen an ein Sprachmodell.** Alle drei Datenwerkzeuge nehmen
+  `type=students` entgegen. Was dann zurückkommt, geht an den Client und damit an
+  das Modell dahinter — je nach Einsatz an einen fremden Dienst. Das ist die
+  Entscheidung, die vor der ersten Zeile Code gehört, nicht nach dem Prototyp;
+  siehe [Observer-Modus](demo-rezepte.md#wo-die-grenze-wirklich-liegt), wo
+  dieselbe Grenze von der anderen Seite beschrieben ist.
+- **Der Server ist ungetestet.** `mcp-server/` ist bewusst kein Workspace — eigener
+  Lockfile, eigener Docker-Kontext — und hängt damit auch nicht an `npm test`.
+  Für einen Pilot vertretbar; für einen Dienst, der Ergebnisdaten herausgibt,
+  nicht.
+- **Das Verzeichnis ist eingebaut, nicht abgefragt.** Lerngruppen, Schulen,
+  Fächer, Jahrgänge und der Materialkatalog stehen in `server-impl.js`. Für den
+  Pilot ist das richtig und im README auch begründet: ein Werkzeug, das erst
+  eine Anfrage stellen muss, um sagen zu können, welche Anfragen möglich sind,
+  hilft niemandem. Offen bleibt trotzdem, woher ein echter Server das
+  Verzeichnis nähme — die Schnittstelle kennt keinen Endpunkt, der Lerngruppen
+  aufzählt, und für einen Aufrufer ohne Identität wäre die Antwort darauf auch
+  nicht eindeutig.
+
+### Was sich daraus mitnehmen lässt
+
+Unabhängig davon, ob am Ende ein MCP-Server steht:
+
+1. **Nachschlagewerkzeuge zuerst.** Ein Modell, das Kennungen raten muss, rät. Die
+   drei Listenwerkzeuge kosten wenig und ändern die Trefferquote deutlich.
+2. **Ein Werkzeug je Endpunkt**, nicht ein Werkzeug je Frage. Die Fragen kommen
+   ohnehin anders, als man sie vorwegnimmt — das war ja der Anlass.
+3. **Den Kern vom Transport trennen.** Was die Werkzeuge tun, hat mit stdio oder
+   HTTP nichts zu tun, und getrennt lässt sich beides betreiben.
+4. **Die Datenschutzfrage steht am Anfang**, nicht am Ende. Ein Prototyp, der
+   Individualdaten schon herausgibt, hat die Entscheidung stillschweigend
+   getroffen.
+
+Das Handwerkliche — Starten, Umgebungsvariablen, Einbinden in Claude Code oder
+Cursor, das Abbild aus der CI — steht im
+[README des MCP-Pakets](https://github.com/FWU-DE/tba3-demo-app/blob/main/mcp-server/README.md).
