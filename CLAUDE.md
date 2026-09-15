@@ -101,18 +101,34 @@ Das Projekt ist über `.vercel/project.json` verknüpft (`jan-renzs-projects/tba
 ein lokales `dist/` spielt dabei keine Rolle — Vercel baut selbst über
 `buildCommand` aus `vercel.json`.
 
-Nachgezogen wurde das bisher zuverlässig: auf jeden Merge folgte binnen Minuten
-ein Deployment von Hand. Das steht hier nicht als Warnung vor einem Versäumnis,
-sondern weil die Abwesenheit einer Automatik nirgends sichtbar ist — `npm run
-preview` heißt „ausliefern wie im Deployment", `vercel.json` liegt im
-Wurzelverzeichnis, und wer beides sieht, nimmt die Git-Integration an, die es
+Das steht hier, weil die Abwesenheit der Automatik nirgends sichtbar ist: `npm
+run preview` heißt „ausliefern wie im Deployment", `vercel.json` liegt im
+Wurzelverzeichnis, und wer beides sieht, nimmt eine Git-Integration an, die es
 nicht gibt. Wer mergt, deployt, oder sagt ausdrücklich, dass jemand anderes es
 tut.
 
-Der Fehler, der dabei wirklich droht, ist nicht das Vergessen, sondern das
-gleichzeitige Fahren: laufen mehrere Sitzungen am selben Checkout, deployt
-**genau eine**. Zwei Läufe erzeugen zwei Production-Deployments, von denen das
-zweite gewinnt — auch wenn es den älteren Stand trägt.
+Verlassen kann man sich darauf nicht. Am Artefakt gemessen lag #20 rund **elf
+Stunden** zwischen Merge (14.09., 20:21 UTC) und Auslieferung (15.09., 07:17
+UTC) — und das Deployment vier Minuten nach dem Merge trug den Stand von davor.
+
+Darin steckt die eigentliche Falle: **der Zeitpunkt eines Deployments sagt
+nichts darüber, welcher Commit darin steckt.** Wer aus seinem eigenen Checkout
+deployt, liefert dessen Stand aus, auch wenn inzwischen etwas gemergt wurde.
+Welcher Stand live ist, steht deshalb in keinem Zeitstempel — das prüft man am
+ausgelieferten Artefakt, mit einem Marker aus dem fraglichen Commit:
+
+```bash
+npx vercel curl https://tba3.vercel.app/bausteine/kern/thema.js | grep stufe-1-text
+```
+
+Dieser Absatz stand zweimal falsch hier, einmal in jede Richtung, weil zweimal
+Zeitstempel verglichen wurden statt Artefakte. Wer ihn das nächste Mal anfasst:
+erst messen, dann schreiben.
+
+Der zweite Fehler, der droht, ist das gleichzeitige Fahren: laufen mehrere
+Sitzungen am selben Checkout, deployt **genau eine**. Zwei Läufe erzeugen zwei
+Production-Deployments, von denen das zweite gewinnt — auch wenn es den älteren
+Stand trägt.
 
 ### Eine Spalte für die ganze Seite
 
