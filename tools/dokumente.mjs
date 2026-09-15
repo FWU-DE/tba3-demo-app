@@ -145,6 +145,21 @@ export function rendere(markdown) {
     return Renderer.prototype.link.call(this, ziel ? { ...token, href: ziel } : token);
   };
 
+  // Ein Bild, das allein in seinem Absatz steht, ist eine Abbildung und kein
+  // Satzzeichen: es bekommt ein <figure>, und der Markdown-Titel
+  // (`![alt](bild.png "Unterschrift")`) wird zur sichtbaren Bildunterschrift.
+  // Ohne das stünde die Erklärung nur im title-Attribut — sichtbar allein für
+  // den, der mit der Maus stehen bleibt, und für sonst niemanden.
+  renderer.paragraph = function (token) {
+    const kinder = token.tokens ?? [];
+    const bild = kinder.length === 1 && kinder[0].type === 'image' ? kinder[0] : null;
+    if (!bild) return Renderer.prototype.paragraph.call(this, token);
+    return `<figure class="abbildung">` +
+      `<img src="${schuetze(bild.href)}" alt="${schuetze(bild.text)}" loading="lazy" />` +
+      (bild.title ? `<figcaption>${schuetze(bild.title)}</figcaption>` : '') +
+      `</figure>\n`;
+  };
+
   // Tabellen brauchen einen eigenen Rahmen: die Endpunkt-Referenz hat breite
   // Tabellen, die sonst das Layout auf dem Telefon auseinanderziehen.
   renderer.table = function (token) {
