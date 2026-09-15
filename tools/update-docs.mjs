@@ -17,7 +17,12 @@ let fehler = 0;
 let geaendert = 0;
 const unbekannteVerweise = new Set();
 
-for (const dok of DOKUMENTE) {
+// Eigene Dokumente (`eigen: true`) werden hier geschrieben und nicht von oben
+// geholt — sie dürfen von diesem Lauf nicht angefasst werden.
+const GEHOLT = DOKUMENTE.filter((dok) => !dok.eigen);
+const EIGEN = DOKUMENTE.filter((dok) => dok.eigen);
+
+for (const dok of GEHOLT) {
   const url = rohUrl(dok);
   let text;
   try {
@@ -59,7 +64,7 @@ for (const dok of DOKUMENTE) {
   }
 }
 
-if (fehler === DOKUMENTE.length) {
+if (fehler === GEHOLT.length) {
   console.error('\n✗ Kein Dokument konnte geholt werden — Stand unverändert.');
   process.exit(1);
 }
@@ -74,6 +79,8 @@ if (unbekannteVerweise.size > 0) {
   for (const href of unbekannteVerweise) console.log(`    ${href}`);
   console.log('  → in DOKUMENTE (tools/dokumente.mjs) aufnehmen oder als externen Link belassen.');
 }
+
+for (const dok of EIGEN) console.log(`· ${dok.datei} gehört hierher — nicht geholt`);
 
 console.log(`\n${geaendert === 0 ? 'Alles auf Stand' : `${geaendert} Dokument(e) aktualisiert`} → apps/portal/dokumentation/`);
 console.log('  Stand prüfen: git diff -- apps/portal/dokumentation/');

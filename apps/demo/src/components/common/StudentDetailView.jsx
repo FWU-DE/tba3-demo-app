@@ -317,7 +317,10 @@ const StudentDetailView = ({ student, onBack }) => {
             {/* Left: name + meta */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
-                <h1 className={`text-3xl font-black text-gray-900 truncate ${observerMode ? 'blur select-none' : ''}`}>
+                <h1
+                  data-testid="datenblatt-name"
+                  className={`text-3xl font-black text-gray-900 truncate ${observerMode ? 'blur select-none' : ''}`}
+                >
                   {student.firstName} {student.lastName}
                 </h1>
               </div>

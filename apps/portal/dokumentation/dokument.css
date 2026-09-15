@@ -246,6 +246,19 @@ h2:hover .sprungmarke, h3:hover .sprungmarke, h4:hover .sprungmarke,
   box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
   transform: translateY(-2px);
 }
+/* Woher der Text kommt, steht über dem Titel: eine Karte, die hier gepflegt
+   wird, und eine Kopie aus dem Spezifikations-Repository sind nicht dasselbe.
+   Die Klasse sitzt auf dem <p>, nicht auf den <span lang>-Kindern — eine Regel
+   mit drei Klassen schlüge sonst `html[lang] [lang]` und die Sprachumschaltung
+   zeigte beide Fassungen nebeneinander. */
+.karten .karte .quelle {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--grau);
+  margin: 0 0 8px;
+}
 .karten .karte h2 { font-size: 17px; font-weight: 650; color: var(--tinte); margin: 0 0 12px; letter-spacing: -0.01em; }
 .karten .karte p { font-size: 14.5px; margin: 0 0 18px; }
 .karten .karte .fuss { margin-top: auto; font-size: 13.5px; font-weight: 600; color: var(--blau); }

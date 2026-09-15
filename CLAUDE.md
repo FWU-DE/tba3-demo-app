@@ -12,6 +12,7 @@ npm run dev:katalog    # Komponentenkatalog → http://localhost:5174/katalog/
 npm run build          # alle Bereiche → dist/
 npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
 npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba3 holen
+                       #  (eigene Dokumente mit `eigen: true` bleiben unberührt)
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
@@ -139,6 +140,15 @@ Entscheidungen stecken darin:
 
 Wer ein Dokument aufnimmt, trägt es in `DOKUMENTE` ein und ruft `docs:update` —
 Übersicht, Navigation und Build ziehen daraus nach.
+
+**Nicht jedes Dokument kommt von oben.** Ein Eintrag mit `eigen: true` wird hier
+geschrieben und gepflegt: `docs:update` fasst ihn nicht an, der Herkunftsverweis
+zeigt auf `FWU-DE/tba3-demo-app`, und Seite wie Übersichtskarte sagen das, statt
+einen „Stand“ zu behaupten, den es nicht gibt. So liegt
+`demo-rezepte.md` — Rezepte der Demoanwendung, angefangen beim Observer-Modus —
+neben den Kopien, ohne beim nächsten Nachziehen zu verschwinden. Die Regel dafür
+ist einfach: was die Schnittstelle beschreibt, gehört nach `indibit-eu/tba3`; was
+die Oberfläche beschreibt, gehört hierher.
 
 ### Rückmeldungsbeispiele
 

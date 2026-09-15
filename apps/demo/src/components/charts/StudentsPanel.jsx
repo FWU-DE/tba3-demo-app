@@ -65,7 +65,10 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
         className="w-4 h-4 accent-blue-600 flex-shrink-0 cursor-pointer"
       />
       <label className="flex-1 min-w-0 cursor-pointer" onClick={() => onToggle(student.id)}>
-        <span className={`font-medium text-sm text-gray-900 ${observerMode ? 'blur select-none' : ''}`}>
+        <span
+          data-testid={`schueler-name-${student.id}`}
+          className={`font-medium text-sm text-gray-900 ${observerMode ? 'blur select-none' : ''}`}
+        >
           {student.firstName} {student.lastName}
         </span>
         <span className="ml-2 text-xs text-gray-400">{group?.name}</span>
