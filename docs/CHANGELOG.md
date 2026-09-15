@@ -22,6 +22,67 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   der Startseite fällt sonst niemandem auf, der die Liste nicht nachzählt.
 
 ### Added
+- **Die zehn Rückmeldungen des Konsortiums** unter `/beispiele`, mit Demo-,
+  Quelltext- und Dokumentationsverweis. Bisher standen dort zwölf ausformulierte
+  Platzhalter ohne einen einzigen Link und mit dem Hinweis, verbindlich sei daran
+  nichts — genau dafür waren sie gedacht, und jetzt gibt es das Echte: die
+  Sachberichte der Abschlusssitzung der Steuergruppe vom 15.09.2026 haben zum
+  ersten Mal Repositorien und Demoadressen aller vier entwickelnden
+  Einrichtungen zusammengetragen (kompetenztest.de, indibit, ISQ Berlin, zepf).
+
+  Was dabei nicht passt, ist das alte Datenmodell: eine Rückmeldung hat nicht
+  *ein* Fach und *eine* Zielgruppe. Das Lernstand-Barometer richtet sich an vier
+  Adressatinnen zugleich, das ISQ-Portal deckt vier Fächer und beide
+  Jahrgangsstufen ab, und die Schulrückmeldung von indibit ist fachunabhängig —
+  „das Fach ist Filter, keine inhaltliche Festlegung". Aus den Feldern sind
+  deshalb Listen geworden, und Fach und Klassenstufe sind **offen**: eine leere
+  Liste heißt „gilt für alles". Ohne das wäre die Schulrückmeldung verschwunden,
+  sobald jemand nach Deutsch filtert — der Filter hätte die Aussage des
+  Sachberichts umgedreht. Ein Test hält beides fest.
+
+  Die Einrichtung ist ein vierter Filter. Die Daten sind nach
+  `apps/shared/konsortium.js` umgezogen und werden als
+  `/gemeinsam/konsortium.js` ausgeliefert, weil sie jetzt drei Stellen tragen
+  statt einer.
+
+- **Ein technologieagnostischer Katalog der Bausteine**, erzeugt als
+  `/dokumentation/bausteine-der-rueckmeldungen`. Die zehn Rückmeldungen sind in
+  fünf Technologien gebaut — Vue 3 mit Quasar, Vue 3 mit Pinia, React 19 mit
+  Material-UI, Angular 21 mit ECharts, Vanilla JavaScript mit Tabulator und D3.
+  Nachnutzbar ist daran nicht der Code, sondern der Zuschnitt: 29 Bausteine in
+  drei Schichten — Anzeigebausteine, Rückmeldeelemente, Rahmen. Der Aufbau
+  stammt von indibit und passt auf die anderen drei genauso.
+
+  Die Regel, die den Katalog von einer Behauptung unterscheidet: **zugeordnet
+  ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen Baustein nicht
+  aufzählt, zeigt ihn womöglich trotzdem — sie hat ihn nur nicht berichtet. Zu
+  raten wäre bequemer und wertlos. Sichtbar wird dadurch auch das Gegenteil:
+  fünf Bausteine führt `@tba3/bausteine`, ohne dass ein Bericht sie nennt, und
+  vierzehn Katalogeinträge haben noch keinen Baustein. Beides steht in der
+  Bilanz des Dokuments, statt sich zu verstecken.
+
+  Das Dokument wird aus denselben Daten erzeugt (`npm run konsortium:doc`) und
+  ist trotzdem eingecheckt — der Build erwartet die Datei, und der Stand soll im
+  Diff stehen. `tools/konsortium-dokument.test.mjs` vergleicht beides: wer die
+  Daten ändert und das Erzeugen vergisst, merkt es im Testlauf und nicht beim
+  Lesen.
+
+- **Der Reiter „Rückmeldeelemente" in der Demoanwendung** (`?tab=elemente`).
+  Er zeichnet den Katalog mit den Daten der gewählten Ebene, über
+  `@tba3/bausteine/react` — dasselbe Paket, das ein fremdes Projekt bekommt.
+  Die Ansicht **doppelt mit Absicht**, was andere Reiter schon zeigen: sie ordnet
+  nach der fachlichen Frage statt nach der Ressource der Schnittstelle, und
+  genau dieser Vergleich ist ihr Zweck.
+
+  Beim Abbilden der Antworten auf die Bausteine wurde nichts erfunden, was die
+  Schnittstelle nicht hergibt: der Mittelwert-Vergleich bekommt kein
+  Konfidenzintervall, weil es keins gibt, und der ausgelassene Anteil in der
+  Schüler:innen-Tabelle steht auf 0, weil die Antwort „falsch" nicht von
+  „ausgelassen" trennt. Ein Baustein ohne Datenweg bleibt nicht leer, sondern
+  sagt, woran es liegt — der Verlauf über Messzeitpunkte braucht mehrere
+  Erhebungen, die Schnittstelle kennt eine. Wo es gar keinen Baustein gibt,
+  nennt die Karte den Reiter, der dieselbe Frage sonst beantwortet.
+
 - **Rezepte der Demoanwendung** unter `/dokumentation/demo-rezepte`. Zweiter
   Eintrag: **der PDF-Export** — die beiden Ausgaben (individuelle Rückmeldung und
   Materialzuordnung) und was an ihnen entschieden ist. Dass alles im Browser

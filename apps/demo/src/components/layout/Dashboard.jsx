@@ -8,6 +8,7 @@ import AggregationsView from '../charts/AggregationsView';
 import EducationalMaterialsPanel from '../charts/EducationalMaterialsPanel';
 import StudentsPanel from '../charts/StudentsPanel';
 import CompetenceDeltaView from '../charts/CompetenceDeltaView';
+import ReportElementsView from '../charts/ReportElementsView';
 import HelpView from '../HelpView';
 import StudentDetailView from '../common/StudentDetailView';
 import CompetencyOverviewCards from '../charts/CompetencyOverviewCards';
@@ -65,6 +66,7 @@ const Dashboard = () => {
     { id: 'aggregations', icon: '📉' },
     { id: 'students', icon: '👥' },
     { id: 'materials', icon: '📚' },
+    { id: 'elemente', icon: '🧩' },
     { id: 'help', icon: '📖' },
   ];
 
@@ -143,6 +145,10 @@ const Dashboard = () => {
 
           {activeTab === 'materials' && (
             <EducationalMaterialsPanel />
+          )}
+
+          {activeTab === 'elemente' && (
+            <ReportElementsView />
           )}
 
           {activeTab === 'help' && (

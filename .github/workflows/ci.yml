@@ -46,12 +46,12 @@ jobs:
           pruefe /demo/ 200
           pruefe /katalog/ 200
           pruefe /beispiele/ 200
-          pruefe /beispiele/rueckmeldungen.js 200
           pruefe /dokumentation/ 200
           pruefe /dokumentation/konzepte 200
           pruefe /dokumentation/endpunkt-referenz 200
           pruefe /dokumentation/rezepte 200
           pruefe /dokumentation/rezepte.md 200
+          pruefe /dokumentation/bausteine-der-rueckmeldungen 200
           pruefe /dokumentation/dokument.css 200
           pruefe /schnittstelle/ 200
           pruefe /schnittstelle/tba3-spec.yml 200
@@ -59,6 +59,7 @@ jobs:
           pruefe /gemeinsam/container.css 200
           pruefe /gemeinsam/tba3-leiste.js 200
           pruefe /gemeinsam/sprache.js 200
+          pruefe /gemeinsam/konsortium.js 200
           pruefe /groups/3a-deutsch/competence-levels 200
           pruefe /materials 200
           pruefe /groups/gibtsnicht/items 404

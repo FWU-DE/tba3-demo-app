@@ -54,6 +54,19 @@ export const DOKUMENTE = [
     },
   },
   {
+    slug: 'bausteine-der-rueckmeldungen',
+    datei: 'bausteine-der-rueckmeldungen.md',
+    eigen: true,
+    // Erzeugt aus apps/shared/konsortium.js (`npm run konsortium:doc`), nicht
+    // von Hand geschrieben — deshalb steht die Datei zwar hier, ist aber keine
+    // Quelle, sondern ein Ergebnis.
+    kurz: { de: 'Bausteine der Rückmeldungen', en: 'Building blocks of the reports' },
+    beschreibung: {
+      de: 'Was zehn Rückmeldungen aus vier Einrichtungen gemeinsam haben, technologieagnostisch herausgezogen: Anzeigebausteine, Rückmeldeelemente und der Rahmen drumherum.',
+      en: 'What ten reports from four institutions have in common, extracted independently of technology: display blocks, report elements and the frame around them.',
+    },
+  },
+  {
     slug: 'demo-rezepte',
     datei: 'demo-rezepte.md',
     eigen: true,

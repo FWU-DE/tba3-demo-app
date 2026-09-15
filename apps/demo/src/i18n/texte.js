@@ -152,7 +152,47 @@ export const TEXTE = {
     aggregations: { de: 'Aggregationen', en: 'Aggregations' },
     students: { de: 'Schüler*innen', en: 'Students' },
     materials: { de: 'Lernmaterialien', en: 'Learning materials' },
+    elemente: { de: 'Rückmeldeelemente', en: 'Report elements' },
     help: { de: 'Hilfe', en: 'Help' },
+  },
+
+  // Der Reiter „Rückmeldeelemente": der Katalog aus den Sachberichten der vier
+  // Einrichtungen, gezeichnet mit den Daten der gewählten Ebene. Die Namen der
+  // Bausteine und Schichten stehen nicht hier, sondern zweisprachig in
+  // apps/shared/konsortium.js — sie gehören zu den Daten, nicht zur Oberfläche.
+  elemente: {
+    titel: { de: 'Rückmeldeelemente des Konsortiums', en: 'Report elements of the consortium' },
+    einleitung: {
+      de: 'Zehn Rückmeldungen aus vier Einrichtungen, gebaut in fünf Technologien — und immer wieder dieselben Darstellungen. Hier stehen sie nach der fachlichen Frage geordnet statt nach der Ressource der Schnittstelle, gezeichnet mit den Daten der gewählten Ebene. Was ein anderer Reiter schon zeigt, steht hier noch einmal: der Vergleich ist der Zweck dieser Ansicht.',
+      en: 'Ten reports from four institutions, built in five technologies — and the same displays again and again. Here they are ordered by the question they answer rather than by the API resource, drawn with the data of the selected level. What another tab already shows appears here again: the comparison is the point of this view.',
+    },
+    einrichtung: { de: 'Einrichtung', en: 'Institution' },
+    alleEinrichtungen: { de: 'Alle Einrichtungen', en: 'All institutions' },
+    anzahl: {
+      de: '{n} Bausteine aus {rueckmeldungen} Rückmeldungen',
+      en: '{n} building blocks from {rueckmeldungen} reports',
+    },
+    zumKatalog: { de: 'Zum Katalog in der Dokumentation →', en: 'To the catalogue in the documentation →' },
+    daten: { de: 'Daten: {daten}', en: 'Data: {daten}' },
+    nurBibliothek: {
+      de: 'aus der Bibliothek, von keinem Sachbericht genannt',
+      en: 'from the library, named by no progress report',
+    },
+    abMindeststandard: { de: 'ab Mindeststandard', en: 'at or above the minimum standard' },
+    insgesamt: { de: 'Insgesamt', en: 'Overall' },
+    ohneDomaene: { de: 'Ohne Domäne', en: 'No domain' },
+    ohneDaten: {
+      de: 'Der Baustein ist da, die Daten nicht: dafür bräuchte es {daten}.',
+      en: 'The building block exists, the data does not: this would need {daten}.',
+    },
+    ohneBaustein: {
+      de: 'Dafür gibt es noch keinen Baustein in der Bibliothek.',
+      en: 'There is no building block for this in the library yet.',
+    },
+    stattdessen: {
+      de: 'Dieselbe Frage beantwortet hier der Reiter „{reiter}".',
+      en: 'The “{reiter}” tab answers the same question here.',
+    },
   },
 
   gemeinsam: {

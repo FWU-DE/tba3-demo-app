@@ -1,44 +1,66 @@
-# Rückmeldungsbeispiele
+# Rückmeldungen des Konsortiums
 
-Übersicht der 12 prototypischen Rückmeldungen, ausgeliefert unter `/beispiele`.
+Übersicht der 10 Rückmeldungen, die im Projekt TBA III entstanden sind,
+ausgeliefert unter `/beispiele`.
 
-Jede Rückmeldung liegt in einem **eigenen Repository** und wird über GitHub Pages
-veröffentlicht — hier steht nur der Verweis darauf. Dieser Bereich ist statisches
-HTML ohne Build; `tools/build-site.mjs` kopiert ihn unverändert nach
-`dist/beispiele/` (ohne `README.md` und Testdateien).
+Jede Rückmeldung liegt bei ihrer Einrichtung — in einem eigenen Repositorium,
+mit eigener Demo, teils mit eigener Dokumentation. Hier steht nur der Verweis
+darauf. Dieser Bereich ist statisches HTML ohne Build; `tools/build-site.mjs`
+kopiert ihn unverändert nach `dist/beispiele/` (ohne `README.md` und
+Testdateien).
 
-## Eine Rückmeldung eintragen oder freischalten
+## Wo die Daten stehen
 
-Alles steht in [`rueckmeldungen.js`](./rueckmeldungen.js) — eine Datei, sonst nichts:
+**Nicht hier**, sondern in [`apps/shared/konsortium.js`](../shared/konsortium.js),
+ausgeliefert als `/gemeinsam/konsortium.js`. Der Grund: dieselben Daten tragen
+drei Stellen — diese Übersicht, den Reiter „Rückmeldeelemente" der
+Demoanwendung und das erzeugte Dokument
+[`/dokumentation/bausteine-der-rueckmeldungen`](../portal/dokumentation/bausteine-der-rueckmeldungen.md).
+Eine zweite Liste wäre eine Liste, die veraltet.
+
+Quelle der Angaben ist der Sachbericht der Abschlusssitzung der Steuergruppe vom
+15.09.2026. Was dort nicht steht, steht hier nicht: fehlt einer Rückmeldung die
+Dokumentationsadresse, bleibt das Feld leer, statt eine zu raten.
+
+## Eine Rückmeldung eintragen oder ändern
 
 ```js
 {
-  id: 'de-v3-lehrkraft',
-  titel: 'Klassenrückmeldung Deutsch, Klasse 3',
-  beschreibung: '…',
-  fach: 'DE',            // FAECHER
-  stufe: 'V3',           // STUFEN
-  zielgruppe: 'lehrkraft', // ZIELGRUPPEN
-  url: 'https://fwu-de.github.io/tba3-rueckmeldung-…/',
+  id: 'indibit-klassenrueckmeldung',
+  einrichtung: 'indibit',          // EINRICHTUNGEN
+  titel: { de: '…', en: '…' },
+  beschreibung: { de: '…', en: '…' },
+  faecher: ['DE'],                 // leer = fachunabhängig
+  stufen: ['V8'],                  // leer = alle Jahrgänge
+  zielgruppen: ['lehrkraft'],      // ZIELGRUPPEN
+  demo: 'https://…',               // null, wenn es keine gibt
+  code: 'https://…',
+  doku: 'https://…',
+  hinweis: { de: '…', en: '…' },   // was an den Verweisen vorläufig ist
+  technik: { de: '…', en: '…' },
+  bausteine: ['profil-heatmap'],   // Kennungen aus BAUSTEINE
 }
 ```
 
-Ohne `url` erscheint der Eintrag als „in Vorbereitung“ und ist nicht klickbar;
-sobald die Seite steht, wird er verlinkt.
+Eine fehlende Adresse erscheint als „Demo folgt" und ist nicht klickbar.
 
-Die 12 Einträge sind **ausformulierte Beispiele** — so könnten die Rückmeldungen
-heißen und zugeschnitten sein; verbindlich ist daran nichts. Die Zuschnitte
-folgen VERA: Klasse 3 mit Deutsch und Mathematik, Klasse 8 zusätzlich mit
-Englisch und Französisch. Alle vier Zielgruppen sind belegt (Lehrkraft,
-Schulleitung, Eltern, Schüler:in), damit die Filter sichtbar arbeiten.
+Nach einer Änderung an den Daten: **`npm run konsortium:doc`** — sonst sagt das
+Dokument unter `/dokumentation` etwas anderes als diese Seite, und
+`tools/konsortium-dokument.test.mjs` schlägt fehl.
 
 ## Filter
 
-Gefiltert wird nach Fach, Klassenstufe und Zielgruppe. Ein weiterer Filter kostet
-einen Eintrag in `FILTER` plus das Feld an den Rückmeldungen — Seite und Adresszeile
-(`?fach=DE&stufe=V3`) ziehen automatisch mit. Angeboten werden nur Werte, die
-mindestens einmal vorkommen; `ZIELGRUPPEN` kennt deshalb schon „Schüler:in“ und
-„Eltern“, ohne dass sie in der Auswahl auftauchen.
+Gefiltert wird nach Einrichtung, Fach, Klassenstufe und Zielgruppe. Ein weiterer
+Filter kostet einen Eintrag in `FILTER` plus das Feld an den Rückmeldungen —
+Seite und Adresszeile (`?einrichtung=zepf&fach=DE`) ziehen automatisch mit.
+Angeboten werden nur Werte, die zu mindestens einer Rückmeldung führen.
+
+Fach und Klassenstufe sind **offene** Felder: eine leere Liste heißt „gilt für
+alles", nicht „gilt für nichts". Die Schulrückmeldung von indibit ist
+fachunabhängig — „das Fach ist Filter, keine inhaltliche Festlegung" — und darf
+nicht verschwinden, sobald jemand nach Deutsch filtert.
 
 Die Logik (`filtern`, `optionen`) ist von der Seite getrennt und wird in
-`rueckmeldungen.test.mjs` geprüft (`npm test`).
+[`apps/shared/konsortium.test.mjs`](../shared/konsortium.test.mjs) geprüft;
+`seite.test.mjs` daneben führt das Seitenskript wirklich aus und schaut nach,
+was im DOM ankommt.
