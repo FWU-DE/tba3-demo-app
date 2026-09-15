@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { FilterProvider } from './context/FilterContext';
 import { useTexte } from './i18n';
 import Header from './components/layout/Header';
+import DemoHinweis from './components/layout/DemoHinweis';
 import Sidebar from './components/layout/Sidebar';
 import Dashboard from './components/layout/Dashboard';
 
@@ -17,6 +18,7 @@ function App() {
     <FilterProvider>
       <div className="min-h-screen bg-gray-50">
         <Header />
+        <DemoHinweis />
         <div className="flex flex-col lg:flex-row">
           <Sidebar />
           <Dashboard />
