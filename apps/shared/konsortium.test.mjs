@@ -113,11 +113,20 @@ describe('Katalog', () => {
   });
 
   // Ein Eintrag, der weder gezeichnet wird noch sagt, wo die Frage sonst
-  // beantwortet ist, hinterlässt in der Demoanwendung eine leere Fläche.
-  it('zeichnet einen Anzeigebaustein oder nennt den Reiter, der ihn ersetzt', () => {
+  // beantwortet ist, hinterlässt in der Demoanwendung eine leere Fläche. Eine
+  // Lücke darf stehen bleiben — aber nicht schweigen: dann gehört ein Grund
+  // dazu, und der wird auf der Karte auch gezeigt.
+  it('zeichnet einen Anzeigebaustein, nennt seinen Reiter oder begründet die Lücke', () => {
     for (const b of BAUSTEINE.filter((x) => x.schicht === 'anzeige')) {
-      expect(Boolean(b.element) || Boolean(b.reiter), `${b.id}: weder Baustein noch Reiter`).toBe(true);
+      expect(
+        Boolean(b.element) || Boolean(b.reiter) || Boolean(b.offen),
+        `${b.id}: weder Baustein noch Reiter noch Begründung`,
+      ).toBe(true);
     }
+  });
+
+  it('führt die Begründung einer Lücke in beiden Sprachen', () => {
+    for (const b of BAUSTEINE.filter((x) => x.offen)) zweisprachig(b.offen, `${b.id}.offen`);
   });
 });
 

@@ -60,10 +60,17 @@ mit Pinia, React 19 mit Material-UI, Angular 21 mit ECharts und Vanilla
 JavaScript mit Tabulator und D3. Genau deshalb steht hier keine Technologie:
 was fünf Umsetzungen gemeinsam haben, ist die Aussage, nicht das Framework.
 
-> **Zugeordnet ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen
-> Baustein nicht in ihrer Liste hat, zeigt ihn womöglich trotzdem — sie hat ihn
-> nur nicht berichtet. Zu raten wäre bequemer und wertlos: die Zuordnung soll
-> belegen, nicht behaupten.
+> **Jede Zuordnung nennt ihren Beleg.** „Genannt von" heißt: die Einrichtung hat
+> den Baustein selbst beschrieben. „Gefunden bei" heißt: er wurde in der
+> laufenden Demo oder im offenen Quelltext gefunden — die Sachberichte sind
+> Zusammenfassungen und nennen längst nicht alles, was gebaut wurde. Was weder
+> das eine noch das andere hat, steht hier nicht.
+
+Die Erhebung am Artefakt lief am 15.09.2026: alle zehn Demos im Browser
+geöffnet, dazu die vier offenen Repositorien flach geklont und ihre
+Komponentenverzeichnisse gelesen. Das Repositorium von indibit war noch nicht
+veröffentlicht; dort ist die Quelle die laufende Anwendung, deren
+Angular-Komponenten im DOM stehen.
 
 Dieses Dokument wird aus \`apps/shared/konsortium.js\` erzeugt
 (\`npm run konsortium:doc\`). Dieselben Daten tragen die
@@ -116,7 +123,7 @@ function schichten() {
         `*Daten:* ${de(b.daten)}`,
         b.element ? `*Bibliothek:* \`<tba3-${b.element}>\`` : '*Bibliothek:* noch keiner',
         genannt.length
-          ? `*Genannt von:* ${genannt.join(', ')}`
+          ? `*${b.beleg === 'artefakt' ? 'Gefunden bei' : 'Genannt von'}:* ${genannt.join(', ')}`
           : '*Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek',
       ];
       return `### ${de(b.name)}\n\n${de(b.zweck)}\n\n${angaben.join(' · ')}\n`;
@@ -133,10 +140,20 @@ function bilanz() {
     .filter(({ n }) => n >= 3)
     .map(({ b }) => de(b.name));
 
+  const ausSachbericht = BAUSTEINE.filter((b) => b.beleg === 'sachbericht').length;
+  const ausArtefakt = BAUSTEINE.filter((b) => b.beleg === 'artefakt');
+
   return `## Bilanz
 
-Der Katalog führt **${BAUSTEINE.length} Bausteine** in drei Schichten. Drei Zahlen
-daraus sind es wert, festgehalten zu werden.
+Der Katalog führt **${BAUSTEINE.length} Bausteine** in drei Schichten:
+${ausSachbericht} aus den Sachberichten, ${ausArtefakt.length} aus den laufenden
+Demos und ihrem Quelltext.
+
+**Was erst die Erhebung am Artefakt gezeigt hat:**
+${ausArtefakt.map((b) => de(b.name)).join(', ')}. Keiner davon steht in einem
+Sachbericht — was nichts über ihren Wert sagt, aber alles darüber, wie
+vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
+übersieht ein Viertel dessen, was gebaut wurde.
 
 **Was mindestens drei der vier Einrichtungen unabhängig voneinander gebaut haben:**
 ${mehrfach.map((n) => `${n}`).join(', ')}. Das ist der belastbare Kern einer

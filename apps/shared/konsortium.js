@@ -19,10 +19,18 @@
 // Code, sondern der Zuschnitt: welche Darstellung welche fachliche Frage
 // beantwortet und woher sie ihre Daten nimmt. Genau das hält der Katalog fest.
 //
-// **Zugeordnet ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen
-// Baustein nicht in ihrer Liste hat, zeigt ihn womöglich trotzdem — sie hat ihn
-// nur nicht berichtet. Zu raten wäre bequemer und wertlos: die Zuordnung soll
-// belegen, nicht behaupten.
+// **Jede Zuordnung nennt ihren Beleg.** `beleg: 'sachbericht'` heißt: die
+// Einrichtung hat den Baustein selbst beschrieben. `beleg: 'artefakt'` heißt:
+// er wurde in der laufenden Demo oder im offenen Quelltext gefunden — die
+// Sachberichte sind Zusammenfassungen und nennen längst nicht alles, was
+// gebaut wurde. Was weder das eine noch das andere hat, steht hier nicht.
+//
+// Die Erhebung am Artefakt lief am 15.09.2026: alle zehn Demos im Browser
+// geöffnet, dazu die vier offenen Repositorien flach geklont und ihre
+// Komponentenverzeichnisse gelesen (`report-messwiederholung`,
+// `lernstand-barometer`, `kompetenzstand-mathematik`, `zepf-RPTU/TBA3`). Das
+// Repositorium von indibit war noch nicht veröffentlicht; dort ist die Quelle
+// die laufende Anwendung, deren Angular-Komponenten im DOM stehen.
 //
 // Alle sichtbaren Texte stehen als `{ de, en }` und werden von der jeweiligen
 // Seite über `text()` aus /gemeinsam/sprache.js aufgelöst. Diese Datei
@@ -96,6 +104,7 @@ export const FILTER = [
 export const RUECKMELDUNGEN = [
   {
     id: 'kt-d3-messwiederholung',
+    bild: { datei: '/beispiele/bilder/kt-d3-messwiederholung.jpg', alt: 'Vögel auf dem Lernverlauf, drei Messzeitpunkte nebeneinander' },
     einrichtung: 'kt',
     titel: {
       de: 'Messwiederholung Deutsch, Klasse 3',
@@ -125,10 +134,15 @@ export const RUECKMELDUNGEN = [
       'einzelbericht',
       'materialanbindung',
       'rollensichten',
+          'lernverlauf-figuren', // BirdsResultsView.vue, Feather.vue, BirdColorPicker.vue
+      'zeugnissaetze', // ReportCardHelper.vue, Reiter „Zeugnissätze“
+      'pseudonymisierung', // Umschalter „Namen / Codes“ in der Demo
+      'personen-tabelle', // ResultsTable.vue, Reiter „Tabelle“
     ],
   },
   {
     id: 'kt-d8-lernstand-barometer',
+    bild: { datei: '/beispiele/bilder/kt-d8-lernstand-barometer.jpg', alt: 'Startseite des Lernstand-Barometers' },
     einrichtung: 'kt',
     titel: {
       de: 'Lernstand-Barometer Deutsch, Klasse 8',
@@ -149,10 +163,19 @@ export const RUECKMELDUNGEN = [
       de: 'Vue 3 mit Composition API und TypeScript, gebaut mit Vite; optionales Backend mit Express.js und Puppeteer für die PDF-Ausgabe. Entwicklung: Uni Jena, UX/UI: Potter Web Development (Erfurt).',
       en: 'Vue 3 with the Composition API and TypeScript, built with Vite; optional back end with Express.js and Puppeteer for PDF output. Development: Uni Jena, UX/UI: Potter Web Development (Erfurt).',
     },
-    bausteine: ['rollensichten', 'einzelbericht', 'bericht-ausgeben'],
+    bausteine: [
+      'rollensichten',
+      'einzelbericht',
+      'bericht-ausgeben',
+      'selbsteinschaetzung', // SelfEvaluationPage.vue und vier Druckansichten dazu
+      'aufgabenbrowser', // TaskBrowserPage.vue
+      'uebersichtskarten', // ResultDonutsSection.vue, FeedbackCircleD3.vue
+      'personen-tabelle', // TableauCard.vue, TableauGroupRow.vue
+    ],
   },
   {
     id: 'kt-m8-kompetenzstand',
+    bild: { datei: '/beispiele/bilder/kt-m8-kompetenzstand.jpg', alt: 'Einstieg in den siebenstufigen Schüler:innenbericht' },
     einrichtung: 'kt',
     titel: {
       de: 'Kompetenzstand Mathematik, Klasse 8',
@@ -173,10 +196,15 @@ export const RUECKMELDUNGEN = [
       de: 'Vue 3 mit Composition API und TypeScript, gebaut mit Vite; gemeinsame Grundstruktur aus Pinia-Stores, Composables und Routing. Entwicklung: OUTERMEDIA GmbH (Berlin).',
       en: 'Vue 3 with the Composition API and TypeScript, built with Vite; shared foundation of Pinia stores, composables and routing. Development: OUTERMEDIA GmbH (Berlin).',
     },
-    bausteine: ['gefuehrter-ablauf', 'einzelbericht'],
+    bausteine: [
+      'gefuehrter-ablauf',
+      'einzelbericht',
+      'kompetenzstufen-verteilung', // StackedBarChart.vue, SingleBarChart.vue
+    ],
   },
   {
     id: 'indibit-klassenrueckmeldung',
+    bild: { datei: '/beispiele/bilder/indibit-klassenrueckmeldung.jpg', alt: 'Übersicht der Klassenrückmeldung mit Reitern' },
     einrichtung: 'indibit',
     titel: {
       de: 'Klassenrückmeldung',
@@ -207,10 +235,13 @@ export const RUECKMELDUNGEN = [
       'foerdergruppen',
       'materialanbindung',
       'einzelbericht',
+          'personen-tabelle', // Reiter „Schülerübersicht“
+      'vergleichsebenen', // Reiter „Vergleich“
     ],
   },
   {
     id: 'indibit-schulrueckmeldung',
+    bild: { datei: '/beispiele/bilder/indibit-schulrueckmeldung.jpg', alt: 'Kontextmerkmale als Ringe, Standard-Erreichung je Domäne' },
     einrichtung: 'indibit',
     titel: {
       de: 'Schulrückmeldung',
@@ -236,10 +267,14 @@ export const RUECKMELDUNGEN = [
       'loesungshaeufigkeit-je-aufgabe',
       'vergleichsebenen',
       'filterleiste',
+          'kontextmerkmal-ring', // vier Ringe auf der Übersicht: Status, Teilnahme, Geschlecht, Sprache
+      'standard-erreichung', // „Mindeststandard erreicht“ mit Balken je Fach
+      'uebersichtskarten', // app-school-summary, app-participants-card
     ],
   },
   {
     id: 'indibit-schulaufsicht',
+    bild: { datei: '/beispiele/bilder/indibit-schulaufsicht.jpg', alt: 'Übersicht einer Bezirksregierung über ihre Schulämter' },
     einrichtung: 'indibit',
     titel: {
       de: 'Schulaufsichtsrückmeldung',
@@ -268,10 +303,13 @@ export const RUECKMELDUNGEN = [
       'kompetenzstufen-verteilung',
       'loesungshaeufigkeit-je-aufgabe',
       'filterleiste',
+          'kennzahl-mit-vergleich', // app-comparison-stat-card
+      'uebersichtskarten', // app-overview-dashboard
     ],
   },
   {
     id: 'isq-portal',
+    bild: { datei: '/beispiele/bilder/isq-portal.jpg', alt: 'Anmeldung des rollenbasierten Rückmeldeportals' },
     einrichtung: 'isq',
     titel: {
       de: 'Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8',
@@ -320,6 +358,7 @@ export const RUECKMELDUNGEN = [
   },
   {
     id: 'zepf-ma3',
+    bild: { datei: '/beispiele/bilder/zepf-ma3.jpg', alt: 'Einstieg in die Mathematik-Rückmeldung' },
     einrichtung: 'zepf',
     titel: {
       de: 'Mathematik, Klasse 3',
@@ -349,10 +388,14 @@ export const RUECKMELDUNGEN = [
       'vergleichsebenen',
       'personen-tabelle',
       'erklaertexte',
+          'glossar-mit-suche', // MaGlossarySearchModule, maGlossary.js
+      'aufgabenvorschau', // ItemPreviewOverlay
+      'export-mit-auswahl', // ExportService, ExportSelectionManager
     ],
   },
   {
     id: 'zepf-en8',
+    bild: { datei: '/beispiele/bilder/zepf-en8.jpg', alt: 'Einstieg in die Englisch-Rückmeldung' },
     einrichtung: 'zepf',
     titel: {
       de: 'Englisch, Klasse 8',
@@ -382,10 +425,14 @@ export const RUECKMELDUNGEN = [
       'vergleichsebenen',
       'personen-tabelle',
       'erklaertexte',
+          'glossar-mit-suche', // enGlossary.js
+      'aufgabenvorschau', // ItemPreviewOverlay
+      'export-mit-auswahl', // ExportService, ExportSelectionManager
     ],
   },
   {
     id: 'zepf-sl',
+    bild: { datei: '/beispiele/bilder/zepf-sl.jpg', alt: 'Schul- und Klassenleistung auf einen Blick' },
     einrichtung: 'zepf',
     titel: {
       de: 'Schulleitung',
@@ -409,7 +456,16 @@ export const RUECKMELDUNGEN = [
       de: 'Dieselbe Grundstruktur, zielgruppenspezifische Module. Streamlining der drei zepf-Rückmeldungen hinsichtlich Grundaufbau, technischer Umsetzung und übergreifender Funktionen war ein eigenes Arbeitspaket.',
       en: 'The same foundation, audience-specific modules. Streamlining the three zepf reports in terms of basic structure, technical implementation and cross-cutting functions was a work package of its own.',
     },
-    bausteine: ['kompetenzstufen-verteilung', 'vergleichsebenen', 'erklaertexte'],
+    bausteine: [
+      'kompetenzstufen-verteilung',
+      'vergleichsebenen',
+      'erklaertexte',
+      'verlauf-ueber-messzeitpunkte', // slLongitudinalViewModule
+      'materialanbindung', // slMaterialViewModule
+      'glossar-mit-suche', // slGlossary.js
+      'export-mit-auswahl', // ExportService, ExportSelectionManager
+      'kontextmerkmal-ring', // slStudentCovariates
+    ],
   },
 ];
 
@@ -460,6 +516,13 @@ export const SCHICHTEN = {
  *                                   'competence-levels' | 'items' | 'items-schueler' | null.
  *                                   Nur gesetzt, wo es auch einen Baustein gibt — sonst
  *                                   bliebe die Kachel leer.
+ * @property {'sachbericht'|'artefakt'} beleg  Woher die Zuordnung stammt: aus dem
+ *                                   Sachbericht der Einrichtung, oder aus der laufenden
+ *                                   Demo bzw. ihrem offenen Quelltext.
+ * @property {{de: string, en: string}} [offen]  Nur bei Anzeigebausteinen ohne Element und
+ *                                   ohne Reiter: warum es beides nicht gibt. Ohne diese
+ *                                   Begründung fiele der Eintrag durch den Test — eine
+ *                                   Lücke darf hier stehen, aber nicht schweigen.
  * @property {string|null} reiter    Reiter der Demoanwendung, der dieselbe Frage sonst
  *                                   beantwortet. Für Bausteine ohne eigene Zeichnung ist das
  *                                   die ehrliche Antwort: „dafür gibt es hier schon eine
@@ -479,6 +542,7 @@ export const BAUSTEINE = [
     element: 'kompetenzstufen-leiste',
     quelle: 'competence-levels',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'loesungshaeufigkeit-je-aufgabe',
@@ -492,6 +556,7 @@ export const BAUSTEINE = [
     element: 'aufgaben-tabelle',
     quelle: 'items',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'erwartung-gegen-ergebnis',
@@ -505,6 +570,7 @@ export const BAUSTEINE = [
     element: 'erwartet-tatsaechlich',
     quelle: 'items',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'mittelwert-mit-unsicherheit',
@@ -518,6 +584,7 @@ export const BAUSTEINE = [
     element: 'mittelwert-vergleich',
     quelle: 'items',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'streubereich-je-merkmal',
@@ -531,6 +598,7 @@ export const BAUSTEINE = [
     element: 'perzentilbaender',
     quelle: 'items-schueler',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'verlauf-ueber-messzeitpunkte',
@@ -544,6 +612,7 @@ export const BAUSTEINE = [
     element: 'lernstands-verlauf',
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'profil-heatmap',
@@ -557,6 +626,7 @@ export const BAUSTEINE = [
     element: 'aufgaben-heatmap',
     quelle: 'items-schueler',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'personen-tabelle',
@@ -570,6 +640,7 @@ export const BAUSTEINE = [
     element: 'schueler-tabelle',
     quelle: 'items-schueler',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'punktwolke',
@@ -583,6 +654,7 @@ export const BAUSTEINE = [
     element: 'streudiagramm',
     quelle: 'items-schueler',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'positionsskala-mit-zonen',
@@ -596,6 +668,7 @@ export const BAUSTEINE = [
     element: 'bista-verteilung',
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'kennzahl-mit-vergleich',
@@ -609,6 +682,7 @@ export const BAUSTEINE = [
     element: 'kennzahl-kachel',
     quelle: 'competence-levels',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'uebersichtskarten',
@@ -622,6 +696,7 @@ export const BAUSTEINE = [
     element: 'uebersichtskarten',
     quelle: 'competence-levels',
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'gebietskarte',
@@ -635,6 +710,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'students',
+    beleg: 'sachbericht',
   },
 
   // ── Schicht 2: Rückmeldeelemente ─────────────────────────────────────────
@@ -650,6 +726,7 @@ export const BAUSTEINE = [
     element: 'kompetenzstufen-leiste',
     quelle: 'competence-levels',
     reiter: 'delta',
+    beleg: 'sachbericht',
   },
   {
     id: 'staerken-und-entwicklungsbedarfe',
@@ -663,6 +740,7 @@ export const BAUSTEINE = [
     element: 'aufgaben-tabelle',
     quelle: 'items',
     reiter: 'items',
+    beleg: 'sachbericht',
   },
   {
     id: 'foerdergruppen',
@@ -676,6 +754,7 @@ export const BAUSTEINE = [
     element: 'schueler-tabelle',
     quelle: 'items-schueler',
     reiter: 'students',
+    beleg: 'sachbericht',
   },
   {
     id: 'materialanbindung',
@@ -689,6 +768,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'materials',
+    beleg: 'sachbericht',
   },
   {
     id: 'aufgabenbrowser',
@@ -702,6 +782,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'einzelbericht',
@@ -715,6 +796,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'students',
+    beleg: 'sachbericht',
   },
   {
     id: 'gefuehrter-ablauf',
@@ -728,6 +810,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'automatische-hinweise',
@@ -741,6 +824,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'auszeichnungen',
@@ -754,6 +838,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
 
   // ── Schicht 3: Rahmen ────────────────────────────────────────────────────
@@ -769,6 +854,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'filterleiste',
@@ -782,6 +868,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'competence',
+    beleg: 'sachbericht',
   },
   {
     id: 'arbeitsstand',
@@ -795,6 +882,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'bericht-ausgeben',
@@ -808,6 +896,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'materials',
+    beleg: 'sachbericht',
   },
   {
     id: 'erklaertexte',
@@ -821,6 +910,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: 'help',
+    beleg: 'sachbericht',
   },
   {
     id: 'zweisprachigkeit',
@@ -834,6 +924,7 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
   },
   {
     id: 'barrierefreiheit',
@@ -847,6 +938,142 @@ export const BAUSTEINE = [
     element: null,
     quelle: null,
     reiter: null,
+    beleg: 'sachbericht',
+  },
+  // ── Am Artefakt gefunden ─────────────────────────────────────────────────
+  // Was folgt, steht in keinem Sachbericht. Es stammt aus den laufenden Demos
+  // und den offenen Repositorien — teils direkt aus Dateinamen, die keine
+  // Auslegung brauchen (`BirdsResultsView.vue`, `ReportCardHelper.vue`,
+  // `ItemPreviewOverlay`, `MaGlossarySearchModule`).
+  {
+    id: 'kontextmerkmal-ring',
+    schicht: 'anzeige',
+    name: { de: 'Kontextmerkmal als Ring', en: 'Context characteristic as a ring' },
+    zweck: {
+      de: 'Ein kategoriales Merkmal der Gruppe — sozioökonomischer Status, Teilnahmequote, Geschlecht, Sprache zuhause — als Ring mit Legende, die Mitte trägt die Gesamtzahl oder die mittlere Kategorie. Ergebnisse ohne Zusammensetzung der Gruppe sind nicht einzuordnen; deshalb steht dieser Ring in der Schulrückmeldung viermal nebeneinander.',
+      en: 'One categorical characteristic of the group — socio-economic status, participation rate, gender, language at home — as a ring with a legend, the centre carrying the total or the median category. Results cannot be placed without the composition of the group; hence this ring appears four times side by side in the school report.',
+    },
+    daten: { de: 'Kovariaten je Schüler:in', en: 'Covariates per student' },
+    element: 'kontextmerkmal-ring',
+    quelle: 'items-schueler',
+    reiter: null,
+    beleg: 'artefakt',
+  },
+  {
+    id: 'lernverlauf-figuren',
+    schicht: 'anzeige',
+    name: { de: 'Lernverlauf als Figuren', en: 'Learning progress as figures' },
+    zweck: {
+      de: 'Jede Schüler:in als eigene Figur auf einer Fläche aus Messzeitpunkt und Fähigkeit, die Kompetenzstufen als benannte Zonen statt als Zahlen. In der Messwiederholung sind es Vögel, deren Art die Stufe trägt — eine Darstellung, die eine Drittklässlerin über sich selbst lesen kann.',
+      en: 'Every student as their own figure on a plane of measurement point and ability, the competence levels as named zones rather than numbers. In the repeated measurement they are birds whose species carries the level — a display a third-grader can read about herself.',
+    },
+    daten: { de: 'Mehrere Erhebungen je Schüler:in', en: 'Several measurements per student' },
+    element: null,
+    quelle: null,
+    reiter: null,
+    beleg: 'artefakt',
+    offen: {
+      de: 'Als einziger Anzeigebaustein weder gebaut noch anderswo beantwortet. Die Bibliothek hat mit der Positionsskala die halbe Antwort — Figuren auf einer Skala mit benannten Zonen —, aber nicht die zweite Achse aus Messzeitpunkten. Und die Schnittstelle liefert eine Erhebung, also gäbe es auch nichts zu zeichnen.',
+      en: 'The only display block neither built nor answered elsewhere. The library has half the answer in the position scale — figures on a scale with named zones — but not the second axis of measurement points. And the API delivers one measurement, so there would be nothing to draw either.',
+    },
+  },
+  {
+    id: 'standard-erreichung',
+    schicht: 'element',
+    name: { de: 'Standard-Erreichung', en: 'Standard attainment' },
+    zweck: {
+      de: 'Ein Prozentwert als Schlagzeile — wie viele erreichen den Mindeststandard —, darunter je Fach oder Domäne ein Balken. Die eine Zahl, nach der zuerst gefragt wird, mit der Aufschlüsselung direkt daneben, damit sie nicht allein stehen bleibt.',
+      en: 'One percentage as a headline — how many reach the minimum standard — with a bar per subject or domain beneath it. The number everyone asks for first, with its breakdown right next to it so it does not stand alone.',
+    },
+    daten: { de: 'Kompetenzstufen je Domäne', en: 'Competence levels per domain' },
+    element: 'standard-erreichung',
+    quelle: 'competence-levels',
+    reiter: null,
+    beleg: 'artefakt',
+  },
+  {
+    id: 'zeugnissaetze',
+    schicht: 'element',
+    name: { de: 'Zeugnissätze', en: 'Report card sentences' },
+    zweck: {
+      de: 'Aus den Ergebnissen formulierte Sätze zum Übernehmen und Abwandeln. Der Schritt, den eine Lehrkraft nach der Rückmeldung ohnehin tut — und der einzige Baustein hier, dessen Ausgabe Text ist und kein Bild.',
+      en: 'Sentences formulated from the results, to adopt and adapt. The step a teacher takes after the report anyway — and the only block here whose output is text rather than a picture.',
+    },
+    daten: { de: 'Kompetenzstufen je Schüler:in oder Gruppe', en: 'Competence levels per student or group' },
+    element: 'zeugnissaetze',
+    quelle: 'competence-levels',
+    reiter: null,
+    beleg: 'artefakt',
+  },
+  {
+    id: 'selbsteinschaetzung',
+    schicht: 'element',
+    name: { de: 'Selbsteinschätzung gegen Ergebnis', en: 'Self-assessment against result' },
+    zweck: {
+      de: 'Was die Schüler:in sich zutraut, neben dem, was der Test misst. Die Lücke zwischen beidem ist pädagogisch oft der interessantere Befund als das Ergebnis allein — und sie taucht in keiner Ergebnisrückmeldung auf, die nur Ergebnisse kennt.',
+      en: 'What the student thinks she can do, next to what the test measures. The gap between the two is often the more interesting finding than the result alone — and it appears in no report that knows only results.',
+    },
+    daten: { de: 'Erhobene Selbsteinschätzung, nicht Teil der Schnittstelle', en: 'Collected self-assessment, not part of the API' },
+    element: null,
+    quelle: null,
+    reiter: null,
+    beleg: 'artefakt',
+  },
+  {
+    id: 'aufgabenvorschau',
+    schicht: 'element',
+    name: { de: 'Aufgabenvorschau', en: 'Item preview' },
+    zweck: {
+      de: 'Die Aufgabe selbst in einem Überlagerungsfenster, aus der Tabelle heraus geöffnet. Ohne sie ist eine auffällige Lösungshäufigkeit eine Zahl, über die sich nicht entscheiden lässt, ob sie am Können lag oder an der Aufgabe.',
+      en: 'The item itself in an overlay, opened from the table. Without it a striking solution frequency is a number about which one cannot decide whether it was about ability or about the item.',
+    },
+    daten: { de: 'Aufgabeninhalt, nicht nur Kennung und Statistik', en: 'Item content, not only identifier and statistics' },
+    element: null,
+    quelle: null,
+    reiter: 'items',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'pseudonymisierung',
+    schicht: 'rahmen',
+    name: { de: 'Namen gegen Codes', en: 'Names versus codes' },
+    zweck: {
+      de: 'Ein Umschalter, der Namen durch Codes ersetzt und die Ergebnisse stehen lässt. Wer eine Rückmeldung auf dem Beamer oder in einer Bildschirmfreigabe bespricht, braucht genau das — und braucht es als einen Griff, nicht als Vorbereitung.',
+      en: 'A switch that replaces names with codes and leaves the results standing. Anyone discussing a report on a projector or in a screen share needs exactly this — and needs it as one action, not as preparation.',
+    },
+    daten: { de: 'Keine — eine Darstellungsentscheidung', en: 'None — a display decision' },
+    element: null,
+    quelle: null,
+    reiter: 'students',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'glossar-mit-suche',
+    schicht: 'rahmen',
+    name: { de: 'Glossar mit Suche', en: 'Glossary with search' },
+    zweck: {
+      de: 'Die Fachbegriffe an einer Stelle, durchsuchbar, aus jeder Ansicht erreichbar. „Kompetenzstufe", „fairer Vergleich", „Lösungshäufigkeit" sind für die Lesenden nicht selbsterklärend, und ein Tooltip beantwortet nur die Frage, die man an genau dieser Stelle stellt.',
+      en: 'The technical terms in one place, searchable, reachable from every view. “Competence level”, “fair comparison”, “solution frequency” are not self-explanatory to readers, and a tooltip only answers the question asked at that exact spot.',
+    },
+    daten: { de: 'Keine — datenunabhängig gehalten', en: 'None — kept independent of the data' },
+    element: null,
+    quelle: null,
+    reiter: 'help',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'export-mit-auswahl',
+    schicht: 'rahmen',
+    name: { de: 'Export mit Auswahl', en: 'Export with a selection' },
+    zweck: {
+      de: 'Vor dem Export auswählen, was hineinkommt. Ein Bericht, der alles enthält, wird nicht gelesen; die Auswahl ist der Unterschied zwischen einer Ausgabe und einer Vorlage für die Konferenz.',
+      en: 'Choosing what goes in before exporting. A report containing everything does not get read; the selection is the difference between an output and a template for the meeting.',
+    },
+    daten: { de: 'Der aktuelle Stand der Ansicht plus eine Auswahl', en: 'The current state of the view plus a selection' },
+    element: null,
+    quelle: null,
+    reiter: 'materials',
+    beleg: 'artefakt',
   },
 ];
 

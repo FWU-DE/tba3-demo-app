@@ -136,6 +136,25 @@
       box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
       transform: translateY(-2px);
     }
+    /* ── Bild ───────────────────────────────────────────────── */
+    /* Das Bild trägt die Karte: eine Rückmeldung erkennt man an ihr, nicht an
+       ihrem Namen. Deshalb steht es oben und randlos, mit festem Seitenverhält-
+       nis — ohne das springen die Karten beim Laden, weil jede Aufnahme eine
+       andere Höhe hätte. */
+    .bild {
+      margin: -22px -22px 16px;
+      aspect-ratio: 8 / 5;
+      overflow: hidden;
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: var(--flaeche);
+      border-bottom: 1px solid var(--linie);
+    }
+    .bild img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top center;
+      display: block;
+    }
+
     .karte h2 { font-size: 16px; font-weight: 650; color: var(--tinte); margin: 0 0 10px; letter-spacing: -0.01em; }
     .karte p { font-size: 14px; margin: 0 0 16px; }
     .karte.offen { background: var(--flaeche); }
@@ -243,14 +262,15 @@
       Stand vom 15.09.2026, dem Tag der Abschlusssitzung der Steuergruppe. Die Verweise sind
       vorläufig: das zepf zieht von GitLab auf GitHub um, das ISQ plant den Umzug seines
       Repositoriums, und der Repositoriumsname von indibit folgt mit der Veröffentlichung.
-      Jede Rückmeldung nennt darunter die Bausteine, die ihr Sachbericht beschreibt —
+      Die Bilder sind Aufnahmen der laufenden Demos vom selben Tag. Jede Rückmeldung nennt
+      darunter ihre Bausteine —
       <a href="/dokumentation/bausteine-der-rueckmeldungen">der Katalog dazu steht in der Dokumentation</a>.
     </span>
     <span lang="en">
       As of 15 Sept 2026, the day of the steering group’s closing meeting. The links are
       provisional: zepf is moving from GitLab to GitHub, ISQ plans to move its repository,
-      and indibit’s repository name follows on publication. Each report names the building
-      blocks its progress report describes —
+      and indibit’s repository name follows on publication. The images are captures of the
+      running demos from the same day. Each report names its building blocks below —
       <a href="/dokumentation/bausteine-der-rueckmeldungen">the catalogue is in the documentation</a>.
     </span>
   </p>
@@ -396,6 +416,22 @@
     const kachel = document.createElement('article');
     kachel.className = 'karte';
     kachel.dataset.testid = `rueckmeldung-${r.id}`;
+
+    // Aufgenommen am 15.09.2026 aus der laufenden Demo. Das Bild ist ein
+    // Stand, keine Zusage — deshalb steht das Datum im Hinweis über der Liste.
+    if (r.bild) {
+      const rahmen = document.createElement('div');
+      rahmen.className = 'bild';
+      const img = document.createElement('img');
+      img.src = r.bild.datei;
+      img.alt = r.bild.alt;
+      img.loading = 'lazy';
+      img.width = 800;
+      img.height = 500;
+      rahmen.append(img);
+      kachel.append(rahmen);
+      kachel.dataset.mitBild = 'ja';
+    }
 
     const schilder = document.createElement('div');
     schilder.className = 'schilder';

@@ -9,6 +9,9 @@ import BistaDistributionView from '../views/BistaDistributionView.vue';
 import StudentSolutionTableView from '../views/StudentSolutionTableView.vue';
 import MeanComparisonView from '../views/MeanComparisonView.vue';
 import ItemExpectedActualView from '../views/ItemExpectedActualView.vue';
+import ContextRingView from '../views/ContextRingView.vue';
+import StandardAttainmentView from '../views/StandardAttainmentView.vue';
+import ReportSentencesView from '../views/ReportSentencesView.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -23,5 +26,10 @@ export default createRouter({
     { path: '/student-solution-table', component: StudentSolutionTableView },
     { path: '/mean-comparison', component: MeanComparisonView },
     { path: '/item-expected-actual', component: ItemExpectedActualView },
+    // Aus den Rückmeldungen des Konsortiums herausgezogen, nicht aus der Schau
+    // gewachsen — siehe /dokumentation/bausteine-der-rueckmeldungen.
+    { path: '/context-ring', component: ContextRingView },
+    { path: '/standard-attainment', component: StandardAttainmentView },
+    { path: '/report-sentences', component: ReportSentencesView },
   ],
 });

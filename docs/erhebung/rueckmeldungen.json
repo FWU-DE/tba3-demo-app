@@ -1,0 +1,324 @@
+{
+  "stand": "2026-09-15T13:00:00.000Z",
+  "befunde": [
+    {
+      "id": "kt-d3-messwiederholung",
+      "url": "https://development.tba.i.c.netzkolchose.de/",
+      "status": 200,
+      "titel": "Ergebnisse",
+      "h1": [
+        "Ergebnisse Lesetest BKT infoplay_circleErklärvideo"
+      ],
+      "h2": [],
+      "reiter": [
+        "grafik",
+        "Tabelle",
+        "Zeugnissätze"
+      ],
+      "zaehler": {
+        "svg": 110,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 0,
+        "eingabe": 0,
+        "bild": 1,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {
+        "React": true
+      }
+    },
+    {
+      "id": "kt-d8-lernstand-barometer",
+      "url": "https://lernstand-barometer.ktest.de/login",
+      "status": 200,
+      "titel": "Lernstand Barometer",
+      "h1": [
+        "LernstandBarometer"
+      ],
+      "h2": [],
+      "reiter": [],
+      "zaehler": {
+        "svg": 2,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 0,
+        "eingabe": 0,
+        "bild": 2,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {
+        "React": true
+      }
+    },
+    {
+      "id": "kt-m8-kompetenzstand",
+      "url": "https://kompetenztestde.github.io/kompetenzstand-mathematik",
+      "status": 200,
+      "titel": "Kompetenzstand-Mathematik",
+      "h1": [
+        "Kompetenzstand-Mathematik"
+      ],
+      "h2": [],
+      "reiter": [],
+      "zaehler": {
+        "svg": 2,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 0,
+        "eingabe": 2,
+        "bild": 2,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {
+        "React": true
+      }
+    },
+    {
+      "id": "indibit-klassenrueckmeldung",
+      "url": "https://apps.indibit.eu/tba3/class-teacher",
+      "status": 200,
+      "titel": "TBA3 • Klassenleitung",
+      "h1": [
+        "Übersicht"
+      ],
+      "h2": [],
+      "reiter": [
+        "Übersicht",
+        "Lösungsquote",
+        "Schülerübersicht",
+        "Vergleich",
+        "Weiterarbeit"
+      ],
+      "zaehler": {
+        "svg": 0,
+        "canvas": 6,
+        "tabelle": 5,
+        "auswahl": 0,
+        "eingabe": 0,
+        "bild": 1,
+        "echartsWurzel": 6
+      },
+      "eigeneElemente": [
+        "app-root",
+        "router-outlet",
+        "app-class-teacher-main",
+        "app-main-layout",
+        "app-sidebar",
+        "app-overview",
+        "app-page-breadcrumb",
+        "app-user-avatar",
+        "app-group-summary",
+        "app-participants-card",
+        "app-donut-chart",
+        "app-competence-levels-distribution",
+        "app-info-box",
+        "app-group-students-table"
+      ],
+      "bibliotheken": {}
+    },
+    {
+      "id": "indibit-schulrueckmeldung",
+      "url": "https://apps.indibit.eu/tba3/school-manager",
+      "status": 200,
+      "titel": "TBA3 • Schulleitung",
+      "h1": [
+        "Übersicht"
+      ],
+      "h2": [
+        "Sozioökonomischer Status",
+        "Teilnahmequote",
+        "Geschlecht",
+        "Sprache zuhause",
+        "Standard-Erreichung je Domäne",
+        "Klasse 8.1",
+        "Klasse 8.2",
+        "Klasse 8.3",
+        "Klasse 8.4"
+      ],
+      "reiter": [
+        "Übersicht",
+        "Lösungsquote",
+        "Vergleich",
+        "Schulentwicklung"
+      ],
+      "zaehler": {
+        "svg": 0,
+        "canvas": 40,
+        "tabelle": 24,
+        "auswahl": 0,
+        "eingabe": 0,
+        "bild": 1,
+        "echartsWurzel": 40
+      },
+      "eigeneElemente": [
+        "app-root",
+        "router-outlet",
+        "app-school-manager-main",
+        "app-main-layout",
+        "app-sidebar",
+        "app-school-manager-overview",
+        "app-school-summary",
+        "app-participants-card",
+        "app-donut-chart",
+        "app-mindeststandard-card",
+        "app-school-groups-subjects-list",
+        "app-overview-row",
+        "app-competence-bar-chart"
+      ],
+      "bibliotheken": {}
+    },
+    {
+      "id": "indibit-schulaufsicht",
+      "url": "https://apps.indibit.eu/tba3/school-supervision",
+      "status": 200,
+      "titel": "TBA3 • Schulträger",
+      "h1": [
+        "Bezirksregierung Münster"
+      ],
+      "h2": [],
+      "reiter": [
+        "Übersicht",
+        "Schulämter",
+        "Schulübersicht",
+        "Bezirksentwicklung",
+        "Schulamtsentwicklung"
+      ],
+      "zaehler": {
+        "svg": 0,
+        "canvas": 9,
+        "tabelle": 9,
+        "auswahl": 0,
+        "eingabe": 4,
+        "bild": 1,
+        "echartsWurzel": 9
+      },
+      "eigeneElemente": [
+        "app-root",
+        "router-outlet",
+        "app-school-supervision-main",
+        "app-main-layout",
+        "app-sidebar",
+        "app-school-supervision-overview",
+        "app-comparison-stat-card",
+        "app-overview-dashboard",
+        "app-filter-button-group",
+        "app-donut-chart",
+        "app-competence-levels-comparison",
+        "app-info-box"
+      ],
+      "bibliotheken": {}
+    },
+    {
+      "id": "isq-portal",
+      "url": "https://tba3.isqberlin.de/",
+      "status": 200,
+      "titel": "TBA3-Prototyp (ISQ) Tool",
+      "h1": [
+        "Willkommen bei TBA3-Prototyp (ISQ)"
+      ],
+      "h2": [],
+      "reiter": [],
+      "zaehler": {
+        "svg": 1,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 0,
+        "eingabe": 4,
+        "bild": 0,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {
+        "React": true
+      }
+    },
+    {
+      "id": "zepf-ma3",
+      "url": "https://zepf-rptu.github.io/TBA3/ma",
+      "status": 200,
+      "titel": "TBA3 – Mathe 3",
+      "h1": [
+        "Mathematik VERA-3"
+      ],
+      "h2": [
+        "Willkommen zur Ergebnisrückmeldung von VERA-3 im Fach Mathematik"
+      ],
+      "reiter": [],
+      "zaehler": {
+        "svg": 20,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 1,
+        "eingabe": 0,
+        "bild": 0,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {}
+    },
+    {
+      "id": "zepf-en8",
+      "url": "https://zepf-rptu.github.io/TBA3/en",
+      "status": 200,
+      "titel": "TBA3 – Englisch 8",
+      "h1": [
+        "Englisch VERA 8"
+      ],
+      "h2": [
+        "Willkommen zur Ergebnisrückmeldung von VERA 8: Englisch"
+      ],
+      "reiter": [],
+      "zaehler": {
+        "svg": 19,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 1,
+        "eingabe": 0,
+        "bild": 0,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {}
+    },
+    {
+      "id": "zepf-sl",
+      "url": "https://zepf-rptu.github.io/TBA3/sl",
+      "status": 200,
+      "titel": "TBA3 – Schulleitung",
+      "h1": [
+        "Schul- und Klassenleistung auf einen Blick"
+      ],
+      "h2": [
+        "Deutsch: Rechtschreibung",
+        "Französisch: Hörverstehen",
+        "Deutsch: Leseverstehen",
+        "Französisch: Leseverstehen",
+        "Englisch: Hörverstehen",
+        "Englisch: Leseverstehen",
+        "Mathematik",
+        "ÜberblickSie sind hier",
+        "Willkommen (alternativ)",
+        "Übersicht",
+        "Vergleich",
+        "Entwicklung",
+        "Material"
+      ],
+      "reiter": [],
+      "zaehler": {
+        "svg": 50,
+        "canvas": 0,
+        "tabelle": 0,
+        "auswahl": 2,
+        "eingabe": 0,
+        "bild": 0,
+        "echartsWurzel": 0
+      },
+      "eigeneElemente": [],
+      "bibliotheken": {}
+    }
+  ]
+}

@@ -94,6 +94,9 @@ export const {
   LernstandsVerlauf,
   AufgabenHeatmap,
   KennzahlKachel,
+  KontextmerkmalRing,
+  StandardErreichung,
+  Zeugnissaetze,
 } = gebaut;
 
 /** Alle Komponenten, nach Namen. */

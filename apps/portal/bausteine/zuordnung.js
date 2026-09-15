@@ -28,6 +28,30 @@
 
 /** @type {Zuordnung[]} */
 export const ZUORDNUNG = [
+  // Aus den Rückmeldungen des Konsortiums herausgezogen — die einzigen drei,
+  // die nicht aus der Schau gewachsen sind, sondern aus einer fremden
+  // Anwendung. Siehe /dokumentation/bausteine-der-rueckmeldungen.
+  {
+    katalog: 'ContextRing',
+    anzeige: 'Kontextmerkmal als Ring',
+    baustein: 'kontextmerkmal-ring',
+    stand: 'umgezogen',
+    hinweis: 'Aus der Schulrückmeldung von indibit; die Kovariaten dafür führt die Schnittstelle bereits.',
+  },
+  {
+    katalog: 'StandardAttainment',
+    anzeige: 'Standard-Erreichung',
+    baustein: 'standard-erreichung',
+    stand: 'umgezogen',
+    hinweis: 'Ebenfalls von indibit. Die große Zahl bringt ihre Aufschlüsselung mit, sonst führt sie in die Irre.',
+  },
+  {
+    katalog: 'ReportSentences',
+    anzeige: 'Zeugnissätze',
+    baustein: 'zeugnissaetze',
+    stand: 'umgezogen',
+    hinweis: 'Aus der Messwiederholung des kompetenztest.de. Der einzige Baustein, dessen Ausgabe Text ist.',
+  },
   {
     katalog: 'CompetenceLevels',
     anzeige: 'Kompetenzstufen-Leiste',

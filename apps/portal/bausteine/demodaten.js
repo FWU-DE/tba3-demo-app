@@ -208,6 +208,31 @@ export const DEMODATEN = [
       verlauf: [54, 57, 59, 62],
       hinweis: '25 Schüler:innen · Leseverstehen',
     },
+    'kontextmerkmal-ring': {
+      label: 'Sprache zuhause',
+      segmente: [
+        { label: 'Deutsch', wert: 17, farbe: '#2563eb' },
+        { label: 'andere', wert: 8, farbe: '#eab308' },
+      ],
+    },
+    'standard-erreichung': {
+      label: 'Mindeststandard erreicht',
+      zeilen: [
+        { label: 'Lesen', wert: 84, gesamt: 25 },
+        { label: 'Zuhören', wert: 76, gesamt: 25 },
+        { label: 'Orthografie', wert: 62, gesamt: 25 },
+      ],
+    },
+    zeugnissaetze: {
+      titel: 'Vorschläge für das Zeugnis',
+      werte: { name: 'Anna B.', stufe: 'IV', domaene: 'Leseverstehen', quote: '78' },
+      saetze: [
+        { id: 'stufe', stufe: 'IV', vorlage: '{name} erreicht im {domaene} die Kompetenzstufe {stufe} und liegt damit über dem Regelstandard.',
+          grundlage: 'Kompetenzstufe {stufe}, Lösungsquote {quote} %' },
+        { id: 'arbeit', vorlage: '{name} erschließt sich auch längere Texte selbstständig.',
+          grundlage: 'Lösungsquote {quote} % im {domaene}' },
+      ],
+    },
   },
   {
     'kompetenzstufen-leiste': {
@@ -383,6 +408,37 @@ export const DEMODATEN = [
       vergleich: 50,
       verlauf: [47, 44, 41],
       hinweis: '22 Schüler:innen · Leitidee Zahl',
+    },
+    'kontextmerkmal-ring': {
+      label: 'Sozioökonomischer Status',
+      geordnet: true,
+      mitteLabel: 'Schul-Median',
+      segmente: [
+        { label: 'A — sehr niedrig', wert: 6 },
+        { label: 'B — niedrig', wert: 9 },
+        { label: 'C — mittel', wert: 5 },
+        { label: 'D — hoch', wert: 3 },
+        { label: 'E — sehr hoch', wert: 1 },
+      ],
+    },
+    'standard-erreichung': {
+      label: 'Mindeststandard erreicht',
+      zeilen: [
+        { label: 'Lesen', wert: 58, gesamt: 24 },
+        { label: 'Zuhören', wert: 46, gesamt: 24 },
+        { label: 'Orthografie', wert: 39, gesamt: 24 },
+      ],
+      hinweis: 'Deutlich unter dem fairen Vergleich — die Aufschlüsselung zeigt, wo.',
+    },
+    zeugnissaetze: {
+      titel: 'Vorschläge für das Zeugnis',
+      werte: { name: 'Cem D.', stufe: 'II', domaene: 'Leseverstehen', quote: '44' },
+      saetze: [
+        { id: 'stufe', stufe: 'II', vorlage: '{name} erreicht im {domaene} die Kompetenzstufe {stufe}.',
+          grundlage: 'Kompetenzstufe {stufe}, Lösungsquote {quote} %' },
+        { id: 'foerder', vorlage: '{name} sollte das sinnentnehmende Lesen weiter üben.',
+          grundlage: 'Lösungsquote {quote} % im {domaene}' },
+      ],
     },
   },
 ];

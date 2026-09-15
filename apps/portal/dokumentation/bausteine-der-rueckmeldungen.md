@@ -12,10 +12,17 @@ mit Pinia, React 19 mit Material-UI, Angular 21 mit ECharts und Vanilla
 JavaScript mit Tabulator und D3. Genau deshalb steht hier keine Technologie:
 was fünf Umsetzungen gemeinsam haben, ist die Aussage, nicht das Framework.
 
-> **Zugeordnet ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen
-> Baustein nicht in ihrer Liste hat, zeigt ihn womöglich trotzdem — sie hat ihn
-> nur nicht berichtet. Zu raten wäre bequemer und wertlos: die Zuordnung soll
-> belegen, nicht behaupten.
+> **Jede Zuordnung nennt ihren Beleg.** „Genannt von" heißt: die Einrichtung hat
+> den Baustein selbst beschrieben. „Gefunden bei" heißt: er wurde in der
+> laufenden Demo oder im offenen Quelltext gefunden — die Sachberichte sind
+> Zusammenfassungen und nennen längst nicht alles, was gebaut wurde. Was weder
+> das eine noch das andere hat, steht hier nicht.
+
+Die Erhebung am Artefakt lief am 15.09.2026: alle zehn Demos im Browser
+geöffnet, dazu die vier offenen Repositorien flach geklont und ihre
+Komponentenverzeichnisse gelesen. Das Repositorium von indibit war noch nicht
+veröffentlicht; dort ist die Quelle die laufende Anwendung, deren
+Angular-Komponenten im DOM stehen.
 
 Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 (`npm run konsortium:doc`). Dieselben Daten tragen die
@@ -55,7 +62,7 @@ Reine Darstellung, keine eigene Datenbeschaffung. Was hineingereicht wird, wird 
 
 Wie verteilt sich eine Gruppe über die Kompetenzstufen? Gestapelt, mit dem Mindeststandard als Marke und einer Farbskala, die die Ordnung der Stufen trägt statt sie zu verwischen.
 
-*Daten:* Kompetenzstufen je Ebene · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* indibit, ISQ Berlin, zepf (RPTU)
+*Daten:* Kompetenzstufen je Ebene · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
 ### Lösungshäufigkeit je Aufgabe
 
@@ -85,7 +92,7 @@ Wo liegt der mittlere Bereich je Teilbereich — und wo darin steht eine einzeln
 
 Mehrere Erhebungen als Linie, mit Band und Vergleichslinie. Der einzige Baustein, der eine Entwicklung zeigen kann statt eines Zustands.
 
-*Daten:* Mehrere Erhebungen derselben Gruppe · *Bibliothek:* `<tba3-lernstands-verlauf>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
+*Daten:* Mehrere Erhebungen derselben Gruppe · *Bibliothek:* `<tba3-lernstands-verlauf>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin, zepf (RPTU)
 
 ### Profil-Heatmap
 
@@ -97,7 +104,7 @@ Aufgaben oder Merkmale gegen Personen oder Lerngruppen, gefärbt nach Abweichung
 
 Lösungsanteile je Schüler:in und Teilbereich, sortierbar und auswählbar. Die Tabelle ist die ehrlichste Darstellung: sie verdichtet nichts und verschweigt nichts.
 
-*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-schueler-tabelle>` · *Genannt von:* zepf (RPTU)
+*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-schueler-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, zepf (RPTU)
 
 ### Punktwolke
 
@@ -115,19 +122,31 @@ Jede Schüler:in als eigene Marke auf einer durchgehenden Punkteskala, die Kompe
 
 Eine Zahl, ein Bezugswert, ein kleiner Verlauf. Der Einstieg in jede Übersicht — und die Stelle, an der am leichtesten gelogen wird, wenn der Bezugswert fehlt.
 
-*Daten:* Kompetenzstufen oder Aggregationen je Ebene · *Bibliothek:* `<tba3-kennzahl-kachel>` · *Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek
+*Daten:* Kompetenzstufen oder Aggregationen je Ebene · *Bibliothek:* `<tba3-kennzahl-kachel>` · *Genannt von:* indibit
 
 ### Übersichtskarten
 
 Je Bereich eine Karte mit Ring, Kennzahl und aufklappbarem Detail. Die Zusammenfassung, die man aufklappen kann, statt der Zusammenfassung, der man glauben muss.
 
-*Daten:* Kompetenzstufen je Domäne · *Bibliothek:* `<tba3-uebersichtskarten>` · *Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek
+*Daten:* Kompetenzstufen je Domäne · *Bibliothek:* `<tba3-uebersichtskarten>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
 
 ### Gebietskarte
 
 Schulen und Gebiete auf einer Karte, gekoppelt mit Tabelle und Suche. Für die Schulaufsicht ist die Lage im Bezirk selbst ein Merkmal — in einer Liste ist sie unsichtbar.
 
 *Daten:* Schulen einer Ebene mit Ortsangabe · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+
+### Kontextmerkmal als Ring
+
+Ein kategoriales Merkmal der Gruppe — sozioökonomischer Status, Teilnahmequote, Geschlecht, Sprache zuhause — als Ring mit Legende, die Mitte trägt die Gesamtzahl oder die mittlere Kategorie. Ergebnisse ohne Zusammensetzung der Gruppe sind nicht einzuordnen; deshalb steht dieser Ring in der Schulrückmeldung viermal nebeneinander.
+
+*Daten:* Kovariaten je Schüler:in · *Bibliothek:* `<tba3-kontextmerkmal-ring>` · *Gefunden bei:* indibit, zepf (RPTU)
+
+### Lernverlauf als Figuren
+
+Jede Schüler:in als eigene Figur auf einer Fläche aus Messzeitpunkt und Fähigkeit, die Kompetenzstufen als benannte Zonen statt als Zahlen. In der Messwiederholung sind es Vögel, deren Art die Stufe trägt — eine Darstellung, die eine Drittklässlerin über sich selbst lesen kann.
+
+*Daten:* Mehrere Erhebungen je Schüler:in · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
 ## Rückmeldeelemente
 
@@ -155,13 +174,13 @@ Lernende nach Förderniveau gebündelt, von Hand nachjustierbar. Der Übergabepu
 
 Von einem Befund zu passendem Fördermaterial, ohne die Anwendung zu verlassen. Der Schritt, an dem sich entscheidet, ob eine Rückmeldung etwas verändert oder nur beschreibt.
 
-*Daten:* Merkmal oder Fördergruppe als Suchanfrage · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin
+*Daten:* Merkmal oder Fördergruppe als Suchanfrage · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
 ### Aufgabenbrowser
 
 Aufgaben suchen, ansehen, sammeln und zuweisen — die Aufgabe selbst statt nur ihrer Kennung. Erst damit lässt sich prüfen, ob eine auffällige Lösungshäufigkeit am Können oder an der Aufgabe lag.
 
-*Daten:* Aufgabenkatalog mit Inhalt · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+*Daten:* Aufgabenkatalog mit Inhalt · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
 ### Einzelbericht
 
@@ -186,6 +205,30 @@ Aus Verteilung, Vergleich und Entwicklung erzeugte Sätze, abhängig von den ges
 Regelbasierte Hervorhebungen — „deutlich über dem Bezirksdurchschnitt", „übertrifft strukturell vergleichbare Schulen". Wirkt nur, solange die Regel offenliegt; sonst ist es eine Rangliste mit freundlichem Namen.
 
 *Daten:* Vergleichswerte plus eine offengelegte Regel · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+
+### Standard-Erreichung
+
+Ein Prozentwert als Schlagzeile — wie viele erreichen den Mindeststandard —, darunter je Fach oder Domäne ein Balken. Die eine Zahl, nach der zuerst gefragt wird, mit der Aufschlüsselung direkt daneben, damit sie nicht allein stehen bleibt.
+
+*Daten:* Kompetenzstufen je Domäne · *Bibliothek:* `<tba3-standard-erreichung>` · *Gefunden bei:* indibit
+
+### Zeugnissätze
+
+Aus den Ergebnissen formulierte Sätze zum Übernehmen und Abwandeln. Der Schritt, den eine Lehrkraft nach der Rückmeldung ohnehin tut — und der einzige Baustein hier, dessen Ausgabe Text ist und kein Bild.
+
+*Daten:* Kompetenzstufen je Schüler:in oder Gruppe · *Bibliothek:* `<tba3-zeugnissaetze>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
+
+### Selbsteinschätzung gegen Ergebnis
+
+Was die Schüler:in sich zutraut, neben dem, was der Test misst. Die Lücke zwischen beidem ist pädagogisch oft der interessantere Befund als das Ergebnis allein — und sie taucht in keiner Ergebnisrückmeldung auf, die nur Ergebnisse kennt.
+
+*Daten:* Erhobene Selbsteinschätzung, nicht Teil der Schnittstelle · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
+
+### Aufgabenvorschau
+
+Die Aufgabe selbst in einem Überlagerungsfenster, aus der Tabelle heraus geöffnet. Ohne sie ist eine auffällige Lösungshäufigkeit eine Zahl, über die sich nicht entscheiden lässt, ob sie am Können lag oder an der Aufgabe.
+
+*Daten:* Aufgabeninhalt, nicht nur Kennung und Statistik · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
 
 ## Rahmen
 
@@ -233,22 +276,47 @@ Kontrast, Tastaturbedienung, Bedeutung nicht allein über Farbe. Prüfbar gemach
 
 *Daten:* Keine — eine Eigenschaft jeder Darstellung · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
 
+### Namen gegen Codes
+
+Ein Umschalter, der Namen durch Codes ersetzt und die Ergebnisse stehen lässt. Wer eine Rückmeldung auf dem Beamer oder in einer Bildschirmfreigabe bespricht, braucht genau das — und braucht es als einen Griff, nicht als Vorbereitung.
+
+*Daten:* Keine — eine Darstellungsentscheidung · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
+
+### Glossar mit Suche
+
+Die Fachbegriffe an einer Stelle, durchsuchbar, aus jeder Ansicht erreichbar. „Kompetenzstufe", „fairer Vergleich", „Lösungshäufigkeit" sind für die Lesenden nicht selbsterklärend, und ein Tooltip beantwortet nur die Frage, die man an genau dieser Stelle stellt.
+
+*Daten:* Keine — datenunabhängig gehalten · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
+### Export mit Auswahl
+
+Vor dem Export auswählen, was hineinkommt. Ein Bericht, der alles enthält, wird nicht gelesen; die Auswahl ist der Unterschied zwischen einer Ausgabe und einer Vorlage für die Konferenz.
+
+*Daten:* Der aktuelle Stand der Ansicht plus eine Auswahl · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
 ## Bilanz
 
-Der Katalog führt **29 Bausteine** in drei Schichten. Drei Zahlen
-daraus sind es wert, festgehalten zu werden.
+Der Katalog führt **38 Bausteine** in drei Schichten:
+29 aus den Sachberichten, 9 aus den laufenden
+Demos und ihrem Quelltext.
+
+**Was erst die Erhebung am Artefakt gezeigt hat:**
+Kontextmerkmal als Ring, Lernverlauf als Figuren, Standard-Erreichung, Zeugnissätze, Selbsteinschätzung gegen Ergebnis, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Keiner davon steht in einem
+Sachbericht — was nichts über ihren Wert sagt, aber alles darüber, wie
+vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
+übersieht ein Viertel dessen, was gebaut wurde.
 
 **Was mindestens drei der vier Einrichtungen unabhängig voneinander gebaut haben:**
-Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Vergleichsebenen, Materialanbindung, Einzelbericht. Das ist der belastbare Kern einer
+Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Materialanbindung, Einzelbericht. Das ist der belastbare Kern einer
 Rückmeldung — wer eine neue baut, fängt hier an.
 
-**Was noch kein Baustein in `@tba3/bausteine` ist** (14 Einträge):
-Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit. Ein Teil davon ist keine
+**Was noch kein Baustein in `@tba3/bausteine` ist** (20 Einträge):
+Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Lernverlauf als Figuren, Selbsteinschätzung gegen Ergebnis, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Ein Teil davon ist keine
 Visualisierung, sondern ein Rahmen und gehört auch nicht in eine
 Visualisierungsbibliothek. Der Rest ist eine Liste offener Arbeit.
 
 **Was die Bibliothek führt, ohne dass ein Sachbericht es nennt**
-(5 Einträge): Erwartung gegen Ergebnis, Mittelwert mit Unsicherheit, Punktwolke, Kennzahl mit Vergleich, Übersichtskarten.
+(3 Einträge): Erwartung gegen Ergebnis, Mittelwert mit Unsicherheit, Punktwolke.
 Das ist kein Vorwurf an die Berichte — sie beschreiben, was die Gruppen
 gefordert haben, nicht alles, was auf dem Schirm steht. Aber es ist der Teil des
 Katalogs, für den der Beleg fehlt, und das soll man sehen können.
