@@ -89,7 +89,6 @@ onMounted(async () => {
     :karten="karten"
     :geoeffnet="geoeffnet"
     @karte-geoeffnet="e => (geoeffnet = e.geoeffnet)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -276,7 +275,6 @@ watch(() => selectedGroup.value, () => { geoeffnet.value = []; });
           :title="selectedGroup?.subject"
           :geoeffnet="geoeffnet"
           @karte-geoeffnet="(e) => (geoeffnet = e.geoeffnet)"
-          data-thema="hell"
         />
 
         <ComponentDocs

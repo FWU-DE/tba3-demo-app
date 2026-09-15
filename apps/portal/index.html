@@ -175,7 +175,11 @@
       box-shadow: 0 8px 24px rgba(15, 23, 42, .07);
       transform: translateY(-2px);
     }
-    .karte-kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .karte-kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    /* Mehrere Schilder nebeneinander: die Komponentenbibliothek gibt es in
+       drei Fassungen, und alle drei gehören auf die Karte. Auf schmalen
+       Schirmen fällt die Gruppe als Ganzes unter die Überschrift. */
+    .schilder { display: flex; gap: 6px; flex-wrap: wrap; }
     .karte h2 { font-size: 17px; font-weight: 650; color: var(--tinte); margin: 0; letter-spacing: -0.01em; }
     .karte p { font-size: 14.5px; margin: 0 0 18px; }
     .karte .fuss {
@@ -198,6 +202,7 @@
     }
     .schild-react { background: var(--farbe-marke-zart); color: var(--farbe-marke-tief); }
     .schild-vue   { background: #ecfdf5; color: #047857; }
+    .schild-wc    { background: #fff7ed; color: #b45309; }
     .schild-bald  { background: var(--farbe-sekundaer); color: var(--grau); }
 
     /* ── Zielgruppen ───────────────────────────────────────── */
@@ -385,17 +390,23 @@
       <div class="karte-kopf">
         <h2 lang="de">Komponentenbibliothek</h2>
         <h2 lang="en">Component library</h2>
-        <span class="schild schild-vue">Vue 3</span>
+        <span class="schilder">
+          <span class="schild schild-wc">Web Component</span>
+          <span class="schild schild-react">React</span>
+          <span class="schild schild-vue">Vue 3</span>
+        </span>
       </div>
       <p lang="de">
         Die Visualisierungen einzeln — von der Kompetenzstufen-Leiste über die
         Perzentilbänder bis zum Vergleich von erwarteter und tatsächlicher Lösungsquote.
-        Jede mit Einsatzzweck, genutztem Endpunkt und Quelltext.
+        Jede mit Einsatzzweck, genutztem Endpunkt und Quelltext, und jede in allen drei
+        Fassungen: native Web Component, React und Vue.
       </p>
       <p lang="en">
         The visualisations one by one — from the competence level bar and the percentile
         bands to the comparison of expected and actual solution rates. Each with its
-        purpose, the endpoint it uses, and its source code.
+        purpose, the endpoint it uses, and its source code, and each in all three
+        flavours: native web component, React and Vue.
       </p>
       <span class="fuss" lang="de">Bausteine ansehen →</span>
       <span class="fuss" lang="en">View the building blocks →</span>

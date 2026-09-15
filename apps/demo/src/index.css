@@ -5,6 +5,14 @@
 @tailwind utilities;
 
 @layer base {
+  /* Die Demoanwendung ist hell, auch auf einem dunkel gestellten System.
+     Ohne diese Zeile fragen die Bausteine im Shadow DOM das System nach ihren
+     Vorgaben und zeichnen dunkle Flächen in die weiße Oberfläche —
+     packages/bausteine/kern/thema.js erklärt den Zusammenhang. */
+  :root {
+    color-scheme: light;
+  }
+
   body {
     @apply font-sans bg-gray-50 text-gray-900;
   }

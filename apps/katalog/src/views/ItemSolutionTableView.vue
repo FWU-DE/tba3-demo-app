@@ -67,7 +67,6 @@ onMounted(async () => {
     title="Leseverstehen"
     @sortiert="s => console.log(s)"
     @aufgabe-gewaehlt="a => console.log(a)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -269,7 +268,6 @@ const gewaehlteAufgabe = ref(null);
             sortierung="delta"
             richtung="auf"
             @aufgabe-gewaehlt="(a) => (gewaehlteAufgabe = a)"
-            data-thema="hell"
           />
           <p v-if="gewaehlteAufgabe" class="gewaehlt" data-testid="aufgabe-gewaehlt">
             <i class="pi pi-arrow-right" />

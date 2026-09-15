@@ -552,16 +552,12 @@
     const klasse = themaWahl.value;
     document.body.className = klasse;
 
-    // Diese Seite hat keinen eigenen Dunkelmodus — sie ist immer hell. Die
-    // Bausteine folgen ohne Zutun aber `prefers-color-scheme`, und dann stünde
-    // heller Text auf hellem Grund, sobald jemand sein System dunkel gestellt
-    // hat. Der Modus gehört hier also an die Elemente, und er folgt der Wahl
-    // im Feld daneben, nicht dem Betriebssystem.
-    const modus = klasse === 'thema-dunkel' ? 'dunkel' : 'hell';
-    for (const { el } of elemente) el.dataset.thema = modus;
-    for (const kasten of document.querySelectorAll('.vorschau > *')) {
-      kasten.dataset.thema = modus;
-    }
+    // Welcher Satz Vorgaben in den Bausteinen gilt, entscheidet das
+    // `color-scheme` — und das erben sie von hier. Maßgeblich ist die Wahl im
+    // Feld daneben, nicht das Betriebssystem: die Seite selbst bleibt hell,
+    // nur das Thema „dunkel" zeigt die dunklen Vorgaben. Eine Zeile für alle
+    // Bausteine, auch für die, die erst später dazukommen.
+    document.body.style.colorScheme = klasse === 'thema-dunkel' ? 'dark' : 'light';
   }
 
   const fassungWahl = document.getElementById('fassung');
