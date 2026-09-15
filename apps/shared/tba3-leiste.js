@@ -16,12 +16,22 @@
 
 import { SPRACHEN, anwenden, beiSprachwechsel, setzeSprache, sprache, text } from './sprache.js';
 
+// Die Reihenfolge ist eine inhaltliche Aussage, keine Gewohnheit:
+// **„Rückmeldungen" steht an zweiter Stelle**, direkt hinter der Übersicht.
+// Dort liegen die zehn echten Anwendungen der vier Einrichtungen — das
+// Ergebnis des Projekts. Demoanwendung, Komponenten und Bausteine sind das
+// Werkzeug, mit dem es gebaut wurde, und Werkzeug kommt nach dem Ergebnis.
+//
+// Bis September 2026 stand der Bereich an fünfter Stelle. Das war richtig,
+// solange dort zwölf ausgedachte Platzhalter ohne einen einzigen Verweis
+// lagen. `apps/shared/leiste.test.mjs` hält die Reihenfolge fest, damit sie
+// nicht bei der nächsten Ergänzung still zurückwandert.
 const BEREICHE = [
   { id: 'portal',        text: { de: 'Übersicht',     en: 'Overview' },   pfad: '/' },
+  { id: 'beispiele',     text: { de: 'Rückmeldungen', en: 'Reports' },    pfad: '/beispiele' },
   { id: 'demo',          text: { de: 'Demoanwendung', en: 'Demo app' },   pfad: '/demo' },
   { id: 'katalog',       text: { de: 'Komponenten',   en: 'Components' }, pfad: '/katalog' },
   { id: 'bausteine',     text: { de: 'Bausteine',     en: 'Blocks' },     pfad: '/bausteine' },
-  { id: 'beispiele',     text: { de: 'Rückmeldungen', en: 'Reports' },    pfad: '/beispiele' },
   { id: 'dokumentation', text: { de: 'Dokumentation', en: 'Docs' },       pfad: '/dokumentation' },
   { id: 'schnittstelle', text: { de: 'Schnittstelle', en: 'API' },        pfad: '/schnittstelle' },
 ];
