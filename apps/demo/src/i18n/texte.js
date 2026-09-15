@@ -524,6 +524,75 @@ export const TEXTE = {
       de: '{n} Materialien als PDF exportiert.',
       en: '{n} materials exported as PDF.',
     },
+
+    // ── Materialien aus der Schnittstelle (/materials) ──────────────────
+    modusSchnittstelle: { de: 'Aus der Schnittstelle', en: 'From the API' },
+    quelleSchnittstelle: { de: 'Schnittstelle', en: 'API' },
+    schnittstelleEinleitung: {
+      de: 'Diese Materialien kommen aus <code>/materials</code> — nicht aus dem lokalen Pool. Der Entwurf kennt sechs Zuordnungsarten; gezeigt wird, woran jedes Material hängt.',
+      en: 'These materials come from <code>/materials</code>, not from the local pool. The draft defines six kinds of attachment; what each material is attached to is shown below.',
+    },
+    schnittstelleLaedt: { de: 'Materialien werden geladen …', en: 'Loading materials…' },
+    schnittstelleLeer: {
+      de: 'Die Schnittstelle liefert derzeit keine Materialien.',
+      en: 'The API currently returns no materials.',
+    },
+    scopeAnzahl: { de: '{n} Materialien', en: '{n} materials' },
+    scopeAnzahlEines: { de: '{n} Material', en: '{n} material' },
+
+    scope: {
+      'competence-level': { de: 'Zu einer Kompetenzstufe', en: 'For a competence level' },
+      competence: { de: 'Zu einer Kompetenz', en: 'For a competence' },
+      item: { de: 'Zu einem Item', en: 'For an item' },
+      exercise: { de: 'Zu einer Aufgabe', en: 'For an exercise' },
+      test: { de: 'Zum ganzen Test', en: 'For the whole test' },
+      general: { de: 'Ohne festes Ziel', en: 'Not tied to anything' },
+    },
+
+    art: {
+      support: { de: 'Förderung', en: 'Support' },
+      diagnostic: { de: 'Diagnose', en: 'Diagnostic' },
+      solution: { de: 'Lösung', en: 'Solution' },
+      didactic: { de: 'Didaktik', en: 'Didactic' },
+      'anchor-text': { de: 'Ankertext', en: 'Anchor text' },
+      info: { de: 'Information', en: 'Information' },
+      video: { de: 'Video', en: 'Video' },
+      audio: { de: 'Audio', en: 'Audio' },
+      transcript: { de: 'Transkript', en: 'Transcript' },
+      example: { de: 'Beispiel', en: 'Example' },
+      other: { de: 'Sonstiges', en: 'Other' },
+    },
+
+    zielgruppe: {
+      teacher: { de: 'Lehrkraft', en: 'Teacher' },
+      student: { de: 'Schüler*in', en: 'Student' },
+      parents: { de: 'Eltern', en: 'Parents' },
+      other: { de: 'Sonstige', en: 'Other' },
+    },
+
+    autoTitel: { de: 'Automatisch zuweisen', en: 'Assign automatically' },
+    autoUnterzeile: {
+      de: 'Was die Metadaten hergeben, ordnet die Anwendung selbst zu — den Rest nicht.',
+      en: 'Whatever the metadata settles, the application assigns itself — and nothing beyond that.',
+    },
+    autoErklaerung: {
+      de: 'Zugeordnet wird nur, was im Anhang eindeutig steht: ein Material zu einer Kompetenzstufe geht an diese Stufe, ein Material <em>ohne festes Ziel</em> an alle fünf. Was an einem Item, einer Aufgabe oder einem Test hängt, braucht den Einsatzkontext und bleibt Ihre Entscheidung.',
+      en: 'Only unambiguous attachments are assigned: a material for a competence level goes to that level, a material <em>not tied to anything</em> goes to all five. Anything attached to an item, an exercise or a test needs the context it is used in, and stays your call.',
+    },
+    autoZiel: { de: 'Ziel', en: 'Target' },
+    autoMaterialien: { de: 'Materialien', en: 'Materials' },
+    autoAnzahl: { de: 'Anzahl', en: 'Count' },
+    autoStufe: { de: 'Stufe {stufe}', en: 'Level {stufe}' },
+    autoAlleStufen: { de: 'Alle Stufen', en: 'All levels' },
+    autoOffen: {
+      de: '{n} Materialien ordnet die Anwendung nicht zu — sie hängen an einem Item, einer Aufgabe, einem Test oder einer Kompetenz, oder ihr Stufenanhang zeigt auf eine Kennung, zu der die Schnittstelle keinen Namen führt.',
+      en: '{n} materials are left alone — they are attached to an item, an exercise, a test or a competence, or their level attachment points at an identifier the API gives no name for.',
+    },
+    autoKnopf: { de: '{n} Materialien zuweisen', en: 'Assign {n} materials' },
+    autoKnopfEines: { de: '{n} Material zuweisen', en: 'Assign {n} material' },
+    autoNichts: { de: 'Nichts automatisch zuzuordnen', en: 'Nothing to assign automatically' },
+    autoFertig: { de: '✓ {n} zugewiesen', en: '✓ {n} assigned' },
+    autoSchliessen: { de: 'Schließen', en: 'Close' },
   },
 
   mundo: {

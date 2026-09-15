@@ -10,6 +10,8 @@ import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import MundoSearchModal from './MundoSearchModal';
+import SchnittstellenMaterialien from './SchnittstellenMaterialien';
+import { planAnwenden } from '../../utils/materialien';
 
 // ── Storage ───────────────────────────────────────────────────────────────────
 
@@ -24,6 +26,14 @@ const loadExternal = () => Object.values(load(EXT_KEY));
 const saveExternal = (arr) => save(EXT_KEY, Object.fromEntries(arr.map((m) => [m.id, m])));
 
 const LEVEL_KEYS = ['I', 'II', 'III', 'IV', 'V'];
+
+// Materialien aus dem lokalen Pool tragen Art, Fach und Dauer; was von außen
+// kommt, hat davon nichts und wird deshalb anders gezeichnet. „Außen" waren
+// bisher nur MUNDO-Treffer, seit dem Modus „Aus der Schnittstelle" auch
+// Materialien aus `/materials`.
+const FREMDE_QUELLEN = ['mundo', 'schnittstelle'];
+const istFremd = (material) => FREMDE_QUELLEN.includes(material.source);
+const quellenName = (material) => (material.source === 'mundo' ? 'MUNDO' : null);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -59,7 +69,10 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
       style={isActive ? { borderColor: cfg.color, backgroundColor: cfg.color + '18' } : {}}
     >
       {assignedCount > 0 && (
-        <span className="absolute top-2 right-2 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+        <span
+          data-testid={`materialien-stufe-${levelKey}-zugewiesen`}
+          className="absolute top-2 right-2 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+        >
           {assignedCount}
         </span>
       )}
@@ -81,7 +94,8 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
   const { MATERIAL_TYPES, SUBJECTS } = useKonstanten();
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
-  const isExternal = material.source === 'mundo';
+  const isExternal = istFremd(material);
+  const quelle = quellenName(material) ?? t('materialien.quelleSchnittstelle');
 
   return (
     <div
@@ -108,7 +122,7 @@ const MaterialCard = ({ material, isAssigned, isSelected, onToggle, showLevels =
       {/* Source label strip for external materials */}
       {isExternal && (
         <div className="flex items-center gap-1.5 mb-2 -mt-0.5">
-          <span className="text-xs font-bold tracking-wide text-blue-600 uppercase">🌍 MUNDO</span>
+          <span className="text-xs font-bold tracking-wide text-blue-600 uppercase">{quelle}</span>
           <span className="flex-1 h-px bg-blue-200" />
         </div>
       )}
@@ -173,14 +187,15 @@ const AssignedRow = ({ material, onRemove }) => {
   const { MATERIAL_TYPES, SUBJECTS } = useKonstanten();
   const type    = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
-  const isExternal = material.source === 'mundo';
+  const isExternal = istFremd(material);
+  const quelle = quellenName(material) ?? t('materialien.quelleSchnittstelle');
 
   return (
     <div className={`flex items-center justify-between gap-3 py-2 border-b last:border-0 ${isExternal ? 'border-blue-100' : 'border-gray-100'}`}>
       <div className="flex items-center gap-2 min-w-0">
         {isExternal ? (
           <span className="flex-shrink-0 text-xs font-bold text-blue-500 bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5 leading-none">
-            MUNDO
+            {quelle}
           </span>
         ) : (
           <span className="flex-shrink-0">{type?.icon}</span>
@@ -549,6 +564,37 @@ const EducationalMaterialsPanel = () => {
     }
   };
 
+  /**
+   * Die Auto-Zuweisung schreibt in dieselben beiden Ablagen wie MUNDO: die
+   * Materialien selbst nach `EXT_KEY`, damit die Stufenansicht sie zeichnen
+   * kann, die Zuordnung nach `LEVEL_KEY`. Danach ist ein Material aus der
+   * Schnittstelle von einem MUNDO-Treffer nicht mehr zu unterscheiden — außer
+   * an seiner Herkunft, und genau die steht auf der Karte.
+   */
+  const handleSchnittstellenZuweisung = (plan) => {
+    const neueMaterialien = [
+      ...plan.allgemein,
+      ...LEVEL_KEYS.flatMap((stufe) => plan.jeStufe[stufe]),
+    ].map((m) => ({
+      id: m.id,
+      title: m.title,
+      description: m.description ?? '',
+      url: m.url ?? null,
+      source: 'schnittstelle',
+    }));
+
+    const zusammen = [
+      ...externalMaterials,
+      ...neueMaterialien.filter((neu) => !externalMaterials.some((alt) => alt.id === neu.id)),
+    ];
+    setExternalMaterials(zusammen);
+    saveExternal(zusammen);
+
+    const zuordnung = planAnwenden(plan, levelAss);
+    setLevelAss(zuordnung);
+    save(LEVEL_KEY, zuordnung);
+  };
+
   const flashMsg = (msg) => { setExportMsg(msg); setTimeout(() => setExportMsg(null), 5000); };
 
   const handleExportCC = async () => {
@@ -595,6 +641,7 @@ const EducationalMaterialsPanel = () => {
         {[
           { key: 'level', label: t('materialien.modusStufe'), icon: '📊' },
           { key: 'group', label: t('materialien.modusGruppe'), icon: '👥' },
+          { key: 'api',   label: t('materialien.modusSchnittstelle'), icon: '🔌' },
         ].map(({ key, label, icon }) => (
           <button
             key={key}
@@ -733,6 +780,13 @@ const EducationalMaterialsPanel = () => {
             />
           )}
         </>
+      )}
+
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {/* MODUS 3: Aus der Schnittstelle                                        */}
+      {/* ════════════════════════════════════════════════════════════════════ */}
+      {mode === 'api' && (
+        <SchnittstellenMaterialien onZuweisen={handleSchnittstellenZuweisung} />
       )}
 
       {/* ── Export ── */}
