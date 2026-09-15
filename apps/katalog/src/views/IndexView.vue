@@ -41,7 +41,7 @@ const COMPONENTS = [
     tag: 'SVG',
     tagSeverity: 'info',
     api: '/groups (items?type=students)',
-    preview: 'donut',
+    preview: 'kontext-ring',
   },
   {
     name: 'StandardAttainment',
@@ -50,7 +50,7 @@ const COMPONENTS = [
     tag: 'HTML',
     tagSeverity: 'secondary',
     api: '/groups (competence-levels)',
-    preview: 'stacked',
+    preview: 'standard-erreichung',
   },
   {
     name: 'ReportSentences',
@@ -59,7 +59,7 @@ const COMPONENTS = [
     tag: 'Text',
     tagSeverity: 'secondary',
     api: '/groups (competence-levels)',
-    preview: 'student-solution',
+    preview: 'zeugnissaetze',
   },
   {
     name: 'CompetencyOverviewCards',
@@ -136,7 +136,61 @@ const COMPONENTS = [
         <!-- Preview area -->
         <div class="card-preview">
           <!-- Donut preview -->
-          <svg v-if="comp.preview === 'donut'" viewBox="0 0 200 120" class="preview-svg">
+          <!-- Kontextmerkmal als Ring: zwei Ringe nebeneinander, wie in der
+               Schulrückmeldung von indibit. Ungeordnete Kategorien, deshalb
+               eigene Farben statt der Stufenskala. -->
+          <svg v-if="comp.preview === 'kontext-ring'" viewBox="0 0 200 120" class="preview-svg">
+            <circle cx="52" cy="54" r="30" fill="none" stroke="#2563eb" stroke-width="17"
+              stroke-dasharray="90 98" />
+            <circle cx="52" cy="54" r="30" fill="none" stroke="#7c3aed" stroke-width="17"
+              stroke-dasharray="60 128" stroke-dashoffset="-90" />
+            <circle cx="52" cy="54" r="30" fill="none" stroke="#0891b2" stroke-width="17"
+              stroke-dasharray="38 150" stroke-dashoffset="-150" />
+            <text x="52" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">25</text>
+            <text x="52" y="100" text-anchor="middle" font-size="6" fill="#64748b">{{ t('ansichten.kontext.geschlecht') }}</text>
+
+            <circle cx="148" cy="54" r="30" fill="none" stroke="#2563eb" stroke-width="17"
+              stroke-dasharray="166 22" />
+            <circle cx="148" cy="54" r="30" fill="none" stroke="#d97706" stroke-width="17"
+              stroke-dasharray="22 166" stroke-dashoffset="-166" />
+            <text x="148" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#0f172a">25</text>
+            <text x="148" y="100" text-anchor="middle" font-size="6" fill="#64748b">{{ t('ansichten.kontext.sprache') }}</text>
+          </svg>
+
+          <!-- Standard-Erreichung: die große Zahl mit ihrer Aufschlüsselung.
+               Die untere Zeile weicht ab und wird deshalb eingefärbt. -->
+          <svg v-else-if="comp.preview === 'standard-erreichung'" viewBox="0 0 200 120" class="preview-svg">
+            <text x="14" y="34" font-size="26" font-weight="700" fill="#0000c4">80<tspan font-size="11">%</tspan></text>
+            <text x="70" y="32" font-size="7" fill="#64748b">{{ t('ansichten.standard.label') }}</text>
+            <g font-size="6.5" fill="#334155">
+              <text x="14" y="58">Deutsch</text><text x="186" y="58" text-anchor="end" font-weight="700">83 %</text>
+              <rect x="14" y="62" width="172" height="7" rx="3.5" fill="#e2e8f0" />
+              <rect x="14" y="62" width="143" height="7" rx="3.5" fill="#0000c4" />
+              <text x="14" y="86">Französisch</text><text x="186" y="86" text-anchor="end" font-weight="700">61 %</text>
+              <rect x="14" y="90" width="172" height="7" rx="3.5" fill="#e2e8f0" />
+              <rect x="14" y="90" width="105" height="7" rx="3.5" fill="#dc2626" />
+            </g>
+          </svg>
+
+          <!-- Zeugnissätze: der einzige Baustein, dessen Ausgabe Text ist.
+               Die zweite Zeile je Satz ist seine Grundlage. -->
+          <svg v-else-if="comp.preview === 'zeugnissaetze'" viewBox="0 0 200 120" class="preview-svg">
+            <rect x="10" y="12" width="180" height="44" rx="6" fill="#fff" stroke="#e2e8f0" />
+            <rect x="18" y="22" width="16" height="10" rx="5" fill="#f1f5f9" />
+            <text x="26" y="29.5" text-anchor="middle" font-size="6" font-weight="700" fill="#475569">III</text>
+            <rect x="40" y="22" width="112" height="4" rx="2" fill="#334155" />
+            <rect x="40" y="30" width="86" height="4" rx="2" fill="#334155" />
+            <rect x="40" y="41" width="64" height="3" rx="1.5" fill="#cbd5e1" />
+            <text x="180" y="30" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">kopieren</text>
+
+            <rect x="10" y="62" width="180" height="44" rx="6" fill="#fff" stroke="#e2e8f0" />
+            <rect x="18" y="74" width="134" height="4" rx="2" fill="#334155" />
+            <rect x="18" y="82" width="98" height="4" rx="2" fill="#334155" />
+            <rect x="18" y="93" width="58" height="3" rx="1.5" fill="#cbd5e1" />
+            <text x="180" y="80" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">kopieren</text>
+          </svg>
+
+          <svg v-else-if="comp.preview === 'donut'" viewBox="0 0 200 120" class="preview-svg">
             <!-- Left: donut -->
             <circle cx="55" cy="60" r="38" fill="none" stroke="#f1f5f9" stroke-width="22" />
             <circle cx="55" cy="60" r="38" fill="none" stroke="#ef4444" stroke-width="22"
