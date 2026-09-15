@@ -1,6 +1,6 @@
 # Rückmeldungsbeispiele
 
-Übersicht der 16 prototypischen Rückmeldungen, ausgeliefert unter `/beispiele`.
+Übersicht der 12 prototypischen Rückmeldungen, ausgeliefert unter `/beispiele`.
 
 Jede Rückmeldung liegt in einem **eigenen Repository** und wird über GitHub Pages
 veröffentlicht — hier steht nur der Verweis darauf. Dieser Bereich ist statisches
@@ -26,7 +26,7 @@ Alles steht in [`rueckmeldungen.js`](./rueckmeldungen.js) — eine Datei, sonst 
 Ohne `url` erscheint der Eintrag als „in Vorbereitung“ und ist nicht klickbar;
 sobald die Seite steht, wird er verlinkt.
 
-Die 16 Einträge sind **ausformulierte Beispiele** — so könnten die Rückmeldungen
+Die 12 Einträge sind **ausformulierte Beispiele** — so könnten die Rückmeldungen
 heißen und zugeschnitten sein; verbindlich ist daran nichts. Die Zuschnitte
 folgen VERA: Klasse 3 mit Deutsch und Mathematik, Klasse 8 zusätzlich mit
 Englisch und Französisch. Alle vier Zielgruppen sind belegt (Lehrkraft,

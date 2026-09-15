@@ -1,4 +1,4 @@
-// Die 16 prototypischen Rückmeldungen.
+// Die 12 prototypischen Rückmeldungen.
 //
 // Jede Rückmeldung lebt in einem eigenen Repository und wird über GitHub Pages
 // ausgeliefert — hier steht nur der Verweis darauf. Diese Datei ist deshalb die
@@ -65,21 +65,6 @@ export const RUECKMELDUNGEN = [
     url: null,
   },
   {
-    id: 'de-v3-foerderblick',
-    titel: {
-      de: 'Förderblick Lesen',
-      en: 'Support focus: reading',
-    },
-    beschreibung: {
-      de: 'Für die Unterrichtsplanung: Welche Kinder stehen unter dem Mindeststandard, an welchen Aufgabenformaten scheitert die Klasse — mit Vorschlägen für passende Materialien.',
-      en: 'For lesson planning: which children are below the minimum standard, which exercise formats the class stumbles over — with suggestions for matching materials.',
-    },
-    fach: 'DE',
-    stufe: 'V3',
-    zielgruppe: 'lehrkraft',
-    url: null,
-  },
-  {
     id: 'de-v3-elternbrief',
     titel: {
       de: 'Elternbrief Deutsch',
@@ -105,21 +90,6 @@ export const RUECKMELDUNGEN = [
     beschreibung: {
       de: 'Ergebnisse nach Leitideen — Zahlen und Operationen, Raum und Form, Größen und Messen — mit Kompetenzstufenverteilung und Aufgabenstatistik.',
       en: 'Results by domain — numbers and operations, space and shape, quantities and measurement — with the competence level distribution and item statistics.',
-    },
-    fach: 'MA',
-    stufe: 'V3',
-    zielgruppe: 'lehrkraft',
-    url: null,
-  },
-  {
-    id: 'ma-v3-aufgabenblick',
-    titel: {
-      de: 'Aufgaben unter Erwartung',
-      en: 'Exercises below expectation',
-    },
-    beschreibung: {
-      de: 'Stellt die tatsächliche der erwarteten Lösungsquote gegenüber und hebt die Aufgaben hervor, bei denen die Klasse deutlich abweicht — nach oben wie nach unten.',
-      en: 'Puts the actual solution rate next to the expected one and highlights the exercises where the class clearly deviates — in either direction.',
     },
     fach: 'MA',
     stufe: 'V3',
@@ -156,21 +126,6 @@ export const RUECKMELDUNGEN = [
     fach: 'DE',
     stufe: 'V8',
     zielgruppe: 'lehrkraft',
-    url: null,
-  },
-  {
-    id: 'de-v8-schulbericht',
-    titel: {
-      de: 'Schulbericht Deutsch, Jahrgang 8',
-      en: 'School report, German, grade 8',
-    },
-    beschreibung: {
-      de: 'Für die Steuerung: alle achten Klassen im Vergleich, Entwicklung über drei Durchgänge und die Frage, wo die Streuung innerhalb der Schule größer ist als zwischen den Schulen.',
-      en: 'For steering: all grade 8 classes compared, the trend across three assessments, and the question of where the spread within the school exceeds the spread between schools.',
-    },
-    fach: 'DE',
-    stufe: 'V8',
-    zielgruppe: 'schulleitung',
     url: null,
   },
   {
@@ -218,21 +173,6 @@ export const RUECKMELDUNGEN = [
     fach: 'MA',
     stufe: 'V8',
     zielgruppe: 'schulleitung',
-    url: null,
-  },
-  {
-    id: 'ma-v8-meine-ergebnisse',
-    titel: {
-      de: 'Meine Ergebnisse Mathematik',
-      en: 'My results, mathematics',
-    },
-    beschreibung: {
-      de: 'Das eigene Kompetenzprofil als Spinnennetz, dazu drei konkrete Übungsvorschläge zu dem Bereich, in dem der nächste Schritt am nächsten liegt.',
-      en: 'The student’s own competence profile as a radar chart, plus three concrete practice suggestions for the area where the next step is closest.',
-    },
-    fach: 'MA',
-    stufe: 'V8',
-    zielgruppe: 'lernende',
     url: null,
   },
 

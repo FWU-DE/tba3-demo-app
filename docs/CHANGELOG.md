@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Zwölf Rückmeldungsbeispiele statt sechzehn.** Die Liste führte vier Einträge
+  mehr, als es Prototypen gibt. Gestrichen sind „Förderblick Lesen“ und
+  „Aufgaben unter Erwartung“ (Klasse 3), „Schulbericht Deutsch“ und „Meine
+  Ergebnisse Mathematik“ (Klasse 8); übrig bleiben zwei je Fach und
+  Klassenstufe. Von den beiden Einträgen für Schüler:innen bleibt einer stehen —
+  fielen beide weg, verschwände die Zielgruppe aus dem Filter, denn angeboten
+  werden nur Werte, die mindestens einmal vorkommen.
+
+  Die Zahl stand ausgeschrieben in fünf Dateien und in beiden Sprachen. Ein Test
+  hält sie jetzt an der Liste fest: jede Fundstelle in `rueckmeldungen.js`,
+  `apps/beispiele/index.html`, `apps/portal/index.html`, dem README des Bereichs
+  und `CLAUDE.md` muss `RUECKMELDUNGEN.length` entsprechen. Eine falsche Zahl auf
+  der Startseite fällt sonst niemandem auf, der die Liste nicht nachzählt.
+
 ### Added
 - **Rezepte der Demoanwendung** unter `/dokumentation/demo-rezepte`. Zweiter
   Eintrag: **der PDF-Export** — die beiden Ausgaben (individuelle Rückmeldung und

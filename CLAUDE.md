@@ -152,7 +152,7 @@ die Oberfläche beschreibt, gehört hierher.
 
 ### Rückmeldungsbeispiele
 
-`apps/beispiele/` ist statisches HTML ohne Build — die 16 prototypischen
+`apps/beispiele/` ist statisches HTML ohne Build — die 12 prototypischen
 Rückmeldungen liegen je in einem eigenen Repository und werden über GitHub Pages
 ausgeliefert. Hier steht nur die filterbare Übersicht. Alles Inhaltliche steckt in
 `apps/beispiele/rueckmeldungen.js`: Liste, Vokabular (Fach, Klassenstufe,

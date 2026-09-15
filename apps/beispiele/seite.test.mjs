@@ -85,13 +85,13 @@ describe('Rückmeldungsseite', () => {
   it.each([
     ['ohne abschließenden Schrägstrich', 'http://localhost/beispiele'],
     ['mit abschließendem Schrägstrich', 'http://localhost/beispiele/'],
-  ])('zeichnet alle 16 Karten %s', async (_name, adresse) => {
+  ])('zeichnet alle 12 Karten %s', async (_name, adresse) => {
     const dokument = await zeichnen(adresse);
 
-    expect(dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')).toHaveLength(16);
+    expect(dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')).toHaveLength(12);
     expect([...dokument.querySelectorAll('[data-testid^="filter-"]')].map((f) => f.dataset.testid))
       .toEqual(expect.arrayContaining(['filter-fach', 'filter-stufe', 'filter-zielgruppe']));
-    expect(dokument.querySelector('[data-testid="anzahl"]').textContent).toContain('16');
+    expect(dokument.querySelector('[data-testid="anzahl"]').textContent).toContain('12');
   });
 
   it('filtert nach der Auswahl in der Adresse', async () => {
@@ -99,7 +99,7 @@ describe('Rückmeldungsseite', () => {
 
     const karten = dokument.querySelectorAll('[data-testid^="rueckmeldung-"]');
     expect(karten.length).toBeGreaterThan(0);
-    expect(karten.length).toBeLessThan(16);
+    expect(karten.length).toBeLessThan(12);
     for (const karte of karten) expect(karte.dataset.testid).toMatch(/^rueckmeldung-de-v3-/);
     expect(dokument.querySelector('#filter-fach').value).toBe('DE');
   });
@@ -110,6 +110,6 @@ describe('Rückmeldungsseite', () => {
     // Solange keine Rückmeldung veröffentlicht ist, darf es keinen toten Link
     // geben — die Karten sind dann <div>, nicht <a>.
     expect(dokument.querySelectorAll('a[data-testid^="rueckmeldung-"]')).toHaveLength(0);
-    expect(dokument.querySelectorAll('div[data-testid^="rueckmeldung-"]')).toHaveLength(16);
+    expect(dokument.querySelectorAll('div[data-testid^="rueckmeldung-"]')).toHaveLength(12);
   });
 });

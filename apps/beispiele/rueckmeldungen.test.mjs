@@ -4,9 +4,36 @@ import { FILTER, RUECKMELDUNGEN, ZIELGRUPPEN, filtern, optionen } from './rueckm
 import { SPRACHEN, text } from '../shared/sprache.js';
 
 describe('Rückmeldungen', () => {
-  it('führt die 16 Prototypen mit eindeutigen Kennungen', () => {
-    expect(RUECKMELDUNGEN).toHaveLength(16);
-    expect(new Set(RUECKMELDUNGEN.map((r) => r.id)).size).toBe(16);
+  it('führt die 12 Prototypen mit eindeutigen Kennungen', () => {
+    expect(RUECKMELDUNGEN).toHaveLength(12);
+    expect(new Set(RUECKMELDUNGEN.map((r) => r.id)).size).toBe(12);
+  });
+
+  // Die Zahl stand in fünf Dateien und in beiden Sprachen ausgeschrieben — als
+  // die Liste von 16 auf 12 schrumpfte, wäre sie an jeder einzelnen Stelle
+  // stehen geblieben. Eine falsche Zahl auf der Startseite fällt niemandem auf,
+  // der die Liste nicht nachzählt.
+  it('nennt überall dieselbe Anzahl wie die Liste', () => {
+    const wurzel = new URL('../../', import.meta.url);
+    const dateien = [
+      'apps/beispiele/rueckmeldungen.js',
+      'apps/beispiele/index.html',
+      'apps/beispiele/README.md',
+      'apps/portal/index.html',
+      'CLAUDE.md',
+    ];
+    const muster = /(\d+)\s+(?:[Pp]rototyp\w*|Einträge)/g;
+
+    const gefunden = [];
+    for (const datei of dateien) {
+      const text = readFileSync(new URL(datei, wurzel), 'utf8');
+      for (const [ganz, zahl] of text.matchAll(muster)) gefunden.push({ datei, ganz, zahl: Number(zahl) });
+    }
+
+    expect(gefunden.length, 'keine Fundstelle — Formulierung geändert?').toBeGreaterThan(5);
+    for (const { datei, ganz, zahl } of gefunden) {
+      expect(zahl, `${datei}: „${ganz}"`).toBe(RUECKMELDUNGEN.length);
+    }
   });
 
   it('gibt jeder Rückmeldung die Werte, nach denen gefiltert wird', () => {
@@ -27,8 +54,8 @@ describe('Rückmeldungen', () => {
 
 describe('Filtern', () => {
   it('lässt ohne Auswahl alles durch', () => {
-    expect(filtern(RUECKMELDUNGEN, {})).toHaveLength(16);
-    expect(filtern(RUECKMELDUNGEN, { fach: '', stufe: '' })).toHaveLength(16);
+    expect(filtern(RUECKMELDUNGEN, {})).toHaveLength(12);
+    expect(filtern(RUECKMELDUNGEN, { fach: '', stufe: '' })).toHaveLength(12);
   });
 
   it('schränkt je Feld ein und kombiniert die Felder', () => {
@@ -55,7 +82,7 @@ describe('Filtern', () => {
 
   it('ignoriert Felder, die kein Filter sind', () => {
     // Sonst würde ein beliebiger Adressparameter die Liste leerfiltern.
-    expect(filtern(RUECKMELDUNGEN, { erfunden: 'x' })).toHaveLength(16);
+    expect(filtern(RUECKMELDUNGEN, { erfunden: 'x' })).toHaveLength(12);
   });
 
   it('liefert eine leere Liste, wenn nichts passt', () => {
