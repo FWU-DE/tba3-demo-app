@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { THEMA } from '../kern/thema.js';
+import { THEMA, themaCss } from '../kern/thema.js';
 import {
   PAARE,
   SCHWELLE,
@@ -54,6 +54,33 @@ describe('Die Vorgaben der Bibliothek', () => {
       expect(THEMA[`stufe-${nr}`], `stufe-${nr}`).toBeTruthy();
       expect(THEMA[`stufe-${nr}-text`], `stufe-${nr}-text`).toBeTruthy();
     }
+  });
+
+  it('unterscheidet hell und dunkel nur in Farben', () => {
+    // `themaCss()` packt eine Vorgabe nur dann in `light-dark(hell, dunkel)`,
+    // wenn sich die beiden unterscheiden. Das geht gut, solange alles, was
+    // sich unterscheidet, eine Farbe ist: ein Wert mit Komma auf oberster
+    // Ebene — `system-ui, sans-serif` — würde `light-dark()` als zwei
+    // Argumente lesen und die Regel still verwerfen.
+    for (const [name, { hell, dunkel }] of Object.entries(THEMA)) {
+      if (hell === dunkel) continue;
+      for (const wert of [hell, dunkel]) {
+        expect(farbe(wert), `${name}: „${wert}" ist keine Farbe`).not.toBeNull();
+      }
+    }
+  });
+
+  it('fragt nicht mehr das Betriebssystem', () => {
+    // Der Fehler, der das hier ausgelöst hat: dunkle Vorgaben in einer hellen
+    // Seite, nur weil das System dunkel stand. Entscheiden darf das jetzt
+    // `color-scheme`, und das kommt von der Seite.
+    const css = themaCss();
+    expect(css).not.toContain('prefers-color-scheme');
+    expect(css).toContain('light-dark(#1a1a1a, #f1f3f5)');
+    expect(css).toContain(':host([data-thema="hell"]) { color-scheme: light; }');
+    expect(css).toContain(':host([data-thema="dunkel"]) { color-scheme: dark; }');
+    // Die Schriftstapel tragen Kommas und dürfen deshalb nicht eingepackt sein.
+    expect(css).toContain('var(--tba3-schrift, system-ui, sans-serif)');
   });
 
   it('prüft jedes Paar gegen beide Vorgaben', () => {

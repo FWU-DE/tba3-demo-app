@@ -82,7 +82,6 @@ onMounted(async () => {
     :punkte="punkte"
     title="3a Deutsch"
     @punkt-gewaehlt="p => console.log(p)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -270,7 +269,6 @@ watch(() => selectedGroup.value, () => { gewaehlterPunkt.value = null; });
             :title="selectedGroup?.label ?? ''"
             :mittelwert="mittelwert"
             @punkt-gewaehlt="(p) => (gewaehlterPunkt = p)"
-            data-thema="hell"
           />
         </div>
         <p v-if="gewaehlterPunkt" class="gewaehlt" data-testid="punkt-gewaehlt">

@@ -96,7 +96,6 @@ onMounted(async () => {
     :auswahl="auswahl"
     @auswahl-geaendert="e => (auswahl = e.auswahl)"
     @schueler-gewaehlt="s => console.log(s)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -276,7 +275,6 @@ watch(() => selectedGroup.value, () => { auswahl.value = []; });
           :domains="domains"
           :auswahl="auswahl"
           @auswahl-geaendert="(e) => (auswahl = e.auswahl)"
-          data-thema="hell"
         />
         <p v-if="auswahl.length" class="auswahl-hinweis" data-testid="auswahl-hinweis">
           <i class="pi pi-check-square" />

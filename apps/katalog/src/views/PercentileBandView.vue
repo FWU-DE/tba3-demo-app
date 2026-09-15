@@ -79,7 +79,6 @@ onMounted(async () => {
     marker-label="Klasse 3a"
     band-label="Schule ± 1 SD"
     x-axis-label="Lösungshäufigkeit (%)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -388,7 +387,6 @@ const s3Items = computed(() => {
             :marker-label="t('ansichten.band.eins.marker')"
             :band-label="t('ansichten.band.eins.band')"
             :x-axis-label="t('bausteine.band.achse')"
-            data-thema="hell"
           />
         </div>
       </template>
@@ -446,7 +444,6 @@ const s3Items = computed(() => {
             :marker-label="t('ansichten.band.zwei.marker')"
             :band-label="t('ansichten.band.zwei.band')"
             :x-axis-label="t('bausteine.band.achse')"
-            data-thema="hell"
           />
         </div>
       </template>
@@ -503,7 +500,6 @@ const s3Items = computed(() => {
             :marker-label="s3Student?.name ?? t('ansichten.band.drei.schuelerin')"
             :band-label="`Klasse (${s3BandRange?.label?.split(' ')[0] ?? 'P25–P75'})`"
             :x-axis-label="t('ansichten.band.drei.achse')"
-            data-thema="hell"
           />
         </div>
 

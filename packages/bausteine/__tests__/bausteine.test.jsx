@@ -430,12 +430,14 @@ describe('Thema — neutral, überschreibbar, mit Dark Mode', () => {
     expect(befunde).toEqual([]);
   });
 
-  it('bringt einen Dark-Mode-Block mit', async () => {
+  it('bringt für jede Vorgabe beide Modi mit', async () => {
     const el = element('kompetenzstufen-leiste', DATEN['kompetenzstufen-leiste']);
     await gezeichnet();
     const stil = el.shadowRoot.querySelector('style').textContent;
-    expect(stil).toContain('prefers-color-scheme: dark');
-    // und einen Weg, den Modus zu erzwingen
+    // Welcher Modus gilt, entscheidet das `color-scheme` der Seite — nicht
+    // das Betriebssystem; `thema.test.mjs` nebenan erklärt, warum.
+    expect(stil).toContain('light-dark(');
+    // und einen Weg, den Modus am Element zu erzwingen
     expect(stil).toContain('data-thema="dunkel"');
   });
 

@@ -56,7 +56,6 @@ const schueler = ref([
     title="8a Deutsch"
     :mittelwert="395"
     @schueler-gewaehlt="s => console.log(s)"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -230,7 +229,6 @@ const tooltipDemos = computed(() => [
             :mittelwert="mittelwert"
             @schueler-gewaehlt="(s) => (gewaehlt = s)"
             @zone-gewaehlt="() => (gewaehlt = null)"
-            data-thema="hell"
           />
         </div>
         <p v-if="gewaehlt" class="gewaehlt-hinweis" data-testid="schueler-gewaehlt">

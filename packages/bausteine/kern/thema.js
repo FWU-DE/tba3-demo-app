@@ -3,8 +3,7 @@
 // Die Bausteine bringen absichtlich **kein** Design mit. Sie lesen
 // CSS-Variablen und haben für jede eine Vorgabe — einmal hell, einmal dunkel.
 // Steht ein Baustein in einer Seite mit eigenen Tokens, übernimmt er deren
-// Aussehen; steht er allein, sieht er unauffällig aus statt kaputt, und im
-// dunklen Systemthema von selbst dunkel.
+// Aussehen; steht er allein, sieht er unauffällig aus statt kaputt.
 //
 //   tba3-kompetenzstufen-leiste {
 //     --tba3-farbe-marke: #0000c4;
@@ -20,15 +19,38 @@
 //
 // Deshalb die Umleitung über einen privaten Namen:
 //
-//   :host { --tba3-_farbe-text: var(--tba3-farbe-text, #1a1a1a); }
-//   @media (prefers-color-scheme: dark) {
-//     :host { --tba3-_farbe-text: var(--tba3-farbe-text, #f1f3f5); }
-//   }
+//   :host { --tba3-_farbe-text: var(--tba3-farbe-text, light-dark(#1a1a1a, #f1f3f5)); }
 //
 // Die Bausteine zeichnen mit `--tba3-_farbe-text`. Setzt die Seite den
 // öffentlichen Namen, gewinnt sie — der private Wert liest ihn ja. Setzt sie
-// nichts, greift die Vorgabe, und die hängt vom Systemthema ab. Den privaten
-// Namen setzt niemand von außen; er ist nur die Leitung dazwischen.
+// nichts, greift die Vorgabe. Den privaten Namen setzt niemand von außen; er
+// ist nur die Leitung dazwischen.
+//
+// ── Welche Vorgabe gilt: die der Seite, nicht die des Systems ─────────────
+//
+// Hier stand vorher `@media (prefers-color-scheme: dark)`. Das war falsch
+// herum: gefragt wurde das Betriebssystem, gebraucht war die Seite. Wer sein
+// System dunkel gestellt und eine helle Seite geöffnet hatte, bekam dunkle
+// Vorgaben in eine weiße Fläche — schwarze Balken im Katalog, weiße Schrift
+// auf weißem Grund im Demonstrator. Ein Baustein kann nicht wissen, dass das
+// System dunkel ist, solange die Seite es nicht sagt.
+//
+// Sagen tut sie es mit `color-scheme` — der Eigenschaft, die CSS genau dafür
+// hat. Sie **vererbt**, kommt also am Wirtselement an, ohne die Shadow-Grenze
+// zu brechen, und `light-dark()` liest sie:
+//
+//   :root { color-scheme: light }       → Bausteine hell
+//   :root { color-scheme: dark }        → Bausteine dunkel
+//   :root { color-scheme: light dark }  → Bausteine folgen dem System
+//   nichts davon                        → hell, wie jede undeklarierte Seite
+//
+// Der letzte Fall ist der eigentliche Wechsel: eine Seite, die nichts sagt,
+// ist eine helle Seite, und dann ist hell die richtige Vorgabe. Wer das
+// System mitnehmen will, schreibt die eine Zeile `color-scheme: light dark`.
+//
+// `color-scheme` steht mit Absicht **nicht** auf `:host` — sonst schlüge es
+// wieder das, was die Seite vererbt, genau wie oben bei den Farben. Die
+// Ausnahme ist `data-thema` am Element selbst, das den Modus erzwingt.
 // ──────────────────────────────────────────────────────────────────────────
 
 /** Jede Variable mit Vorgabe für hell und dunkel. */
@@ -134,35 +156,31 @@ export const stufenSchrift = (nr) => v(`stufe-${Math.max(1, Math.min(5, nr))}-te
 /**
  * Die Umleitung als CSS. Kommt in jedes Shadow DOM.
  *
- * Zwei Blöcke: der erste bindet jeden privaten Namen an den öffentlichen mit
- * heller Vorgabe, der zweite tut dasselbe mit dunkler Vorgabe, sobald das
- * System auf Dunkel steht. Eine Seite, die den öffentlichen Namen setzt,
- * gewinnt in beiden Fällen.
+ * Ein Block: jeder private Name liest den öffentlichen und fällt sonst auf
+ * `light-dark(hell, dunkel)` zurück — welche Hälfte davon gilt, entscheidet
+ * das `color-scheme`, das die Seite vererbt (siehe Kopf der Datei).
+ *
+ * Vorgaben, die in beiden Modi gleich sind — die Schriftstapel, die Maße —,
+ * stehen ohne `light-dark()` da. Das ist nicht nur kürzer: ihre Werte tragen
+ * Kommas auf oberster Ebene (`system-ui, sans-serif`), und die würde
+ * `light-dark()` als eigene Argumente lesen.
  */
 export function themaCss() {
-  const zeile = (name, modus) =>
-    `  ${privat(name)}: var(${oeffentlich(name)}, ${THEMA[name][modus]});`;
-  const namen = Object.keys(THEMA);
+  const zeile = (name) => {
+    const { hell, dunkel } = THEMA[name];
+    const vorgabe = hell === dunkel ? hell : `light-dark(${hell}, ${dunkel})`;
+    return `  ${privat(name)}: var(${oeffentlich(name)}, ${vorgabe});`;
+  };
   return [
     ':host {',
-    ...namen.map((n) => zeile(n, 'hell')),
+    ...Object.keys(THEMA).map(zeile),
     '}',
-    '@media (prefers-color-scheme: dark) {',
-    '  :host {',
-    ...namen.map((n) => '  ' + zeile(n, 'dunkel')),
-    '  }',
-    '}',
-    // Wer den Modus erzwingen will, setzt `data-thema` **am Element selbst**:
-    // `:host()` prüft nur das Wirtselement, ein Attribut weiter oben im Baum
-    // greift hier nicht. Nötig ist das auf jeder Seite, die keinen eigenen
-    // Dunkelmodus hat — sonst folgt der Baustein dem System, die Seite bleibt
-    // hell, und heller Text steht auf hellem Grund.
-    ':host([data-thema="hell"]) {',
-    ...namen.map((n) => zeile(n, 'hell')),
-    '}',
-    ':host([data-thema="dunkel"]) {',
-    ...namen.map((n) => zeile(n, 'dunkel')),
-    '}',
+    // Wer den Modus am einzelnen Baustein erzwingen will, setzt `data-thema`
+    // **am Element selbst**: `:host()` prüft nur das Wirtselement, ein
+    // Attribut weiter oben im Baum greift hier nicht. Für eine ganze Seite
+    // ist `color-scheme` auf `:root` der kürzere Weg.
+    ':host([data-thema="hell"]) { color-scheme: light; }',
+    ':host([data-thema="dunkel"]) { color-scheme: dark; }',
   ].join('\n');
 }
 

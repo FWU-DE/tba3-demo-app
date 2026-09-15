@@ -29,6 +29,13 @@
  */
 
 :root {
+  /* Diese Tokens sind der Modus Light — die Seite ist hell, und zwar auch
+     dann, wenn das Betriebssystem dunkel steht. Gesagt werden muss das, weil
+     alles, was seine Vorgaben selbst mitbringt, sonst das System fragt: die
+     Bausteine im Shadow DOM (siehe packages/bausteine/kern/thema.js), aber
+     auch Bildlaufleisten und Formularelemente vom Browser. */
+  color-scheme: light;
+
   /* ── Farben: Flächen ─────────────────────────────────────── */
   --farbe-grund: #ffffff;           /* background/default */
   --farbe-grund-zart: #fafafa;      /* background/subtle */

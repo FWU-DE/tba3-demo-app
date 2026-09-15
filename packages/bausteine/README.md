@@ -192,32 +192,34 @@ diese Seite ihn umgibt.
 
 ### Dark Mode kann jeder Baustein von selbst
 
-Jede Variable hat **zwei** Vorgaben, hell und dunkel. Ohne Zutun folgt ein
-Baustein `prefers-color-scheme` — im dunklen Systemthema werden Flächen,
-Linien und Text dunkel, und die Kompetenzstufen bekommen angehobene Töne, damit
-sie auf dunklem Grund nicht absaufen.
+Jede Variable hat **zwei** Vorgaben, hell und dunkel. Welche gilt, sagt die
+Seite mit `color-scheme` — der Eigenschaft, die CSS genau dafür hat. Sie
+vererbt, kommt also am Baustein an, ohne dass er etwas davon wissen muss:
 
-Erzwingen lässt sich der Modus über `data-thema` — **am Element selbst**, nicht
-weiter oben im Baum: die Regel dahinter ist `:host([data-thema="dunkel"])`, und
-`:host()` prüft nur das Wirtselement.
+```css
+:root { color-scheme: light }       /* Bausteine hell */
+:root { color-scheme: dark }        /* Bausteine dunkel — angehobene Töne,
+                                       damit die Stufen nicht absaufen */
+:root { color-scheme: light dark }  /* Bausteine folgen dem System */
+```
+
+Sagt eine Seite nichts, ist sie eine helle Seite, und die Bausteine sind hell.
+Das ist bewusst so: ein Baustein kann nicht wissen, dass das Betriebssystem
+dunkel steht, solange die Seite es nicht mitmacht. Genau daran ist die frühere
+Vorgabe „folge `prefers-color-scheme`" gescheitert — im Katalog standen
+schwarze Balken in weißen Karten, im Demonstrator weiße Schrift auf weißem
+Grund, sobald jemand sein System dunkel gestellt hatte.
+
+Erzwingen lässt sich der Modus am einzelnen Baustein über `data-thema` — **am
+Element selbst**, nicht weiter oben im Baum: die Regel dahinter ist
+`:host([data-thema="dunkel"])`, und `:host()` prüft nur das Wirtselement. Für
+eine ganze Seite ist `color-scheme` der kürzere Weg.
 
 ```html
 <tba3-aufgaben-tabelle data-thema="dunkel"></tba3-aufgaben-tabelle>
 ```
 
 Eine Seite, die eine Variable selbst setzt, gewinnt in beiden Modi.
-
-### Seiten ohne eigenen Dunkelmodus müssen das tun
-
-Die Vorgabe „folge dem System" stimmt nur, solange die **umgebende Seite** das
-auch tut. Eine Seite, die immer hell ist, bekommt sonst hellen Text auf hellem
-Grund, sobald jemand sein Betriebssystem dunkel gestellt hat — der Baustein
-wechselt, die Seite nicht. Genau das war im Komponentenkatalog der Fall.
-
-```html
-<!-- immer helle Seite -->
-<tba3-kompetenzstufen-leiste data-thema="hell"></tba3-kompetenzstufen-leiste>
-```
 
 Zwei E2E-Tests in `e2e/katalog-bausteine.spec.js` öffnen Katalog und
 Demonstrator mit dunkel gestelltem System und prüfen, dass der Text dunkel
@@ -233,11 +235,11 @@ Thema blieb der Text schwarz auf schwarz.
 Deshalb die Umleitung über einen privaten Namen:
 
 ```css
-:host { --tba3-_farbe-text: var(--tba3-farbe-text, #1a1a1a); }
-@media (prefers-color-scheme: dark) {
-  :host { --tba3-_farbe-text: var(--tba3-farbe-text, #f1f3f5); }
-}
+:host { --tba3-_farbe-text: var(--tba3-farbe-text, light-dark(#1a1a1a, #f1f3f5)); }
 ```
+
+`color-scheme` steht aus demselben Grund **nicht** auf `:host`: es würde sonst
+schlagen, was die Seite vererbt.
 
 Gezeichnet wird mit `--tba3-_farbe-text`; gesetzt wird von außen
 `--tba3-farbe-text`. Zwei Tests bewachen das: kein öffentlicher Name darf im

@@ -140,11 +140,13 @@ test.describe('Katalog — die Naht zwischen Ansicht und Baustein', () => {
 });
 
 test.describe('Dunkles System, helle Seite', () => {
-  // Der Fall, der ohne Zutun schiefgeht: die Bausteine folgen
+  // Der Fall, an dem es einmal schiefging: die Bausteine fragten
   // `prefers-color-scheme`, Katalog und Demonstrator haben aber keinen eigenen
-  // Dunkelmodus. Wer sein System dunkel gestellt hat, bekäme hellen Text auf
-  // hellem Grund — lesbar bleibt es nur, weil beide Seiten `data-thema`
-  // setzen. Ohne das Attribut schlagen diese beiden Tests fehl.
+  // Dunkelmodus. Wer sein System dunkel gestellt hatte, bekam dunkle Flächen
+  // und hellen Text in eine weiße Seite. Seitdem entscheidet das
+  // `color-scheme`, das die Seite vererbt — nimmt jemand die eine Zeile aus
+  // `tokens.css` bzw. `katalog/index.html` heraus, schlagen diese beiden
+  // Tests fehl.
   test.use({ colorScheme: 'dark' });
 
   /** Heller Text (Leuchtkraft über 0,5) auf heller Seite wäre der Fehler. */

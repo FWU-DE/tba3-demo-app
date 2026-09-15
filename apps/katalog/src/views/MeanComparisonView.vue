@@ -63,7 +63,6 @@ onMounted(async () => {
     :rows="rows"
     title="3a Deutsch"
     domain="Leseverstehen"
-    data-thema="hell"
   />
 </template>`,
   apiEndpoints: [
@@ -239,7 +238,6 @@ const domainCharts = computed(() => {
               :rows="dc.rows"
               :title="selectedGroup?.label"
               :domain="dc.label"
-              data-thema="hell"
             />
           </div>
         </div>
