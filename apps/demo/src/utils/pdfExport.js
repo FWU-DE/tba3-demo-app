@@ -73,9 +73,17 @@ const drawHeader = (pdf, group, pageNum, totalPages) => {
   setFont(pdf, 15, 'bold', [255, 255, 255]);
   pdf.text(safe(group.name), MARGIN, 11);
 
-  // Subtitle
-  setFont(pdf, 8.5, 'normal', [186, 211, 253]);
-  pdf.text(`${safe(subject?.name ?? group.subject)} · ${safe(grade?.name ?? group.grade)}`, MARGIN, 18);
+  // Subtitle — die Abschnittsköpfe im Stufenmodus sind keine echten Lerngruppen
+  // und haben weder Fach noch Klassenstufe. Ohne die Prüfung stünde dort ein
+  // Mittelpunkt ohne alles daneben.
+  const subtitle = [subject?.name ?? group.subject, grade?.name ?? group.grade]
+    .map((teil) => safe(teil ?? ''))
+    .filter(Boolean)
+    .join(' · ');
+  if (subtitle) {
+    setFont(pdf, 8.5, 'normal', [186, 211, 253]);
+    pdf.text(subtitle, MARGIN, 18);
+  }
 
   // Right: branding + page count
   setFont(pdf, 8, 'normal', [186, 211, 253]);

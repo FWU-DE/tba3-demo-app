@@ -24,6 +24,7 @@
     "e2e:bericht": "playwright show-report e2e/.bericht",
     "fixtures:update": "node tools/fetch-fixtures.mjs",
     "docs:update": "node tools/update-docs.mjs",
+    "docs:bilder": "node tools/dokumentbilder.mjs",
     "spec:update": "node tools/update-spec.mjs",
     "material-spec:update": "node tools/build-material-spec.mjs"
   },

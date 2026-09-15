@@ -13,6 +13,7 @@ npm run build          # alle Bereiche → dist/
 npm run preview        # dist/ ausliefern wie im Deployment → http://localhost:4173
 npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba3 holen
                        #  (eigene Dokumente mit `eigen: true` bleiben unberührt)
+npm run docs:bilder    # Abbildungen der Dokumentseiten neu erzeugen (gegen npm run preview)
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
@@ -140,6 +141,20 @@ Entscheidungen stecken darin:
 
 Wer ein Dokument aufnimmt, trägt es in `DOKUMENTE` ein und ruft `docs:update` —
 Übersicht, Navigation und Build ziehen daraus nach.
+
+**Abbildungen.** Ein Bild, das allein in seinem Absatz steht, wird zu einem
+`<figure>`; der Markdown-Titel (`![alt](/dokumentation/bilder/x.png "Unterschrift")`)
+ist die sichtbare Bildunterschrift, nicht ein `title`-Attribut, das nur sieht, wer
+mit der Maus stehen bleibt. Die Dateien liegen unter
+`apps/portal/dokumentation/bilder/` und werden **absolut** verlinkt — die Seite
+liegt unter `/dokumentation/<slug>/`, ein relatives `bilder/x.png` zeigte also ein
+Verzeichnis zu tief. `tools/dokumente.test.mjs` prüft beides.
+
+Erzeugt werden sie mit `npm run docs:bilder` (`tools/dokumentbilder.mjs`) gegen
+`npm run preview`, nicht von Hand: Oberflächen und erzeugte PDFs veralten, und ein
+veraltetes Bild ist schlimmer als keines, weil niemand ihm ansieht, dass es von
+gestern ist. Das Skript braucht `pdftoppm` (poppler-utils) und `magick`
+(ImageMagick); fehlt eines, bricht es ab, statt halbe Bilder zu schreiben.
 
 **Nicht jedes Dokument kommt von oben.** Ein Eintrag mit `eigen: true` wird hier
 geschrieben und gepflegt: `docs:update` fasst ihn nicht an, der Herkunftsverweis

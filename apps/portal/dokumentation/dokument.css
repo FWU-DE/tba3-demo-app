@@ -132,6 +132,27 @@ a:hover { color: var(--blau-dunkel); }
 .inhalt strong { color: var(--tinte); font-weight: 620; }
 .inhalt hr { border: 0; border-top: 1px solid var(--linie); margin: 32px 0; }
 
+/* ── Abbildungen ─────────────────────────────────────────── */
+/* Ein Bild in einem Dokument zeigt fast immer eine Oberfläche oder eine
+   erzeugte Datei — beides mit hellem Grund. Der eigene weiße Grund und der
+   Rahmen halten es vom Fließtext getrennt, auch wenn das Bild selbst an den
+   Rändern hell ausläuft. */
+.inhalt .abbildung { margin: 0 0 22px; }
+.inhalt .abbildung img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--linie);
+  border-radius: 10px;
+  background: #fff;
+}
+.inhalt .abbildung figcaption {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--grau);
+  margin-top: 8px;
+}
+
 .inhalt blockquote {
   margin: 0 0 16px;
   padding: 2px 0 2px 16px;

@@ -44,6 +44,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   „Bezeichnung“ und hat als Beispiel schon `Schüler 1`. Dazu zwei E2E-Tests, die
   beides prüfen: dass der Name verdeckt ist und dass das Ergebnis daneben noch
   dasteht.
+- **Abbildungen in den Dokumentseiten.** Ein Bild, das allein in seinem Absatz
+  steht, wird zu einem `<figure>` mit sichtbarer Unterschrift aus dem
+  Markdown-Titel. Die beiden Rezepte zeigen damit, wovon sie reden: die
+  weichgezeichnete Schülerliste und die beiden erzeugten PDFs. Erzeugt werden die
+  Bilder mit `npm run docs:bilder` gegen den ausgelieferten Stand — ein von Hand
+  aufgenommenes Bild veraltet still, und niemand sieht ihm an, dass es von gestern
+  ist. Zwei Tests halten dagegen: jedes Bild muss vorliegen und absolut verlinkt
+  sein (relativ zeigte von `/dokumentation/<slug>/` aus ein Verzeichnis zu tief).
 - **Eigene Dokumente in `/dokumentation`.** Ein Eintrag in `DOKUMENTE` mit
   `eigen: true` wird hier geschrieben statt aus `indibit-eu/tba3` geholt:
   `docs:update` fasst ihn nicht an, der Herkunftsverweis zeigt auf dieses
@@ -129,6 +137,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   Perzentilbänder), haben jetzt Platz.
 
 ### Fixed
+- **Ein Mittelpunkt ohne alles daneben** stand im Kopf der Materialzuordnung,
+  sobald nach Kompetenzstufe exportiert wurde: die Abschnittsköpfe sind dort
+  keine echten Lerngruppen und haben weder Fach noch Klassenstufe, der
+  Untertitel setzte beide aber unbesehen zusammen. Aufgefallen ist es erst, als
+  die Seite als Abbildung in die Dokumentation sollte.
 - **Heller Text auf heller Seite bei dunkel gestelltem System.** Die Bausteine
   folgen `prefers-color-scheme`; Katalog und Demonstrator haben aber keinen
   eigenen Dunkelmodus. Beide setzen jetzt `data-thema` an den Elementen — der

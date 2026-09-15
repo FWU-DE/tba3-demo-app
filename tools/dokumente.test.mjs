@@ -55,6 +55,22 @@ describe('rendere', () => {
     expect(lokalerVerweis('konzepte.md')).toBe('/dokumentation/konzepte');
   });
 
+  it('macht aus einem Bild, das allein im Absatz steht, eine Abbildung mit Unterschrift', () => {
+    const { inhalt } = rendere('# T\n\n![Die Liste](/dokumentation/bilder/x.png "So sieht sie aus.")\n');
+    expect(inhalt).toContain('<figure class="abbildung">');
+    expect(inhalt).toContain('alt="Die Liste"');
+    // Der Titel wird zur sichtbaren Unterschrift, nicht zu einem title-Attribut,
+    // das nur sieht, wer mit der Maus stehen bleibt
+    expect(inhalt).toContain('<figcaption>So sieht sie aus.</figcaption>');
+    expect(inhalt).not.toContain('<p><img');
+  });
+
+  it('lässt ein Bild mitten im Satz ein Bild mitten im Satz', () => {
+    const { inhalt } = rendere('# T\n\nText mit ![einem](/y.png) Bild darin.\n');
+    expect(inhalt).toContain('<p>Text mit <img');
+    expect(inhalt).not.toContain('<figure');
+  });
+
   it('rahmt Tabellen ein — sonst ziehen die breiten das Telefon auseinander', () => {
     const { inhalt } = rendere('# T\n\n| a | b |\n| - | - |\n| 1 | 2 |\n');
     expect(inhalt).toContain('<div class="tabelle"><table>');
@@ -87,6 +103,25 @@ describe('die eingecheckten Kopien', () => {
       const [pfad, marke] = ziel.split('#');
       expect(sprungmarken.has(pfad), `${von} → ${ziel}`).toBe(true);
       if (marke) expect(sprungmarken.get(pfad).has(marke), `${von} → ${ziel}`).toBe(true);
+    }
+  });
+
+  // Ein Bild, das fehlt oder relativ verlinkt ist, ist im Deployment ein leerer
+  // Rahmen. Relativ wäre besonders tückisch: die Seite liegt unter
+  // /dokumentation/<slug>/, `bilder/x.png` zeigte also ein Verzeichnis zu tief.
+  it('jedes Bild liegt vor und ist absolut verlinkt', () => {
+    const bilder = [];
+    for (const dok of DOKUMENTE) {
+      const markdown = readFileSync(join(ORDNER, dok.datei), 'utf8');
+      for (const [, quelle] of markdown.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)) {
+        if (/^https?:/.test(quelle)) continue;
+        bilder.push({ von: dok.datei, quelle });
+      }
+    }
+    for (const { von, quelle } of bilder) {
+      expect(quelle.startsWith('/dokumentation/'), `${von} → ${quelle}`).toBe(true);
+      const datei = join(ORDNER, quelle.replace('/dokumentation/', ''));
+      expect(existsSync(datei), `${von} → ${quelle} fehlt`).toBe(true);
     }
   });
 
