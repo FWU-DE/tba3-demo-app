@@ -7,6 +7,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- **Rezepte der Demoanwendung** unter `/dokumentation/demo-rezepte`. Zweiter
+  Eintrag: **der PDF-Export** — die beiden Ausgaben (individuelle Rückmeldung und
+  Materialzuordnung) und was an ihnen entschieden ist. Dass alles im Browser
+  entsteht und kein Byte an einen Dienst geht, ist bei Individualdaten kein
+  Nebeneffekt, sondern der Grund für die Bauweise; dass jsPDF erst beim Klick
+  geladen wird, spart dem ersten Seitenaufruf gut die Hälfte (870 KB Hauptbündel
+  gegen 410 KB nachgeladen); dass jede Zeichenkette durch `safe()` geht, liegt an
+  Helvetica, das Emoji nicht darstellen kann — und daran, dass Wegwerfen aufhört
+  zu taugen, sobald Namen betroffen sind, die nicht in WinAnsi passen. Dazu
+  Seitenumbruch von Hand, QR-Codes vor der Zeichenschleife und die Platzhalter-URL,
+  die die Fußzeile als solche ausweist. Neuer E2E-Test: das Datenblatt liefert eine
+  PDF-Datei mit dem Namen im Dateinamen.
+- Erster Eintrag der Rezepte: **der Observer-Modus** — der Schalter im Kopf der
+  Demoanwendung, der die Namen weichzeichnet und die Ergebnisse stehen lässt, damit
+  Individualergebnisse auf dem Beamer oder in einer Bildschirmfreigabe besprochen
+  werden können. Der Text beschreibt auch, was der Modus *nicht* leistet — der
+  Name steht weiter im DOM, das PDF trägt ihn unverändert, und der Schalter
+  überlebt kein Neuladen —, und wo die Grenze wirklich liegt: beim liefernden
+  System, denn `name` an der Wertegruppe heißt in der Spezifikation
+  „Bezeichnung“ und hat als Beispiel schon `Schüler 1`. Dazu zwei E2E-Tests, die
+  beides prüfen: dass der Name verdeckt ist und dass das Ergebnis daneben noch
+  dasteht.
+- **Eigene Dokumente in `/dokumentation`.** Ein Eintrag in `DOKUMENTE` mit
+  `eigen: true` wird hier geschrieben statt aus `indibit-eu/tba3` geholt:
+  `docs:update` fasst ihn nicht an, der Herkunftsverweis zeigt auf dieses
+  Repository, und Seite wie Übersichtskarte sagen das, statt einen „Stand“ zu
+  behaupten, den es nicht gibt. Ohne diese Unterscheidung wäre das Rezept zum
+  Observer-Modus beim nächsten Nachziehen verschwunden — es beschreibt die
+  Oberfläche, nicht die Schnittstelle.
 - **Sieben weitere Bausteine, und alle neun Katalog-Ansichten laufen jetzt über
   das Paket.** Aus dem Katalog umgezogen sind Schüler-Tabelle (mit Auswahl),
   Übersichtskarten, Streudiagramm und BISTA-Verteilung; dazu drei, die es nur in

@@ -7,7 +7,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { DOKUMENTE, ORDNER, anker, lokalerVerweis, rendere, seite, uebersicht } from './dokumente.mjs';
+import { DOKUMENTE, ORDNER, anker, githubUrl, lokalerVerweis, rendere, seite, uebersicht } from './dokumente.mjs';
 
 const ankerIn = (html) => [...html.matchAll(/<h[1-6] id="([^"]+)"/g)].map((m) => m[1]);
 
@@ -90,6 +90,14 @@ describe('die eingecheckten Kopien', () => {
     }
   });
 
+  it('jedes Dokument zeigt auf das Repository, in dem es gepflegt wird', () => {
+    for (const dok of DOKUMENTE) {
+      expect(githubUrl(dok), dok.datei).toContain(
+        dok.eigen ? 'FWU-DE/tba3-demo-app' : 'indibit-eu/tba3',
+      );
+    }
+  });
+
   it('kein Verweis auf ein Markdown, das hier nicht liegt', () => {
     const unbekannt = new Set();
     for (const dok of DOKUMENTE) {
@@ -114,6 +122,18 @@ describe('die Seiten', () => {
     expect(html).toContain('14.09.2026');
   });
 
+  it('sagt bei einem eigenen Dokument, dass docs:update es nicht anfasst', () => {
+    const eigen = DOKUMENTE.find((d) => d.eigen);
+    expect(eigen, 'kein eigenes Dokument in DOKUMENTE').toBeTruthy();
+    const html = seite(eigen, markdown, { abgerufen: '2026-09-14' });
+    // Der Verweis zeigt hierher, nicht ins Spezifikations-Repository
+    expect(html).toContain(`href="https://github.com/FWU-DE/tba3-demo-app/blob/main/apps/portal/dokumentation/${eigen.datei}"`);
+    expect(html).not.toContain('indibit-eu/tba3');
+    expect(html).toContain('fasst dieses Dokument nicht an');
+    // Ein „Stand“ wäre gelogen: das Dokument wird hier geschrieben, nicht geholt
+    expect(html).not.toContain('14.09.2026');
+  });
+
   it('kommt ohne Stand aus — dann steht eben kein Datum da', () => {
     const html = seite(DOKUMENTE[0], markdown, null);
     expect(html).not.toContain('Stand ');
@@ -127,5 +147,14 @@ describe('die Seiten', () => {
       expect(html).toContain(dok.kurz.de);
       expect(html).toContain(dok.kurz.en);
     }
+  });
+
+  it('schreibt auf jede Karte, woher ihr Text kommt', () => {
+    const html = uebersicht(DOKUMENTE, null);
+    expect(html).toContain('Kopie aus indibit-eu/tba3');
+    expect(html).toContain('Zu dieser Seite');
+    // Die Klasse gehört auf das <p>, nicht auf die Sprach-<span>s: sonst
+    // schlägt `.karten .karte .quelle` die Regel, die eine Sprache ausblendet.
+    expect(html).toContain('<p class="quelle"><span lang="de">');
   });
 });

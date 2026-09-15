@@ -66,6 +66,65 @@ test.describe('Demoanwendung — Schüler:innen', () => {
     await expect(page).not.toHaveURL(/[?&]student=/);
   });
 
+  // Der Observer-Modus verdeckt die Namen, damit Individualergebnisse auf dem
+  // Beamer oder in einer Bildschirmfreigabe besprochen werden können. Geprüft
+  // wird beides: dass der Name verdeckt ist und dass das Ergebnis daneben
+  // stehen bleibt — eine Ansicht, die im Observer-Modus auch die Zahlen
+  // versteckt, hätte den Zweck verfehlt. Beschrieben in
+  // /dokumentation/demo-rezepte.
+  test('der Observer-Modus zeichnet die Namen weich und lässt die Ergebnisse stehen', async ({ page }) => {
+    await oeffneSchueler(page);
+
+    const name = page.getByTestId(`schueler-name-${ERSTE}`);
+    const vorher = await name.innerText();
+    await expect(name).not.toHaveCSS('filter', /blur/);
+
+    await page.getByTestId('observer-schalter').click();
+
+    await expect(name).toHaveCSS('filter', /blur/);
+    // Der Name bleibt im DOM — weichgezeichnet wird angezeigt, nicht ersetzt.
+    // Genau das ist die Grenze des Modus, und sie steht so in der Doku.
+    await expect(name).toHaveText(vorher);
+    // Was zum Ergebnis gehört, bleibt lesbar
+    await expect(page.getByTestId(`schueler-zeile-${ERSTE}`)).toContainText('3a Deutsch');
+  });
+
+  test('der Observer-Modus gilt auch im Datenblatt und endet mit dem Neuladen', async ({ page }) => {
+    await oeffneSchueler(page);
+
+    await page.getByTestId('observer-schalter').click();
+    await page.getByTestId(`schueler-datenblatt-${ERSTE}`).click();
+
+    const name = page.getByTestId('datenblatt-name');
+    await expect(name).toHaveCSS('filter', /blur/);
+
+    // Der Schalter steht weder in der Adresse noch im Speicher: nach dem
+    // Neuladen stehen die Namen wieder da. Für einen Schalter, der im Gespräch
+    // umgelegt wird, ist das gewollt — geteilte Links tragen ihn nicht mit.
+    await page.reload();
+    await expect(page.getByTestId('datenblatt-name')).not.toHaveCSS('filter', /blur/);
+  });
+
+  // Die individuelle Rückmeldung ist die Ausgabe, die das Gerät verlässt.
+  // Geprüft wird beides, was sich von außen prüfen lässt: dass jsPDF im Moment
+  // des Klicks wirklich nachgeladen wird (sonst käme keine Datei an) und dass
+  // der Name im Dateinamen steht — der Observer-Modus greift hier mit Absicht
+  // nicht. Beschrieben in /dokumentation/demo-rezepte.
+  test('das Datenblatt gibt eine Rückmeldung als PDF aus, mit dem Namen im Dateinamen', async ({ page }) => {
+    await oeffneSchueler(page);
+    await page.getByTestId(`schueler-datenblatt-${ERSTE}`).click();
+
+    const [vorname, nachname] = (await page.getByTestId('datenblatt-name').innerText()).split(' ');
+
+    const download = page.waitForEvent('download', { timeout: 20_000 });
+    await page.getByTestId('datenblatt-pdf').click();
+
+    const datei = await download;
+    expect(datei.suggestedFilename()).toMatch(/\.pdf$/);
+    expect(datei.suggestedFilename()).toContain(nachname);
+    expect(datei.suggestedFilename()).toContain(vorname);
+  });
+
   test('eine eigene Gruppe entsteht aus der Auswahl und überlebt das Neuladen', async ({ page }) => {
     await oeffneSchueler(page);
 
