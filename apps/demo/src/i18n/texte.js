@@ -102,6 +102,15 @@ export const TEXTE = {
     einstellungen: { de: 'Einstellungen', en: 'Settings' },
   },
 
+  // Steht unter dem Kopf, siehe components/layout/DemoHinweis.jsx. Der Satz
+  // grenzt gegen /beispiele ab — dort stehen die erprobten Rückmeldungen.
+  hinweis: {
+    text: {
+      de: '<strong>Technisches Demonstrationssystem.</strong> Diese Anwendung führt an Daten aus dem Mock-Server vor, was die Auswertungsschnittstelle hergibt. Anders als die <a href="/beispiele" class="font-semibold underline">Rückmeldungen der Einrichtungen</a> ist sie <strong>keine nutzervalidierte Rückmeldung</strong>: Darstellung, Wortwahl und Auswahl der Kennzahlen sind weder pädagogisch abgestimmt noch mit Lehrkräften erprobt.',
+      en: '<strong>Technical demonstration system.</strong> This application demonstrates, on data from the mock server, what the reporting API makes possible. Unlike the <a href="/beispiele" class="font-semibold underline">reports of the institutions</a>, it is <strong>not a user-validated report</strong>: presentation, wording and choice of indicators are neither pedagogically agreed nor tested with teachers.',
+    },
+  },
+
   einstellungen: {
     nutzer: { de: 'Demo-Nutzer', en: 'Demo user' },
     schliessen: { de: 'Schließen', en: 'Close' },

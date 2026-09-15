@@ -15,6 +15,17 @@ test.describe('Demoanwendung — Grundgerüst', () => {
     await expect(page.getByTestId('ansicht-kompetenzstufen')).toBeVisible();
   });
 
+  test('sagt im Kopf, dass die Anwendung ein Demonstrator ist', async ({ page }) => {
+    await oeffneDemo(page);
+
+    // Der Hinweis grenzt die Demo gegen die Rückmeldungen der Einrichtungen
+    // ab. Er hat keinen Schließen-Knopf und muss deshalb schlicht da stehen.
+    const hinweis = page.getByTestId('demo-hinweis');
+    await expect(hinweis).toBeVisible();
+    await expect(hinweis).toContainText('keine nutzervalidierte Rückmeldung');
+    await expect(hinweis.locator('a[href="/beispiele"]')).toBeVisible();
+  });
+
   test('zeigt die Übersichtskarten mit Zahlen aus der Schnittstelle', async ({ page }) => {
     await oeffneDemo(page);
 
@@ -43,6 +54,7 @@ test.describe('Demoanwendung — Grundgerüst', () => {
     ['aggregations', 'ansicht-aggregationen'],
     ['students', 'ansicht-schueler'],
     ['materials', 'ansicht-materialien'],
+    ['elemente', 'ansicht-elemente'],
     ['help', 'ansicht-hilfe'],
   ];
 

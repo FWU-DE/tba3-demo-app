@@ -450,7 +450,7 @@ apps/katalog/src/i18n/texte.test.mjs                     Textschlüssel des Kata
 Dazu die E2E-Tests unter `e2e/` (Playwright, `npm run e2e`):
 
 ```
-e2e/demo-grundgeruest.spec.js   Laden, Leiste, Übersichtskarten, alle sieben Reiter, Deeplinks
+e2e/demo-grundgeruest.spec.js   Laden, Leiste, Hinweis, Übersichtskarten, alle acht Reiter, Deeplinks
 e2e/demo-filter.spec.js         Ebene, Lerngruppe, Fach, Klassenstufe, Datentyp — je gegen die Abfrage
 e2e/demo-schueler.spec.js       Suche, Filter, Datenblatt, eigene Gruppen (localStorage)
 e2e/demo-materialien.spec.js    Stufe wählen, zuweisen, Export als .imscc und .pdf
