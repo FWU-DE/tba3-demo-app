@@ -367,6 +367,11 @@
   import { BAUPLAENE, PRAEFIX, registrieren } from '/bausteine/webcomponents/index.js';
   import { DEMODATEN } from '/bausteine/demodaten.js';
   import { NUR_BAUSTEIN, ZAHLEN, ZUORDNUNG } from '/bausteine/zuordnung.js';
+  // Woher ein Baustein stammt, steht in den Daten des Konsortiums. Drei der
+  // fünfzehn sind nicht aus eigener Anschauung entstanden, sondern aus fremden
+  // Rückmeldungen herausgezogen — und das stand bisher nirgends, wo jemand
+  // Bausteine durchsieht.
+  import { BAUSTEINE, EINRICHTUNGEN, rueckmeldungenZu } from '/gemeinsam/konsortium.js';
 
   registrieren();
 
@@ -438,6 +443,33 @@
 
   const elemente = [];
 
+  /**
+   * Die Herkunftszeile eines Bausteins — nur für die, die aus den
+   * Rückmeldungen des Konsortiums herausgezogen wurden.
+   *
+   * Ein Baustein, der aus der eigenen Schau gewachsen ist, braucht keine:
+   * eine Zeile „stammt von hier" an zwölf von fünfzehn Abschnitten wäre
+   * Rauschen. Sichtbar soll der Unterschied sein, nicht die Regel.
+   */
+  function herkunftsZeile(elementName) {
+    const eintrag = BAUSTEINE.find((b) => b.element === elementName && b.beleg === 'artefakt');
+    if (!eintrag) return null;
+
+    const traeger = [...new Set(rueckmeldungenZu(eintrag.id).map((r) => r.einrichtung))]
+      .map((e) => EINRICHTUNGEN[e].de);
+
+    const zeile = document.createElement('p');
+    zeile.className = 'herkunft';
+    zeile.dataset.herkunft = eintrag.id;
+    zeile.append(`Aus den Rückmeldungen des Konsortiums — gefunden bei ${traeger.join(', ')}. `);
+
+    const verweis = document.createElement('a');
+    verweis.href = '/dokumentation/bausteine-der-rueckmeldungen';
+    verweis.textContent = 'Woher die Bausteine kommen';
+    zeile.append(verweis);
+    return zeile;
+  }
+
   function abschnitt(bauplan) {
     const sektion = document.createElement('section');
     sektion.className = 'baustein';
@@ -454,6 +486,9 @@
       chip(bauplan.ereignisse.length ? `Ereignisse: ${bauplan.ereignisse.join(', ')}` : 'ohne Ereignisse'),
     );
     kopf.append(h2, meta);
+
+    const herkunft = herkunftsZeile(bauplan.name);
+    if (herkunft) kopf.append(herkunft);
 
     const fassungen = document.createElement('div');
     fassungen.className = 'fassungen';
