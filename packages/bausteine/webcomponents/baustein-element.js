@@ -167,7 +167,29 @@ figcaption {
 }
 .gedaempft { color: var(--tba3-_farbe-text-gedaempft); font-weight: 400; }
 .scroll { overflow-x: auto; }
-.scroll svg { display: block; }
+/*
+ * Ein Diagramm, das breiter ist als sein Platz, wurde bisher nur gescrollt.
+ * Auf dem Telefon hieß das: von einem gestapelten Balken waren 42 Prozent zu
+ * sehen — und ein abgeschnittener Stapelbalken sieht aus wie ein
+ * vollständiger. Wer die Kompetenzstufen-Leiste überflog, las „Stufe I und II
+ * beherrschen das Bild", also das Gegenteil der Daten. Das ist schlimmer als
+ * unbequem.
+ *
+ * Deshalb skaliert das Bild herunter, statt abgeschnitten zu werden: die
+ * Beschriftung wird klein, aber die Anteile stimmen. .scroll bleibt für die
+ * Tabellen, die nicht skalieren können, ohne unlesbar zu werden.
+ *
+ * Eine Untergrenze stand hier kurz und war wirkungslos: min(100%, 420px)
+ * kann den Wirt nie überschreiten, und ohne min(100%, …) käme das Scrollen
+ * zurück, das gerade abgeschafft wurde. Eine echte Untergrenze bräuchte
+ * responsive Geometrie — die Bausteine rechnen ihre Maße heute aus festen
+ * Konstanten in MASSE.
+ */
+.scroll svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 :where(button, [tabindex]):focus-visible {
   outline: 2px solid var(--tba3-_farbe-fokus);
   outline-offset: 2px;

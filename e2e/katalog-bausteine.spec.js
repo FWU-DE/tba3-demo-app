@@ -197,3 +197,47 @@ test.describe('Dunkles System, helle Seite', () => {
       .toBeGreaterThan(0.5);
   });
 });
+
+test.describe('Bausteine auf dem Telefon', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  // Ein Diagramm, das breiter ist als sein Platz, wurde früher nur gescrollt.
+  // Von einem gestapelten Balken waren damit 42 Prozent zu sehen — und ein
+  // abgeschnittener Stapelbalken sieht aus wie ein vollständiger. Wer die
+  // Kompetenzstufen-Leiste überflog, las das Gegenteil der Daten.
+  //
+  // Geprüft wird deshalb nicht „die Seite läuft nicht über" (das tat sie auch
+  // vorher nicht), sondern: jedes Bild passt in seinen Wirt.
+  for (const [route, element] of ANSICHTEN) {
+    test(`${route} zeichnet vollständig in 390 px`, async ({ page }) => {
+      await page.goto(`/katalog/#${route}`);
+
+      // Kein strikter Locator: mehrere Ansichten zeichnen ihren Baustein
+      // mehrfach, eine Leiste je Domäne. Genau die müssen alle passen — und
+      // `page.locator(tag)` wirft bei mehr als einem Treffer.
+      await expect.poll(async () => (await gezeichnet(page, element)).mitInhalt)
+        .toBeGreaterThan(0);
+
+      const masse = await page.evaluate((tag) =>
+        [...document.querySelectorAll(tag)].map((el) => {
+          const svg = el.shadowRoot?.querySelector('svg');
+          if (!svg) return null; // Tabellen-Bausteine zeichnen kein SVG
+          return {
+            svg: Math.round(svg.getBoundingClientRect().width),
+            wirt: Math.round(svg.parentElement.clientWidth),
+          };
+        }).filter(Boolean), element);
+
+      for (const [i, m] of masse.entries()) {
+        expect(m.svg, `${route} [${i}]: ${m.svg} px Bild in ${m.wirt} px Platz`)
+          .toBeLessThanOrEqual(m.wirt + 1);
+      }
+
+      // Und die Seite selbst schiebt nichts seitwärts.
+      const seite = await page.evaluate(() => ({
+        breite: document.documentElement.scrollWidth, fenster: window.innerWidth,
+      }));
+      expect(seite.breite, route).toBeLessThanOrEqual(seite.fenster);
+    });
+  }
+});

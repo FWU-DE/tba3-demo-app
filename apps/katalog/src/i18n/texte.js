@@ -773,6 +773,66 @@ export const TEXTE = {
   },
 
   komponenten: {
+    // Aus den Rückmeldungen des Konsortiums herausgezogen (#26). Ohne diese
+    // Einträge stand auf der Übersicht der Schlüsselname statt des Textes —
+    // der Prüfer für Textschlüssel findet nur statische, und hier wird der
+    // Schlüssel aus dem Komponentennamen gebaut. `index.test.mjs` daneben
+    // schließt die Lücke.
+    ContextRing: {
+      beschreibung: {
+        de: 'Ein kategoriales Merkmal der Gruppe als Ring — Geschlecht, Sprache zuhause, sozioökonomischer Status. Die Mitte trägt die Gesamtzahl, bei geordneten Kategorien den Median. Aus der Schulrückmeldung von indibit, wo vier davon nebeneinander stehen.',
+        en: 'One categorical characteristic of the group as a ring — gender, language at home, socio-economic status. The centre carries the total, or the median for ordered categories. From indibit’s school report, where four of them stand side by side.',
+      },
+      faelle: {
+        de: [
+          'Wer ist diese Gruppe? Eine Lösungsquote ist ohne sie nicht einzuordnen',
+          'Kovariaten je Schüler:in, die die Schnittstelle bereits führt',
+          'Ungeordnete Kategorien bekommen eigene Farben statt der Stufenskala',
+        ],
+        en: [
+          'Who is this group? A solution rate cannot be placed without it',
+          'Covariates per student that the API already carries',
+          'Unordered categories get their own colours instead of the level scale',
+        ],
+      },
+    },
+    StandardAttainment: {
+      beschreibung: {
+        de: 'Eine große Zahl mit ihrer Aufschlüsselung: wie viele erreichen den Mindeststandard, und wie verteilt sich das über die Domänen. Beides gehört zusammen — 80 % gesamt, davon eine Domäne bei 55 %, ist kein Ergebnis von 80 %.',
+        en: 'One headline figure with its breakdown: how many reach the minimum standard, and how that spreads across the domains. The two belong together — 80 % overall with one domain at 55 % is not a result of 80 %.',
+      },
+      faelle: {
+        de: [
+          'Die Zahl, nach der in jeder Konferenz zuerst gefragt wird',
+          'Auffällige Domänen werden eingefärbt, nicht nur aufgelistet',
+          'Der Gesamtwert wird nach Gruppengröße gewichtet',
+        ],
+        en: [
+          'The figure asked for first in every meeting',
+          'Conspicuous domains are coloured, not merely listed',
+          'The overall value is weighted by group size',
+        ],
+      },
+    },
+    ReportSentences: {
+      beschreibung: {
+        de: 'Der einzige Baustein, dessen Ausgabe Text ist: aus Vorlagen gefüllte Sätze zum Übernehmen. Jeder nennt die Zahl, aus der er stammt. Aus der Messwiederholung des kompetenztest.de, wo „Zeugnissätze" ein eigener Reiter neben Grafik und Tabelle ist.',
+        en: 'The only block whose output is text: sentences filled from templates, ready to adopt. Each names the figure it came from. From kompetenztest.de’s repeated measurement, where “report card sentences” is a tab of its own.',
+      },
+      faelle: {
+        de: [
+          'Der Schritt nach der Rückmeldung: aus einem Ergebnis wird ein Satz',
+          'Der Baustein formuliert nicht selbst — die Vorlagen kommen von außen',
+          'Bedingungen sind Objekte, kein ausgewerteter Ausdruck',
+        ],
+        en: [
+          'The step after the report: a result becomes a sentence',
+          'The block does not formulate on its own — templates come from outside',
+          'Conditions are objects, not an evaluated expression',
+        ],
+      },
+    },
+
     ItemExpectedActualChart: {
       beschreibung: {
         de: 'Tatsächliche vs. erwartete Lösungsquote pro Aufgabe. Der Erwartungswert kommt aus dem Rasch-Modell (BISTA-Parameter). Rot = unter Erwartung → direkter didaktischer Hinweis.',
