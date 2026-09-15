@@ -81,6 +81,35 @@ Wer einen Bereich hinzufügt, fasst fünf Stellen an: `tools/build-site.mjs`
 statischer Bereich mit eigenen Verzeichnissen braucht keinen SPA-Fallback —
 `/dokumentation` fasst deshalb nur drei dieser vier Stellen an.
 
+Wer eine Datei unter `/gemeinsam/` hinzufügt oder umbenennt, fasst eine sechste
+Stelle an: die Liste der geprüften Adressen in `.github/workflows/ci.yml`. Sie
+ruft nach dem Build jede ausgelieferte Adresse einzeln ab — ein Bereich, der
+lokal läuft und im Deployment 404 gibt, fällt sonst erst dort auf. Lint, Tests
+und Build merken davon nichts; sie klopfen den ausgelieferten Baum nicht ab.
+
+### Deployment — `main` deployt nicht von selbst
+
+**Ein Merge nach `main` geht nicht live.** Es gibt keinen Deploy-Workflow;
+ausgeliefert wird von Hand:
+
+```bash
+git checkout main && git pull
+npx vercel deploy --prod          # gebaut wird auf Vercel, nicht hier
+```
+
+Das Projekt ist über `.vercel/project.json` verknüpft (`jan-renzs-projects/tba3`),
+ein lokales `dist/` spielt dabei keine Rolle — Vercel baut selbst über
+`buildCommand` aus `vercel.json`.
+
+Das steht hier, weil es schon passiert ist: gemergte Stände lagen auf `main`,
+ohne ausgeliefert zu sein, und es fiel niemandem auf — ein gemergter PR sieht
+nach getaner Arbeit aus. Wer mergt, deployt, oder sagt ausdrücklich, dass jemand
+anderes es tut.
+
+Laufen mehrere Sitzungen am selben Checkout, fährt **genau eine** den Deploy.
+Zwei gleichzeitige Läufe erzeugen zwei Production-Deployments, von denen das
+zweite gewinnt — auch wenn es den älteren Stand trägt.
+
 ### Eine Spalte für die ganze Seite
 
 `apps/shared/container.css` führt die Maße, unter `/gemeinsam/container.css`
