@@ -207,25 +207,30 @@ test.describe('Bausteine auf dem Telefon', () => {
   // Kompetenzstufen-Leiste überflog, las das Gegenteil der Daten.
   //
   // Geprüft wird deshalb nicht „die Seite läuft nicht über" (das tat sie auch
-  // vorher nicht), sondern: das Bild passt in seinen Wirt.
+  // vorher nicht), sondern: jedes Bild passt in seinen Wirt.
   for (const [route, element] of ANSICHTEN) {
     test(`${route} zeichnet vollständig in 390 px`, async ({ page }) => {
       await page.goto(`/katalog/#${route}`);
-      await expect(page.locator(element)).toBeVisible();
 
-      const masse = await page.locator(element).evaluate((el) => {
-        const svg = el.shadowRoot?.querySelector('svg');
-        if (!svg) return null; // Tabellen-Bausteine zeichnen kein SVG
-        const wirt = svg.parentElement;
-        return {
-          svg: Math.round(svg.getBoundingClientRect().width),
-          wirt: Math.round(wirt.clientWidth),
-        };
-      });
+      // Kein strikter Locator: mehrere Ansichten zeichnen ihren Baustein
+      // mehrfach, eine Leiste je Domäne. Genau die müssen alle passen — und
+      // `page.locator(tag)` wirft bei mehr als einem Treffer.
+      await expect.poll(async () => (await gezeichnet(page, element)).mitInhalt)
+        .toBeGreaterThan(0);
 
-      if (masse) {
-        expect(masse.svg, `${route}: ${masse.svg} px Bild in ${masse.wirt} px Platz`)
-          .toBeLessThanOrEqual(masse.wirt + 1);
+      const masse = await page.evaluate((tag) =>
+        [...document.querySelectorAll(tag)].map((el) => {
+          const svg = el.shadowRoot?.querySelector('svg');
+          if (!svg) return null; // Tabellen-Bausteine zeichnen kein SVG
+          return {
+            svg: Math.round(svg.getBoundingClientRect().width),
+            wirt: Math.round(svg.parentElement.clientWidth),
+          };
+        }).filter(Boolean), element);
+
+      for (const [i, m] of masse.entries()) {
+        expect(m.svg, `${route} [${i}]: ${m.svg} px Bild in ${m.wirt} px Platz`)
+          .toBeLessThanOrEqual(m.wirt + 1);
       }
 
       // Und die Seite selbst schiebt nichts seitwärts.
