@@ -101,13 +101,17 @@ Das Projekt ist über `.vercel/project.json` verknüpft (`jan-renzs-projects/tba
 ein lokales `dist/` spielt dabei keine Rolle — Vercel baut selbst über
 `buildCommand` aus `vercel.json`.
 
-Das steht hier, weil es schon passiert ist: gemergte Stände lagen auf `main`,
-ohne ausgeliefert zu sein, und es fiel niemandem auf — ein gemergter PR sieht
-nach getaner Arbeit aus. Wer mergt, deployt, oder sagt ausdrücklich, dass jemand
-anderes es tut.
+Nachgezogen wurde das bisher zuverlässig: auf jeden Merge folgte binnen Minuten
+ein Deployment von Hand. Das steht hier nicht als Warnung vor einem Versäumnis,
+sondern weil die Abwesenheit einer Automatik nirgends sichtbar ist — `npm run
+preview` heißt „ausliefern wie im Deployment", `vercel.json` liegt im
+Wurzelverzeichnis, und wer beides sieht, nimmt die Git-Integration an, die es
+nicht gibt. Wer mergt, deployt, oder sagt ausdrücklich, dass jemand anderes es
+tut.
 
-Laufen mehrere Sitzungen am selben Checkout, fährt **genau eine** den Deploy.
-Zwei gleichzeitige Läufe erzeugen zwei Production-Deployments, von denen das
+Der Fehler, der dabei wirklich droht, ist nicht das Vergessen, sondern das
+gleichzeitige Fahren: laufen mehrere Sitzungen am selben Checkout, deployt
+**genau eine**. Zwei Läufe erzeugen zwei Production-Deployments, von denen das
 zweite gewinnt — auch wenn es den älteren Stand trägt.
 
 ### Eine Spalte für die ganze Seite
