@@ -197,3 +197,42 @@ test.describe('Dunkles System, helle Seite', () => {
       .toBeGreaterThan(0.5);
   });
 });
+
+test.describe('Bausteine auf dem Telefon', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  // Ein Diagramm, das breiter ist als sein Platz, wurde früher nur gescrollt.
+  // Von einem gestapelten Balken waren damit 42 Prozent zu sehen — und ein
+  // abgeschnittener Stapelbalken sieht aus wie ein vollständiger. Wer die
+  // Kompetenzstufen-Leiste überflog, las das Gegenteil der Daten.
+  //
+  // Geprüft wird deshalb nicht „die Seite läuft nicht über" (das tat sie auch
+  // vorher nicht), sondern: das Bild passt in seinen Wirt.
+  for (const [route, element] of ANSICHTEN) {
+    test(`${route} zeichnet vollständig in 390 px`, async ({ page }) => {
+      await page.goto(`/katalog/#${route}`);
+      await expect(page.locator(element)).toBeVisible();
+
+      const masse = await page.locator(element).evaluate((el) => {
+        const svg = el.shadowRoot?.querySelector('svg');
+        if (!svg) return null; // Tabellen-Bausteine zeichnen kein SVG
+        const wirt = svg.parentElement;
+        return {
+          svg: Math.round(svg.getBoundingClientRect().width),
+          wirt: Math.round(wirt.clientWidth),
+        };
+      });
+
+      if (masse) {
+        expect(masse.svg, `${route}: ${masse.svg} px Bild in ${masse.wirt} px Platz`)
+          .toBeLessThanOrEqual(masse.wirt + 1);
+      }
+
+      // Und die Seite selbst schiebt nichts seitwärts.
+      const seite = await page.evaluate(() => ({
+        breite: document.documentElement.scrollWidth, fenster: window.innerWidth,
+      }));
+      expect(seite.breite, route).toBeLessThanOrEqual(seite.fenster);
+    });
+  }
+});
