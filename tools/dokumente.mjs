@@ -59,8 +59,8 @@ export const DOKUMENTE = [
     eigen: true,
     kurz: { de: 'Rezepte der Demoanwendung', en: 'Demo application recipes' },
     beschreibung: {
-      de: 'Was eine Oberfläche mit den Antworten macht — angefangen beim Observer-Modus, der Namen verdeckt und die Ergebnisse stehen lässt.',
-      en: 'What a front end does with the responses — starting with observer mode, which hides names and leaves the results readable.',
+      de: 'Was eine Oberfläche mit den Antworten macht: Namen verdecken, ohne die Ergebnisse zu verstecken, und eine Rückmeldung erzeugen, die das Gerät verlässt.',
+      en: 'What a front end does with the responses: hiding names without hiding the results, and producing a report that leaves the device.',
     },
   },
 ];

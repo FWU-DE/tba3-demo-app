@@ -105,6 +105,26 @@ test.describe('Demoanwendung — Schüler:innen', () => {
     await expect(page.getByTestId('datenblatt-name')).not.toHaveCSS('filter', /blur/);
   });
 
+  // Die individuelle Rückmeldung ist die Ausgabe, die das Gerät verlässt.
+  // Geprüft wird beides, was sich von außen prüfen lässt: dass jsPDF im Moment
+  // des Klicks wirklich nachgeladen wird (sonst käme keine Datei an) und dass
+  // der Name im Dateinamen steht — der Observer-Modus greift hier mit Absicht
+  // nicht. Beschrieben in /dokumentation/demo-rezepte.
+  test('das Datenblatt gibt eine Rückmeldung als PDF aus, mit dem Namen im Dateinamen', async ({ page }) => {
+    await oeffneSchueler(page);
+    await page.getByTestId(`schueler-datenblatt-${ERSTE}`).click();
+
+    const [vorname, nachname] = (await page.getByTestId('datenblatt-name').innerText()).split(' ');
+
+    const download = page.waitForEvent('download', { timeout: 20_000 });
+    await page.getByTestId('datenblatt-pdf').click();
+
+    const datei = await download;
+    expect(datei.suggestedFilename()).toMatch(/\.pdf$/);
+    expect(datei.suggestedFilename()).toContain(nachname);
+    expect(datei.suggestedFilename()).toContain(vorname);
+  });
+
   test('eine eigene Gruppe entsteht aus der Auswahl und überlebt das Neuladen', async ({ page }) => {
     await oeffneSchueler(page);
 
