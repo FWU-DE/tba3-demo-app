@@ -240,6 +240,37 @@ leer bedeutet „gleicher Host".
 Beispiele des Entwurfs zur Laufzeit (scope, kind, audience, item, competenceLevel …) —
 sonst gäbe „Try it out“ auf jede Anfrage dieselbe Liste zurück.
 
+### Zwei Sorten Lernmaterial
+
+Der Reiter „Lernmaterialien“ der Demoanwendung führt beides nebeneinander, und
+das ist Absicht:
+
+- **Der lokale Pool** (`EDUCATIONAL_MATERIALS` in `utils/constants.js`) plus
+  MUNDO-Treffer. Ein Material hat hier Art, Fach und Dauer und passt „zu einer
+  Stufe“ — mehr Struktur gibt es nicht.
+- **`/materials`** im dritten Modus. Der Entwurf kennt sechs Zuordnungsarten:
+  ein Material hängt an einer Kompetenzstufe, einer Kompetenz, einem Item,
+  einer Aufgabe, am ganzen Test — oder an nichts Bestimmtem. Erst
+  nebeneinander wird sichtbar, was das austrägt.
+
+Gerechnet wird in `apps/demo/src/utils/materialien.js`, geladen über
+`hooks/useMaterialien.js` (eigener Hook statt `useApiDaten`: `/materials` hängt
+an keiner Ebene). Eine Falle steckt in `stufeAusAnhang()`: die Anhänge zeigen
+mal über `refName` auf die Stufe („Ia“), mal über `refId` („III“), und mal auf
+eine UUID, zu der die Schnittstelle keinen Namen führt — die Kompetenzstufen
+der Gruppen kommen ohne `id`. Dazu teilt das IQB die unterste Stufe in Ia und
+Ib, die Anwendung führt fünf. Ein Abgleich, der stumpf `refName === 'I'` prüft,
+ordnet auf den echten Beispieldaten **nichts** zu und meldet trotzdem Erfolg;
+der Unit-Test läuft deshalb gegen die Fixtures des Mocks, nicht gegen
+selbstgebaute Daten.
+
+Die Auto-Zuweisung ordnet nur zu, was eindeutig im Anhang steht (Stufe → diese
+Stufe, „ohne festes Ziel“ → alle fünf) und zählt den Rest sichtbar mit. Was an
+einem Item, einer Aufgabe oder einem Test hängt, braucht den Einsatzkontext und
+bleibt Sache der Lehrkraft. Geschrieben wird in dieselben beiden Ablagen wie
+bei MUNDO (`tba3_materials_by_level`, `tba3_external_materials`) — danach
+unterscheidet nur die Herkunft `schnittstelle` das eine vom anderen.
+
 Die OpenAPI-Spezifikation liegt als Kopie unter
 `apps/portal/schnittstelle/tba3-spec.yml` und wird mit `npm run spec:update` aus
 `indibit-eu/tba3` nachgezogen — bewusst eingecheckt, damit die Referenz an nichts
@@ -250,6 +281,7 @@ eigenen Host um, sodass „Try it out“ ohne CORS gegen dieselben Demodaten lä
 
 ```
 apps/demo/src/utils/__tests__/dataTransformers.test.js   Datenaufbereitung
+apps/demo/src/utils/__tests__/materialien.test.js        Materialien: Gruppierung, Zuordnungsplan
 apps/demo/src/hooks/__tests__/useApiDaten.test.jsx       Laden, Fehler, überholte Antworten
 apps/demo/src/components/charts/__tests__/…              Übersichtskarten
 apps/demo/src/__tests__/App.test.jsx                     Zusammenspiel: Filter, Reiter, Abfragen
@@ -269,6 +301,8 @@ e2e/demo-grundgeruest.spec.js   Laden, Leiste, Übersichtskarten, alle sieben Re
 e2e/demo-filter.spec.js         Ebene, Lerngruppe, Fach, Klassenstufe, Datentyp — je gegen die Abfrage
 e2e/demo-schueler.spec.js       Suche, Filter, Datenblatt, eigene Gruppen (localStorage)
 e2e/demo-materialien.spec.js    Stufe wählen, zuweisen, Export als .imscc und .pdf
+e2e/demo-materialien-schnittstelle.spec.js
+                                /materials im dritten Modus: Gruppierung, Vorschau, Zuweisung
 e2e/demo-vergleich.spec.js      Teilbereiche, Vergleiche hinzunehmen, gesperrte Vergleiche
 e2e/demo-sprache.spec.js        Umschalten, Merken, über Bereiche hinweg, ?lang= beim ersten Rendern
 e2e/demo-fehler.spec.js         Abfrage scheitert, erneut versuchen, Fehler bleibt im Reiter

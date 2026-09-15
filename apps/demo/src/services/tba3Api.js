@@ -39,6 +39,11 @@ export const tba3Api = {
 
   getStateAggregations: (stateId, params = {}) =>
     api.get(`/states/${stateId}/aggregations`, { params }),
+
+  // Materialien
+  // Hängt an keiner Ebene: `/materials` wird über Eigenschaften gefiltert
+  // (scope, kind, audience, item, competenceLevel …), nicht über eine Gruppe.
+  getMaterials: (params = {}) => api.get('/materials', { params }),
 };
 
 export default tba3Api;
