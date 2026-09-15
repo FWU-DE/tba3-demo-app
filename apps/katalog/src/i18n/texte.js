@@ -42,6 +42,10 @@ export const TEXTE = {
   },
 
   index: {
+    ausDenRueckmeldungen: {
+      de: 'Aus den Rückmeldungen des Konsortiums — gefunden bei {traeger}, nicht hier erfunden.',
+      en: 'From the reports of the consortium — found at {traeger}, not invented here.',
+    },
     ueberschrift: { de: 'Komponenten', en: 'Components' },
     einleitung: {
       de: 'Vue 3 SVG-Visualisierungen für VERA-Auswertungsdaten. Alle Komponenten lesen die TBA3-Auswertungsschnittstelle direkt — keine granularen Schülerdaten nötig.',

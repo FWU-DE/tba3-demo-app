@@ -1,5 +1,6 @@
 // Der Katalog zeichnet seine Ansichten seit dem Umzug nicht mehr selbst,
 import { NUR_BAUSTEIN, ZUORDNUNG } from '../apps/portal/bausteine/zuordnung.js';
+import { BAUSTEINE } from '../apps/shared/konsortium.js';
 // sondern über `@tba3/bausteine`. Diese Tests prüfen genau diese Naht: steht
 // das Custom Element in der Seite, und hat es tatsächlich gezeichnet?
 //
@@ -240,4 +241,36 @@ test.describe('Bausteine auf dem Telefon', () => {
       expect(seite.breite, route).toBeLessThanOrEqual(seite.fenster);
     });
   }
+});
+
+test.describe('Woher ein Baustein stammt', () => {
+  // Drei der fünfzehn Bausteine sind nicht aus dieser Schau gewachsen, sondern
+  // aus den Rückmeldungen des Konsortiums herausgezogen. Das stand lange nur
+  // in den Daten und in der Dokumentation — also nirgends, wo jemand Bausteine
+  // durchsieht. Wer den Katalog öffnet, konnte nicht erkennen, welche
+  // Komponenten von wo kommen, und genau das war die Rückmeldung des Nutzers.
+  const ausRueckmeldungen = BAUSTEINE.filter((b) => b.beleg === 'artefakt' && b.element);
+
+  test('der Demonstrator nennt sie bei jedem betroffenen Baustein', async ({ page }) => {
+    await page.goto('/bausteine?lang=de');
+
+    expect(ausRueckmeldungen.length, 'keine Bausteine aus den Rückmeldungen?').toBeGreaterThan(0);
+    for (const b of ausRueckmeldungen) {
+      const zeile = page.locator(`[data-herkunft="${b.id}"]`);
+      await expect(zeile, b.id).toBeVisible();
+      await expect(zeile).toContainText('Rückmeldungen des Konsortiums');
+    }
+
+    // Und nur dort: eine Herkunftszeile an jedem Abschnitt wäre Rauschen.
+    await expect.poll(() => anzahl(page, '.herkunft')).toBe(ausRueckmeldungen.length);
+  });
+
+  test('die Katalog-Übersicht markiert dieselben Karten', async ({ page }) => {
+    await page.goto('/katalog/');
+
+    for (const b of ausRueckmeldungen) {
+      await expect(page.getByTestId(`herkunft-${b.element}`), b.element).toBeVisible();
+    }
+    await expect.poll(() => anzahl(page, '[data-testid^="herkunft-"]')).toBe(ausRueckmeldungen.length);
+  });
 });

@@ -1,5 +1,22 @@
 <script setup>
 import { t } from '../i18n';
+// Woher ein Baustein stammt, steht in den Daten des Konsortiums — nicht hier
+// abgeschrieben. Drei der zwölf Ansichten sind nicht aus dieser Schau
+// gewachsen, sondern aus fremden Rückmeldungen herausgezogen, und das war auf
+// der Übersicht bisher nicht zu sehen.
+import { BAUSTEINE, EINRICHTUNGEN, rueckmeldungenZu } from '../../../shared/konsortium.js';
+
+/**
+ * Die Herkunft eines Bausteins, oder null für die aus eigener Anschauung.
+ * Ein Schild an jeder Karte wäre Rauschen; sichtbar soll der Unterschied sein.
+ */
+const herkunft = (baustein) => {
+  const eintrag = BAUSTEINE.find((b) => b.element === baustein && b.beleg === 'artefakt');
+  if (!eintrag) return null;
+  const traeger = [...new Set(rueckmeldungenZu(eintrag.id).map((r) => r.einrichtung))]
+    .map((e) => EINRICHTUNGEN[e].de);
+  return { id: eintrag.id, traeger: traeger.join(', ') };
+};
 
 // Alle Ansichten des Katalogs laufen inzwischen über @tba3/bausteine. Der
 // Quelltext-Link zeigt deshalb dorthin und nicht mehr auf eine Kopie im
@@ -501,6 +518,10 @@ const COMPONENTS = [
           </div>
           <!-- Was die Ansicht tatsächlich rendert: der Baustein aus dem Paket. -->
           <code class="card-element">&lt;tba3-{{ comp.baustein }}&gt;</code>
+          <p v-if="herkunft(comp.baustein)" class="card-herkunft"
+             :data-testid="`herkunft-${comp.baustein}`">
+            {{ t('index.ausDenRueckmeldungen', { traeger: herkunft(comp.baustein).traeger }) }}
+          </p>
           <p class="card-desc">{{ t(`komponenten.${comp.name}.beschreibung`) }}</p>
           <ul class="card-use-cases">
             <li v-for="fall in t(`komponenten.${comp.name}.faelle`)" :key="fall">{{ fall }}</li>
@@ -529,6 +550,19 @@ const COMPONENTS = [
 </template>
 
 <style scoped>
+/* Die Herkunftszeile steht zwischen Elementnamen und Beschreibung: wer die
+   Karte überfliegt, soll sie sehen, ohne dass sie die Überschrift verdrängt. */
+.card-herkunft {
+  margin: 0.5rem 0 0;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid #f59e0b;
+  background: #fffbeb;
+  color: #78350f;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  border-radius: 0 6px 6px 0;
+}
+
 .index-main {
   max-width: var(--breite);
   margin: 32px auto;
