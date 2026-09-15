@@ -125,6 +125,21 @@ describe('Rückmeldungsseite', () => {
   // Erwartet wird über `text(…, sprache())` statt über feste Wörter: welche
   // Sprache gilt, entscheidet in dieser Umgebung die Browsersprache, und das
   // Seitenskript liest dieselbe Kopie des Moduls wie dieser Test.
+  // Ein Bild, das nicht lädt, fällt auf der Seite auf; eine Karte ohne Bild
+  // nicht — sie sieht nur etwas karger aus. Deshalb hier gezählt.
+  it('zeigt zu jeder Rückmeldung eine Aufnahme', async () => {
+    const dokument = await zeichnen('http://localhost/beispiele/');
+
+    const karten = [...dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')];
+    expect(karten).toHaveLength(10);
+    for (const karte of karten) {
+      const bild = karte.querySelector('.bild img');
+      expect(bild, karte.dataset.testid).not.toBeNull();
+      expect(bild.getAttribute('src'), karte.dataset.testid).toMatch(/^\/beispiele\/bilder\/.+\.jpg$/);
+      expect(bild.getAttribute('alt'), karte.dataset.testid).toBeTruthy();
+    }
+  });
+
   it('nennt zu jeder Rückmeldung die Bausteine ihres Sachberichts', async () => {
     const dokument = await zeichnen('http://localhost/beispiele/');
 

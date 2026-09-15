@@ -29,6 +29,9 @@ import { BAUPLAN as BISTA, BistaVerteilungElement } from './bista-verteilung.js'
 import { BAUPLAN as VERLAUF, LernstandsVerlaufElement } from './lernstands-verlauf.js';
 import { BAUPLAN as HEATMAP, AufgabenHeatmapElement } from './aufgaben-heatmap.js';
 import { BAUPLAN as KACHEL, KennzahlKachelElement } from './kennzahl-kachel.js';
+import { BAUPLAN as RING, KontextmerkmalRingElement } from './kontextmerkmal-ring.js';
+import { BAUPLAN as ERREICHUNG, StandardErreichungElement } from './standard-erreichung.js';
+import { BAUPLAN as SAETZE, ZeugnissaetzeElement } from './zeugnissaetze.js';
 import { elementKlasse } from './baustein-element.js';
 
 export const PRAEFIX = 'tba3-';
@@ -37,12 +40,14 @@ export const PRAEFIX = 'tba3-';
  * Alle Baupläne — das Verzeichnis, aus dem sich jede Fassung bedient.
  *
  * Reihenfolge: erst die fünf aus der ersten Runde, dann die vier aus dem
- * Katalog umgezogenen, zuletzt die drei, die es nur hier gibt.
+ * Katalog umgezogenen, dann die drei, die es nur hier gibt — zuletzt die drei
+ * aus den Rückmeldungen des Konsortiums herausgezogenen.
  */
 export const BAUPLAENE = [
   LEISTE, TABELLE, VERGLEICH, ERWARTUNG, BAENDER,
   SCHUELER, KARTEN, STREU, BISTA,
   VERLAUF, HEATMAP, KACHEL,
+  RING, ERREICHUNG, SAETZE,
 ];
 
 /** Elementklassen, nach Elementnamen. */
@@ -59,6 +64,9 @@ export const ELEMENTE = {
   [`${PRAEFIX}${VERLAUF.name}`]: LernstandsVerlaufElement,
   [`${PRAEFIX}${HEATMAP.name}`]: AufgabenHeatmapElement,
   [`${PRAEFIX}${KACHEL.name}`]: KennzahlKachelElement,
+  [`${PRAEFIX}${RING.name}`]: KontextmerkmalRingElement,
+  [`${PRAEFIX}${ERREICHUNG.name}`]: StandardErreichungElement,
+  [`${PRAEFIX}${SAETZE.name}`]: ZeugnissaetzeElement,
 };
 
 /**

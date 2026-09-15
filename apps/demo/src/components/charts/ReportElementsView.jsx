@@ -28,8 +28,8 @@ import ErrorMessage from '../common/ErrorMessage';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import {
   aufgabenZeilen, erwartungsPunkte, gesamtQuote, gesamtZeile, heatmapDaten, kennzahlen,
-  leisteZeilen, mittelwertZeilen, perzentilBaender, schuelerTabelle, streuPunkte,
-  uebersichtsKarten,
+  kontextmerkmal, leisteZeilen, mittelwertZeilen, perzentilBaender, schuelerTabelle,
+  standardErreichung, streuPunkte, uebersichtsKarten, zeugnissatzWerte,
 } from '../../utils/reportElements';
 
 // Auf Modulebene: als Objektliteral im Render wären es bei jedem Durchlauf neue
@@ -84,6 +84,21 @@ const zeichnung = (id, q, hilfe) => {
     case 'personen-tabelle':
     case 'foerdergruppen':
       return { name: 'schueler-tabelle', ...schuelerTabelle(q.schueler.data, hilfe), auswaehlbar: id === 'foerdergruppen' };
+    case 'kontextmerkmal-ring':
+      // Zwei Ringe nebeneinander, wie in der Schulrückmeldung von indibit: die
+      // Schnittstelle führt genau diese beiden Kovariaten je Schüler:in.
+      return {
+        ringe: [
+          kontextmerkmal(q.schueler.data, { typ: 'gender', label: hilfe.geschlecht, beschriften: hilfe.geschlechtName }),
+          kontextmerkmal(q.schueler.data, { typ: 'languageAtHome', label: hilfe.sprache, beschriften: hilfe.sprachName }),
+        ].filter((r) => r.segmente.length > 0),
+      };
+    case 'standard-erreichung':
+      return { name: 'standard-erreichung', ...standardErreichung(q.stufen.data, hilfe) };
+    case 'zeugnissaetze': {
+      const werte = zeugnissatzWerte(q.stufen.data, hilfe);
+      return werte ? { name: 'zeugnissaetze', ...hilfe.zeugnissaetze(werte) } : null;
+    }
     case 'punktwolke':
       return {
         name: 'streudiagramm',
@@ -99,8 +114,10 @@ const zeichnung = (id, q, hilfe) => {
 const hatInhalt = (gezeichnet) => {
   if (!gezeichnet) return false;
   if (gezeichnet.kacheln) return gezeichnet.kacheln.length > 0;
-  const { rows, items, karten, punkte, werte } = gezeichnet;
-  return [rows, items, karten, punkte, werte].some((liste) => Array.isArray(liste) && liste.length > 0);
+  if (gezeichnet.ringe) return gezeichnet.ringe.length > 0;
+  const { rows, items, karten, punkte, werte, zeilen, saetze } = gezeichnet;
+  return [rows, items, karten, punkte, werte, zeilen, saetze]
+    .some((liste) => Array.isArray(liste) && liste.length > 0);
 };
 
 const Traeger = ({ ids, t, gewaehlt }) => (
@@ -122,7 +139,7 @@ const Traeger = ({ ids, t, gewaehlt }) => (
 const ReportElementsView = () => {
   const t = useTexte();
   const gewaehlt = useSprache();
-  const { COMPETENCE_LEVELS } = useKonstanten();
+  const { COMPETENCE_LEVELS, GENDERS, LANGUAGES } = useKonstanten();
   const { selectedLevel, selectedGroup, selectedSchool, selectedState, getSelectedId } = useFilters();
   const [einrichtung, setEinrichtung] = useState('');
 
@@ -145,7 +162,23 @@ const ReportElementsView = () => {
     farbe: (stufe) => COMPETENCE_LEVELS[stufe]?.color,
     hinweis: t('elemente.abMindeststandard'),
     gesamt: t('elemente.insgesamt'),
-  }), [t, COMPETENCE_LEVELS]);
+    label: t('elemente.mindeststandardErreicht'),
+    geschlecht: t('elemente.geschlecht'),
+    sprache: t('elemente.spracheZuhause'),
+    geschlechtName: (code) => GENDERS[code] ?? code,
+    sprachName: (code) => LANGUAGES[code] ?? code,
+    // Die Vorlagen stehen in i18n, nicht im Baustein: wie über eine Lerngruppe
+    // geschrieben wird, ist keine Entscheidung einer Visualisierung.
+    zeugnissaetze: (werte) => ({
+      titel: t('elemente.zeugnissaetzeTitel'),
+      werte,
+      saetze: [
+        { id: 'lage', stufe: werte.stufe, vorlage: t('elemente.satzLage'), grundlage: t('elemente.satzGrundlage') },
+        { id: 'schwerpunkt', vorlage: t(werte.lage === 'auffaellig' ? 'elemente.satzAuffaellig' : 'elemente.satzUnauffaellig'),
+          grundlage: t('elemente.satzGrundlageUnter') },
+      ],
+    }),
+  }), [t, COMPETENCE_LEVELS, GENDERS, LANGUAGES]);
 
   const ebenen = useMemo(() => [
     gesamtZeile(ebeneGruppe.data, { label: t('seitenleiste.lerngruppe'), farbe: hilfe.farbe }),
@@ -220,7 +253,14 @@ const ReportElementsView = () => {
                     <h4 className="text-base font-semibold text-gray-900">
                       {ausWoerterbuch(baustein.name, gewaehlt)}
                     </h4>
-                    <Traeger ids={[...new Set(traeger)]} t={t} gewaehlt={gewaehlt} />
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {baustein.beleg === 'artefakt' && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700" data-testid={`beleg-${baustein.id}`}>
+                          {t('elemente.amArtefakt')}
+                        </span>
+                      )}
+                      <Traeger ids={[...new Set(traeger)]} t={t} gewaehlt={gewaehlt} />
+                    </div>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">{ausWoerterbuch(baustein.zweck, gewaehlt)}</p>
                   <p className="text-xs text-gray-400 mb-4">
@@ -232,15 +272,21 @@ const ReportElementsView = () => {
 
                   {!laedt && hatInhalt(gezeichnet) && (
                     <div className="overflow-x-auto" data-testid={`zeichnung-${baustein.id}`}>
-                      {gezeichnet.kacheln ? (
+                      {gezeichnet.kacheln && (
                         <div className="flex flex-wrap gap-4">
                           {gezeichnet.kacheln.map((kachel) => (
                             <Element key={kachel.id} name="kennzahl-kachel" {...kachel} />
                           ))}
                         </div>
-                      ) : (
-                        <Element {...gezeichnet} />
                       )}
+                      {gezeichnet.ringe && (
+                        <div className="flex flex-wrap gap-8">
+                          {gezeichnet.ringe.map((ring) => (
+                            <Element key={ring.label} name="kontextmerkmal-ring" {...ring} />
+                          ))}
+                        </div>
+                      )}
+                      {!gezeichnet.kacheln && !gezeichnet.ringe && <Element {...gezeichnet} />}
                     </div>
                   )}
 
@@ -250,6 +296,7 @@ const ReportElementsView = () => {
                         ? t('elemente.ohneDaten', { daten: ausWoerterbuch(baustein.daten, gewaehlt) })
                         : t('elemente.ohneBaustein')}
                       {baustein.reiter && ` ${t('elemente.stattdessen', { reiter: t(`reiter.${baustein.reiter}`) })}`}
+                      {baustein.offen && ` ${ausWoerterbuch(baustein.offen, gewaehlt)}`}
                     </p>
                   )}
                 </Card>

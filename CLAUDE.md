@@ -16,6 +16,9 @@ npm run docs:update    # Konzepte, Endpunkt-Referenz, Rezepte aus indibit-eu/tba
 npm run docs:bilder    # Abbildungen der Dokumentseiten neu erzeugen (gegen npm run preview)
 npm run konsortium:doc # /dokumentation/bausteine-der-rueckmeldungen aus
                        #  apps/shared/konsortium.js neu erzeugen
+npm run rueckmeldungen:erheben
+                       # die zehn Demos aufrufen: Befunde nach docs/erhebung/,
+                       #  Bilder nach apps/beispiele/bilder/ (braucht Netz, magick)
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
 npm run test:watch     # dasselbe im Beobachtungsmodus
@@ -236,22 +239,34 @@ verschicken lässt.
 
 ### Der Baustein-Katalog
 
-`BAUSTEINE` in derselben Datei führt 29 Bausteine in drei Schichten —
+`BAUSTEINE` in derselben Datei führt 38 Bausteine in drei Schichten —
 Anzeigebausteine, Rückmeldeelemente, Rahmen. Der Aufbau stammt von indibit (16
 Anzeigekomponenten, 13 Rückmeldeelemente, 3 Rollen-Sichten) und passt auf die
 anderen drei Einrichtungen genauso.
 
 Zwei Regeln halten den Katalog ehrlich, und beide haben einen Test:
 
-- **Zugeordnet ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen
-  Baustein nicht in ihrer Liste hat, zeigt ihn womöglich trotzdem — sie hat ihn
-  nur nicht berichtet. Was allein aus `@tba3/bausteine` kommt und von keinem
-  Bericht genannt wird, steht als solches da.
+- **Jede Zuordnung nennt ihren Beleg.** `beleg: 'sachbericht'` heißt, die
+  Einrichtung hat den Baustein selbst beschrieben; `beleg: 'artefakt'` heißt, er
+  wurde in der laufenden Demo oder im offenen Quelltext gefunden. Neun der 38
+  stammen aus der zweiten Quelle — die Sachberichte sind Zusammenfassungen und
+  nennen längst nicht alles, was gebaut wurde. Was allein aus
+  `@tba3/bausteine` kommt und von keinem Bericht genannt wird, steht ebenfalls
+  als solches da.
 - **`quelle` nur, wo es auch einen Baustein gibt.** Das Feld sagt, welche
   Ressource die Demoanwendung dafür abruft; stünde dort eine ohne zugehörigen
   Baustein, bliebe die Kachel leer und niemand merkte es. Wo es keine Zeichnung
   gibt, nennt `reiter` den Reiter der Demoanwendung, der dieselbe Frage sonst
   beantwortet.
+
+**Die zweite Quelle lässt sich wiederholen.** `npm run rueckmeldungen:erheben`
+ruft die zehn Demos auf, schreibt die Befunde nach `docs/erhebung/` und nimmt
+die Bilder für die Übersichtsseite auf. Das ist nötig, weil sich diese Quelle
+bewegt: das zepf zieht von GitLab auf GitHub, das ISQ plant den Umzug seines
+Repositoriums, indibits Repositorium ist noch nicht veröffentlicht. Ergiebig
+sind dabei besonders die eigenen Elementnamen im DOM — die Angular-Anwendungen
+von indibit tragen ihr Komponentenverzeichnis sichtbar mit sich
+(`app-school-summary`, `app-comparison-stat-card`).
 
 Nach jeder Änderung an den Daten: **`npm run konsortium:doc`**. Die erzeugte
 Datei ist eingecheckt, weil `tools/build-site.mjs` sie auf der Platte erwartet

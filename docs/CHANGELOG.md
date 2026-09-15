@@ -22,6 +22,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   der Startseite fällt sonst niemandem auf, der die Liste nicht nachzählt.
 
 ### Added
+- **Neun Bausteine, die in keinem Sachbericht stehen.** Der Katalog aus #24 gab
+  wieder, was die vier Einrichtungen über ihre Rückmeldungen *berichtet* haben.
+  Diese Runde hat nachgesehen, was sie *gebaut* haben: alle zehn Demos im
+  Browser geöffnet, die vier offenen Repositorien geklont und ihre
+  Komponentenverzeichnisse gelesen.
+
+  Der Unterschied ist groß. `BirdsResultsView.vue` und `Feather.vue` in der
+  Messwiederholung — jede Schüler:in ein Vogel, dessen Art die Kompetenzstufe
+  trägt, über drei Messzeitpunkte hinweg. `ReportCardHelper.vue` daneben, ein
+  eigener Reiter „Zeugnissätze". `SelfEvaluationPage.vue` im Lernstand-Barometer
+  mit vier Druckansichten: die Selbsteinschätzung neben dem gemessenen
+  Ergebnis. Vier Ringe auf der Übersicht der indibit-Schulrückmeldung, die
+  fragen, wer diese Gruppe überhaupt ist. `MaGlossarySearchModule`,
+  `ItemPreviewOverlay` und `ExportSelectionManager` bei zepf.
+
+  Der Katalog führt jetzt 38 Bausteine, und jeder nennt seinen Beleg:
+  `sachbericht` oder `artefakt`. Die Erhebung hat nebenbei zwei
+  Bibliotheks-Bausteine belegt, die bis dahin ohne Rückmeldung dastanden.
+
+- **Drei davon sind gebaut** — in `@tba3/bausteine`, in allen drei Fassungen,
+  mit Katalog-Ansicht und im Reiter „Rückmeldeelemente" der Demoanwendung:
+
+  `<tba3-kontextmerkmal-ring>` (aus der Schulrückmeldung von indibit) zeigt ein
+  kategoriales Merkmal der Gruppe als Ring. Die Schnittstelle führt die
+  Kovariaten dafür bereits. Bei geordneten Kategorien trägt die Mitte den
+  Median, bei ungeordneten die Gesamtzahl — und die Farben kommen dann aus den
+  Daten, weil die Vorgabe des Bausteins durch die Stufenfarben läuft und eine
+  Rot-nach-Grün-Skala über „männlich, weiblich, divers" eine Rangfolge
+  behaupten würde, die es nicht gibt.
+
+  `<tba3-standard-erreichung>` (ebenfalls indibit) bindet die eine große Zahl an
+  ihre Aufschlüsselung: 80 % über alle Fächer, davon eines bei 55 %, ist kein
+  Ergebnis von 80 %.
+
+  `<tba3-zeugnissaetze>` (aus der Messwiederholung) ist der erste Baustein,
+  dessen Ausgabe Text ist. Er formuliert nicht selbst — die Vorlagen kommen von
+  außen, und jeder Satz nennt die Zahl, aus der er stammt.
+
+- **Die Übersichtsseite zeigt Aufnahmen.** Zu jeder der zehn Rückmeldungen steht
+  jetzt ein Bild der laufenden Demo auf der Karte. Eine Rückmeldung erkennt man
+  an ihrem Bild, nicht an ihrem Namen.
+
 - **Die zehn Rückmeldungen des Konsortiums** unter `/beispiele`, mit Demo-,
   Quelltext- und Dokumentationsverweis. Bisher standen dort zwölf ausformulierte
   Platzhalter ohne einen einzigen Link und mit dem Hinweis, verbindlich sei daran

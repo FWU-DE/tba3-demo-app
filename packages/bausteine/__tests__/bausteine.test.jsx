@@ -143,6 +143,29 @@ const DATEN = {
     verlauf: [54, 57, 59, 62],
     hinweis: '25 Schüler:innen',
   },
+  'kontextmerkmal-ring': {
+    label: 'Sprache zuhause',
+    segmente: [
+      { label: 'Deutsch', wert: 17, farbe: '#2563eb' },
+      { label: 'andere', wert: 8, farbe: '#eab308' },
+    ],
+  },
+  'standard-erreichung': {
+    label: 'Mindeststandard erreicht',
+    zeilen: [
+      { label: 'Deutsch', wert: 83, gesamt: 120 },
+      { label: 'Französisch', wert: 76, gesamt: 94 },
+    ],
+  },
+  zeugnissaetze: {
+    titel: 'Vorschläge für das Zeugnis',
+    werte: { name: 'Anna', stufe: 'III', domaene: 'Leseverstehen' },
+    saetze: [
+      { id: 's1', stufe: 'III', vorlage: '{name} erreicht im {domaene} die Kompetenzstufe {stufe}.',
+        grundlage: 'Kompetenzstufe {stufe} im {domaene}' },
+      { id: 's2', vorlage: '{name} arbeitet zunehmend selbstständig.' },
+    ],
+  },
 };
 
 const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());

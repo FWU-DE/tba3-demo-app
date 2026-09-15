@@ -318,7 +318,104 @@ export const gesamtZeile = (daten, { label, farbe, fair = false }) => {
   };
 };
 
+// ── Aus den Rückmeldungen des Konsortiums ──────────────────────────────────
+
+/**
+ * Ein Kontextmerkmal als Ring. Die Schnittstelle führt Kovariaten je
+ * Schüler:in (`covariates: [{ type, value }]`) — genau die Angaben, aus denen
+ * die Schulrückmeldung von indibit ihre vier Ringe baut.
+ */
+/**
+ * Farben für ungeordnete Kategorien. Die Vorgabe des Bausteins läuft durch die
+ * Stufenfarben von Rot nach Grün — richtig für A–E, falsch für „männlich,
+ * weiblich, divers": eine Skala mit Richtung behauptet eine Rangfolge.
+ */
+export const UNGEORDNET = ['#2563eb', '#7c3aed', '#0891b2', '#d97706', '#64748b'];
+
+export const kontextmerkmal = (datenSchueler, { typ, label, beschriften }) => {
+  const gesehen = new Map();
+  for (const s of schuelerZusammenfuehren(datenSchueler)) gesehen.set(s.id, s);
+
+  const zaehler = new Map();
+  for (const eintrag of schuelerEintraege(datenSchueler)) {
+    if (!gesehen.has(eintrag.id)) continue;
+    gesehen.delete(eintrag.id); // je Schüler:in einmal zählen, nicht je Domäne
+    const wert = eintrag.covariates?.find((k) => k.type === typ)?.value;
+    if (!wert) continue;
+    zaehler.set(wert, (zaehler.get(wert) ?? 0) + 1);
+  }
+
+  return {
+    label,
+    segmente: [...zaehler].map(([wert, anzahl], i) => ({
+      label: beschriften ? beschriften(wert) : wert,
+      wert: anzahl,
+      farbe: UNGEORDNET[i % UNGEORDNET.length],
+    })),
+  };
+};
+
+/**
+ * Standard-Erreichung: der Anteil ab Mindeststandard, gesamt und je Domäne.
+ * Stufe I ist definitionsgemäß darunter, alles andere darüber.
+ */
+export const standardErreichung = (daten, { domaene, label }) => ({
+  label,
+  zeilen: aggregate(daten)
+    .filter((e) => e.competenceLevels?.length)
+    .map((e) => {
+      const gesamt = e.competenceLevels.reduce((n, l) => n + (l.descriptiveStatistics?.frequency ?? 0), 0);
+      const erreicht = e.competenceLevels
+        .filter((l) => l.nameShort !== 'I')
+        .reduce((n, l) => n + (l.descriptiveStatistics?.frequency ?? 0), 0);
+      return { label: domaene(e.domain?.name), wert: gesamt ? Math.round((erreicht / gesamt) * 100) : 0, gesamt };
+    }),
+});
+
+/**
+ * Zeugnissätze aus den Kompetenzstufen der Gruppe.
+ *
+ * Die Vorlagen kommen von außen — welcher Satz über eine Lerngruppe
+ * geschrieben wird, ist keine Entscheidung der Datenaufbereitung. Hier wird
+ * nur bestimmt, welche Werte einzusetzen sind und welcher Satz zutrifft.
+ */
+export const zeugnissatzWerte = (daten, { domaene }) => {
+  const eintraege = aggregate(daten).filter((e) => e.competenceLevels?.length);
+  if (eintraege.length === 0) return null;
+
+  // Die Domäne mit dem größten Anteil unter Mindeststandard — über die wird im
+  // Zeugnis am ehesten etwas zu sagen sein.
+  const bewertet = eintraege.map((e) => {
+    const gesamt = e.competenceLevels.reduce((n, l) => n + (l.descriptiveStatistics?.frequency ?? 0), 0);
+    const unter = e.competenceLevels
+      .filter((l) => l.nameShort === 'I')
+      .reduce((n, l) => n + (l.descriptiveStatistics?.frequency ?? 0), 0);
+    const haeufigste = [...e.competenceLevels]
+      .sort((a, b) => (b.descriptiveStatistics?.frequency ?? 0) - (a.descriptiveStatistics?.frequency ?? 0))[0];
+    return {
+      domaene: domaene(e.domain?.name),
+      gesamt,
+      unterAnteil: gesamt ? Math.round((unter / gesamt) * 100) : 0,
+      abMindest: gesamt ? Math.round(((gesamt - unter) / gesamt) * 100) : 0,
+      stufe: haeufigste?.nameShort ?? '',
+    };
+  }).sort((a, b) => b.unterAnteil - a.unterAnteil);
+
+  const schwach = bewertet[0];
+  return {
+    domaene: schwach.domaene,
+    stufe: schwach.stufe,
+    abMindest: String(schwach.abMindest),
+    unterAnteil: String(schwach.unterAnteil),
+    anzahl: String(schwach.gesamt),
+    lage: schwach.unterAnteil >= 20 ? 'auffaellig' : 'unauffaellig',
+  };
+};
+
 export default {
+  kontextmerkmal,
+  standardErreichung,
+  zeugnissatzWerte,
   gesamtZeile,
   leisteZeilen,
   uebersichtsKarten,

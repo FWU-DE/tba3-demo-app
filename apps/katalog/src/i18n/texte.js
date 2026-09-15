@@ -207,6 +207,101 @@ export const TEXTE = {
   },
 
   ansichten: {
+    // ── Aus den Rückmeldungen des Konsortiums herausgezogen ───────────────
+    // Drei Ansichten, die nicht aus der Schau gewachsen sind, sondern aus
+    // fremden Anwendungen: den Demos des Konsortiums und ihrem Quelltext.
+    kontext: {
+      titel: { de: 'Kontextmerkmal als Ring', en: 'Context characteristic as a ring' },
+      zweck: {
+        de: 'Wer ist diese Gruppe? Eine Lösungsquote von 62 % heißt etwas anderes, wenn die Hälfte der Klasse nicht mitgeschrieben hat. Aus der Schulrückmeldung von indibit, wo vier dieser Ringe nebeneinander stehen.',
+        en: 'Who is this group? A solution rate of 62 % means something different if half the class did not sit the test. From indibit’s school report, where four of these rings stand side by side.',
+      },
+      geschlecht: { de: 'Geschlecht', en: 'Gender' },
+      sprache: { de: 'Sprache zuhause', en: 'Language at home' },
+      werte: {
+        f: { de: 'weiblich', en: 'female' },
+        m: { de: 'männlich', en: 'male' },
+        d: { de: 'divers', en: 'diverse' },
+        german: { de: 'Deutsch', en: 'German' },
+        english: { de: 'Englisch', en: 'English' },
+        french: { de: 'Französisch', en: 'French' },
+        other: { de: 'andere', en: 'other' },
+      },
+      domaenen: {
+        le: { de: 'Leseverstehen', en: 'Reading comprehension' },
+        ho: { de: 'Hörverstehen', en: 'Listening comprehension' },
+        rs: { de: 'Rechtschreibung', en: 'Spelling' },
+      },
+      props: {
+        label: { de: 'Überschrift des Rings.', en: 'Heading of the ring.' },
+        segmente: { de: 'Die Kategorien mit ihrer Häufigkeit. Es wird normiert; die Werte müssen sich nicht zu 100 addieren.', en: 'The categories with their frequency. Values are normalised; they need not add up to 100.' },
+        geordnet: { de: 'Haben die Kategorien eine Reihenfolge (A–E, Stufen)? Dann trägt die Mitte den Median statt der Summe.', en: 'Do the categories have an order (A–E, levels)? Then the centre carries the median instead of the total.' },
+        mitte: { de: 'Was in der Mitte steht. Leer = Summe bzw. Median.', en: 'What stands in the centre. Empty = total or median.' },
+        mitteLabel: { de: 'Kleine Zeile unter der Mitte, etwa „Schul-Median".', en: 'Small line beneath the centre, e.g. “school median”.' },
+      },
+      endpunkte: { gruppe: { de: 'Kovariaten je Schüler:in', en: 'Covariates per student' } },
+      hinweis: {
+        de: 'Gezählt wird je Schüler:in einmal — die Antwort führt einen Eintrag je Domäne, sonst zählte jede Person doppelt.',
+        en: 'Counted once per student — the response carries one entry per domain, otherwise every person would count twice.',
+      },
+    },
+
+    standard: {
+      titel: { de: 'Standard-Erreichung', en: 'Standard attainment' },
+      zweck: {
+        de: 'Die eine Zahl, nach der zuerst gefragt wird, mit ihrer Aufschlüsselung daneben. 80 % über alle Fächer, davon ein Fach bei 55 %, ist kein Ergebnis von 80 % — es ist ein Problem in einem Fach.',
+        en: 'The number everyone asks for first, with its breakdown next to it. 80 % across all subjects with one at 55 % is not a result of 80 % — it is a problem in one subject.',
+      },
+      label: { de: 'Mindeststandard erreicht', en: 'Minimum standard reached' },
+      props: {
+        label: { de: 'Beschriftung neben der großen Zahl.', en: 'Label next to the headline figure.' },
+        zeilen: { de: 'Die Aufschlüsselung, je Fach oder Domäne eine Zeile.', en: 'The breakdown, one row per subject or domain.' },
+        wert: { de: 'Gesamtwert. Leer = gewichtetes Mittel der Zeilen.', en: 'Overall value. Empty = weighted mean of the rows.' },
+        schwelle: { de: 'Ab welchem Abstand zum Gesamtwert eine Zeile eingefärbt wird.', en: 'From which distance to the overall value a row is coloured.' },
+        hinweis: { de: 'Ein Satz unter der Aufschlüsselung.', en: 'One sentence beneath the breakdown.' },
+      },
+      endpunkte: { gruppe: { de: 'Kompetenzstufen je Domäne', en: 'Competence levels per domain' } },
+      hinweis: {
+        de: 'Stufe I gilt als unter dem Mindeststandard, alle übrigen als darüber — so ist die Stufe definiert, nicht so ist es gewählt.',
+        en: 'Level I counts as below the minimum standard, all others as at or above — that is how the level is defined, not a choice made here.',
+      },
+    },
+
+    saetze: {
+      titel: { de: 'Zeugnissätze', en: 'Report card sentences' },
+      zweck: {
+        de: 'Der einzige Baustein, dessen Ausgabe Text ist. Aus der Messwiederholung des kompetenztest.de, wo „Zeugnissätze" ein eigener Reiter neben Grafik und Tabelle ist — der Schritt, den eine Lehrkraft nach der Rückmeldung ohnehin tut.',
+        en: 'The only block whose output is text. From kompetenztest.de’s repeated measurement, where “report card sentences” is a tab of its own next to chart and table — the step a teacher takes after the report anyway.',
+      },
+      vorschlaege: { de: 'Vorschläge für das Zeugnis', en: 'Suggestions for the report card' },
+      kopiert: { de: 'Satz in die Zwischenablage kopiert.', en: 'Sentence copied to the clipboard.' },
+      satzLage: {
+        de: 'In der Gruppe {gruppe} erreichen im Bereich {domaene} {abMindest} % der {anzahl} Teilnehmenden mindestens den Mindeststandard; die häufigste Kompetenzstufe ist {stufe}.',
+        en: 'In group {gruppe}, {abMindest} % of the {anzahl} participants reach at least the minimum standard in {domaene}; the most frequent competence level is {stufe}.',
+      },
+      satzAuffaellig: {
+        de: 'Ein Anteil von {unterAnteil} % unter dem Mindeststandard legt nahe, im Bereich {domaene} gezielt weiterzuarbeiten.',
+        en: 'A share of {unterAnteil} % below the minimum standard suggests working specifically on {domaene}.',
+      },
+      satzUnauffaellig: {
+        de: 'Mit {unterAnteil} % unter dem Mindeststandard liegt der Bereich {domaene} im erwartbaren Rahmen.',
+        en: 'At {unterAnteil} % below the minimum standard, {domaene} lies within the expected range.',
+      },
+      grundlageLage: { de: 'Kompetenzstufen im Bereich {domaene}, {anzahl} Teilnehmende', en: 'Competence levels in {domaene}, {anzahl} participants' },
+      grundlageUnter: { de: '{unterAnteil} % auf Stufe I im Bereich {domaene}', en: '{unterAnteil} % at level I in {domaene}' },
+      props: {
+        titel: { de: 'Überschrift über der Liste.', en: 'Heading above the list.' },
+        saetze: { de: 'Die Vorlagen. Der Baustein formuliert nicht selbst — wie über eine Lerngruppe geschrieben wird, gehört nicht in eine Visualisierungsbibliothek.', en: 'The templates. The block does not formulate on its own — how one writes about a class does not belong in a visualisation library.' },
+        werte: { de: 'Die Werte für die Platzhalter.', en: 'The values for the placeholders.' },
+        leerHinweis: { de: 'Was dasteht, wenn keine Vorlage zutrifft.', en: 'What stands there when no template applies.' },
+      },
+      endpunkte: { gruppe: { de: 'Kompetenzstufen der Gruppe', en: 'Competence levels of the group' } },
+      hinweis: {
+        de: 'Gewählt wird die Domäne mit dem größten Anteil unter Mindeststandard — über die wird im Zeugnis am ehesten etwas zu sagen sein.',
+        en: 'The domain with the largest share below the minimum standard is chosen — that is the one most likely to warrant a sentence.',
+      },
+    },
+
     gemeinsam: {
       lerngruppe: { de: 'Lerngruppe', en: 'Learning group' },
       gruppeWaehlen: { de: 'Gruppe wählen', en: 'Choose a group' },

@@ -1,4 +1,5 @@
 // Der Katalog zeichnet seine Ansichten seit dem Umzug nicht mehr selbst,
+import { NUR_BAUSTEIN, ZUORDNUNG } from '../apps/portal/bausteine/zuordnung.js';
 // sondern über `@tba3/bausteine`. Diese Tests prüfen genau diese Naht: steht
 // das Custom Element in der Seite, und hat es tatsächlich gezeichnet?
 //
@@ -24,6 +25,12 @@ const ANSICHTEN = [
   ['/competency-overview', 'tba3-uebersichtskarten'],
   ['/student-scatter', 'tba3-streudiagramm'],
   ['/bista-distribution', 'tba3-bista-verteilung'],
+  // Aus den Rückmeldungen des Konsortiums herausgezogen — hier steht, dass sie
+  // nicht nur im Demonstrator mit Beispieldaten zeichnen, sondern auch mit den
+  // Antworten der Schnittstelle.
+  ['/context-ring', 'tba3-kontextmerkmal-ring'],
+  ['/standard-attainment', 'tba3-standard-erreichung'],
+  ['/report-sentences', 'tba3-zeugnissaetze'],
 ];
 
 /**
@@ -78,10 +85,20 @@ test.describe('Bausteine — der Demonstrator', () => {
     // `bausteine.spec.js` nebenan; hier geht es um ihren Inhalt.
     await page.goto('/bausteine?lang=de');
 
-    await expect.poll(() => anzahl(page, 'section.baustein')).toBe(12);
-    await expect.poll(() => anzahl(page, '#zuordnung tbody tr')).toBe(9);
-    await expect.poll(() => anzahl(page, '#nur-baustein li')).toBe(3);
-    await expect(page.locator('#stand')).toContainText('9 von 9');
+    // Die Zahlen kommen aus den Daten, nicht aus diesem Test. Als sie hier
+    // standen, mussten sie bei jedem neuen Baustein an drei Stellen
+    // nachgezogen werden — und wer das vergisst, bekommt einen roten Test, der
+    // nichts über die Seite sagt.
+    // `webcomponents/index.js` ließe sich hier nicht laden — die Elementklassen
+    // brauchen HTMLElement, und dieser Test läuft in Node. Die Zahl steht aber
+    // ohnehin in der Zuordnung: `zuordnung.test.mjs` prüft, dass jeder Baustein
+    // in genau einer der beiden Listen steht.
+    const bausteine = ZUORDNUNG.length + NUR_BAUSTEIN.length;
+    const umgezogen = ZUORDNUNG.filter((z) => z.stand === 'umgezogen').length;
+    await expect.poll(() => anzahl(page, 'section.baustein')).toBe(bausteine);
+    await expect.poll(() => anzahl(page, '#zuordnung tbody tr')).toBe(ZUORDNUNG.length);
+    await expect.poll(() => anzahl(page, '#nur-baustein li')).toBe(NUR_BAUSTEIN.length);
+    await expect(page.locator('#stand')).toContainText(`${umgezogen} von ${ZUORDNUNG.length}`);
     expect(fehler).toEqual([]);
   });
 
@@ -90,13 +107,14 @@ test.describe('Bausteine — der Demonstrator', () => {
 
     // Die Zuordnungstabelle und die Liste darunter nennen sonst nur
     // Elementnamen. Eine Vorschau, die leer bleibt, wäre schlimmer als keine.
-    await expect.poll(() => anzahl(page, '.vorschau')).toBe(12);
+    const bausteine = ZUORDNUNG.length + NUR_BAUSTEIN.length;
+    await expect.poll(() => anzahl(page, '.vorschau')).toBe(bausteine);
 
     const gezeichnet = await page.evaluate(() =>
       [...document.querySelectorAll('.vorschau')]
         .filter((k) => k.firstElementChild?.shadowRoot?.children.length > 1).length,
     );
-    expect(gezeichnet).toBe(12);
+    expect(gezeichnet).toBe(bausteine);
   });
 
   test('zeigt jeden Baustein in allen drei Fassungen', async ({ page }) => {

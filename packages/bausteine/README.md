@@ -6,6 +6,9 @@ Eine Implementierung, drei Fassungen. Ohne Abhängigkeiten, ohne Design.
 **Demonstrator:** [`/bausteine`](https://tba3.vercel.app/bausteine) — alle
 Bausteine in allen drei Fassungen nebeneinander, mit Theme-Umschalter.
 
+**Woher sie kommen:** zwölf aus der eigenen Schau, drei aus den Rückmeldungen
+des Konsortiums — herausgezogen aus fremden Anwendungen, nicht erfunden.
+
 ---
 
 ## Katalog und Bausteine — der Unterschied
@@ -80,10 +83,21 @@ Test fehl.
 | `<tba3-lernstands-verlauf>` | Mehrere Erhebungen als Linie, mit Band und Vergleichslinie | `/groups/{id}/aggregations` | `zeitpunkt-gewaehlt` |
 | `<tba3-aufgaben-heatmap>` | Aufgaben gegen Lerngruppen, gefärbt nach Abweichung oder Wert | `/groups/{id}/items` | `zelle-gewaehlt` |
 | `<tba3-kennzahl-kachel>` | Eine Zahl mit Vergleich und kleinem Verlauf | `/groups/{id}/aggregations` | `kachel-gewaehlt` |
+| `<tba3-kontextmerkmal-ring>` | Ein kategoriales Merkmal der Gruppe als Ring, mit Legende und Mitte | `/groups/{id}/items?type=students` | `segment-gewaehlt` |
+| `<tba3-standard-erreichung>` | Eine große Zahl mit ihrer Aufschlüsselung je Fach oder Domäne | `/groups/{id}/competence-levels` | `zeile-gewaehlt` |
+| `<tba3-zeugnissaetze>` | Aus Vorlagen gefüllte Sätze zum Übernehmen — Ausgabe ist Text | `/groups/{id}/competence-levels` | `satz-kopiert` |
 
-Die letzten drei haben **keine** Katalog-Ansicht: der Verlauf braucht mehrere
-Erhebungen, die Heatmap die Sicht über Lerngruppen hinweg, und die Kachel ist zu
-klein für eine eigene Seite. Die Bibliothek ist eben nicht die Teilmenge der
+Die letzten drei stammen **nicht aus der Schau**, sondern aus den Rückmeldungen
+des Konsortiums: die Erhebung am Artefakt am 15.09.2026 hat sie in fremden
+Anwendungen gefunden, wo kein Sachbericht sie genannt hatte. Der Ring und die
+Standard-Erreichung stehen in der Schulrückmeldung von indibit, die Zeugnissätze
+als eigener Reiter in der Messwiederholung des kompetenztest.de. Alle drei haben
+inzwischen eine Katalog-Ansicht — siehe
+[`/dokumentation/bausteine-der-rueckmeldungen`](https://tba3.vercel.app/dokumentation/bausteine-der-rueckmeldungen).
+
+Ohne Katalog-Ansicht sind der Verlauf, die Heatmap und die Kachel: der Verlauf
+braucht mehrere Erhebungen, die Heatmap die Sicht über Lerngruppen hinweg, und
+die Kachel ist zu klein für eine eigene Seite. Die Bibliothek ist eben nicht die Teilmenge der
 Schau — `NUR_BAUSTEIN` in
 [`zuordnung.js`](../../apps/portal/bausteine/zuordnung.js) hält das mit Grund
 fest, und ein Test prüft, dass dort kein Baustein fehlt.
@@ -332,10 +346,16 @@ Vue- und React-Fassung entstehen daraus von selbst — die Adapter lesen nur
 
 ## Stand
 
-Zwölf Bausteine, alle in drei Fassungen. **Alle neun Katalog-Ansichten laufen
-über das Paket** — was die Schau zeigt, ist damit derselbe Quelltext, den auch
-ein fremdes Projekt bekommt. Drei Bausteine stehen ohne Ansicht daneben
+Fünfzehn Bausteine, alle in drei Fassungen. **Alle zwölf Katalog-Ansichten
+laufen über das Paket** — was die Schau zeigt, ist damit derselbe Quelltext, den
+auch ein fremdes Projekt bekommt. Drei Bausteine stehen ohne Ansicht daneben
 (Verlauf, Heatmap, Kachel).
+
+Die drei jüngsten kamen nicht aus eigener Anschauung, sondern aus der Erhebung
+am Artefakt: zehn fremde Rückmeldungen im Browser geöffnet und vier offene
+Repositorien gelesen. Das ist die günstigste Quelle für neue Bausteine, die es
+gibt — vier Einrichtungen haben drei Jahre lang ausprobiert, was eine
+Rückmeldung braucht, und das Ergebnis steht öffentlich da.
 
 Zwei Dinge sind beim Umzug bewusst liegen geblieben und stehen als Hinweis in
 der Zuordnungstabelle: das K-Means-Clustering des alten Streudiagramms — Gruppen

@@ -135,3 +135,15 @@ export {
   bewertung as kachelBewertung,
   kachel,
 } from './kennzahl-kachel.js';
+
+// ── Aus den Rückmeldungen des Konsortiums herausgezogen ────────────────────
+export {
+  NAME as KONTEXTMERKMAL_RING, STANDARD as kontextmerkmalRingStandard,
+  MASSE as kontextmerkmalRingMasse, ringPfad, ring,
+} from './kontextmerkmal-ring.js';
+export {
+  NAME as STANDARD_ERREICHUNG, STANDARD as standardErreichungStandard, erreichung,
+} from './standard-erreichung.js';
+export {
+  NAME as ZEUGNISSAETZE, STANDARD as zeugnissaetzeStandard, fuellen, trifftZu, saetze,
+} from './zeugnissaetze.js';

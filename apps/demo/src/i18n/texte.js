@@ -193,6 +193,29 @@ export const TEXTE = {
       de: 'Dieselbe Frage beantwortet hier der Reiter „{reiter}".',
       en: 'The “{reiter}” tab answers the same question here.',
     },
+    amArtefakt: { de: 'am Artefakt gefunden', en: 'found at the artefact' },
+    mindeststandardErreicht: { de: 'Mindeststandard erreicht', en: 'Minimum standard reached' },
+    geschlecht: { de: 'Geschlecht', en: 'Gender' },
+    spracheZuhause: { de: 'Sprache zuhause', en: 'Language at home' },
+    zeugnissaetzeTitel: { de: 'Vorschläge für die Rückmeldung', en: 'Suggestions for the report' },
+    // Vorlagen mit Platzhaltern, die der Baustein füllt — {domaene}, {stufe},
+    // {abMindest}, {unterAnteil}, {anzahl}. Die Sätze stehen hier und nicht im
+    // Baustein: wie über eine Lerngruppe geschrieben wird, gehört nicht in
+    // eine Visualisierungsbibliothek.
+    satzLage: {
+      de: 'Im Bereich {domaene} erreichen {abMindest} % der {anzahl} Teilnehmenden mindestens den Mindeststandard; die häufigste Kompetenzstufe ist {stufe}.',
+      en: 'In {domaene}, {abMindest} % of the {anzahl} participants reach at least the minimum standard; the most frequent competence level is {stufe}.',
+    },
+    satzAuffaellig: {
+      de: 'Ein Anteil von {unterAnteil} % unter dem Mindeststandard im Bereich {domaene} legt nahe, hier gezielt weiterzuarbeiten.',
+      en: 'A share of {unterAnteil} % below the minimum standard in {domaene} suggests working on this specifically.',
+    },
+    satzUnauffaellig: {
+      de: 'Mit {unterAnteil} % unter dem Mindeststandard liegt der Bereich {domaene} im erwartbaren Rahmen.',
+      en: 'At {unterAnteil} % below the minimum standard, {domaene} lies within the expected range.',
+    },
+    satzGrundlage: { de: 'Kompetenzstufen im Bereich {domaene}', en: 'Competence levels in {domaene}' },
+    satzGrundlageUnter: { de: '{unterAnteil} % auf Stufe I im Bereich {domaene}', en: '{unterAnteil} % at level I in {domaene}' },
   },
 
   gemeinsam: {
