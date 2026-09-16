@@ -274,13 +274,22 @@ test.describe('Woher ein Baustein stammt', () => {
       .not.toBe('rgba(0, 0, 0, 0)');
   });
 
-  test('die Katalog-Übersicht markiert dieselben Karten', async ({ page }) => {
+  test('die Katalog-Übersicht markiert die, die dort eine Ansicht haben', async ({ page }) => {
     await page.goto('/katalog/');
 
-    for (const b of ausRueckmeldungen) {
+    // Nicht jeder Baustein aus den Rückmeldungen hat eine Katalog-Ansicht:
+    // drei von ihnen speist die Schnittstelle nicht und stehen deshalb nur im
+    // Demonstrator (`NUR_BAUSTEIN`, je mit Grund). Erwartet wird deshalb der
+    // Schnitt mit der Zuordnung, nicht die ganze Liste — sonst verlangt der
+    // Test eine Karte, die es aus gutem Grund nicht gibt.
+    const mitAnsicht = ausRueckmeldungen
+      .filter((b) => ZUORDNUNG.some((z) => z.baustein === b.element));
+    expect(mitAnsicht.length, 'keine mit Katalog-Ansicht?').toBeGreaterThan(0);
+
+    for (const b of mitAnsicht) {
       await expect(page.getByTestId(`herkunft-${b.element}`), b.element).toBeVisible();
     }
-    await expect.poll(() => anzahl(page, '[data-testid^="herkunft-"]')).toBe(ausRueckmeldungen.length);
+    await expect.poll(() => anzahl(page, '[data-testid^="herkunft-"]')).toBe(mitAnsicht.length);
   });
 });
 

@@ -97,6 +97,9 @@ export const {
   KontextmerkmalRing,
   StandardErreichung,
   Zeugnissaetze,
+  LernverlaufFiguren,
+  Selbsteinschaetzung,
+  Glossar,
 } = gebaut;
 
 /** Alle Komponenten, nach Namen. */

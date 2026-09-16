@@ -146,7 +146,7 @@ Ein kategoriales Merkmal der Gruppe — sozioökonomischer Status, Teilnahmequot
 
 Jede Schüler:in als eigene Figur auf einer Fläche aus Messzeitpunkt und Fähigkeit, die Kompetenzstufen als benannte Zonen statt als Zahlen. In der Messwiederholung sind es Vögel, deren Art die Stufe trägt — eine Darstellung, die eine Drittklässlerin über sich selbst lesen kann.
 
-*Daten:* Mehrere Erhebungen je Schüler:in · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
+*Daten:* Mehrere Erhebungen je Schüler:in · *Bibliothek:* `<tba3-lernverlauf-figuren>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
 ## Rückmeldeelemente
 
@@ -222,7 +222,7 @@ Aus den Ergebnissen formulierte Sätze zum Übernehmen und Abwandeln. Der Schrit
 
 Was die Schüler:in sich zutraut, neben dem, was der Test misst. Die Lücke zwischen beidem ist pädagogisch oft der interessantere Befund als das Ergebnis allein — und sie taucht in keiner Ergebnisrückmeldung auf, die nur Ergebnisse kennt.
 
-*Daten:* Erhobene Selbsteinschätzung, nicht Teil der Schnittstelle · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
+*Daten:* Erhobene Selbsteinschätzung, nicht Teil der Schnittstelle · *Bibliothek:* `<tba3-selbsteinschaetzung>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
 ### Aufgabenvorschau
 
@@ -310,8 +310,8 @@ vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
 Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Materialanbindung, Einzelbericht. Das ist der belastbare Kern einer
 Rückmeldung — wer eine neue baut, fängt hier an.
 
-**Was noch kein Baustein in `@tba3/bausteine` ist** (20 Einträge):
-Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Lernverlauf als Figuren, Selbsteinschätzung gegen Ergebnis, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Ein Teil davon ist keine
+**Was noch kein Baustein in `@tba3/bausteine` ist** (18 Einträge):
+Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Ein Teil davon ist keine
 Visualisierung, sondern ein Rahmen und gehört auch nicht in eine
 Visualisierungsbibliothek. Der Rest ist eine Liste offener Arbeit.
 

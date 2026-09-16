@@ -6,7 +6,7 @@ Eine Implementierung, drei Fassungen. Ohne Abhängigkeiten, ohne Design.
 **Demonstrator:** [`/bausteine`](https://tba3.vercel.app/bausteine) — alle
 Bausteine in allen drei Fassungen nebeneinander, mit Theme-Umschalter.
 
-**Woher sie kommen:** zwölf aus der eigenen Schau, drei aus den Rückmeldungen
+**Woher sie kommen:** zwölf aus der eigenen Schau, sechs aus den Rückmeldungen
 des Konsortiums — herausgezogen aus fremden Anwendungen, nicht erfunden.
 
 ---
@@ -86,6 +86,9 @@ Test fehl.
 | `<tba3-kontextmerkmal-ring>` | Ein kategoriales Merkmal der Gruppe als Ring, mit Legende und Mitte | `/groups/{id}/items?type=students` | `segment-gewaehlt` |
 | `<tba3-standard-erreichung>` | Eine große Zahl mit ihrer Aufschlüsselung je Fach oder Domäne | `/groups/{id}/competence-levels` | `zeile-gewaehlt` |
 | `<tba3-zeugnissaetze>` | Aus Vorlagen gefüllte Sätze zum Übernehmen — Ausgabe ist Text | `/groups/{id}/competence-levels` | `satz-kopiert` |
+| `<tba3-lernverlauf-figuren>` | Personen als Marken über mehrere Messzeitpunkte, Stufen als benannte Zonen | mehrere Erhebungen je Schüler:in | `person-gewaehlt` |
+| `<tba3-selbsteinschaetzung>` | Selbsteinschätzung neben dem gemessenen Ergebnis, die Lücke als Strecke | erhobene Selbsteinschätzung | `zeile-gewaehlt` |
+| `<tba3-glossar>` | Begriffe mit Suche — der einzige Baustein mit Eingabefeld | keine, datenunabhängig | `suche-geaendert`, `begriff-gewaehlt` |
 
 Die letzten drei stammen **nicht aus der Schau**, sondern aus den Rückmeldungen
 des Konsortiums: die Erhebung am Artefakt am 15.09.2026 hat sie in fremden
@@ -346,7 +349,7 @@ Vue- und React-Fassung entstehen daraus von selbst — die Adapter lesen nur
 
 ## Stand
 
-Fünfzehn Bausteine, alle in drei Fassungen. **Alle zwölf Katalog-Ansichten
+Achtzehn Bausteine, alle in drei Fassungen. **Alle zwölf Katalog-Ansichten
 laufen über das Paket** — was die Schau zeigt, ist damit derselbe Quelltext, den
 auch ein fremdes Projekt bekommt. Drei Bausteine stehen ohne Ansicht daneben
 (Verlauf, Heatmap, Kachel).
