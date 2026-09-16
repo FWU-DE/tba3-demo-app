@@ -1052,7 +1052,7 @@ export const BAUSTEINE = [
       en: 'The technical terms in one place, searchable, reachable from every view. “Competence level”, “fair comparison”, “solution frequency” are not self-explanatory to readers, and a tooltip only answers the question asked at that exact spot.',
     },
     daten: { de: 'Keine — datenunabhängig gehalten', en: 'None — kept independent of the data' },
-    element: null,
+    element: 'glossar',
     quelle: null,
     reiter: 'help',
     beleg: 'artefakt',
