@@ -205,6 +205,74 @@
     .thema-dunkel .fassung { background: #1b1e24; border-color: #3a3f48; }
     .thema-dunkel .fassung > h3 { background: #16181d; border-color: #3a3f48; color: #f1f3f5; }
 
+    /* ── Herkunft ────────────────────────────────────────────── */
+    /* Drei der fünfzehn Bausteine sind nicht aus dieser Schau gewachsen,
+       sondern aus fremden Rückmeldungen herausgezogen. Nur die bekommen die
+       Zeile — an allen wäre sie Rauschen. */
+    .herkunft {
+      margin: var(--abstand-sm) 0 0;
+      padding: 8px 12px;
+      border-left: 3px solid #f59e0b;
+      background: #fffbeb;
+      color: #78350f;
+      font-size: var(--text-sm);
+      border-radius: 0 8px 8px 0;
+    }
+    .herkunft a { color: inherit; font-weight: 600; }
+    .thema-dunkel .herkunft { background: #2a2418; color: #fcd34d; border-left-color: #b45309; }
+
+    /* ── Nachnutzen ──────────────────────────────────────────── */
+    /* Diese Seite heißt „die Bibliothek" und soll zum Einbauen taugen. Bis
+       hierhin zeigte sie nur, wie ein Baustein aussieht. */
+    .nachnutzung {
+      margin-top: var(--abstand-lg);
+      border: 1px solid var(--farbe-linie);
+      border-radius: 12px;
+      background: var(--farbe-grund);
+    }
+    .nachnutzung > summary {
+      cursor: pointer; padding: 12px 18px; font-weight: 600;
+      font-size: var(--text-sm); color: var(--farbe-marke); list-style: none;
+    }
+    .nachnutzung > summary::-webkit-details-marker { display: none; }
+    .nachnutzung > summary::before { content: '\25B8  '; }
+    .nachnutzung[open] > summary::before { content: '\25BE  '; }
+    .nachnutzung > *:not(summary) { margin: 0 18px 14px; }
+    .nachnutzung h4 {
+      font-size: var(--text-xs); text-transform: uppercase; letter-spacing: .05em;
+      color: var(--farbe-text-gedaempft); margin: 16px 18px 6px;
+    }
+
+    table.eigenschaften { width: calc(100% - 36px); border-collapse: collapse; font-size: var(--text-sm); }
+    table.eigenschaften th {
+      text-align: left; font-size: var(--text-xs); text-transform: uppercase;
+      letter-spacing: .05em; color: var(--farbe-text-gedaempft);
+      border-bottom: 1px solid var(--farbe-linie); padding: 6px 8px;
+    }
+    table.eigenschaften td {
+      padding: 5px 8px; border-bottom: 1px solid var(--farbe-linie);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    /* Die Listen sind das, was man wirklich setzt — der Rest hat Vorgaben. */
+    table.eigenschaften tr.wichtig td:first-child { font-weight: 700; color: var(--farbe-text); }
+
+    .schnipsel-huelle { position: relative; }
+    pre.schnipsel {
+      margin: 0; padding: 12px 14px; overflow-x: auto;
+      background: #0f172a; color: #e2e8f0; border-radius: 10px;
+      font-size: 12.5px; line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .kopieren {
+      position: absolute; top: 8px; right: 8px; font: inherit; font-size: var(--text-xs);
+      font-weight: 600; color: #e2e8f0; background: rgba(255, 255, 255, .12);
+      border: none; border-radius: 6px; padding: 4px 9px; cursor: pointer;
+    }
+    .kopieren:hover { background: rgba(255, 255, 255, .22); }
+    .kopieren:focus-visible { outline: 2px solid #e2e8f0; outline-offset: 2px; }
+    .quelle { font-size: var(--text-sm); color: var(--farbe-text-gedaempft); }
+    .quelle a { color: var(--farbe-marke); }
+
     footer {
       border-top: 1px solid var(--farbe-linie);
       padding-block: var(--abstand-lg) var(--abstand-2xl);
@@ -470,6 +538,161 @@
     return zeile;
   }
 
+  /** camelCase → kebab-case, wie ein Attribut im HTML heißt. */
+  const attributName = (name) => name.replace(/[A-Z]/g, (z) => `-${z.toLowerCase()}`);
+
+  /** kompetenzstufen-leiste → KompetenzstufenLeiste */
+  const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, z) => z.toUpperCase());
+
+  /** stufe-gewaehlt → onStufeGewaehlt */
+  const rueckruf = (ereignis) => `on${pascal(ereignis)}`;
+
+  /**
+   * Die Eigenschaften eines Bausteins mit ihren Vorgaben — aus `standard` des
+   * Bauplans, nicht abgeschrieben. Ein Baustein, der eine Eigenschaft
+   * dazubekommt, bringt ihre Dokumentation damit mit.
+   */
+  function eigenschaften(bauplan) {
+    return Object.entries(bauplan.standard).map(([name, vorgabe]) => ({
+      name,
+      typ: Array.isArray(vorgabe) ? 'Array' : vorgabe === null ? 'Zahl oder null' : typeof vorgabe === 'object' ? 'Objekt' : typeof vorgabe === 'boolean' ? 'Boolean' : typeof vorgabe === 'number' ? 'Zahl' : 'Zeichenkette',
+      vorgabe: Array.isArray(vorgabe) ? '[]' : vorgabe === '' ? "''" : JSON.stringify(vorgabe),
+      // Die Daten stecken in den Listen; sie sind das, was man wirklich setzt.
+      wichtig: Array.isArray(vorgabe),
+    }));
+  }
+
+  /**
+   * Der Ausschnitt zum Kopieren, je Fassung. Erzeugt aus dem Bauplan — der
+   * Elementname, die Datenliste und die Ereignisse stehen dort schon.
+   */
+  function schnipsel(bauplan, fassung) {
+    const tag = `${PRAEFIX}${bauplan.name}`;
+    const komponente = pascal(bauplan.name);
+    const daten = eigenschaften(bauplan).filter((e) => e.wichtig).map((e) => e.name);
+    const erste = daten[0] ?? 'daten';
+    const ereignis = bauplan.ereignisse[0];
+
+    if (fassung === 'Native Web Component') {
+      return [
+        `<script type="module">`,
+        `  import { registrieren } from '/bausteine/webcomponents/index.js';`,
+        `  registrieren();`,
+        `</` + `script>`,
+        ``,
+        `<${tag} id="b"></${tag}>`,
+        ``,
+        `<script type="module">`,
+        `  const el = document.getElementById('b');`,
+        `  el.${erste} = [ /* … */ ];`,
+        ereignis ? `  el.addEventListener('${ereignis}', (e) => console.log(e.detail));` : null,
+        `</` + `script>`,
+      ].filter((z) => z !== null).join('\n');
+    }
+
+    if (fassung === 'Vue 3') {
+      return [
+        `<script setup>`,
+        `import { ${komponente} } from '@tba3/bausteine/vue';`,
+        `const ${erste} = [ /* … */ ];`,
+        `</` + `script>`,
+        ``,
+        `<template>`,
+        `  <${komponente}`,
+        `    :${attributName(erste)}="${erste}"`,
+        ereignis ? `    @${ereignis}="zeigen"` : null,
+        `  />`,
+        `</template>`,
+      ].filter((z) => z !== null).join('\n');
+    }
+
+    return [
+      `import { ${komponente} } from '@tba3/bausteine/react';`,
+      ``,
+      `<${komponente}`,
+      `  ${erste}={${erste}}`,
+      ereignis ? `  ${rueckruf(ereignis)}={(detail) => zeigen(detail)}` : null,
+      `/>`,
+    ].filter((z) => z !== null).join('\n');
+  }
+
+  /**
+   * Der Block, der aus einer Schau eine Bibliothek macht: was man setzt, wie
+   * man es einbaut, wo der Quelltext liegt.
+   *
+   * Bis hierhin zeigte diese Seite nur, **wie ein Baustein aussieht** — in drei
+   * Fassungen nebeneinander. Wer ihn mitnehmen wollte, musste in die README
+   * oder in den Quelltext. Für eine Seite, die „die Bibliothek" heißt und deren
+   * Zweck „einbauen, mitnehmen" ist, war das die Hälfte.
+   */
+  function nachnutzung(bauplan) {
+    const block = document.createElement('details');
+    block.className = 'nachnutzung';
+    block.dataset.nachnutzung = bauplan.name;
+
+    const auf = document.createElement('summary');
+    auf.textContent = 'Nachnutzen — Eigenschaften, Einbau, Quelltext';
+    block.append(auf);
+
+    // Eigenschaften
+    const tabelle = document.createElement('table');
+    tabelle.className = 'eigenschaften';
+    tabelle.innerHTML = '<thead><tr><th>Eigenschaft</th><th>Typ</th><th>Vorgabe</th></tr></thead>';
+    const koerper = document.createElement('tbody');
+    for (const e of eigenschaften(bauplan)) {
+      const zeile = document.createElement('tr');
+      if (e.wichtig) zeile.className = 'wichtig';
+      for (const wert of [e.name, e.typ, e.vorgabe]) {
+        const zelle = document.createElement('td');
+        zelle.textContent = wert;
+        zeile.append(zelle);
+      }
+      koerper.append(zeile);
+    }
+    tabelle.append(koerper);
+    block.append(tabelle);
+
+    // Einbau je Fassung
+    for (const fassung of ['Native Web Component', 'Vue 3', 'React 19']) {
+      const h4 = document.createElement('h4');
+      h4.textContent = fassung;
+      const pre = document.createElement('pre');
+      pre.className = 'schnipsel';
+      const code = document.createElement('code');
+      code.textContent = schnipsel(bauplan, fassung);
+      pre.append(code);
+
+      const kopieren = document.createElement('button');
+      kopieren.type = 'button';
+      kopieren.className = 'kopieren';
+      kopieren.textContent = 'kopieren';
+      kopieren.dataset.kopieren = `${bauplan.name}-${fassung}`;
+      kopieren.addEventListener('click', () => {
+        navigator.clipboard?.writeText?.(code.textContent).catch(() => {});
+        kopieren.textContent = 'kopiert';
+        setTimeout(() => { kopieren.textContent = 'kopieren'; }, 1500);
+      });
+
+      const huelle = document.createElement('div');
+      huelle.className = 'schnipsel-huelle';
+      huelle.append(pre, kopieren);
+      block.append(h4, huelle);
+    }
+
+    // Quelltext
+    const quelle = document.createElement('p');
+    quelle.className = 'quelle';
+    const a = document.createElement('a');
+    a.href = `https://github.com/FWU-DE/tba3-demo-app/blob/main/packages/bausteine/webcomponents/${bauplan.name}.js`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = `packages/bausteine/webcomponents/${bauplan.name}.js`;
+    quelle.append('Quelltext: ', a);
+    block.append(quelle);
+
+    return block;
+  }
+
   function abschnitt(bauplan) {
     const sektion = document.createElement('section');
     sektion.className = 'baustein';
@@ -512,7 +735,7 @@
       fassungen.append(karte);
     }
 
-    sektion.append(kopf, fassungen);
+    sektion.append(kopf, fassungen, nachnutzung(bauplan));
     return sektion;
   }
 

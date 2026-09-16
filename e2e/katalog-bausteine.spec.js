@@ -263,6 +263,15 @@ test.describe('Woher ein Baustein stammt', () => {
 
     // Und nur dort: eine Herkunftszeile an jedem Abschnitt wäre Rauschen.
     await expect.poll(() => anzahl(page, '.herkunft')).toBe(ausRueckmeldungen.length);
+
+    // Sichtbar heißt nicht gestaltet. Die Stilregeln für diese Zeile landeten
+    // beim ersten Anlauf außerhalb des <style>-Blocks — die Zeile stand da,
+    // unformatiert, und der Test war trotzdem grün. Deshalb wird hier eine
+    // Eigenschaft geprüft, die nur aus dem Stilblock kommen kann.
+    const hintergrund = await page.locator('.herkunft').first()
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(hintergrund, 'Herkunftszeile ohne Hintergrund — Stilblock nicht angekommen?')
+      .not.toBe('rgba(0, 0, 0, 0)');
   });
 
   test('die Katalog-Übersicht markiert dieselben Karten', async ({ page }) => {
@@ -272,5 +281,44 @@ test.describe('Woher ein Baustein stammt', () => {
       await expect(page.getByTestId(`herkunft-${b.element}`), b.element).toBeVisible();
     }
     await expect.poll(() => anzahl(page, '[data-testid^="herkunft-"]')).toBe(ausRueckmeldungen.length);
+  });
+});
+
+test.describe('Bausteine nachnutzen', () => {
+  // Diese Seite heißt „die Bibliothek" und soll zum Einbauen taugen. Bis
+  // September 2026 zeigte sie nur, wie ein Baustein **aussieht** — in drei
+  // Fassungen nebeneinander. Wer ihn mitnehmen wollte, musste in die README
+  // oder in den Quelltext. Für eine Seite mit diesem Zweck war das die Hälfte.
+  test('jeder Baustein zeigt Eigenschaften, Einbau und Quelltext', async ({ page }) => {
+    await page.goto('/bausteine?lang=de');
+
+    const bausteine = ZUORDNUNG.length + NUR_BAUSTEIN.length;
+    await expect.poll(() => anzahl(page, '.nachnutzung')).toBe(bausteine);
+
+    // Drei Fassungen je Baustein, jede mit einem Ausschnitt zum Kopieren.
+    await expect.poll(() => anzahl(page, '.nachnutzung pre.schnipsel')).toBe(bausteine * 3);
+    await expect.poll(() => anzahl(page, '.nachnutzung .kopieren')).toBe(bausteine * 3);
+
+    // Und die Eigenschaften kommen aus dem Bauplan, nicht aus einer Liste
+    // daneben: jeder Baustein hat mindestens eine.
+    const ohneEigenschaften = await page.evaluate(() =>
+      [...document.querySelectorAll('.nachnutzung')]
+        .filter((b) => b.querySelectorAll('table.eigenschaften tbody tr').length === 0)
+        .map((b) => b.dataset.nachnutzung));
+    expect(ohneEigenschaften).toEqual([]);
+  });
+
+  test('der Ausschnitt nennt das Element, seine Daten und sein Ereignis', async ({ page }) => {
+    await page.goto('/bausteine?lang=de');
+
+    // `textContent` statt `innerText`: der Block ist ein zugeklapptes
+    // <details>, und was nicht sichtbar ist, hat keinen innerText.
+    const schnipsel = await page.locator('[data-nachnutzung="kompetenzstufen-leiste"] pre.schnipsel')
+      .first().evaluate((el) => el.textContent);
+
+    // Kein Platzhaltertext: der Ausschnitt muss sich einsetzen lassen.
+    expect(schnipsel).toContain('<tba3-kompetenzstufen-leiste');
+    expect(schnipsel).toContain('el.rows =');
+    expect(schnipsel).toContain("addEventListener('stufe-gewaehlt'");
   });
 });
