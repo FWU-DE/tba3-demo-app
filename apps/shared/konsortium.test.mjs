@@ -105,6 +105,24 @@ describe('Katalog', () => {
 
   // Ein Verweis auf einen Reiter, den es nicht gibt, ist schlimmer als keiner:
   // er schickt jemanden los, der dann nichts findet.
+  // Ein Katalogeintrag, der auf einen Baustein zeigt, den es nicht gibt, wäre
+  // ein toter Verweis — die Herkunftszeile bliebe aus, und die Dokumentation
+  // versprüche ein Element, das niemand einbauen kann.
+  //
+  // Den umgekehrten Fall fängt dieser Test nicht: dass ein gebauter Baustein
+  // im Katalog **nicht** eingetragen wird. Genau das ist bei `glossar`
+  // passiert — der Baustein war ausgeliefert, der Eintrag zeigte weiter auf
+  // nichts, und der Herkunfts-Test war grün, weil er Erwartung und Wirklichkeit
+  // aus derselben Quelle zieht. Diese Verbindung ist eine Absicht, und
+  // Absichten prüft kein Test.
+  it('verweist nur auf Bausteine, die es wirklich gibt', async () => {
+    const { BAUPLAENE } = await import('../../packages/bausteine/webcomponents/index.js');
+    const vorhanden = new Set(BAUPLAENE.map((b) => b.name));
+    for (const b of BAUSTEINE.filter((x) => x.element)) {
+      expect(vorhanden, `${b.id} → <tba3-${b.element}>`).toContain(b.element);
+    }
+  });
+
   it('verweist nur auf Reiter, die die Demoanwendung hat', () => {
     const reiter = ['competence', 'delta', 'items', 'aggregations', 'students', 'materials', 'elemente', 'help'];
     for (const b of BAUSTEINE) {

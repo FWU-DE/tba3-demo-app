@@ -286,7 +286,7 @@ Ein Umschalter, der Namen durch Codes ersetzt und die Ergebnisse stehen lässt. 
 
 Die Fachbegriffe an einer Stelle, durchsuchbar, aus jeder Ansicht erreichbar. „Kompetenzstufe", „fairer Vergleich", „Lösungshäufigkeit" sind für die Lesenden nicht selbsterklärend, und ein Tooltip beantwortet nur die Frage, die man an genau dieser Stelle stellt.
 
-*Daten:* Keine — datenunabhängig gehalten · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+*Daten:* Keine — datenunabhängig gehalten · *Bibliothek:* `<tba3-glossar>` · *Gefunden bei:* zepf (RPTU)
 
 ### Export mit Auswahl
 
@@ -310,8 +310,8 @@ vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
 Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Materialanbindung, Einzelbericht. Das ist der belastbare Kern einer
 Rückmeldung — wer eine neue baut, fängt hier an.
 
-**Was noch kein Baustein in `@tba3/bausteine` ist** (18 Einträge):
-Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Ein Teil davon ist keine
+**Was noch kein Baustein in `@tba3/bausteine` ist** (17 Einträge):
+Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Export mit Auswahl. Ein Teil davon ist keine
 Visualisierung, sondern ein Rahmen und gehört auch nicht in eine
 Visualisierungsbibliothek. Der Rest ist eine Liste offener Arbeit.
 
