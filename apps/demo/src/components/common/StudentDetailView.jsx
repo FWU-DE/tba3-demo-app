@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useFilters } from '../../context/useFilters';
+import { anzeigename } from '../../utils/anzeigename';
 import {
   Radar,
   RadarChart,
@@ -319,9 +320,9 @@ const StudentDetailView = ({ student, onBack }) => {
               <div className="flex items-center gap-3 mb-1">
                 <h1
                   data-testid="datenblatt-name"
-                  className={`text-3xl font-black text-gray-900 truncate ${observerMode ? 'blur select-none' : ''}`}
+                  className="text-3xl font-black text-gray-900 truncate"
                 >
-                  {student.firstName} {student.lastName}
+                  {anzeigename(student, observerMode)}
                 </h1>
               </div>
               <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">

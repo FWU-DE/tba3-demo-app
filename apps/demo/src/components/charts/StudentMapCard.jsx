@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { GROUPS, COMPETENCE_LEVELS } from '../../utils/constants';
 import { useFilters } from '../../context/useFilters';
+import { anzeigename, initialen } from '../../utils/anzeigename';
 import { SUBJECT_DOMAINS } from '../../utils/studentData';
 import { createCustomGroup, addStudentsToGroup } from '../../utils/customGroupsStore';
 import { useTexte } from '../../i18n';
@@ -591,7 +592,7 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
             const isSelected = selectedIds.has(p.id);
             const isDragging = draggingDot?.idx === i;
             const cx = toSvgX(p.x), cy = toSvgY(p.y);
-            const initials = observerMode ? '••' : `${p.student.firstName[0]}${p.student.lastName[0]}`;
+            const initials = initialen(p.student, observerMode);
             return (
               <g key={p.id}
                 style={{ cursor: clusters ? 'grab' : 'pointer' }}
@@ -687,8 +688,8 @@ const StudentMapCard = ({ students, customGroups, onGroupsChange }) => {
                   filter="drop-shadow(0 2px 8px rgba(0,0,0,0.12))" />
                 {/* Name */}
                 <text x={tx + 10} y={ty + 17} fontSize={11.5} fontWeight={700} fill="#111827"
-                  style={observerMode ? { filter: 'blur(5px)', userSelect: 'none' } : undefined}>
-                  {s.firstName} {s.lastName}
+                  >
+                  {anzeigename(s, observerMode)}
                 </text>
                 {/* Class */}
                 <text x={tx + 10} y={ty + 31} fontSize={10} fill="#6b7280">

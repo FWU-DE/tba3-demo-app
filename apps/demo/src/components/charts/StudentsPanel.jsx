@@ -10,6 +10,7 @@ import {
   renameCustomGroup,
 } from '../../utils/customGroupsStore';
 import { useFilters } from '../../context/useFilters';
+import { anzeigename } from '../../utils/anzeigename';
 
 import Card from '../common/Card';
 import { useKonstanten, useTexte } from '../../i18n';
@@ -67,9 +68,9 @@ const StudentRow = ({ student, selected, onToggle, onDetail }) => {
       <label className="flex-1 min-w-0 cursor-pointer" onClick={() => onToggle(student.id)}>
         <span
           data-testid={`schueler-name-${student.id}`}
-          className={`font-medium text-sm text-gray-900 ${observerMode ? 'blur select-none' : ''}`}
+          className="font-medium text-sm text-gray-900"
         >
-          {student.firstName} {student.lastName}
+          {anzeigename(student, observerMode)}
         </span>
         <span className="ml-2 text-xs text-gray-400">{group?.name}</span>
       </label>
@@ -124,10 +125,10 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
     return STUDENTS.filter((s) => {
       if (editorClass && s.classGroupId !== editorClass) return false;
       if (editorLevel && s.competenceLevel !== editorLevel) return false;
-      if (q && !`${s.firstName} ${s.lastName}`.toLowerCase().includes(q)) return false;
+      if (q && !anzeigename(s, observerMode).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [editorSearch, editorClass, editorLevel]);
+  }, [editorSearch, editorClass, editorLevel, observerMode]);
 
   const openEditor = () => {
     setDraft(new Set(group.studentIds));
@@ -218,7 +219,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
               {members.map((s) => (
                 <li key={s.id} className="flex items-center gap-2 px-3 py-1.5">
                   <LevelBadge level={s.competenceLevel} small />
-                  <span className={`flex-1 text-xs text-gray-700 ${observerMode ? 'blur select-none' : ''}`}>{s.firstName} {s.lastName}</span>
+                  <span className="flex-1 text-xs text-gray-700">{anzeigename(s, observerMode)}</span>
                   <span className="text-xs text-gray-400">{GROUPS.find(g => g.id === s.classGroupId)?.name}</span>
                   <button
                     onClick={() => onDetail(s)}
@@ -294,7 +295,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
                   <input type="checkbox" checked={draft.has(s.id)} onChange={() => toggleDraft(s.id)}
                     className="w-3.5 h-3.5 accent-blue-600 flex-shrink-0" />
                   <LevelBadge level={s.competenceLevel} small />
-                  <span className={`flex-1 text-xs text-gray-800 ${observerMode ? 'blur select-none' : ''}`}>{s.firstName} {s.lastName}</span>
+                  <span className="flex-1 text-xs text-gray-800">{anzeigename(s, observerMode)}</span>
                   <span className="text-xs text-gray-400">{GROUPS.find(g => g.id === s.classGroupId)?.name}</span>
                 </label>
               </li>
@@ -323,7 +324,7 @@ const CustomGroupCard = ({ group, onSaveMembers, onDelete, onRename, onNavigateM
 const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
   const t = useTexte();
   const { SUBJECTS, GRADES, COMPETENCE_LEVELS } = useKonstanten();
-  const { selectedLevel, selectedGroup: sidebarGroup, selectedSubject: sidebarSubject, selectedGrade: sidebarGrade } = useFilters();
+  const { selectedLevel, selectedGroup: sidebarGroup, selectedSubject: sidebarSubject, selectedGrade: sidebarGrade, observerMode } = useFilters();
 
   // ── Filter state (initialised from sidebar) ──
   const [search, setSearch] = useState('');
@@ -373,10 +374,10 @@ const StudentsPanel = ({ onNavigateMaterials, onOpenStudent }) => {
       if (filterLevel && s.competenceLevel !== filterLevel) return false;
       if (filterSubject && s.subject !== filterSubject) return false;
       if (filterGrade && s.grade !== filterGrade) return false;
-      if (q && !`${s.firstName} ${s.lastName}`.toLowerCase().includes(q)) return false;
+      if (q && !anzeigename(s, observerMode).toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [search, filterGroup, filterLevel, filterSubject, filterGrade]);
+  }, [search, filterGroup, filterLevel, filterSubject, filterGrade, observerMode]);
 
   const toggleStudent = (id) => {
     setSelectedIds((prev) => {
