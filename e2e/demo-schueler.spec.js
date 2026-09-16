@@ -72,21 +72,41 @@ test.describe('Demoanwendung — Schüler:innen', () => {
   // stehen bleibt — eine Ansicht, die im Observer-Modus auch die Zahlen
   // versteckt, hätte den Zweck verfehlt. Beschrieben in
   // /dokumentation/demo-rezepte.
-  test('der Observer-Modus zeichnet die Namen weich und lässt die Ergebnisse stehen', async ({ page }) => {
+  test('der Observer-Modus ersetzt die Namen durch Codes und lässt die Ergebnisse stehen', async ({ page }) => {
     await oeffneSchueler(page);
 
     const name = page.getByTestId(`schueler-name-${ERSTE}`);
-    const vorher = await name.innerText();
-    await expect(name).not.toHaveCSS('filter', /blur/);
+    const echterName = await name.innerText();
+    expect(echterName.trim().length).toBeGreaterThan(0);
 
     await page.getByTestId('observer-schalter').click();
 
-    await expect(name).toHaveCSS('filter', /blur/);
-    // Der Name bleibt im DOM — weichgezeichnet wird angezeigt, nicht ersetzt.
-    // Genau das ist die Grenze des Modus, und sie steht so in der Doku.
-    await expect(name).toHaveText(vorher);
+    // Der Name ist **weg**, nicht überdeckt. Vorher wurde er weichgezeichnet —
+    // `filter: blur` ist rein visuell, der Name blieb im Barrierebaum und wurde
+    // von Vorlesesoftware gelesen. In genau dem Fall, für den der Modus gebaut
+    // ist: eine Konferenz, in der jemand mitliest.
+    await expect(name).not.toHaveText(echterName);
+    await expect(name).toHaveText(/^[A-Z]\d{3}$/);
+
+    // Und nirgends sonst auf der Seite steht er noch.
+    const irgendwo = await page.evaluate((n) => document.body.innerText.includes(n), echterName);
+    expect(irgendwo, `„${echterName}" steht weiterhin im Text der Seite`).toBe(false);
+
     // Was zum Ergebnis gehört, bleibt lesbar
     await expect(page.getByTestId(`schueler-zeile-${ERSTE}`)).toContainText('3a Deutsch');
+  });
+
+  test('der Code ist stabil — dieselbe Person trägt ihn in jeder Ansicht', async ({ page }) => {
+    await oeffneSchueler(page);
+    await page.getByTestId('observer-schalter').click();
+
+    const inDerListe = await page.getByTestId(`schueler-name-${ERSTE}`).innerText();
+    await page.getByTestId(`schueler-datenblatt-${ERSTE}`).click();
+
+    // Im Datenblatt muss derselbe Code stehen — sonst lässt sich in einer
+    // Konferenz nicht mehr über eine bestimmte Person sprechen.
+    await expect(page.getByTestId('datenblatt-name')).toBeVisible();
+    await expect(page.getByTestId('datenblatt-name')).toHaveText(inDerListe.trim());
   });
 
   test('der Observer-Modus gilt auch im Datenblatt und endet mit dem Neuladen', async ({ page }) => {
@@ -96,13 +116,13 @@ test.describe('Demoanwendung — Schüler:innen', () => {
     await page.getByTestId(`schueler-datenblatt-${ERSTE}`).click();
 
     const name = page.getByTestId('datenblatt-name');
-    await expect(name).toHaveCSS('filter', /blur/);
+    await expect(name).toHaveText(/^[A-Z]\d{3}$/);
 
     // Der Schalter steht weder in der Adresse noch im Speicher: nach dem
     // Neuladen stehen die Namen wieder da. Für einen Schalter, der im Gespräch
     // umgelegt wird, ist das gewollt — geteilte Links tragen ihn nicht mit.
     await page.reload();
-    await expect(page.getByTestId('datenblatt-name')).not.toHaveCSS('filter', /blur/);
+    await expect(page.getByTestId('datenblatt-name')).not.toHaveText(/^[A-Z]\d{3}$/);
   });
 
   // Die individuelle Rückmeldung ist die Ausgabe, die das Gerät verlässt.

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { COMPETENCE_LEVELS, GROUPS } from '../../utils/constants';
 import { useFilters } from '../../context/useFilters';
+import { anzeigename } from '../../utils/anzeigename';
 import { loadCustomGroups, addStudentsToGroup, removeStudentFromGroup } from '../../utils/customGroupsStore';
 import { useKonstanten, useTexte } from '../../i18n';
 
@@ -105,8 +106,8 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
           style={{ backgroundColor: levelCfg ? levelCfg.color + '18' : '#f9fafb' }}
         >
           <div>
-            <h2 className={`text-xl font-bold text-gray-900 ${observerMode ? 'blur select-none' : ''}`}>
-              {student.firstName} {student.lastName}
+            <h2 className="text-xl font-bold text-gray-900">
+              {anzeigename(student, observerMode)}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
               {group?.name} · {subject?.name} · {grade?.name}
