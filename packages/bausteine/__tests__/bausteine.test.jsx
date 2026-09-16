@@ -166,6 +166,30 @@ const DATEN = {
       { id: 's2', vorlage: '{name} arbeitet zunehmend selbstständig.' },
     ],
   },
+  'lernverlauf-figuren': {
+    zeitpunkte: [{ id: 'h', label: 'Herbst' }, { id: 'f', label: 'Frühjahr' }],
+    zonen: [
+      { label: 'Silbe', von: 0, bis: 50 },
+      { label: 'Fink', von: 50, bis: 75 },
+      { label: 'Adler', von: 75, bis: 100 },
+    ],
+    personen: [
+      { id: 'p1', name: 'Anna B.', werte: [{ zeitpunkt: 'h', wert: 48 }, { zeitpunkt: 'f', wert: 66 }] },
+      { id: 'p2', name: 'Ben C.', werte: [{ zeitpunkt: 'h', wert: 72 }, { zeitpunkt: 'f', wert: 81 }] },
+    ],
+  },
+  selbsteinschaetzung: {
+    zeilen: [
+      { label: 'Lesen', selbst: 80, gemessen: 62 },
+      { label: 'Zuhören', selbst: 55, gemessen: 58 },
+    ],
+  },
+  glossar: {
+    eintraege: [
+      { id: 'ks', begriff: 'Kompetenzstufe', erklaerung: 'Fünf Stufen von I bis V.' },
+      { id: 'fv', begriff: 'Fairer Vergleich', erklaerung: 'Schulen ähnlicher Zusammensetzung.', auch: ['Standorttyp'] },
+    ],
+  },
 };
 
 const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());

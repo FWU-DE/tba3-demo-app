@@ -136,6 +136,24 @@ export const NUR_BAUSTEIN = [
     grund:
       'Eine einzelne Zahl mit Vergleich und kleinem Verlauf. Zu klein für eine eigene Ansicht, zu oft gebraucht, um sie wegzulassen.',
   },
+  {
+    baustein: 'lernverlauf-figuren',
+    anzeige: 'Lernverlauf als Figuren',
+    grund:
+      'Braucht mehrere Erhebungen derselben Personen; die Schnittstelle liefert eine. Aus der Messwiederholung des kompetenztest.de, wo die Figuren Vögel sind.',
+  },
+  {
+    baustein: 'selbsteinschaetzung',
+    anzeige: 'Selbsteinschätzung gegen Ergebnis',
+    grund:
+      'Die Selbsteinschätzung wird erhoben, nicht gemessen — sie steht in keiner Antwort der Schnittstelle. Aus dem Lernstand-Barometer.',
+  },
+  {
+    baustein: 'glossar',
+    anzeige: 'Glossar mit Suche',
+    grund:
+      'Datenunabhängig: die Begriffe kommen aus der Seite, nicht aus der Auswertung. Aus den drei Glossaren von zepf.',
+  },
 ];
 
 export const ZAHLEN = {

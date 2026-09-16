@@ -233,6 +233,46 @@ export const DEMODATEN = [
           grundlage: 'Lösungsquote {quote} % im {domaene}' },
       ],
     },
+    'lernverlauf-figuren': {
+      title: 'Lesegeschwindigkeit über drei Erhebungen',
+      yTitel: 'Lesegeschwindigkeit',
+      zeitpunkte: [
+        { id: 'm25', label: '2025 März' }, { id: 'h25', label: '2025 Herbst' }, { id: 'm26', label: '2026 März' },
+      ],
+      // Benannte Zonen statt Zahlen — das ist der Kern der Vorlage: eine
+      // Drittklässlerin liest „Fink", nicht „Kompetenzstufe III".
+      zonen: [
+        { label: 'Silbe', von: 0, bis: 35 },
+        { label: 'Wort', von: 35, bis: 60 },
+        { label: 'Fink', von: 60, bis: 80 },
+        { label: 'Adler', von: 80, bis: 100 },
+      ],
+      personen: [
+        { id: 's1', name: 'Anna B.', werte: [{ zeitpunkt: 'm25', wert: 41 }, { zeitpunkt: 'h25', wert: 58 }, { zeitpunkt: 'm26', wert: 74 }] },
+        { id: 's2', name: 'Ben C.', werte: [{ zeitpunkt: 'm25', wert: 66 }, { zeitpunkt: 'h25', wert: 71 }, { zeitpunkt: 'm26', wert: 84 }] },
+        { id: 's3', name: 'Cem D.', werte: [{ zeitpunkt: 'm25', wert: 28 }, { zeitpunkt: 'h25', wert: 33 }, { zeitpunkt: 'm26', wert: 46 }] },
+        { id: 's4', name: 'Dilara E.', werte: [{ zeitpunkt: 'm25', wert: 79 }, { zeitpunkt: 'h25', wert: 88 }, { zeitpunkt: 'm26', wert: 92 }] },
+      ],
+    },
+    selbsteinschaetzung: {
+      title: 'Selbsteinschätzung und Ergebnis',
+      zeilen: [
+        { label: 'Lesen', selbst: 82, gemessen: 61 },
+        { label: 'Zuhören', selbst: 60, gemessen: 64 },
+        { label: 'Orthografie', selbst: 45, gemessen: 72 },
+        { label: 'Sprachgebrauch', selbst: 70, gemessen: 66 },
+      ],
+    },
+    glossar: {
+      title: 'Begriffe dieser Rückmeldung',
+      eintraege: [
+        { id: 'ks', begriff: 'Kompetenzstufe', erklaerung: 'Fünf Stufen von I bis V. Stufe I liegt unter dem Mindeststandard, ab II gilt er als erreicht.' },
+        { id: 'fv', begriff: 'Fairer Vergleich', erklaerung: 'Der Vergleich mit Schulen ähnlicher sozialer Zusammensetzung statt mit allen.', auch: ['Standorttyp', 'STYPS'] },
+        { id: 'lh', begriff: 'Lösungshäufigkeit', erklaerung: 'Der Anteil der Lernenden, die eine Aufgabe richtig gelöst haben.' },
+        { id: 'ms', begriff: 'Mindeststandard', erklaerung: 'Das Niveau, das am Ende der Jahrgangsstufe alle erreicht haben sollen.' },
+        { id: 'do', begriff: 'Domäne', erklaerung: 'Ein Teilbereich eines Faches, etwa Leseverstehen oder Hörverstehen.', auch: ['Teilbereich'] },
+      ],
+    },
   },
   {
     'kompetenzstufen-leiste': {
@@ -438,6 +478,41 @@ export const DEMODATEN = [
           grundlage: 'Kompetenzstufe {stufe}, Lösungsquote {quote} %' },
         { id: 'foerder', vorlage: '{name} sollte das sinnentnehmende Lesen weiter üben.',
           grundlage: 'Lösungsquote {quote} % im {domaene}' },
+      ],
+    },
+    'lernverlauf-figuren': {
+      title: 'Lesegeschwindigkeit über drei Erhebungen',
+      yTitel: 'Lesegeschwindigkeit',
+      zeitpunkte: [
+        { id: 'm25', label: '2025 März' }, { id: 'h25', label: '2025 Herbst' }, { id: 'm26', label: '2026 März' },
+      ],
+      zonen: [
+        { label: 'Silbe', von: 0, bis: 35 },
+        { label: 'Wort', von: 35, bis: 60 },
+        { label: 'Fink', von: 60, bis: 80 },
+        { label: 'Adler', von: 80, bis: 100 },
+      ],
+      // Eine Gruppe, die sich kaum bewegt — damit sichtbar wird, dass der
+      // Baustein auch das zeigt und nicht nur den erfreulichen Fall.
+      personen: [
+        { id: 's1', name: 'Emre F.', werte: [{ zeitpunkt: 'm25', wert: 31 }, { zeitpunkt: 'h25', wert: 29 }, { zeitpunkt: 'm26', wert: 34 }] },
+        { id: 's2', name: 'Frieda G.', werte: [{ zeitpunkt: 'm25', wert: 44 }, { zeitpunkt: 'h25', wert: 43 }, { zeitpunkt: 'm26', wert: 47 }] },
+        { id: 's3', name: 'Gero H.', werte: [{ zeitpunkt: 'm25', wert: 22 }, { zeitpunkt: 'h25', wert: 26 }, { zeitpunkt: 'm26', wert: 25 }] },
+      ],
+    },
+    selbsteinschaetzung: {
+      title: 'Selbsteinschätzung und Ergebnis',
+      zeilen: [
+        { label: 'Lesen', selbst: 35, gemessen: 38 },
+        { label: 'Zuhören', selbst: 40, gemessen: 42 },
+        { label: 'Orthografie', selbst: 30, gemessen: 31 },
+      ],
+    },
+    glossar: {
+      title: 'Begriffe dieser Rückmeldung',
+      eintraege: [
+        { id: 'ks', begriff: 'Kompetenzstufe', erklaerung: 'Fünf Stufen von I bis V.' },
+        { id: 'ms', begriff: 'Mindeststandard', erklaerung: 'Das Niveau, das alle erreicht haben sollen.' },
       ],
     },
   },

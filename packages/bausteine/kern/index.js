@@ -147,3 +147,14 @@ export {
 export {
   NAME as ZEUGNISSAETZE, STANDARD as zeugnissaetzeStandard, fuellen, trifftZu, saetze,
 } from './zeugnissaetze.js';
+
+export {
+  NAME as LERNVERLAUF_FIGUREN, STANDARD as lernverlaufFigurenStandard,
+  MASSE as lernverlaufFigurenMasse, zeichenVon, verlauf,
+} from './lernverlauf-figuren.js';
+export {
+  NAME as SELBSTEINSCHAETZUNG, STANDARD as selbsteinschaetzungStandard, lage, einschaetzung,
+} from './selbsteinschaetzung.js';
+export {
+  NAME as GLOSSAR, STANDARD as glossarStandard, normal, glossar,
+} from './glossar.js';

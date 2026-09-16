@@ -32,6 +32,9 @@ import { BAUPLAN as KACHEL, KennzahlKachelElement } from './kennzahl-kachel.js';
 import { BAUPLAN as RING, KontextmerkmalRingElement } from './kontextmerkmal-ring.js';
 import { BAUPLAN as ERREICHUNG, StandardErreichungElement } from './standard-erreichung.js';
 import { BAUPLAN as SAETZE, ZeugnissaetzeElement } from './zeugnissaetze.js';
+import { BAUPLAN as FIGUREN, LernverlaufFigurenElement } from './lernverlauf-figuren.js';
+import { BAUPLAN as SELBST, SelbsteinschaetzungElement } from './selbsteinschaetzung.js';
+import { BAUPLAN as GLOSSAR, GlossarElement } from './glossar.js';
 import { elementKlasse } from './baustein-element.js';
 
 export const PRAEFIX = 'tba3-';
@@ -48,6 +51,7 @@ export const BAUPLAENE = [
   SCHUELER, KARTEN, STREU, BISTA,
   VERLAUF, HEATMAP, KACHEL,
   RING, ERREICHUNG, SAETZE,
+  FIGUREN, SELBST, GLOSSAR,
 ];
 
 /** Elementklassen, nach Elementnamen. */
@@ -67,6 +71,9 @@ export const ELEMENTE = {
   [`${PRAEFIX}${RING.name}`]: KontextmerkmalRingElement,
   [`${PRAEFIX}${ERREICHUNG.name}`]: StandardErreichungElement,
   [`${PRAEFIX}${SAETZE.name}`]: ZeugnissaetzeElement,
+  [`${PRAEFIX}${FIGUREN.name}`]: LernverlaufFigurenElement,
+  [`${PRAEFIX}${SELBST.name}`]: SelbsteinschaetzungElement,
+  [`${PRAEFIX}${GLOSSAR.name}`]: GlossarElement,
 };
 
 /**
