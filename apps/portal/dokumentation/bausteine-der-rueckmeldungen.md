@@ -40,9 +40,9 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 | indibit | Schulrückmeldung | Schulleitung | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-manager) · [Code](https://github.com/indibit-eu) · [Doku](https://apps.indibit.eu/tba3/docs/) |
 | indibit | Schulaufsichtsrückmeldung | Schulaufsicht | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-supervision) · [Code](https://github.com/indibit-eu) · [Doku](https://apps.indibit.eu/tba3/docs/) |
 | ISQ Berlin | Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8 | Lehrkraft, Schulleitung, Schulaufsicht, Schüler:in | Deutsch, Mathematik, Englisch, Französisch | Klasse 3, Klasse 8 | [Demo](https://tba3.isqberlin.de/) · [Code](https://git.imp.fu-berlin.de/isq/feedbacksysteme/tbaiii) |
-| zepf (RPTU) | Mathematik, Klasse 3 | Lehrkraft | Mathematik | Klasse 3 | [Demo](https://zepf-rptu.github.io/TBA3/ma) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/ma) |
-| zepf (RPTU) | Englisch, Klasse 8 | Lehrkraft | Englisch | Klasse 8 | [Demo](https://zepf-rptu.github.io/TBA3/en) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/en) |
-| zepf (RPTU) | Schulleitung | Schulleitung | fachunabhängig | alle | [Demo](https://zepf-rptu.github.io/TBA3/sl) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/sl) |
+| zepf (RPTU) | Mathematik, Klasse 3 | Lehrkraft | Mathematik | Klasse 3 | [Demo](https://zepf-rptu.github.io/TBA3/ma) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/) |
+| zepf (RPTU) | Englisch, Klasse 8 | Lehrkraft | Englisch | Klasse 8 | [Demo](https://zepf-rptu.github.io/TBA3/en) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/) |
+| zepf (RPTU) | Schulleitung | Schulleitung | fachunabhängig | alle | [Demo](https://zepf-rptu.github.io/TBA3/sl) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/) |
 
 Was an diesen Verweisen vorläufig ist:
 
@@ -50,9 +50,6 @@ Was an diesen Verweisen vorläufig ist:
 - **Klassenrückmeldung** (indibit): Der Repositoriumsname folgt mit der Veröffentlichung. Lizenz: MIT.
 - **Schulaufsichtsrückmeldung** (indibit): Das Land Hessen setzt für seine Rückmeldungen an die Schulaufsicht auf diesem Entwicklungsstand auf.
 - **Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8** (ISQ Berlin): Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant. Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.
-- **Mathematik, Klasse 3** (zepf (RPTU)): Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.
-- **Englisch, Klasse 8** (zepf (RPTU)): Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.
-- **Schulleitung** (zepf (RPTU)): Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.
 
 ## Anzeigebausteine
 
