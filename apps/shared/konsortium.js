@@ -373,11 +373,8 @@ export const RUECKMELDUNGEN = [
     zielgruppen: ['lehrkraft'],
     demo: 'https://zepf-rptu.github.io/TBA3/ma',
     code: 'https://github.com/zepf-RPTU/TBA3',
-    doku: 'https://zepf-rptu.github.io/TBA3/docs/ma',
-    hinweis: {
-      de: 'Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.',
-      en: 'The reports are being moved from GitLab to GitHub; the links are provisional.',
-    },
+    doku: 'https://zepf-rptu.github.io/TBA3/docs/',
+    hinweis: null,
     technik: {
       de: 'Vanilla JavaScript, CSS und HTML mit Tabulator und D3; ausschließlich clientseitiges Frontend. Gemeinsame Grundstruktur aus Basisklassen, Stilen und Hintergrundlogiken, dazu fach- und zielgruppenspezifische Module. Optimiert für Desktop und hochauflösende Tablets.',
       en: 'Vanilla JavaScript, CSS and HTML with Tabulator and D3; front end only. A shared foundation of base classes, styles and background logic, plus subject- and audience-specific modules. Optimised for desktop and high-resolution tablets.',
@@ -410,11 +407,8 @@ export const RUECKMELDUNGEN = [
     zielgruppen: ['lehrkraft'],
     demo: 'https://zepf-rptu.github.io/TBA3/en',
     code: 'https://github.com/zepf-RPTU/TBA3',
-    doku: 'https://zepf-rptu.github.io/TBA3/docs/en',
-    hinweis: {
-      de: 'Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.',
-      en: 'The reports are being moved from GitLab to GitHub; the links are provisional.',
-    },
+    doku: 'https://zepf-rptu.github.io/TBA3/docs/',
+    hinweis: null,
     technik: {
       de: 'Wie die Mathematik-Rückmeldung: Vanilla JavaScript mit Tabulator und D3, gemeinsame technische Grundstruktur, fachspezifische Module. Textelemente wie Tooltips liegen in separaten, datenunabhängigen JSON-Dateien.',
       en: 'As the mathematics report: vanilla JavaScript with Tabulator and D3, a shared technical foundation, subject-specific modules. Text elements such as tooltips live in separate, data-independent JSON files.',
@@ -447,11 +441,8 @@ export const RUECKMELDUNGEN = [
     zielgruppen: ['schulleitung'],
     demo: 'https://zepf-rptu.github.io/TBA3/sl',
     code: 'https://github.com/zepf-RPTU/TBA3',
-    doku: 'https://zepf-rptu.github.io/TBA3/docs/sl',
-    hinweis: {
-      de: 'Die Rückmeldungen befinden sich im Umzug von GitLab auf GitHub; die Verweise sind vorläufig.',
-      en: 'The reports are being moved from GitLab to GitHub; the links are provisional.',
-    },
+    doku: 'https://zepf-rptu.github.io/TBA3/docs/',
+    hinweis: null,
     technik: {
       de: 'Dieselbe Grundstruktur, zielgruppenspezifische Module. Streamlining der drei zepf-Rückmeldungen hinsichtlich Grundaufbau, technischer Umsetzung und übergreifender Funktionen war ein eigenes Arbeitspaket.',
       en: 'The same foundation, audience-specific modules. Streamlining the three zepf reports in terms of basic structure, technical implementation and cross-cutting functions was a work package of its own.',

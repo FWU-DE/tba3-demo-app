@@ -3,7 +3,7 @@
 // Warum ein Werkzeug und kein Einmal-Skript: Der Katalog in
 // `apps/shared/konsortium.js` steht auf zwei Quellen. Die eine sind die
 // Sachberichte — die ändern sich nicht mehr. Die andere sind die laufenden
-// Demos, und die ändern sich sehr wohl: das zepf zieht von GitLab auf GitHub,
+// Demos, und die ändern sich sehr wohl: das zepf ist von GitLab auf GitHub gezogen,
 // das ISQ plant den Umzug seines Repositoriums, indibits Repositorium ist noch
 // nicht veröffentlicht. Eine Erhebung, die sich nicht wiederholen lässt,
 // veraltet still.

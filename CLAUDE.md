@@ -278,7 +278,7 @@ Zwei Regeln halten den Katalog ehrlich, und beide haben einen Test:
 **Die zweite Quelle lässt sich wiederholen.** `npm run rueckmeldungen:erheben`
 ruft die zehn Demos auf, schreibt die Befunde nach `docs/erhebung/` und nimmt
 die Bilder für die Übersichtsseite auf. Das ist nötig, weil sich diese Quelle
-bewegt: das zepf zieht von GitLab auf GitHub, das ISQ plant den Umzug seines
+bewegt: das zepf ist von GitLab auf GitHub gezogen, das ISQ plant den Umzug seines
 Repositoriums, indibits Repositorium ist noch nicht veröffentlicht. Ergiebig
 sind dabei besonders die eigenen Elementnamen im DOM — die Angular-Anwendungen
 von indibit tragen ihr Komponentenverzeichnis sichtbar mit sich
