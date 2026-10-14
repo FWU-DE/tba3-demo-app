@@ -53,7 +53,6 @@ Request.
 ## [0.1.0] — 2026-05-05
 
 ### Added
-- Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - React-19-Anwendung für TBA3-Auswertungsdaten: Kompetenzstufen, Item-Statistik, drei Ebenen, Filter.
 - Export als PDF, ZIP und QR-Code; MUNDO-Anbindung über LTI.
 - MCP-Server; Docker-Abbild mit App und MCP-Server; CI für beide Abbilder.
