@@ -260,7 +260,7 @@ const CatalogSection = ({
   return (
     <>
       {/* Assigned materials */}
-      <Card title={title}>
+      <Card title={title} testid="materialien-zugewiesen">
         {assignedMaterials.length === 0 ? (
           <p className="text-sm text-gray-400 py-2">{t('materialien.keineZugewiesen')}</p>
         ) : (
@@ -271,7 +271,7 @@ const CatalogSection = ({
       </Card>
 
       {/* Catalog */}
-      <Card title={t('materialien.auswaehlenTitel')}>
+      <Card title={t('materialien.auswaehlenTitel')} testid="materialien-auswahl">
         {/* Mundo search button */}
         {onMundoClick && (
           <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
@@ -280,6 +280,7 @@ const CatalogSection = ({
             </p>
             <button
               onClick={onMundoClick}
+              data-testid="mundo-oeffnen"
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition-colors"
             >
               <span className="text-sm">🌍</span>
@@ -665,6 +666,7 @@ const EducationalMaterialsPanel = () => {
       {mode === 'level' && (
         <>
           <Card
+            testid="materialien-stufen"
             title={
               predefinedGroup
                 ? `${t('materialien.stufeWaehlen')} – ${predefinedGroup.name}`
@@ -790,7 +792,7 @@ const EducationalMaterialsPanel = () => {
       )}
 
       {/* ── Export ── */}
-      <Card title={t('materialien.exportTitel')}>
+      <Card title={t('materialien.exportTitel')} testid="materialien-export">
         <p className="text-sm text-gray-500 mb-4">
           {t('materialien.exportEinleitung')}
         </p>

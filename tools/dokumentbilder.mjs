@@ -138,6 +138,103 @@ const herunterladen = async (seite, testId, name) => {
   await seite.close();
 }
 
+// ── Machbarkeitsstudie: Material sammeln, MUNDO, Export ─────────────────────
+//
+// Diese Seiten gibt es auf Deutsch und Englisch, ihre Bilder also auch:
+// `<name>-de.png` und `<name>-en.png`. Die Oberfläche wird über ?lang=
+// umgeschaltet, das PDF folgt der Sprache beim Klick.
+//
+// Ausgeschnitten wird wie bei der Hilfe-Ansicht aus der ganzen Seite: eine
+// Element-Aufnahme rollt ihr Ziel in den Blick, und dort läge die
+// Navigationsleiste darüber.
+const ausschnitt = async (seite, testId, datei) => {
+  const kasten = await seite.getByTestId(testId).evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return {
+      x: Math.round(r.left + window.scrollX),
+      y: Math.round(r.top + window.scrollY),
+      width: Math.round(r.width),
+      height: Math.round(r.height),
+    };
+  });
+  await seite.screenshot({ path: join(ZIEL, datei), fullPage: true, clip: kasten });
+  console.log(`✓ ${datei}`);
+};
+
+const MUNDO_BEISPIEL = {
+  de: 'Flächeninhalt von Rechtecken',
+  en: 'Area of rectangles',
+};
+
+for (const sprache of ['de', 'en']) {
+  const kontext = await browser.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true });
+  const seite = await kontext.newPage();
+  // Der MUNDO-Dialog öffnet beim ersten Aufruf ein Popup zu mundo.schule. Das
+  // braucht Zugangsdaten und Netz; für die Bilder genügt der Dialog selbst.
+  kontext.on('page', (neu) => { if (neu !== seite) neu.close().catch(() => {}); });
+  await seite.goto(`${BASIS}/demo/?lang=${sprache}&tab=materials`, { waitUntil: 'networkidle' });
+  await seite.getByTestId('ansicht-materialien').waitFor();
+
+  // Stufe II wählen, zwei Materialien anklicken — noch nicht zugewiesen.
+  await seite.getByTestId('materialien-stufe-II').click();
+  const karten = seite.getByTestId(/^material-/);
+  await karten.nth(0).click();
+  await karten.nth(1).click();
+  await seite.waitForTimeout(200);
+  await ausschnitt(seite, 'materialien-stufen', `lms-stufen-${sprache}.png`);
+  await ausschnitt(seite, 'materialien-auswahl', `lms-auswahl-${sprache}.png`);
+  await seite.getByTestId('materialien-zuweisen').click();
+
+  // Ein Material aus MUNDO, von Hand eingetragen — derselbe Weg, den die
+  // LTI-Auswahl nimmt, ohne Zugangsdaten.
+  await seite.getByTestId('mundo-oeffnen').click();
+  await seite.getByTestId('mundo-dialog').waitFor();
+  await seite.getByTestId('mundo-reiter-manual').click();
+  await seite.getByTestId('mundo-manuell-titel').fill(MUNDO_BEISPIEL[sprache]);
+  await seite.getByTestId('mundo-manuell-url').fill('https://mundo.schule/details/SODIX-0000000000001');
+  await seite.getByTestId('mundo-manuell-hinzufuegen').click();
+  await seite.getByTestId('mundo-dialog').screenshot({ path: join(ZIEL, `mundo-dialog-${sprache}.png`) });
+  console.log(`✓ mundo-dialog-${sprache}.png`);
+  await seite.getByTestId('mundo-uebernehmen').click();
+  await seite.waitForTimeout(300);
+  await ausschnitt(seite, 'materialien-zugewiesen', `mundo-zugewiesen-${sprache}.png`);
+
+  await ausschnitt(seite, 'materialien-export', `lms-export-${sprache}.png`);
+  seiteAlsBild(await herunterladen(seite, 'export-pdf', `lms-pdf-${sprache}`), `lms-pdf-${sprache}`);
+  await kontext.close();
+}
+
+// ── Optional: die Cartridge nach dem Import in Moodle ────────────────────────
+//
+// Läuft nur, wenn ein Moodle mit den importierten Kursen erreichbar ist —
+// Kurzname TBA3-DE und TBA3-EN, je aus der Cartridge der Sprache. Wie man so
+// eins aufsetzt, steht in /dokumentation/machbarkeitsstudie-lms-export.
+//
+//   DOCS_MOODLE=http://127.0.0.1:8088 DOCS_MOODLE_NUTZER=admin \
+//   DOCS_MOODLE_KENNWORT=… npm run docs:bilder
+if (process.env.DOCS_MOODLE) {
+  const M = process.env.DOCS_MOODLE;
+  const kontext = await browser.newContext({ viewport: { width: 1280, height: 760 } });
+  const seite = await kontext.newPage();
+  await seite.goto(`${M}/login/index.php`);
+  await seite.fill('#username', process.env.DOCS_MOODLE_NUTZER ?? 'admin');
+  await seite.fill('#password', process.env.DOCS_MOODLE_KENNWORT ?? '');
+  await seite.click('#loginbtn');
+  await seite.waitForLoadState('networkidle');
+  for (const sprache of ['de', 'en']) {
+    await seite.goto(`${M}/course/view.php?name=TBA3-${sprache.toUpperCase()}&lang=${sprache}`, { waitUntil: 'networkidle' });
+    await seite.screenshot({ path: join(ZIEL, `lms-moodle-kurs-${sprache}.png`) });
+    console.log(`✓ lms-moodle-kurs-${sprache}.png`);
+    await seite.getByRole('link', { name: MUNDO_BEISPIEL[sprache] }).first().click();
+    await seite.waitForLoadState('networkidle');
+    await seite.screenshot({ path: join(ZIEL, `lms-moodle-seite-${sprache}.png`) });
+    console.log(`✓ lms-moodle-seite-${sprache}.png`);
+  }
+  await kontext.close();
+} else {
+  console.log('· DOCS_MOODLE nicht gesetzt — die Moodle-Bilder bleiben, wie sie sind');
+}
+
 await browser.close();
 console.log(`\nFertig → apps/portal/dokumentation/bilder/`);
 console.log('  Stand prüfen: git diff --stat -- apps/portal/dokumentation/bilder/');

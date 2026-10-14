@@ -123,7 +123,8 @@ a:hover { color: var(--blau-dunkel); }
 }
 .inhalt h3 { font-size: 19px; margin: 32px 0 10px; }
 .inhalt h4 { font-size: 16.5px; margin: 24px 0 8px; }
-.inhalt > *:first-child { margin-top: 0; }
+.inhalt > *:first-child,
+.inhalt > [lang] > *:first-child { margin-top: 0; }
 
 .inhalt p { margin: 0 0 16px; }
 .inhalt ul, .inhalt ol { margin: 0 0 16px; padding-left: 22px; }

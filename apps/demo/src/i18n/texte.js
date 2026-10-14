@@ -808,6 +808,16 @@ export const TEXTE = {
     dateinameRueckmeldung: { de: 'Rueckmeldung', en: 'Report' },
     mundoExtern: { de: 'MUNDO (extern)', en: 'MUNDO (external)' },
     direktlink: { de: 'Direktlink', en: 'Direct link' },
+    beschreibung: { de: 'Beschreibung', en: 'Description' },
+    zielStufen: { de: 'Ziel-Kompetenzstufen', en: 'Target competence levels' },
+    zugeordnetAn: { de: 'Zugeordnet an', en: 'Assigned to' },
+    gruppe: { de: 'Gruppe', en: 'Group' },
+    kompetenzstufe: { de: 'Kompetenzstufe', en: 'Competence level' },
+    stufe: { de: 'Stufe {n}', en: 'Level {n}' },
+    cartridgeBeschreibung: {
+      de: 'Exportierte Lernmaterialien aus der TBA3-Demoanwendung, gegliedert nach Gruppen und Kompetenzstufen. Erstellt: {datum}',
+      en: 'Learning materials exported from the TBA3 demo application, arranged by group and competence level. Created: {datum}',
+    },
     stufeMitBeschreibung: {
       de: 'Stufe {n}: {text}',
       en: 'Level {n}: {text}',

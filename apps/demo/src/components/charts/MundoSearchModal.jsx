@@ -135,16 +135,16 @@ const ManualEntry = ({ onAdd }) => {
   return (
     <form onSubmit={submit} className="space-y-2 p-6">
       <HtmlText pfad="mundo.manuellEinleitung" className="text-sm text-gray-600 mb-3" />
-      <input required value={title} onChange={(e) => setTitle(e.target.value)}
+      <input required value={title} onChange={(e) => setTitle(e.target.value)} data-testid="mundo-manuell-titel"
         placeholder={t('mundo.titelFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-      <input value={url} onChange={(e) => setUrl(e.target.value)}
+      <input value={url} onChange={(e) => setUrl(e.target.value)} data-testid="mundo-manuell-url"
         placeholder={t('mundo.urlFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       <input value={desc} onChange={(e) => setDesc(e.target.value)}
         placeholder={t('mundo.beschreibungFeld')}
         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-      <button type="submit" disabled={!title.trim()}
+      <button type="submit" disabled={!title.trim()} data-testid="mundo-manuell-hinzufuegen"
         className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed">
         {t('mundo.hinzufuegen')}
       </button>
@@ -312,6 +312,7 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col overflow-hidden"
+        data-testid="mundo-dialog"
         onClick={(e) => e.stopPropagation()}>
 
         {/* ── Header ── */}
@@ -341,7 +342,7 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
                 { key: 'manual', label: t('mundo.reiterManuell') },
                 { key: 'config', label: t('mundo.reiterKonfig') },
               ].map(({ key, label }) => (
-                <button key={key} onClick={() => setTab(key)}
+                <button key={key} onClick={() => setTab(key)} data-testid={`mundo-reiter-${key}`}
                   className={`px-3 py-1.5 rounded-md font-medium transition-all ${
                     tab === key ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
                   }`}>
@@ -450,7 +451,7 @@ const MundoSearchModal = ({ onSelect, onClose }) => {
             </div>
 
             <div className="px-4 py-3 border-t border-gray-100">
-              <button onClick={handleConfirm} disabled={items.length === 0}
+              <button onClick={handleConfirm} disabled={items.length === 0} data-testid="mundo-uebernehmen"
                 className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   items.length > 0
                     ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'

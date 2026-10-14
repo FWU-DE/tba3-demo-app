@@ -229,8 +229,18 @@ die Oberfläche beschreibt, gehört hierher.
 keine eigene Karte auf der Übersicht, der Pfad oben führt über die Landeseite
 zurück, die Adresse bleibt flach. So ist die Machbarkeitsstudie gebaut
 (`machbarkeitsstudie.md` + `machbarkeitsstudie-<frage>.md`). Wer eine Teilfrage
-hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite;
-der Test prüft das Zweite.
+hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite
+(beider Sprachen); der Test prüft das Zweite.
+
+**Zweisprachige Dokumente.** Ein eigenes Dokument kann mit
+`englisch: '<slug>.en.md'` eine englische Fassung mitbringen. Beide stehen auf
+derselben Seite in `<div lang="de">` und `<div lang="en">` und werden wie
+überall über `html[lang]` umgeschaltet. Die Machbarkeitsstudie ist durchgehend
+zweisprachig; wer eine Teilfrage hinzufügt, schreibt beide Fassungen. Bilder
+mit Oberfläche gibt es dann ebenfalls zweimal (`<name>-de.png`,
+`<name>-en.png`), erzeugt von `npm run docs:bilder`. Die Überschriften beider
+Fassungen dürfen nicht gleich lauten, sonst vergibt die Seite eine `id`
+doppelt; der Test fängt das.
 
 ### Die Rückmeldungen des Konsortiums
 
@@ -423,6 +433,14 @@ Ib, die Anwendung führt fünf. Ein Abgleich, der stumpf `refName === 'I'` prüf
 ordnet auf den echten Beispieldaten **nichts** zu und meldet trotzdem Erfolg;
 der Unit-Test läuft deshalb gegen die Fixtures des Mocks, nicht gegen
 selbstgebaute Daten.
+
+**Die Common Cartridge ist Version 1.1, mit Absicht.** Moodle 4.5 erkennt
+beim Wiederherstellen nur 1.0 und 1.1; eine 1.3-Cartridge ist dort
+„unbekanntes Format“. Und die `<organization>` hat genau ein Wurzel-`item` ohne
+Titel, sonst bricht Moodles Schemaprüfung ab. Beides hält
+`utils/__tests__/commonCartridgeExport.test.js` fest, belegt ist es aber erst
+mit einem echten Import. Wie man den macht, steht in
+`/dokumentation/machbarkeitsstudie-lms-export`.
 
 Die Auto-Zuweisung ordnet nur zu, was eindeutig im Anhang steht (Stufe → diese
 Stufe, „ohne festes Ziel“ → alle fünf) und zählt den Rest sichtbar mit. Was an

@@ -113,9 +113,13 @@ behandelt die Anwendung sie wie lokales Material: Sie erscheinen in der Liste
 mit dem Vermerk „MUNDO“ und gehen in den PDF-Export und in die Common Cartridge
 (`.imscc`) für die Lernplattform ein.
 
+![Liste „Zugewiesene Materialien – Stufe II“ mit zwei Materialien aus dem lokalen Pool und einem Eintrag mit dem Etikett MUNDO und einem Link zu mundo.schule.](/dokumentation/bilder/mundo-zugewiesen-de.png "Ein MUNDO-Treffer zwischen den lokalen Materialien der Stufe II. Er geht in beide Exporte ein, wie auf der Seite zur Übergabe an das LMS zu sehen.")
+
 Für den Fall, dass LTI nicht zur Verfügung steht, gibt es einen zweiten Reiter.
 Dort trägt man Titel, Adresse und Beschreibung eines Materials von Hand ein,
 das man vorher auf mundo.schule gefunden hat.
+
+![Der Dialog „MUNDO Materialsuche“ mit den Reitern LTI-Suche, Manuell und Konfiguration. Links das Formular für Titel, URL und Beschreibung, rechts die Liste der ausgewählten Materialien mit einem Eintrag und der Knopf „1 Material übernehmen“.](/dokumentation/bilder/mundo-dialog-de.png "Der MUNDO-Dialog im Reiter „Manuell“. Rechts sammelt sich die Auswahl, ganz gleich, ob sie aus der LTI-Suche oder aus dem Formular kommt.")
 
 ### Was im Prototyp vereinfacht ist
 
