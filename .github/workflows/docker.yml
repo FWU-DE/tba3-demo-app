@@ -1,10 +1,21 @@
 name: Build & Push Docker Images
 
+# Images je Version: ein Tag `vX.Y.Z` baut und taggt X.Y.Z, X.Y und X.
+# `latest` bleibt beim Stand von main. Für einen Tag, der vor diesem Workflow
+# entstand (v1.0.0), lässt sich der Lauf von Hand starten: Eingabe `tag`,
+# gebaut wird dann genau dieser Stand und nur mit seinen Versions-Tags —
+# latest, main und sha-… bleiben, wo sie sind.
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Vorhandener Versions-Tag, z. B. v1.0.0'
+        required: true
 
 env:
   REGISTRY: ghcr.io
@@ -20,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
@@ -35,9 +48,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=ref,event=branch,enable=${{ github.event_name != 'workflow_dispatch' }}
+            type=sha,prefix=sha-,enable=${{ github.event_name != 'workflow_dispatch' }}
+            type=raw,value=latest,enable=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}},value=${{ inputs.tag }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -62,6 +78,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
@@ -77,9 +95,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-mcp
           tags: |
-            type=ref,event=branch
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=ref,event=branch,enable=${{ github.event_name != 'workflow_dispatch' }}
+            type=sha,prefix=sha-,enable=${{ github.event_name != 'workflow_dispatch' }}
+            type=raw,value=latest,enable=${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
+            type=semver,pattern={{major}},value=${{ inputs.tag }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
