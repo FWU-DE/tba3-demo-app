@@ -11,6 +11,8 @@ import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync,
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DOKUMENTE, seite, stand, uebersicht } from './dokumente.mjs';
+import { konsortiumJson, robots, sitemap } from './maschinenlesbar.mjs';
+import { demo as demoOhneJs, katalog as katalogOhneJs } from './ohne-javascript.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
@@ -153,5 +155,25 @@ for (const datei of SWAGGER_DATEIEN) {
   copyFileSync(quelle, join(dist, 'schnittstelle', datei));
 }
 console.log(`✓ swagger-ui → dist/schnittstelle/`);
+
+// Für Werkzeuge, die die Seite lesen statt ansehen (tools/ohne-javascript.mjs,
+// tools/maschinenlesbar.mjs): Demo und Katalog bekommen Inhalt in ihren
+// leeren Container, dazu Daten, Sitemap und robots.txt.
+for (const [datei, container, inhalt] of [
+  ['demo/index.html', '<div id="root"></div>', demoOhneJs()],
+  ['katalog/index.html', '<div id="app"></div>', katalogOhneJs()],
+]) {
+  const pfad = join(dist, datei);
+  const html = readFileSync(pfad, 'utf8');
+  if (!html.includes(container)) {
+    console.error(`✗ ${datei}: ${container} nicht gefunden — Fassung ohne JavaScript nicht eingesetzt`);
+    process.exit(1);
+  }
+  writeFileSync(pfad, html.replace(container, container.replace('></div>', `>\n${inhalt}\n</div>`)));
+}
+writeFileSync(join(dist, 'gemeinsam/konsortium.json'), `${JSON.stringify(konsortiumJson(), null, 2)}\n`);
+writeFileSync(join(dist, 'sitemap.xml'), sitemap());
+writeFileSync(join(dist, 'robots.txt'), robots());
+console.log('✓ ohne JavaScript: demo/, katalog/ · gemeinsam/konsortium.json · sitemap.xml · robots.txt');
 
 console.log('\nSite gebaut → dist/  (lokal ansehen: npm run preview)');

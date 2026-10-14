@@ -136,6 +136,28 @@ Sitzungen am selben Checkout, deployt **genau eine**. Zwei Läufe erzeugen zwei
 Production-Deployments, von denen das zweite gewinnt — auch wenn es den älteren
 Stand trägt.
 
+### Für Werkzeuge, die die Seite lesen
+
+Agents und Suchindizes führen meist kein JavaScript aus; sie lesen das HTML.
+Darauf stellt sich die Seite ein, ohne eigene Inhalte nur für sie:
+
+- **Demo und Katalog ohne JavaScript.** Der Build schreibt in den leeren
+  Container (`#root`, `#app`), was die App zeigt: Reiter bzw. Ansichten mit
+  Adressen und Endpunkten, dazu die Verweise auf Dokumente, Spezifikationen und
+  Daten (`tools/ohne-javascript.mjs`). Die Texte kommen aus denselben
+  Wörterbüchern; ein neuer Reiter erscheint dort ohne Nachtrag. React und Vue
+  ersetzen den Inhalt beim Start; sichtbar ist er nur ohne Skript.
+- **Jede Dokumentseite** verweist im Kopf per `<link rel="alternate"
+  type="text/markdown">` auf ihre Markdown-Fassungen.
+- **`/gemeinsam/konsortium.json`**: Rückmeldungen und Baustein-Katalog als
+  Daten, erzeugt aus `konsortium.js` (`tools/maschinenlesbar.mjs`).
+- **`/sitemap.xml` und `/robots.txt`**, ebenfalls erzeugt. Die Basisadresse
+  kommt aus `SITE_URL` (Vorgabe `https://tba3.softwarehub.schule`).
+
+Eine Auslieferung je nach `Accept`-Kopfzeile gibt es bewusst nicht: Cloudflare
+vor tba3.softwarehub.schule ignoriert `Vary` und hielte eine Fassung für alle
+vor. Jede Fassung hat ihre eigene Adresse.
+
 ### Eine Spalte für die ganze Seite
 
 `apps/shared/container.css` führt die Maße, unter `/gemeinsam/container.css`
@@ -540,6 +562,7 @@ e2e/demo-vergleich.spec.js      Teilbereiche, Vergleiche hinzunehmen, gesperrte 
 e2e/demo-sprache.spec.js        Umschalten, Merken, über Bereiche hinweg, ?lang= beim ersten Rendern
 e2e/demo-fehler.spec.js         Abfrage scheitert, erneut versuchen, Fehler bleibt im Reiter
 e2e/demo-mobil.spec.js          Filter-Umschalter, Bedienbarkeit und kein seitlicher Überlauf bei 390 px
+e2e/ohne-javascript.spec.js     Demo und Katalog ohne Skript lesbar, mit Skript ohne Reste
 ```
 
 Gelaufen wird gegen `npm run preview`, nicht gegen den Dev-Server: Base-Pfade,

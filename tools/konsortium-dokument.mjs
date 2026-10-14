@@ -71,7 +71,8 @@ Angular-Komponenten im DOM stehen.
 Dieses Dokument wird aus \`apps/shared/konsortium.js\` erzeugt
 (\`npm run konsortium:doc\`). Dieselben Daten tragen die
 [Rückmeldungsübersicht](/beispiele) und den Reiter „Rückmeldeelemente" der
-[Demoanwendung](/demo/?tab=elemente).
+[Demoanwendung](/demo/?tab=elemente). Als Daten liegen sie unter
+[/gemeinsam/konsortium.json](/gemeinsam/konsortium.json).
 `,
     rueckmeldungen: (n) => `## Die ${n} Rückmeldungen`,
     spalten: '| Einrichtung | Rückmeldung | Zielgruppen | Fach | Klasse | Adressen |',
@@ -146,7 +147,8 @@ the DOM.
 This document is generated from \`apps/shared/konsortium.js\`
 (\`npm run konsortium:doc\`). The same data drives the
 [report overview](/beispiele) and the “Report elements” tab of the
-[demo application](/demo/?tab=elemente).
+[demo application](/demo/?tab=elemente). As data they are at
+[/gemeinsam/konsortium.json](/gemeinsam/konsortium.json).
 `,
     rueckmeldungen: (n) => `## The ${n} reports`,
     spalten: '| Institution | Report | Audiences | Subject | Grade | Links |',

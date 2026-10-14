@@ -19,18 +19,13 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { TEXTE } from '../i18n/texte.js';
+import { KOMPONENTEN } from '../komponenten.js';
 
 const HIER = dirname(fileURLToPath(import.meta.url));
 const QUELLE = readFileSync(join(HIER, 'IndexView.vue'), 'utf8');
 
-/** Die Einträge der Übersicht — gelesen, weil eine .vue-Datei sich hier nicht importieren lässt. */
-const eintraege = () => {
-  const block = /const COMPONENTS = \[([\s\S]*?)\n\];/.exec(QUELLE);
-  expect(block, 'COMPONENTS nicht gefunden — Aufbau der Übersicht geändert?').toBeTruthy();
-  return [...block[1].matchAll(
-    /\{\s*name: '([\w]+)',\s*route: '([^']+)',\s*baustein: '([\w-]+)',[\s\S]*?preview: '([\w-]+)',\s*\}/g,
-  )].map(([, name, route, baustein, preview]) => ({ name, route, baustein, preview }));
-};
+/** Die Einträge der Übersicht, aus ihrem eigenen Modul (auch der Build liest es). */
+const eintraege = () => KOMPONENTEN.map(({ name, route, baustein, preview }) => ({ name, route, baustein, preview }));
 
 describe('Übersicht des Katalogs', () => {
   it('führt jeden Eintrag vollständig', () => {
