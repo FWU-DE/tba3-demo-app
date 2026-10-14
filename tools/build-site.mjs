@@ -86,7 +86,13 @@ for (const dok of DOKUMENTE) {
   }
   const ziel = join(dist, 'dokumentation', dok.slug);
   mkdirSync(ziel, { recursive: true });
-  writeFileSync(join(ziel, 'index.html'), seite(dok, readFileSync(quelle, 'utf8'), standDaten));
+  const englisch = dok.englisch ? join(root, 'apps/portal/dokumentation', dok.englisch) : null;
+  if (englisch && !existsSync(englisch)) {
+    console.error(`✗ apps/portal/dokumentation/${dok.englisch} fehlt — in DOKUMENTE eingetragen, aber nicht angelegt`);
+    process.exit(1);
+  }
+  writeFileSync(join(ziel, 'index.html'), seite(dok, readFileSync(quelle, 'utf8'), standDaten,
+    englisch ? readFileSync(englisch, 'utf8') : null));
 }
 writeFileSync(join(dist, 'dokumentation/index.html'), uebersicht(DOKUMENTE, standDaten));
 console.log(`✓ ${DOKUMENTE.length} Dokumente gerendert → dist/dokumentation/`);

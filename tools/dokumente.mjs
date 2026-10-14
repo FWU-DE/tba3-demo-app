@@ -79,6 +79,7 @@ export const DOKUMENTE = [
   {
     slug: 'machbarkeitsstudie',
     datei: 'machbarkeitsstudie.md',
+    englisch: 'machbarkeitsstudie.en.md',
     eigen: true,
     kurz: { de: 'Machbarkeitsstudie', en: 'Feasibility study' },
     beschreibung: {
@@ -89,6 +90,7 @@ export const DOKUMENTE = [
   {
     slug: 'machbarkeitsstudie-mediatheken',
     datei: 'machbarkeitsstudie-mediatheken.md',
+    englisch: 'machbarkeitsstudie-mediatheken.en.md',
     eigen: true,
     teil: 'machbarkeitsstudie',
     kurz: { de: 'Mediatheken einbinden', en: 'Integrating media libraries' },
@@ -97,12 +99,28 @@ export const DOKUMENTE = [
       en: 'MUNDO connected to the demo application via LTI: technically feasible, but without shared metadata there is no search starting from the report — and what MEM can contribute in between.',
     },
   },
+  {
+    slug: 'machbarkeitsstudie-lms-export',
+    datei: 'machbarkeitsstudie-lms-export.md',
+    englisch: 'machbarkeitsstudie-lms-export.en.md',
+    eigen: true,
+    teil: 'machbarkeitsstudie',
+    kurz: { de: 'Materialsammlung an das LMS', en: 'Material collection to the LMS' },
+    beschreibung: {
+      de: 'Material zu einer Rückmeldung sammeln und als Common Cartridge an die Lernplattform oder als PDF aufs Papier geben — mit dem Import in Moodle und dem, was dabei auffiel.',
+      en: 'Collecting material for a report and handing it to the learning platform as a Common Cartridge or to paper as a PDF — with the import into Moodle and what it revealed.',
+    },
+  },
 ];
 
 // Ein Eintrag mit `teil` ist eine Unterseite: er steht nicht als eigene Karte
 // auf der Übersicht, sondern wird von seiner Landeseite aus verlinkt, und der
 // Pfad oben auf der Seite führt über sie zurück. Die Adresse bleibt flach
 // (/dokumentation/<slug>), damit Querverweise wie bei allen anderen funktionieren.
+// Ein Eintrag mit `englisch` bringt eine zweite Datei mit. Beide Fassungen
+// stehen dann in derselben Seite und werden über html[lang] umgeschaltet, wie
+// überall sonst auf der Seite. Die Kopien von oben haben keine — dort bleibt
+// der Hinweis, dass das Dokument nur auf Deutsch gepflegt wird.
 export const oberseite = (dok) => (dok.teil ? DOKUMENTE.find((d) => d.slug === dok.teil) : null);
 
 const hier = dirname(fileURLToPath(import.meta.url));
@@ -270,8 +288,9 @@ ${koerper}
 `;
 
 /** Eine Dokumentseite: /dokumentation/<slug> */
-export function seite(dok, markdown, standDaten = null) {
+export function seite(dok, markdown, standDaten = null, markdownEn = null) {
   const { titel, titelText, inhalt, gliederung } = rendere(markdown);
+  const en = markdownEn ? rendere(markdownEn) : null;
   const datum = datumsText(standDaten?.abgerufen);
   const oben = oberseite(dok);
 
@@ -294,9 +313,12 @@ export function seite(dok, markdown, standDaten = null) {
              It is updated in the repository with <code>npm run docs:update</code>.`,
       };
 
-  const eintraege = gliederung
-    .map((g) => `<li class="t${g.tiefe}"><a href="#${schuetze(g.id)}">${g.inhalt}</a></li>`)
+  const liste = (punkte, sprache = null) => punkte
+    .map((g) => `<li class="t${g.tiefe}"${sprache ? ` lang="${sprache}"` : ''}><a href="#${schuetze(g.id)}">${g.inhalt}</a></li>`)
     .join('\n        ');
+  const eintraege = en
+    ? [liste(gliederung, 'de'), liste(en.gliederung, 'en')].filter(Boolean).join('\n        ')
+    : liste(gliederung);
 
   const koerper = `<main class="wrap dokument">
 
@@ -305,14 +327,16 @@ export function seite(dok, markdown, standDaten = null) {
     <span aria-hidden="true">/</span>${oben ? `
     <a href="${seitenPfad(oben)}">${zweisprachig(oben.kurz)}</a>
     <span aria-hidden="true">/</span>` : ''}
-    <span>${dok.kurz.de}</span>
+    <span>${zweisprachig(dok.kurz)}</span>
   </nav>
 
   <header class="dokument-kopf">
-    <h1>${titel || dok.kurz.de}</h1>
+    ${en
+      ? `<h1><span lang="de">${titel || dok.kurz.de}</span><span lang="en">${en.titel || dok.kurz.en}</span></h1>`
+      : `<h1>${titel || dok.kurz.de}</h1>`}
     <p class="herkunft">
-      ${zweisprachig(woher)}
-      <span lang="en"><br />This document is maintained in German and shown here unchanged.</span>
+      ${zweisprachig(woher)}${en ? '' : `
+      <span lang="en"><br />This document is maintained in German and shown here unchanged.</span>`}
     </p>
   </header>
 
@@ -325,7 +349,7 @@ export function seite(dok, markdown, standDaten = null) {
     </aside>` : ''}
 
     <article class="inhalt">
-${inhalt}
+${en ? `<div lang="de">\n${inhalt}</div>\n<div lang="en">\n${en.inhalt}</div>` : inhalt}
     </article>
   </div>
 
@@ -333,7 +357,8 @@ ${inhalt}
     <a href="${githubUrl(dok)}">${zweisprachig(dok.eigen
       ? { de: 'Diese Seite auf GitHub', en: 'This page on GitHub' }
       : { de: 'Original auf GitHub', en: 'Original on GitHub' })}</a>
-    <a href="/dokumentation/${dok.datei}">${zweisprachig({ de: 'Markdown dieser Seite', en: 'Markdown of this page' })}</a>
+    <a href="/dokumentation/${dok.datei}"${en ? ' lang="de"' : ''}>${en ? 'Markdown dieser Seite' : zweisprachig({ de: 'Markdown dieser Seite', en: 'Markdown of this page' })}</a>${en ? `
+    <a href="/dokumentation/${dok.englisch}" lang="en">Markdown of this page</a>` : ''}
     <a href="/schnittstelle">${zweisprachig({ de: 'API-Referenz', en: 'API reference' })}</a>
   </footer>
 
@@ -342,7 +367,7 @@ ${inhalt}
   return rahmen({
     titel: {
       de: `${titelText || dok.kurz.de} — TBA3`,
-      en: `${titelText || dok.kurz.en} — TBA3`,
+      en: `${en?.titelText || titelText || dok.kurz.en} — TBA3`,
     },
     beschreibung: dok.beschreibung,
     koerper,

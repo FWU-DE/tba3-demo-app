@@ -6,6 +6,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+- **Die Common Cartridge lässt sich in Moodle importieren.** Der Export schrieb
+  Common Cartridge 1.3. Moodle 4.5 erkennt beim Wiederherstellen nur 1.0 und 1.1
+  und meldete „unbekanntes Format“. Nach dem Umstellen brach die Schemaprüfung
+  ab, weil die `<organization>` einen eigenen `<title>` trug statt eines
+  Wurzel-`item`. Jetzt: 1.1, Wurzel-`item`, und Moodle legt aus der
+  unveränderten Datei einen Kurs an (geprüft in Moodle 4.5.4, deutsch und
+  englisch). Dazu waren die Seiten in der Cartridge halb deutsch („Beschreibung“,
+  „Zugeordnet an“) und das LOM-Feld fest auf `de`. Beides folgt jetzt der
+  gewählten Sprache. Eine leere Beschreibung bekommt keine leere Überschrift
+  mehr. Neuer Unit-Test: `commonCartridgeExport.test.js`.
+
+### Added
+- **Zweite Teilfrage der Machbarkeitsstudie:
+  `/dokumentation/machbarkeitsstudie-lms-export`.** Material zu einer
+  Rückmeldung sammeln und als Common Cartridge an die Lernplattform oder als
+  PDF aufs Papier geben, mit dem Moodle-Import, seinen Befunden und Bildern.
+- **Die Machbarkeitsstudie gibt es auf Englisch.** Ein Eintrag in `DOKUMENTE`
+  kann eine zweite Datei mitbringen (`englisch: '<slug>.en.md'`). Beide
+  Fassungen stehen auf derselben Seite und werden über `html[lang]`
+  umgeschaltet; der Hinweis „maintained in German“ entfällt dann. Die Tests
+  prüfen Verweise, Anker und Bilder in beiden Fassungen und dass keine Seite
+  eine `id` doppelt vergibt.
+- **Bilder für die Mediatheken-Seite und die LMS-Seite**, je deutsch und
+  englisch, erzeugt mit `npm run docs:bilder`. Die Moodle-Bilder entstehen nur,
+  wenn `DOCS_MOODLE` auf ein Moodle mit den importierten Kursen zeigt.
+- `data-testid` für Stufenwahl, Auswahl, Zuweisung und Export im Reiter
+  „Lernmaterialien“ sowie für den MUNDO-Dialog.
+
 ### Added
 - **Machbarkeitsstudie in der Dokumentation.** `/dokumentation/machbarkeitsstudie`
   ist die Landeseite für die Teilfragen der Studie; jede bekommt eine eigene

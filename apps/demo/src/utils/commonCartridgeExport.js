@@ -6,11 +6,17 @@ import { konstantenJetzt, sprache, uebersetze } from '../i18n';
 let { MATERIAL_TYPES, SUBJECTS, GRADES, COMPETENCE_LEVELS } = konstantenJetzt();
 const LOCALE = { de: 'de-DE', en: 'en-GB' };
 
-const CC_VERSION = '1.3.0';
-const CC_XMLNS = 'http://www.imsglobal.org/xsd/imsccv1p3/imscp_v1p1';
+// Common Cartridge 1.1, nicht 1.3: Moodle (geprüft mit 4.5) erkennt beim
+// Wiederherstellen nur die Namensräume von 1.0 und 1.1 und meldet eine
+// 1.3-Cartridge als „unbekanntes Format“. Was hier exportiert wird — Seiten und
+// eine Gliederung —, kann 1.1 vollständig; 1.3 brächte nichts, was gebraucht wird.
+// Siehe /dokumentation/machbarkeitsstudie-lms-export.
+const CC_VERSION = '1.1.0';
+const CC_XMLNS = 'http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1';
+const CC_LOM = 'http://ltsc.ieee.org/xsd/imsccv1p1/LOM/manifest';
 const CC_SCHEMA_LOCATION = [
-  'http://www.imsglobal.org/xsd/imsccv1p3/imscp_v1p1',
-  'http://www.imsglobal.org/profile/cc/ccv1p3/ccv1p3_imscp_v1p2_v1p0.xsd',
+  'http://www.imsglobal.org/xsd/imsccv1p1/imscp_v1p1',
+  'http://www.imsglobal.org/profile/cc/ccv1p1/ccv1p1_imscp_v1p2_v1p0.xsd',
 ].join(' ');
 
 // Sanitise strings for use as XML identifiers
@@ -26,14 +32,14 @@ const xmlEscape = (str) =>
 
 // ── HTML page for one material ────────────────────────────────────────────────
 
-const buildMaterialHtml = (material, group, levelKey) => {
+export const buildMaterialHtml = (material, group, levelKey) => {
   const type = MATERIAL_TYPES[material.type];
   const subject = SUBJECTS[material.subject];
   const grade = GRADES[material.grade];
   const level = COMPETENCE_LEVELS[levelKey];
 
   return `<!DOCTYPE html>
-<html lang="de">
+<html lang="${sprache()}">
 <head>
   <meta charset="UTF-8" />
   <title>${xmlEscape(material.title)}</title>
@@ -58,23 +64,23 @@ const buildMaterialHtml = (material, group, levelKey) => {
   <div class="meta">
     ${subject ? `<span class="badge" style="background:${subject.color ?? '#6b7280'}">${xmlEscape(subject.name)}</span>` : ''}
     ${grade ? `<span class="badge" style="background:#6b7280">${xmlEscape(grade.name)}</span>` : ''}
-    <span class="badge" style="background:#2563eb">Gruppe: ${xmlEscape(group.name)}</span>
+    <span class="badge" style="background:#2563eb">${xmlEscape(uebersetze('ausgabe.gruppe'))}: ${xmlEscape(group.name)}</span>
     ${level ? `<span class="badge" style="background:${level.color ?? '#6b7280'}">${xmlEscape(uebersetze('ausgabe.stufeMitBeschreibung', { n: levelKey, text: level.description ?? '' }))}</span>` : ''}
   </div>
 
-  <div class="section">
-    <h2>Beschreibung</h2>
+  ${material.description ? `<div class="section">
+    <h2>${xmlEscape(uebersetze('ausgabe.beschreibung'))}</h2>
     <p>${xmlEscape(material.description)}</p>
-  </div>
+  </div>` : ''}
 
   ${(material.targetLevels ?? []).length > 0 ? `<div class="section">
-    <h2>Ziel-Kompetenzstufen</h2>
+    <h2>${xmlEscape(uebersetze('ausgabe.zielStufen'))}</h2>
     ${material.targetLevels
       .map((l) => {
         const lv = COMPETENCE_LEVELS[l];
         return `<div class="level-bar">
           <div class="level-dot" style="background:${lv?.color ?? '#6b7280'}"></div>
-          <span><strong>Stufe ${l}</strong> – ${xmlEscape(lv?.description ?? '')}</span>
+          <span><strong>${xmlEscape(uebersetze('ausgabe.stufe', { n: l }))}</strong> – ${xmlEscape(lv?.description ?? '')}</span>
         </div>`;
       })
       .join('\n    ')}
@@ -82,8 +88,8 @@ const buildMaterialHtml = (material, group, levelKey) => {
   ${material.url ? `<div class="section"><h2>${xmlEscape(uebersetze('ausgabe.direktlink'))}</h2><p><a href="${xmlEscape(material.url)}">${xmlEscape(material.url)}</a></p></div>` : ''}
 
   <div class="section">
-    <h2>Zugeordnet an</h2>
-    <p>Gruppe: <strong>${xmlEscape(group.name)}</strong> · Kompetenzstufe: <strong>${xmlEscape(levelKey)}</strong></p>
+    <h2>${xmlEscape(uebersetze('ausgabe.zugeordnetAn'))}</h2>
+    <p>${xmlEscape(uebersetze('ausgabe.gruppe'))}: <strong>${xmlEscape(group.name)}</strong>${level ? ` · ${xmlEscape(uebersetze('ausgabe.kompetenzstufe'))}: <strong>${xmlEscape(levelKey)}</strong>` : ''}</p>
   </div>
 
   <footer>${xmlEscape(uebersetze('ausgabe.exportiertAus', { datum: new Date().toLocaleDateString(LOCALE[sprache()] ?? LOCALE.de) }))}</footer>
@@ -93,7 +99,7 @@ const buildMaterialHtml = (material, group, levelKey) => {
 
 // ── imsmanifest.xml ───────────────────────────────────────────────────────────
 
-const buildManifest = (items) => {
+export const buildManifest = (items) => {
   // items: [{ group, levelKey, material, resourceId, filePath }]
 
   // Group by group, then by level
@@ -155,6 +161,8 @@ ${levelItems}
     .join('\n');
 
   const exportDate = new Date().toISOString();
+  const lang = sprache();
+  const titel = xmlEscape(uebersetze('ausgabe.lernmaterialien'));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <manifest identifier="tba3_cc_export"
@@ -164,21 +172,26 @@ ${levelItems}
   <metadata>
     <schema>IMS Common Cartridge</schema>
     <schemaversion>${CC_VERSION}</schemaversion>
-    <lom:lom xmlns:lom="http://ltsc.ieee.org/xsd/imsccv1p3/LOM/manifest">
+    <lom:lom xmlns:lom="${CC_LOM}">
       <lom:general>
         <lom:title>
-          <lom:string language="de">TBA3 Lernmaterialien</lom:string>
+          <lom:string language="${lang}">${titel}</lom:string>
         </lom:title>
+        <lom:language>${lang}</lom:language>
         <lom:description>
-          <lom:string language="de">Exportierte Lernmaterialien aus TBA3 Demo App, gruppiert nach Klassen und Kompetenzstufen. Erstellt: ${exportDate}</lom:string>
+          <lom:string language="${lang}">${xmlEscape(uebersetze('ausgabe.cartridgeBeschreibung', { datum: exportDate }))}</lom:string>
         </lom:description>
       </lom:general>
     </lom:lom>
   </metadata>
   <organizations>
+    <!-- Das Schema verlangt genau ein Wurzel-item ohne Titel; die Organisation
+         selbst trägt keinen. Ein <title> direkt hier lässt Moodle den Import
+         mit einem Schemafehler abbrechen. -->
     <organization identifier="tba3_org" structure="rooted-hierarchy">
-      <title>TBA3 Lernmaterialien</title>
+    <item identifier="root">
 ${orgItems}
+    </item>
     </organization>
   </organizations>
   <resources>
@@ -227,10 +240,7 @@ export const exportCommonCartridge = async (assignments, filterGroupId = null, e
   });
 
   if (items.length === 0) {
-    const label = filterGroupId
-      ? `Keine zugewiesenen Materialien für diese Klasse.`
-      : 'Keine zugewiesenen Materialien vorhanden.';
-    throw new Error(label);
+    throw new Error(uebersetze(filterGroupId ? 'ausgabe.keineFuerKlasse' : 'ausgabe.keineVorhanden'));
   }
 
   // Add content HTML files

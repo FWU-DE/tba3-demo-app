@@ -77,10 +77,16 @@ describe('rendere', () => {
   });
 });
 
+// Ein Dokument kann eine englische Fassung mitbringen. Alles, was für die
+// deutsche Datei gilt — Überschrift, Verweise, Anker, Bilder —, gilt für sie
+// genauso; ein Verweis, der nur auf Englisch ins Leere zeigt, ist derselbe Fehler.
+const dateienVon = (dok) => [dok.datei, dok.englisch].filter(Boolean);
+const ALLE_DATEIEN = DOKUMENTE.flatMap((dok) => dateienVon(dok).map((datei) => ({ dok, datei })));
+
 describe('die eingecheckten Kopien', () => {
-  it.each(DOKUMENTE)('$datei liegt vor und trägt eine Überschrift', (dok) => {
-    const datei = join(ORDNER, dok.datei);
-    expect(existsSync(datei), `${dok.datei} fehlt — \`npm run docs:update\``).toBe(true);
+  it.each(ALLE_DATEIEN.map(({ datei }) => ({ datei })))('$datei liegt vor und trägt eine Überschrift', ({ datei: name }) => {
+    const datei = join(ORDNER, name);
+    expect(existsSync(datei), `${name} fehlt — \`npm run docs:update\``).toBe(true);
     expect(readFileSync(datei, 'utf8').trimStart().startsWith('# ')).toBe(true);
   });
 
@@ -90,12 +96,15 @@ describe('die eingecheckten Kopien', () => {
   it('jeder Verweis zwischen den Dokumenten trifft einen Abschnitt', () => {
     const sprungmarken = new Map();
     const verweise = [];
-    for (const dok of DOKUMENTE) {
-      const markdown = readFileSync(join(ORDNER, dok.datei), 'utf8');
-      sprungmarken.set(`/dokumentation/${dok.slug}`, new Set(ankerIn(rendere(markdown).inhalt)));
+    for (const { dok, datei } of ALLE_DATEIEN) {
+      const markdown = readFileSync(join(ORDNER, datei), 'utf8');
+      const pfad = `/dokumentation/${dok.slug}`;
+      // Beide Fassungen stehen auf derselben Seite, ihre Anker also auch.
+      const bisher = sprungmarken.get(pfad) ?? new Set();
+      sprungmarken.set(pfad, new Set([...bisher, ...ankerIn(rendere(markdown).inhalt)]));
       for (const [, href] of markdown.matchAll(/\]\(([^)]+)\)/g)) {
         const ziel = lokalerVerweis(href);
-        if (ziel) verweise.push({ von: dok.datei, ziel });
+        if (ziel) verweise.push({ von: datei, ziel });
       }
     }
     expect(verweise.length).toBeGreaterThan(0);
@@ -111,11 +120,11 @@ describe('die eingecheckten Kopien', () => {
   // /dokumentation/<slug>/, `bilder/x.png` zeigte also ein Verzeichnis zu tief.
   it('jedes Bild liegt vor und ist absolut verlinkt', () => {
     const bilder = [];
-    for (const dok of DOKUMENTE) {
-      const markdown = readFileSync(join(ORDNER, dok.datei), 'utf8');
+    for (const { datei } of ALLE_DATEIEN) {
+      const markdown = readFileSync(join(ORDNER, datei), 'utf8');
       for (const [, quelle] of markdown.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)) {
         if (/^https?:/.test(quelle)) continue;
-        bilder.push({ von: dok.datei, quelle });
+        bilder.push({ von: datei, quelle });
       }
     }
     for (const { von, quelle } of bilder) {
@@ -135,8 +144,8 @@ describe('die eingecheckten Kopien', () => {
 
   it('kein Verweis auf ein Markdown, das hier nicht liegt', () => {
     const unbekannt = new Set();
-    for (const dok of DOKUMENTE) {
-      const markdown = readFileSync(join(ORDNER, dok.datei), 'utf8');
+    for (const { datei } of ALLE_DATEIEN) {
+      const markdown = readFileSync(join(ORDNER, datei), 'utf8');
       for (const [, href] of markdown.matchAll(/\]\(([^)]+)\)/g)) {
         if (/^(?:\.\/)?[\w.-]+\.md(#|$)/.test(href) && !lokalerVerweis(href)) unbekannt.add(href);
       }
@@ -195,9 +204,32 @@ describe('die Seiten', () => {
       expect(oben, `${dok.slug}: teil „${dok.teil}“ steht nicht in DOKUMENTE`).toBeTruthy();
       expect(oben.teil, 'nur eine Ebene tief').toBeUndefined();
       expect(html).not.toContain(`href="/dokumentation/${dok.slug}"`);
-      const landeseite = readFileSync(join(ORDNER, oben.datei), 'utf8');
-      expect(landeseite, `${oben.datei} verlinkt ${dok.datei} nicht`).toContain(`](${dok.datei}`);
+      for (const datei of dateienVon(oben)) {
+        const landeseite = readFileSync(join(ORDNER, datei), 'utf8');
+        expect(landeseite, `${datei} verlinkt ${dok.datei} nicht`).toContain(`](${dok.datei}`);
+      }
     }
+  });
+
+  // Zwei Fassungen auf einer Seite: html[lang] blendet die eine aus. Jede
+  // Überschrift bleibt dabei ein Anker — zweimal dieselbe id, und der Sprung
+  // landet in der Fassung, die gerade unsichtbar ist.
+  it('setzt eine englische Fassung daneben, umschaltbar und ohne doppelte Anker', () => {
+    const dok = DOKUMENTE.find((d) => d.englisch);
+    expect(dok, 'kein Dokument mit englischer Fassung').toBeTruthy();
+    const html = seite(dok, readFileSync(join(ORDNER, dok.datei), 'utf8'), null,
+      readFileSync(join(ORDNER, dok.englisch), 'utf8'));
+    expect(html).toMatch(/<div lang="de">[\s\S]*<div lang="en">/);
+    expect(html).not.toContain('maintained in German and shown here unchanged');
+    expect(html).toContain(`href="/dokumentation/${dok.englisch}"`);
+    const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i)).toEqual([]);
+  });
+
+  it('sagt bei einem Dokument ohne englische Fassung, dass es nur deutsch gepflegt wird', () => {
+    const dok = DOKUMENTE.find((d) => !d.englisch);
+    const html = seite(dok, '# Titel\n', null);
+    expect(html).toContain('maintained in German and shown here unchanged');
   });
 
   it('führt den Pfad einer Unterseite über ihre Landeseite zurück', () => {

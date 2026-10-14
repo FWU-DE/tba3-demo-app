@@ -54,6 +54,7 @@ jobs:
           pruefe /dokumentation/bausteine-der-rueckmeldungen 200
           pruefe /dokumentation/machbarkeitsstudie 200
           pruefe /dokumentation/machbarkeitsstudie-mediatheken 200
+          pruefe /dokumentation/machbarkeitsstudie-lms-export 200
           pruefe /dokumentation/dokument.css 200
           pruefe /schnittstelle/ 200
           pruefe /schnittstelle/tba3-spec.yml 200

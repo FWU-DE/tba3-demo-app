@@ -20,6 +20,7 @@ gleich aus.
 | Frage | Prototyp | Ergebnis in einem Satz |
 |---|---|---|
 | [Mediatheken einbinden](machbarkeitsstudie-mediatheken.md): Material aus MUNDO direkt einer Kompetenzstufe zuordnen | Reiter „Lernmaterialien“ der Demoanwendung, Anbindung über LTI 1.1 | Technisch machbar. Hilfreich aber nur für Lehrkräfte, die schon wissen, was sie suchen. Eine Suche, die von der Rückmeldung ausgeht, scheitert an fehlenden Metadaten auf beiden Seiten. |
+| [Materialsammlung an das LMS übergeben](machbarkeitsstudie-lms-export.md): Material, das zu einer Rückmeldung gesammelt wurde, geht als Common Cartridge an die Lernplattform oder als PDF aufs Papier | Export im Reiter „Lernmaterialien“ | Machbar, und zwar ohne Server. Moodle importiert die Cartridge, seit der Export Common Cartridge 1.1 schreibt. Sie transportiert Gliederung und Verweise, nicht das Material selbst. |
 | [Ein Assistent, der die Auswertung lesen kann](demo-rezepte.md#ein-assistent-der-die-auswertung-lesen-kann-der-mcp-server): ein Sprachmodell stellt die Abfragen selbst zusammen | MCP-Server im Repository (`mcp-server/`) | Als Pilot beschrieben in den Rezepten der Demoanwendung, mit den offenen Fragen für einen echten Betrieb. |
 
 Weitere Teilfragen werden hier eingetragen, sobald ihre Seite steht.
