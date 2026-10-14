@@ -5,6 +5,8 @@ Auswertungsschnittstelle anfangen kann. Daneben entstanden Teilkonzepte für
 das, was über die Schnittstelle hinausgeht: Lässt sich ein fremder Dienst
 anbinden, und bringt das den Lehrkräften etwas?
 
+![Schema: Die Lernstandserhebung VERA liefert Ergebnisse an die Auswertungsschnittstelle TBA3, diese an die Rückmeldung. Von der Rückmeldung führen Wege zur Mediathek MUNDO (LTI, gebaut), zur Lernplattform und aufs Papier (Common Cartridge und PDF, gebaut) und zum Lernsystem AIS.schule (Ergebnispaket, Konzept). MEM mit den IQB-Bildungsstandards ist gestrichelt mit der Schnittstelle (Kennung fehlt) und der Mediathek (nicht erschlossen) verbunden.](/dokumentation/bilder/machbarkeitsstudie-bausteine-de.svg)
+
 > **Prototypen, keine Produkte.** Was in der Studie gebaut wurde, beantwortet
 > die Frage *geht das, und was wäre dafür nötig?*. Es ist keine Empfehlung für
 > den Betrieb und kein Teil der Schnittstelle.

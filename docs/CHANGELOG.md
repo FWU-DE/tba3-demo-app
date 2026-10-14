@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Grafik auf der Landeseite der Machbarkeitsstudie**, deutsch und englisch:
+  wie Lernstandserhebung, Auswertungsschnittstelle, Rückmeldung, Mediathek,
+  Lernplattform und Lernsystem zusammenhängen, mit MEM dazwischen. Durchgezogen
+  ist, was im Prototyp gebaut ist, gestrichelt, was Konzept ist oder fehlt. SVG
+  unter `bilder/machbarkeitsstudie-bausteine-{de,en}.svg`. Auf schmalen Schirmen
+  behält ein SVG-Schema 620 px und lässt sich seitlich wischen, statt auf
+  unlesbare Schrift zu schrumpfen.
+
 ### Changed
 - **Die Seiten der Machbarkeitsstudie ohne Meta-Sätze.** Gestrichen ist, was
   Pfad, Überschrift oder Bildunterschrift schon sagen: „Teil der

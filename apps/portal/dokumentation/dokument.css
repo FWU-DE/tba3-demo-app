@@ -139,6 +139,10 @@ a:hover { color: var(--blau-dunkel); }
    Rahmen halten es vom Fließtext getrennt, auch wenn das Bild selbst an den
    Rändern hell ausläuft. */
 .inhalt .abbildung { margin: 0 0 22px; }
+/* Schemas als SVG tragen Text. Auf dem Telefon geschrumpft wäre er unlesbar;
+   sie behalten deshalb eine Mindestbreite und lassen sich seitlich wischen. */
+.inhalt .abbildung:has(img[src$=".svg"]) { overflow-x: auto; }
+.inhalt .abbildung img[src$=".svg"] { min-width: 620px; }
 .inhalt .abbildung img {
   display: block;
   max-width: 100%;
