@@ -87,13 +87,13 @@ describe('Rückmeldungsseite', () => {
   it.each([
     ['ohne abschließenden Schrägstrich', 'http://localhost/beispiele'],
     ['mit abschließendem Schrägstrich', 'http://localhost/beispiele/'],
-  ])('zeichnet alle zehn Karten %s', async (_name, adresse) => {
+  ])('zeichnet alle elf Karten %s', async (_name, adresse) => {
     const dokument = await zeichnen(adresse);
 
-    expect(dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')).toHaveLength(10);
+    expect(dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')).toHaveLength(11);
     expect([...dokument.querySelectorAll('[data-testid^="filter-"]')].map((f) => f.dataset.testid))
       .toEqual(expect.arrayContaining(['filter-einrichtung', 'filter-fach', 'filter-stufe', 'filter-zielgruppe']));
-    expect(dokument.querySelector('[data-testid="anzahl"]').textContent).toContain('10');
+    expect(dokument.querySelector('[data-testid="anzahl"]').textContent).toContain('11');
   });
 
   it('filtert nach der Auswahl in der Adresse', async () => {
@@ -131,7 +131,7 @@ describe('Rückmeldungsseite', () => {
     const dokument = await zeichnen('http://localhost/beispiele/');
 
     const karten = [...dokument.querySelectorAll('[data-testid^="rueckmeldung-"]')];
-    expect(karten).toHaveLength(10);
+    expect(karten).toHaveLength(11);
     for (const karte of karten) {
       const bild = karte.querySelector('.bild img');
       expect(bild, karte.dataset.testid).not.toBeNull();

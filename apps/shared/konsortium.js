@@ -9,7 +9,7 @@
 //
 // Zwei Listen, ein Zusammenhang:
 //
-//   RUECKMELDUNGEN  Was es gibt: zehn Anwendungen in vier Einrichtungen, je mit
+//   RUECKMELDUNGEN  Was es gibt: elf Anwendungen in vier Einrichtungen, je mit
 //                   Demo-, Quelltext- und Dokumentationsverweis.
 //   BAUSTEINE       Woraus sie bestehen: der Katalog, technologieagnostisch.
 //
@@ -33,7 +33,9 @@
 // die laufende Anwendung, deren Angular-Komponenten im DOM stehen.
 //
 // Die zweite Erhebung lief am 14.10.2026, diesmal über alle Reiter statt nur die
-// Startseiten. indibit hat seine Bibliothek inzwischen als `tba3-elements`
+// Startseiten. Dabei kam eine elfte Rückmeldung dazu: der Klassenbericht von
+// kompetenztest.de, am 08.10.2026 veröffentlicht und deshalb nicht im
+// Sachbericht. indibit hat seine Bibliothek inzwischen als `tba3-elements`
 // veröffentlicht. Zuordnungen aus dieser Runde tragen den Vermerk
 // „Erhebung 14.10.2026“ und ihren Beleg im Kommentar.
 //
@@ -73,7 +75,7 @@ export const STUFEN = {
   V8: { de: 'Klasse 8', en: 'Grade 8' },
 };
 
-// Eltern kommen nicht vor: keine der zehn Rückmeldungen richtet sich an sie.
+// Eltern kommen nicht vor: keine der elf Rückmeldungen richtet sich an sie.
 // Die Fachkonferenz dagegen schon — das Lernstand-Barometer nennt sie neben
 // Fach- und Klassenlehrkräften ausdrücklich als eigene Adressatin.
 export const ZIELGRUPPEN = {
@@ -104,7 +106,7 @@ export const FILTER = [
   { param: 'zielgruppe', feld: 'zielgruppen', text: { de: 'Zielgruppe', en: 'Audience' }, werte: ZIELGRUPPEN },
 ];
 
-// ── Die zehn Rückmeldungen ─────────────────────────────────────────────────
+// ── Die elf Rückmeldungen ──────────────────────────────────────────────────
 
 export const RUECKMELDUNGEN = [
   {
@@ -189,8 +191,8 @@ export const RUECKMELDUNGEN = [
     bild: { datei: '/beispiele/bilder/kt-m8-kompetenzstand.jpg', alt: 'Einstieg in den siebenstufigen Schüler:innenbericht' },
     einrichtung: 'kt',
     titel: {
-      de: 'Kompetenzstand Mathematik, Klasse 8',
-      en: 'Competence status, mathematics, grade 8',
+      de: 'Kompetenzstand Mathematik: Schülerbericht, Klasse 8',
+      en: 'Competence status, mathematics: student report, grade 8',
     },
     beschreibung: {
       de: 'Der Schüler:innenbericht als siebenstufiger, sequenzieller Ablauf statt als Übersicht: Wer ihn öffnet, wird geführt und liest die Ergebnisse in einer Reihenfolge, die jemand gewählt hat. Die Ansichten stehen auf einer gemeinsamen Grundstruktur aus wiederverwendbaren Basiskomponenten.',
@@ -212,6 +214,43 @@ export const RUECKMELDUNGEN = [
       'einzelbericht',
       'kompetenzstufen-verteilung', // StackedBarChart.vue, SingleBarChart.vue
           'staerken-und-entwicklungsbedarfe', // GuidingIdeaView, BadResultsView (Erhebung 14.10.2026)
+    ],
+  },
+  {
+    id: 'kt-m8-klassenbericht',
+    bild: { vonHand: true, datei: '/beispiele/bilder/kt-m8-klassenbericht.jpg', alt: 'Zusammenfassung des Klassenberichts: Gesamtergebnis gegen korrigierten Landesmittelwert, Homogenität der Klasse, Abschneiden in den fünf Leitideen' },
+    einrichtung: 'kt',
+    titel: {
+      de: 'Kompetenzstand Mathematik: Klassenbericht, Klasse 8',
+      en: 'Competence status, mathematics: class report, grade 8',
+    },
+    beschreibung: {
+      de: 'Das Gegenstück zum Schülerbericht für die Lehrkraft, ebenfalls als geführter Ablauf in sieben Schritten: Gesamtergebnis der Klasse gegen den korrigierten Landesmittelwert, Homogenität der Klasse, Leitideen und Teilbereiche im Vergleich, eine Matrix aller Aufgaben und Schüler:innen, die am besten und am schwächsten gelösten Aufgaben und Anregungen zur Weiterarbeit mit Checkliste.',
+      en: 'The teacher’s counterpart to the student report, also a guided sequence of seven steps: the class result against the corrected state average, the class’s homogeneity, key ideas and sub-areas compared, a matrix of all items and students, the best and least well solved items, and suggestions for further work with a checklist.',
+    },
+    faecher: ['MA'],
+    stufen: ['V8'],
+    zielgruppen: ['lehrkraft'],
+    demo: 'https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/',
+    code: 'https://github.com/kompetenztestde/kompetenzstand-mathematik-klassenbericht',
+    doku: null,
+    hinweis: {
+      de: 'Nach dem Sachbericht veröffentlicht (08.10.2026) und mit der Erhebung vom 14.10.2026 aufgenommen. In der Demo „Demo-Zugang: Ja“ wählen und anmelden.',
+      en: 'Published after the progress report (8 Oct 2026) and added with the survey of 14 Oct 2026. In the demo, choose “Demo-Zugang: Ja” and sign in.',
+    },
+    technik: {
+      de: 'Vue 3 mit TypeScript und Vite, Pinia und TanStack Query, Diagramme mit ECharts; API-Clients werden aus der TBA3-Spezifikation erzeugt. Kein eigenes Backend.',
+      en: 'Vue 3 with TypeScript and Vite, Pinia and TanStack Query, charts with ECharts; API clients are generated from the TBA3 specification. No back end of its own.',
+    },
+    bausteine: [
+          'loesungshaeufigkeit-je-aufgabe', // Top- und Flop-Aufgaben, „Ergebnisse im Detail“ (Erhebung 14.10.2026)
+          'streubereich-je-merkmal', // „Homogenität der Klasse“: eher homogen ↔ eher heterogen (Erhebung 14.10.2026)
+          'profil-heatmap', // „Ergebnisse im Detail“: Schüler:innen × Aufgaben, richtig/falsch/nicht bearbeitet (Erhebung 14.10.2026)
+          'kennzahl-mit-vergleich', // Gesamtergebnis der Klasse gegen korrigierten Landesmittelwert (Erhebung 14.10.2026)
+          'vergleichsebenen', // Klasse, korrigierter Landesmittelwert, Schule (Erhebung 14.10.2026)
+          'staerken-und-entwicklungsbedarfe', // Leitideen, „Top Aufgaben“ / „Flop Aufgaben“ (Erhebung 14.10.2026)
+          'gefuehrter-ablauf', // sieben Schritte, src/router/index.ts (Erhebung 14.10.2026)
+          'erklaertexte', // „Über diese Rückmeldung“, „So funktioniert's“, Checkliste zur Weiterarbeit (Erhebung 14.10.2026)
     ],
   },
   {

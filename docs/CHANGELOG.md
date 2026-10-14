@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht** (kompetenztest.de,
+  veröffentlicht am 08.10.2026, nach dem Sachbericht). Aufgenommen nach einem
+  Durchgang durch alle sieben Schritte der Demo mit Demo-Zugang. Acht Bausteine
+  sind zugeordnet, je mit Beleg: geführter Ablauf, Kennzahl mit Vergleich,
+  Vergleichsebenen, Stärken und Entwicklungsbedarfe (Leitideen, Top/Flop-Aufgaben),
+  Lösungshäufigkeit je Aufgabe, Profil-Heatmap (Schüler:innen × Aufgaben),
+  Streubereich (Homogenität der Klasse) und Erklärtexte. Das Bild ist von Hand
+  aus der Demo aufgenommen (`bild.vonHand`), weil die Startseite nur die
+  Anmeldung zeigt; `rueckmeldungen:erheben` überschreibt es nicht. Der bisherige
+  Bericht heißt jetzt wie in der Demo „Schülerbericht“. Alle Zahlen auf der Seite
+  stehen auf 11.
+
+### Changed
+- Die Karten auf /beispiele überschreiben die Liste mit „Bausteine“ statt
+  „Bausteine laut Sachbericht“. Die Zuordnungen stammen inzwischen auch aus den
+  Erhebungen.
+
 ### Changed
 - **Baustein-Katalog neu erhoben (14.10.2026).** Diesmal waren es alle zehn Demos
   über alle Reiter, nicht nur die Startseiten, dazu die offenen Repositorien

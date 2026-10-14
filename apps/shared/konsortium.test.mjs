@@ -15,9 +15,9 @@ const zweisprachig = (paar, wo) => {
 };
 
 describe('Rückmeldungen', () => {
-  it('führt die zehn Anwendungen mit eindeutigen Kennungen', () => {
-    expect(RUECKMELDUNGEN).toHaveLength(10);
-    expect(new Set(RUECKMELDUNGEN.map((r) => r.id)).size).toBe(10);
+  it('führt die elf Anwendungen mit eindeutigen Kennungen', () => {
+    expect(RUECKMELDUNGEN).toHaveLength(11);
+    expect(new Set(RUECKMELDUNGEN.map((r) => r.id)).size).toBe(11);
   });
 
   it('ordnet jede einer bekannten Einrichtung zu und lässt keine leer ausgehen', () => {
@@ -150,8 +150,8 @@ describe('Katalog', () => {
 
 describe('Filtern', () => {
   it('lässt ohne Auswahl alles durch', () => {
-    expect(filtern(RUECKMELDUNGEN, {})).toHaveLength(10);
-    expect(filtern(RUECKMELDUNGEN, { fach: '', stufe: '' })).toHaveLength(10);
+    expect(filtern(RUECKMELDUNGEN, {})).toHaveLength(RUECKMELDUNGEN.length);
+    expect(filtern(RUECKMELDUNGEN, { fach: '', stufe: '' })).toHaveLength(RUECKMELDUNGEN.length);
   });
 
   it('schränkt je Feld ein und kombiniert die Felder', () => {
@@ -182,7 +182,7 @@ describe('Filtern', () => {
 
   it('ignoriert Felder, die kein Filter sind', () => {
     // Sonst würde ein beliebiger Adressparameter die Liste leerfiltern.
-    expect(filtern(RUECKMELDUNGEN, { erfunden: 'x' })).toHaveLength(10);
+    expect(filtern(RUECKMELDUNGEN, { erfunden: 'x' })).toHaveLength(RUECKMELDUNGEN.length);
   });
 
   it('liefert eine leere Liste, wenn ein geschlossenes Feld nicht passt', () => {

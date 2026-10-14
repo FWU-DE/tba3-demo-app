@@ -48,7 +48,7 @@ const traeger = (bausteinId) => {
 function kopf() {
   return `# Bausteine der Rückmeldungen
 
-Zehn Rückmeldungen, vier Einrichtungen, fünf Technologien — und immer wieder
+Elf Rückmeldungen, vier Einrichtungen, fünf Technologien — und immer wieder
 dieselben Darstellungen unter anderen Namen. Dieses Dokument zieht heraus, was
 sich davon nachnutzen lässt: nicht der Code, sondern der **Zuschnitt**. Welche
 Darstellung beantwortet welche fachliche Frage, und woher nimmt sie ihre Daten?

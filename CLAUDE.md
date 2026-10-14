@@ -17,7 +17,7 @@ npm run docs:bilder    # Abbildungen der Dokumentseiten neu erzeugen (gegen npm 
 npm run konsortium:doc # /dokumentation/bausteine-der-rueckmeldungen aus
                        #  apps/shared/konsortium.js neu erzeugen
 npm run rueckmeldungen:erheben
-                       # die zehn Demos aufrufen: Befunde nach docs/erhebung/,
+                       # die elf Demos aufrufen: Befunde nach docs/erhebung/,
                        #  Bilder nach apps/beispiele/bilder/ (braucht Netz, magick)
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
@@ -252,7 +252,7 @@ doppelt; der Test fängt das.
 
 ### Die Rückmeldungen des Konsortiums
 
-`apps/beispiele/` ist statisches HTML ohne Build — die 10 Rückmeldungen liegen
+`apps/beispiele/` ist statisches HTML ohne Build — die 11 Rückmeldungen liegen
 bei den vier Einrichtungen, die sie gebaut haben (kompetenztest.de, indibit, ISQ
 Berlin, zepf), mit eigener Demo und eigenem Repositorium. Hier steht nur die
 filterbare Übersicht mit Demo-, Quelltext- und Dokumentationsverweis.
@@ -304,7 +304,7 @@ Zwei Regeln halten den Katalog ehrlich, und beide haben einen Test:
 alle Reiter der indibit-Anwendungen statt nur die Startseiten. Zuordnungen aus
 dieser Runde tragen in `konsortium.js` den Vermerk „Erhebung 14.10.2026“ mit
 ihrem Beleg. `npm run rueckmeldungen:erheben`
-ruft die zehn Demos auf, schreibt die Befunde nach `docs/erhebung/` und nimmt
+ruft die elf Demos auf, schreibt die Befunde nach `docs/erhebung/` und nimmt
 die Bilder für die Übersichtsseite auf. Das ist nötig, weil sich diese Quelle
 bewegt: das zepf ist von GitLab auf GitHub gezogen, das ISQ plant den Umzug seines
 Repositoriums (die alte Adresse verlangt inzwischen eine Anmeldung), indibit hat
