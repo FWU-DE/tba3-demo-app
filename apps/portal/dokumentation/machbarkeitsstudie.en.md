@@ -5,7 +5,7 @@ reporting API. Alongside it, sub-concepts were developed for what goes
 beyond the API: can an external service be connected, and does that help
 teachers?
 
-![Diagram: the VERA assessment delivers results to the TBA3 reporting API, which delivers them to the report. From the report, routes lead to the media library MUNDO (LTI, built), to the learning platform and to paper (Common Cartridge and PDF, built) and to the learning system AIS.schule (results package, concept). MEM with the IQB educational standards is connected by dashed lines to the API (identifier missing) and to the media library (not indexed).](/dokumentation/bilder/machbarkeitsstudie-bausteine-en.svg)
+![Diagram: the VERA assessment delivers results to the TBA3 reporting API, which delivers them to the report. The materials API (draft /materials) adds material per task and level. From the report, routes lead to the media library MUNDO (LTI, built), to the learning platform and to paper (Common Cartridge and PDF, built) and to the learning system AIS.schule (results package, concept). MEM with the IQB educational standards is connected by dashed lines to the API (identifier missing) and to the media library (not indexed).](/dokumentation/bilder/machbarkeitsstudie-bausteine-en.svg)
 
 > **Prototypes, not products.** What was built in the study answers the
 > question *is it possible, and what would it take?*. It is not a
