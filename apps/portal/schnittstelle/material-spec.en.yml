@@ -1,0 +1,559 @@
+# Übersetzung von material-spec.yml, sha256:dee3128437614c71307bbf579268d22cc853f57d8198a45f516d7de315e12409
+# Englische Fassung für /schnittstelle?lang=en. Übersetzt sind nur Beschreibungstexte
+# (title, summary, description, Namen der Beispiele); Struktur und Werte gleichen dem Original.
+openapi: 3.1.0
+info:
+  title: TBA III — Materials
+  summary: 'Draft: accompanying materials for reporting data'
+  description: |-
+    **Status: draft.** This extension is not yet part of the official
+    specification — it is up for discussion as pull request
+    [indibit-eu/tba3#54](https://github.com/indibit-eu/tba3/pull/54).
+
+    Materials (teacher guides, support material, model solutions, transcripts, …)
+    are linked to reference points of the reporting via `attachments[]`: to the test,
+    a competence or key idea, an exercise, an item, a competence level — or
+    without any specific reference.
+
+    The extension is additive: all fields are optional, existing backends and
+    frontends remain spec-compliant. The full rationale is in the draft under
+    [docs/entwuerfe/materialien](https://github.com/indibit-eu/tba3/pull/54/files).
+  version: 0.1-entwurf
+  license:
+    name: MIT
+    url: https://opensource.org/license/MIT
+servers:
+  - url: /
+    description: This site — examples from the draft
+tags:
+  - name: materials
+    description: Accompanying materials for tests, exercises, items, competences and competence levels
+paths:
+  /materials:
+    get:
+      operationId: getMaterials
+      summary: Query materials related to reporting data
+      description: |
+        Returns materials (teacher guides, support material, model solutions, audio, ...),
+        optionally narrowed down to specific reference points (test, exercise, item,
+        competence/key idea, competence level) or to material properties
+        (kind, language, audience).
+
+        Without filters the backend returns **all** materials it knows (optionally paginated
+        — pagination is not standardised in this version of the spec).
+      tags:
+        - materials
+      parameters:
+        - in: query
+          name: scope
+          schema:
+            type: string
+          description: |
+            Comma-separated. Filter on attachment scopes. Recommended values:
+            `test`, `exercise`, `item`, `competence`, `competence-level`, `general`.
+          examples:
+            — no filter —:
+              value: ''
+            Competence levels:
+              value: competence-level
+            Exercise and item:
+              value: exercise,item
+        - in: query
+          name: test
+          schema:
+            type: string
+          description: |
+            Test booklet / test identifier for which materials should be returned.
+
+            Examples from the demo data: `V8-2024-DE-TH01`.
+          examples:
+            — no filter —:
+              value: ''
+            Test booklet VERA 8 German:
+              value: V8-2024-DE-TH01
+        - in: query
+          name: exercise
+          schema:
+            type: string
+          description: |
+            Exercise ID.
+
+            Examples from the demo data: `ex-at-the-summer-camp-001`.
+          examples:
+            — no filter —:
+              value: ''
+            Exercise ID:
+              value: ex-at-the-summer-camp-001
+        - in: query
+          name: item
+          schema:
+            type: string
+          description: |
+            Item identifier. Either the internal `item.id` or `iqbId:<IQBID>` to explicitly use
+            the IQB item ID.
+          examples:
+            — no filter —:
+              value: ''
+            Internal ID:
+              value: b8d23653-3881-40de-a45a-d34e2dd191ed
+            IQB ID:
+              value: iqbId:AB1021
+        - in: query
+          name: competence
+          schema:
+            type: string
+          description: >
+            Competence ID (also key idea). If the backend works with short names,
+
+            `name:<short name>` can be used (e.g. `name:L1`).
+
+
+            Examples from the demo data: `https://w3id.org/kim/schulfaecher/s1002`, `name:Leitidee
+            Lesen`.
+          examples:
+            — no filter —:
+              value: ''
+            Competence URI:
+              value: https://w3id.org/kim/schulfaecher/s1002
+            Name of the competence:
+              value: name:Leitidee Lesen
+        - in: query
+          name: competenceLevel
+          schema:
+            type: string
+          description: |
+            Competence level ID or `nameShort:<short name>` (e.g. `nameShort:Ia`).
+
+            Examples from the demo data: `nameShort:Ia`, `IV`.
+          examples:
+            — no filter —:
+              value: ''
+            Short name of the level:
+              value: nameShort:Ia
+            ID of the level:
+              value: IV
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: |
+            Subject code (e.g. `de`, `ma`).
+
+            Examples from the demo data: `de`.
+          examples:
+            — no filter —:
+              value: ''
+            German:
+              value: de
+        - in: query
+          name: domain
+          schema:
+            type: string
+          description: |
+            Domain code (e.g. `le`, `rs`).
+
+            Examples from the demo data: `le`.
+          examples:
+            — no filter —:
+              value: ''
+            Reading comprehension:
+              value: le
+        - in: query
+          name: kind
+          schema:
+            type: string
+          description: |
+            Comma-separated. Filter on material kinds.
+
+            Examples from the demo data: `support`, `solution,example`.
+          examples:
+            — no filter —:
+              value: ''
+            Support material:
+              value: support
+            Solutions and examples:
+              value: solution,example
+        - in: query
+          name: language
+          schema:
+            type: string
+          description: |
+            BCP 47 language code.
+
+            Examples from the demo data: `de`.
+          examples:
+            — no filter —:
+              value: ''
+            German:
+              value: de
+        - in: query
+          name: audience
+          schema:
+            type: string
+          description: |
+            Audience (`teacher`, `student`, `parents`, ...).
+
+            Examples from the demo data: `teacher`, `parents`.
+          examples:
+            — no filter —:
+              value: ''
+            Teachers:
+              value: teacher
+            Parents:
+              value: parents
+      responses:
+        '200':
+          description: List of matching materials (possibly empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '501':
+          description: The backend does not support one of the filters at all
+  /materials/{id}:
+    get:
+      operationId: getMaterialById
+      summary: Retrieve a single material
+      description: |
+        Returns the full material object for an ID. Used mainly when reporting
+        responses only embedded compact `MaterialReference` objects and the frontend
+        wants to load the details.
+      tags:
+        - materials
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Material ID
+          examples:
+            Support booklet:
+              value: 9a21ad44-3e8b-4a1e-9f76-2a1e8a6b0e5a
+      responses:
+        '200':
+          description: Material
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        '404':
+          description: Material not found
+components:
+  schemas:
+    Material:
+      type: object
+      description: |
+        A standalone material (teacher guide, support material, reading text, model solution, ...)
+        assigned via `attachments[]` to one or more reference points of the reporting
+        (test, key idea/competence, exercise, item, competence level, general).
+      required:
+        - id
+        - title
+        - kind
+        - attachments
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the material
+          examples:
+            - 9a21ad44-3e8b-4a1e-9f76-2a1e8a6b0e5a
+        title:
+          type: string
+          description: Short, descriptive title
+          examples:
+            - Förderheft Leseverstehen Stufe Ia
+            - Transkript Hörverstehen Aufgabe 3
+        description:
+          type: string
+          description: Longer, optional description
+        kind:
+          type: string
+          description: |
+            Kind of material. Open string. Recommended values (level 2 convention):
+            `support`, `diagnostic`, `didactic`, `anchor-text`, `solution`, `example`,
+            `audio`, `video`, `transcript`, `info`, `other`.
+
+            The set of values is deliberately kept small. Anyone needing a finer classification
+            can additionally use `externalMetadata[]` and point to an
+            AMB/LRMI `learningResourceType` vocabulary there (e.g. `https://w3id.org/kim/hcrt/`).
+            See README &sect; 8 for the mapping table.
+          examples:
+            - support
+            - diagnostic
+            - anchor-text
+            - solution
+        format:
+          type: string
+          description: MIME type or technical format
+          examples:
+            - application/pdf
+            - text/html
+            - video/mp4
+            - audio/mpeg
+        language:
+          type: string
+          description: Language of the material as a BCP 47 tag
+          examples:
+            - de
+            - de-DE
+            - en
+        url:
+          type: string
+          format: uri
+          description: |
+            Direct link to the material. Either `url` **or** `content` must be set.
+            The backend may use pre-signed URLs or require authentication.
+          examples:
+            - https://materials.example.org/foerderheft-lesen-ia.pdf
+        content:
+          type: string
+          description: |
+            Inline content for small materials (short notes, explanatory texts).
+            The format is given by `format` (e.g. `text/html`, `text/markdown`).
+        thumbnailUrl:
+          type: string
+          format: uri
+        size:
+          type: integer
+          description: Size in bytes
+          minimum: 0
+        duration:
+          type: integer
+          description: Duration in seconds (for audio/video)
+          minimum: 0
+        license:
+          type: string
+          description: SPDX identifier or free-text licence notice
+          examples:
+            - CC-BY-4.0
+            - IQB Nutzungsbedingungen
+        source:
+          type: string
+          description: Source / author / institution
+          examples:
+            - IQB
+            - VERA
+            - Schulträger Musterstadt
+        version:
+          type: string
+        audience:
+          type: string
+          description: 'Audience. Recommended values: `teacher`, `student`, `parents`, `other`.'
+          examples:
+            - teacher
+            - student
+            - parents
+        tags:
+          type: array
+          description: Free keywords
+          items:
+            type: string
+        properties:
+          type: array
+          description: Free key-value metadata (as in value-group.yml)
+          items:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+        attachments:
+          type: array
+          description: |
+            Reference points of the material. At least one entry. A material can be attached
+            to several entities at once (e.g. a competence level AND a key idea).
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/MaterialAttachment'
+        externalMetadata:
+          type: array
+          description: |
+            Optional references to external metadata records (LRMI, AMB, LOM, schema.org, ...)
+            that fully describe this material in another metadata schema. Serves
+            interoperability with OER repositories (edu-sharing, WirLernenOnline,
+            Bildungsserver, ...). **No duplication** of the TBA3 core fields —
+            anyone who needs the rich metadata dereferences `url` and reads the target schema.
+          items:
+            type: object
+            required:
+              - schema
+              - url
+            properties:
+              schema:
+                type: string
+                description: |
+                  Identifier of the referenced metadata schema. Recommended values:
+                  - `amb`        - General metadata profile for educational resources (DINI-AG KIM)
+                  - `lrmi`       - Learning Resource Metadata Initiative (schema.org)
+                  - `lom`        - IEEE LOM 1484.12.1
+                  - `lom-de`     - German application profile of LOM
+                  - `schema.org` - generic schema.org
+                examples:
+                  - amb
+                  - lrmi
+                  - lom
+              url:
+                type: string
+                format: uri
+                description: URL at which the external metadata record can be retrieved (JSON-LD, XML, ...)
+                examples:
+                  - https://wirlernenonline.de/entry/abc123.jsonld
+              inlineId:
+                type: string
+                description: |
+                  If the target schema uses its own URL-independent identifier
+                  (e.g. LOM `identifier.entry`), it can be carried here.
+              mediaType:
+                type: string
+                description: MIME type of the metadata record, e.g. `application/ld+json`, `application/xml`.
+                examples:
+                  - application/ld+json
+                  - application/xml
+    MaterialAttachment:
+      type: object
+      description: |
+        Link between a material and a reference point in the reporting structure.
+        `refId` is required except for `scope=general`.
+      required:
+        - scope
+      properties:
+        scope:
+          type: string
+          description: |
+            Kind of reference point. Open string. Recommended values:
+            - `test`             - material relates to an overall (test) context
+            - `exercise`         - relates to an exercise (`exercise.id`)
+            - `item`             - relates to an item / a solution rate
+            - `competence`       - relates to a competence or key idea (`competence.id`)
+            - `competence-level` - relates to a competence level (`competence-level.id`)
+            - `general`          - general, no specific reference point
+          examples:
+            - competence-level
+            - exercise
+            - item
+            - competence
+            - test
+            - general
+        refId:
+          type: string
+          description: |
+            ID of the linked entity. Required except for `scope=general`.
+            For `test` this is the test-specific identifier (e.g. the test booklet ID,
+            as is also usual in `value-group.properties.booklet`).
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+            - V8-2024-DE-TH01
+            - AB1021
+            - L1
+        refName:
+          type: string
+          description: |
+            Optional human-readable identifier, if helpful for display or when no
+            stable ID exists (e.g. short name of the competence level, item name).
+          examples:
+            - Ia
+            - 2.5.1
+            - Leitidee Zahl
+        refKind:
+          type: string
+          description: |
+            Qualifier for ambiguous ID spaces. Recommended values:
+            - `iqbId`        - `refId` is an IQB item identifier
+            - `nameShort`    - `refId` is the short name (e.g. of a competence level)
+            - `internalId`   - `refId` is a backend-internal UUID
+            - `curriculumUri` - `refId` is a URI from a competence/curriculum vocabulary
+              (e.g. from the KMK/IQB educational standards vocabulary or a state curriculum).
+              These URIs map 1:1 onto LRMI/AMB `alignmentObject.targetUrl` and make
+              the transition to external metadata considerably easier.
+          examples:
+            - iqbId
+            - nameShort
+            - internalId
+            - curriculumUri
+        subject:
+          description: |
+            Optional: subject the material relates to. Same structure as in
+            `value-group.subject`.
+          $ref: '#/components/schemas/Subject'
+        domain:
+          description: |
+            Optional: domain the material relates to. Same structure as in
+            `value-group.domain`.
+          $ref: '#/components/schemas/Domain'
+        properties:
+          type: array
+          description: Free key-value metadata for the link (e.g. relevance, order).
+          items:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+    MaterialReference:
+      type: object
+      description: |
+        Compact reference to a material, as embedded in reporting responses.
+        The full material is available via `GET /materials/{id}`.
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Reference to `Material.id`
+          examples:
+            - 9a21ad44-3e8b-4a1e-9f76-2a1e8a6b0e5a
+        title:
+          type: string
+          description: For display without loading anything further
+        kind:
+          type: string
+          description: For icon/filter without further loading (see Material.kind)
+        url:
+          type: string
+          format: uri
+          description: Direct link, if usable without preprocessing
+        audience:
+          type: string
+    Subject:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name of the subject
+          examples:
+            - Deutsch
+            - Mathematik
+    Domain:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name of the domain
+          examples:
+            - Rechtschreibung
+            - Leseverstehen

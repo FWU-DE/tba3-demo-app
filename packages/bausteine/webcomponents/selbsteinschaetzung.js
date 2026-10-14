@@ -11,6 +11,7 @@
 import { STANDARD, einschaetzung } from '../kern/selbsteinschaetzung.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { ENDPUNKT_EN, TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .zeile-label { font-size: 0.85em; fill: var(--tba3-_farbe-text); }
@@ -45,12 +46,12 @@ const STIL = `
 
 const TEILSTRICHE = [0, 25, 50, 75, 100];
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const e = einschaetzung(zustand);
   const m = e.masse;
 
   if (e.leer) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Selbsteinschätzung erhoben' }));
+    wurzel.append(h('p', { class: 'leer', text: t('selbst.leer') }));
     return;
   }
 
@@ -67,7 +68,7 @@ function aufbauen(wurzel, zustand, el) {
         class: 'zeile',
         tabindex: '0',
         role: 'button',
-        'aria-label': `${z.label}: Selbsteinschätzung ${z.selbst}, gemessen ${z.gemessen}`,
+        'aria-label': t('selbst.zeile', { label: z.label, selbst: z.selbst, gemessen: z.gemessen }),
         onclick: () => el.melden('zeile-gewaehlt', { ...z }),
         onkeydown: (ev) => {
           if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.melden('zeile-gewaehlt', { ...z }); }
@@ -101,7 +102,7 @@ function aufbauen(wurzel, zustand, el) {
     h('div', { class: 'scroll' }, [
       s('svg', {
         width: m.breite, height: e.hoehe, viewBox: `0 0 ${m.breite} ${e.hoehe}`,
-        role: 'img', 'aria-label': e.title || 'Selbsteinschätzung gegen Ergebnis',
+        role: 'img', 'aria-label': e.title || t('selbst.aria'),
       }, inhalt),
     ]),
     h('div', { class: 'legende' }, [
@@ -111,8 +112,8 @@ function aufbauen(wurzel, zustand, el) {
     h('p', {
       class: 'bilanz',
       text: e.auffaellig === 0
-        ? 'Selbsteinschätzung und Messung liegen überall nah beieinander.'
-        : `${e.auffaellig} von ${e.zeilen.length} Merkmalen liegen weit auseinander.`,
+        ? t('selbst.stimmig')
+        : t('selbst.auffaellig', { n: e.auffaellig, gesamt: e.zeilen.length }),
     }),
   );
 }
@@ -120,7 +121,9 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'selbsteinschaetzung',
   titel: 'Selbsteinschätzung gegen Ergebnis',
+  titelEn: TITEL_EN.selbsteinschaetzung,
   endpunkt: 'erhobene Selbsteinschätzung, nicht Teil der Schnittstelle',
+  endpunktEn: ENDPUNKT_EN.selbsteinschaetzung,
   standard: STANDARD,
   ereignisse: ['zeile-gewaehlt'],
   stil: STIL,

@@ -107,17 +107,16 @@ const apiEndpoints = computed(() =>
 );
 
 const GROUPS = [
-  { id: '3a-deutsch',  label: '3a Deutsch',    subject: 'Deutsch' },
-  { id: '3b-deutsch',  label: '3b Deutsch',    subject: 'Deutsch' },
-  { id: '3c-deutsch',  label: '3c Deutsch',    subject: 'Deutsch' },
-  { id: '8a-deutsch',  label: '8a Deutsch',    subject: 'Deutsch' },
-  { id: '3a-mathe',    label: '3a Mathematik', subject: 'Mathematik' },
-  { id: '8a-mathe',    label: '8a Mathematik', subject: 'Mathematik' },
-  { id: '8a-englisch', label: '8a Englisch',   subject: 'Englisch' },
+  { id: '3a-deutsch',  label: '3a Deutsch',    subject: 'deutsch' },
+  { id: '3b-deutsch',  label: '3b Deutsch',    subject: 'deutsch' },
+  { id: '3c-deutsch',  label: '3c Deutsch',    subject: 'deutsch' },
+  { id: '8a-deutsch',  label: '8a Deutsch',    subject: 'deutsch' },
+  { id: '3a-mathe',    label: '3a Mathematik', subject: 'mathematik' },
+  { id: '8a-mathe',    label: '8a Mathematik', subject: 'mathematik' },
+  { id: '8a-englisch', label: '8a Englisch',   subject: 'englisch' },
 ];
 
 const LEVEL_COLORS = { I: '#ef4444', II: '#f97316', III: '#eab308', IV: '#22c55e', V: '#15803d' };
-const LEVEL_NAMES  = { I: 'Unter Mindeststandard', II: 'Mindeststandard', III: 'Regelstandard', IV: 'Regelstandard+', V: 'Optimalstandard' };
 const LEVEL_ORDER  = ['I', 'II', 'III', 'IV', 'V'];
 
 const selectedGroup = ref(GROUPS[0]);
@@ -166,7 +165,7 @@ const chartData = computed(() => {
     count: counts[ns] ?? 0,
     percentage: total > 0 ? (counts[ns] ?? 0) / total : 0,
     color: LEVEL_COLORS[ns] ?? GER_FARBEN[GER.indexOf(ns)] ?? '#9ca3af',
-    name: LEVEL_NAMES[ns] ?? ns,
+    name: LEVEL_ORDER.includes(ns) ? t(`ansichten.uebersicht.stufenNamen.${ns}`) : ns,
   }));
 });
 
@@ -289,7 +288,7 @@ watch(() => selectedGroup.value, () => { geoeffnet.value = []; });
         <Uebersichtskarten
           v-if="!loading && !error && hasData"
           :karten="karten"
-          :title="selectedGroup?.subject"
+          :title="selectedGroup ? t(`ansichten.gemeinsam.faecher.${selectedGroup.subject}`) : ''"
           :geoeffnet="geoeffnet"
           @karte-geoeffnet="(e) => (geoeffnet = e.geoeffnet)"
         />

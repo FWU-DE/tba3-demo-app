@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 // Die Dokumentseiten unter /dokumentation entstehen beim Build aus den
 // eingecheckten Markdown-Kopien (tools/dokumente.mjs). Geprüft wird hier
 // zweierlei: das Rendern selbst an kleinen Beispielen, und die echten Kopien —
@@ -87,7 +88,9 @@ describe('die eingecheckten Kopien', () => {
   it.each(ALLE_DATEIEN.map(({ datei }) => ({ datei })))('$datei liegt vor und trägt eine Überschrift', ({ datei: name }) => {
     const datei = join(ORDNER, name);
     expect(existsSync(datei), `${name} fehlt — \`npm run docs:update\``).toBe(true);
-    expect(readFileSync(datei, 'utf8').trimStart().startsWith('# ')).toBe(true);
+    // Eine Übersetzung beginnt mit ihrem Vermerk, danach die Überschrift.
+    const text = readFileSync(datei, 'utf8').replace(/^<!--[^]*?-->\s*/, '');
+    expect(text.trimStart().startsWith('# ')).toBe(true);
   });
 
   // Der eigentliche Grund für diesen Test: die Kopien kommen von oben. Ändert
@@ -246,9 +249,16 @@ describe('die Seiten', () => {
   });
 
   it('sagt bei einem Dokument ohne englische Fassung, dass es nur deutsch gepflegt wird', () => {
-    const dok = DOKUMENTE.find((d) => !d.englisch);
+    const dok = { ...DOKUMENTE[0], englisch: undefined };
     const html = seite(dok, '# Titel\n', null);
     expect(html).toContain('maintained in German and shown here unchanged');
+  });
+
+  it('nennt bei einer übersetzten Kopie das deutsche Original als maßgeblich', () => {
+    const dok = DOKUMENTE.find((d) => d.englisch && !d.eigen);
+    const html = seite(dok, '# Titel\n', null, '# Title\n');
+    expect(html).toContain('Translated from the German original');
+    expect(html).not.toContain('shown here unchanged');
   });
 
   it('führt den Pfad einer Unterseite über ihre Landeseite zurück', () => {
@@ -266,5 +276,19 @@ describe('die Seiten', () => {
     // Die Klasse gehört auf das <p>, nicht auf die Sprach-<span>s: sonst
     // schlägt `.karten .karte .quelle` die Regel, die eine Sprache ausblendet.
     expect(html).toContain('<p class="quelle"><span lang="de">');
+  });
+
+  // Die englische Fassung einer Kopie von oben ist eine Übersetzung. Ihre erste
+  // Zeile hält den sha256 der deutschen Datei fest, aus der sie entstand —
+  // zieht `docs:update` eine neue deutsche Fassung, fällt das hier auf.
+  it('übersetzt jede Kopie vom aktuellen deutschen Stand', () => {
+    for (const dok of DOKUMENTE.filter((d) => d.englisch && !d.eigen)) {
+      const en = readFileSync(join(ORDNER, dok.englisch), 'utf8');
+      const kopf = en.match(/^<!-- Übersetzung von (\S+), sha256:([0-9a-f]{64}) -->/);
+      expect(kopf, `${dok.englisch}: erste Zeile ohne Übersetzungsvermerk`).toBeTruthy();
+      expect(kopf[1]).toBe(dok.datei);
+      const ist = createHash('sha256').update(readFileSync(join(ORDNER, dok.datei))).digest('hex');
+      expect(kopf[2], `${dok.datei} hat sich geändert — ${dok.englisch} nachübersetzen und den sha256 erneuern`).toBe(ist);
+    }
   });
 });

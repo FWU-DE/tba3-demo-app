@@ -48,3 +48,16 @@ export function t(pfad, werte) {
   if (!werte) return roh;
   return roh.replace(/\{(\w+)\}/g, (treffer, name) => (name in werte ? String(werte[name]) : treffer));
 }
+
+/**
+ * Name einer Domäne aus ihrem Kürzel (`le` → „Leseverstehen“). `null` heißt:
+ * die Antwort führt keine Teilbereiche, dann steht „Gesamt“ da. Ein
+ * unbekanntes Kürzel bleibt, wie es ist — besser als ein Schlüsselpfad.
+ */
+export function domaene(kuerzel) {
+  if (kuerzel == null) return t('ansichten.gemeinsam.gesamt');
+  return Object.hasOwn(TEXTE.bausteine.domaenen, kuerzel) ? t(`bausteine.domaenen.${kuerzel}`) : String(kuerzel);
+}
+
+/** Gibt es zu `pfad` einen Eintrag? Für Werte aus den Daten, die nur manchmal einen haben. */
+export const hatText = (pfad) => auflösen(pfad) != null;

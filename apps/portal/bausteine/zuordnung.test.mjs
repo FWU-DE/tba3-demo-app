@@ -87,4 +87,22 @@ describe('Zuordnung Katalog ↔ Bausteine', () => {
       expect(n.grund, `${n.baustein} ohne Grund`).toBeTruthy();
     }
   });
+
+  // Die Seite gibt es auf Deutsch und Englisch; ein Eintrag mit nur einer
+  // Fassung stünde in der anderen leer da.
+  it('führt Anzeige, Hinweis und Grund in beiden Sprachen', () => {
+    const zweisprachig = (wert, wo) => {
+      expect(wert?.de, `${wo} ohne Deutsch`).toBeTypeOf('string');
+      expect(wert?.en, `${wo} ohne Englisch`).toBeTypeOf('string');
+      expect(wert.en, `${wo}: Englisch ist die deutsche Fassung`).not.toBe(wert.de);
+    };
+    for (const z of ZUORDNUNG) {
+      zweisprachig(z.anzeige, `${z.katalog}.anzeige`);
+      if (z.hinweis) zweisprachig(z.hinweis, `${z.katalog}.hinweis`);
+    }
+    for (const n of NUR_BAUSTEIN) {
+      zweisprachig(n.anzeige, `${n.baustein}.anzeige`);
+      zweisprachig(n.grund, `${n.baustein}.grund`);
+    }
+  });
 });

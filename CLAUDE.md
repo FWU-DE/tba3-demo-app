@@ -249,11 +249,19 @@ blau), jede Karte und Seite der Dokumentation über `zielgruppe` in `DOKUMENTE`
 Dokument hinzufügt, ordnet es zu, und was für beide gedacht ist, beginnt mit dem
 Satz, den man ohne Technikkenntnisse versteht.
 
-**Zweisprachige Dokumente.** Ein eigenes Dokument kann mit
-`englisch: '<slug>.en.md'` eine englische Fassung mitbringen. Beide stehen auf
+**Zweisprachige Dokumente.** Jedes Dokument bringt mit
+`englisch: '<slug>.en.md'` eine englische Fassung mit. Beide stehen auf
 derselben Seite in `<div lang="de">` und `<div lang="en">` und werden wie
-überall über `html[lang]` umgeschaltet. Die Machbarkeitsstudie ist durchgehend
-zweisprachig; wer ein Teilkonzept hinzufügt, schreibt beide Fassungen. Bilder
+überall über `html[lang]` umgeschaltet. Wer ein Dokument hinzufügt, schreibt
+beide Fassungen; „Bausteine der Rückmeldungen“ erzeugt `konsortium:doc` in
+beiden Sprachen.
+
+Bei den Kopien von oben ist die englische Fassung eine **Übersetzung**. Ihre
+erste Zeile lautet `<!-- Übersetzung von <datei>.md, sha256:<hex> -->` mit dem
+Hash der deutschen Datei, aus der sie entstand. `docs:update` fasst sie nicht an;
+ändert es die deutsche Kopie, schlägt `tools/dokumente.test.mjs` an, bis die
+Übersetzung nachgezogen und der Hash erneuert ist. Die Seite nennt das deutsche
+Original als maßgeblich. Bilder
 mit Oberfläche gibt es dann ebenfalls zweimal (`<name>-de.png`,
 `<name>-en.png`), erzeugt von `npm run docs:bilder`. Die Überschriften beider
 Fassungen dürfen nicht gleich lauten, sonst vergibt die Seite eine `id`
@@ -406,9 +414,9 @@ Zwei Fallen:
 prüfen, dass jeder verwendete Schlüssel existiert, jeder Eintrag beide Sprachen
 führt und die Platzhalter (`{n}`) in beiden Fassungen dieselben sind.
 
-Nicht übersetzt sind die Beispieldaten: Namen von Schüler:innen, Lerngruppen und
-Teilbereichen, der Materialkatalog und die OpenAPI-Spezifikation. Sie kommen im
-Betrieb aus der Schnittstelle.
+Nicht übersetzt sind die Beispieldaten: Namen von Schüler:innen, Lerngruppen,
+Aufgaben und Teilbereichen und der Materialkatalog. Sie kommen im Betrieb aus der
+Schnittstelle. Ebenso bleibt Quelltext in Code-Beispielen, wie er ist.
 
 ### Base-Pfade
 
@@ -491,8 +499,16 @@ unterscheidet nur die Herkunft `schnittstelle` das eine vom anderen.
 Die OpenAPI-Spezifikation liegt als Kopie unter
 `apps/portal/schnittstelle/tba3-spec.yml` und wird mit `npm run spec:update` aus
 `indibit-eu/tba3` nachgezogen — bewusst eingecheckt, damit die Referenz an nichts
-Externem hängt. In der Referenz schreibt ein `requestInterceptor` Anfragen auf den
-eigenen Host um, sodass „Try it out“ ohne CORS gegen dieselben Demodaten läuft.
+Externem hängt. „Try it out“ läuft über die `servers`-Zeilen, die der Build auf den
+eigenen Host setzt, ohne CORS gegen dieselben Demodaten.
+
+Beide Spezifikationen gibt es auch auf Englisch (`tba3-spec.en.yml`,
+`material-spec.en.yml`); die Referenz lädt die der gewählten Sprache. Übersetzt
+sind nur `title`, `summary`, `description` und die Namen der Beispiele. Die erste
+Zeile hält den sha256 der deutschen Datei fest: Nach `spec:update` oder
+`material-spec:update` schlägt `apps/portal/schnittstelle/spec-en.test.mjs` an,
+bis die Übersetzung nachgezogen ist. Derselbe Test prüft, dass die Struktur
+gleich bleibt.
 
 ## Tests
 

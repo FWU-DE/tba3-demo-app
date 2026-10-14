@@ -6,6 +6,30 @@
 //
 // Die Zahlen sind erfunden und folgen dem Zuschnitt der TBA3-Beispieldaten;
 // echte Auswertungen kommen im Betrieb aus der Schnittstelle.
+//
+// Beschriftungen gibt es in beiden Sprachen der Seite: `text(de, en)` steht
+// für einen Wert, den der Demonstrator vor dem Setzen in die gerade gewählte
+// Sprache auflöst (`lokal()`), und bei jedem Wechsel neu. Namen von
+// Schüler:innen, Lerngruppen, Aufgaben und Teilbereichen bleiben, wie sie sind
+// — sie kämen im Betrieb so aus der Schnittstelle.
+
+/** Ein sichtbarer Text in beiden Sprachen. */
+const text = (de, en) => ({ de, en });
+
+/** Ist `wert` ein Text in beiden Sprachen, und nicht etwa ein Datenobjekt? */
+export const istText = (wert) =>
+  wert !== null && typeof wert === 'object' && !Array.isArray(wert) &&
+  Object.keys(wert).length === 2 && typeof wert.de === 'string' && typeof wert.en === 'string';
+
+/** Alle Texte in `wert` in die Sprache `sprache` auflösen — tief, ohne das Original zu ändern. */
+export function lokal(wert, sprache) {
+  if (istText(wert)) return wert[sprache] ?? wert.de;
+  if (Array.isArray(wert)) return wert.map((w) => lokal(w, sprache));
+  if (wert && typeof wert === 'object') {
+    return Object.fromEntries(Object.entries(wert).map(([k, w]) => [k, lokal(w, sprache)]));
+  }
+  return wert;
+}
 
 /** Rot nach Grün — dieselbe Ordnung, die auch die Leiste zeigt. */
 const STUFENFARBEN = {
@@ -22,13 +46,13 @@ export const DEMODATEN = [
       domain: 'Leseverstehen',
       rows: [
         { label: '3a Deutsch', total: 25, levels: stufen(8, 22, 34, 24, 12) },
-        { label: 'Schule', total: 78, levels: stufen(10, 24, 33, 22, 11) },
-        { label: 'Fairer Vergleich', total: 480, fair: true, levels: stufen(11, 23, 34, 22, 10) },
-        { label: 'Bundesland', total: 12400, levels: stufen(12, 25, 33, 20, 10) },
+        { label: text('Schule', 'School'), total: 78, levels: stufen(10, 24, 33, 22, 11) },
+        { label: text('Fairer Vergleich', 'Fair comparison'), total: 480, fair: true, levels: stufen(11, 23, 34, 22, 10) },
+        { label: text('Bundesland', 'State'), total: 12400, levels: stufen(12, 25, 33, 20, 10) },
       ],
     },
     'aufgaben-tabelle': {
-      title: 'Aufgaben der Lerngruppe',
+      title: text('Aufgaben der Lerngruppe', 'Items of the learning group'),
       items: [
         { label: 'LE-026', exercise: 'Geheimsache', level: 'II', actual: 41, expected: 63 },
         { label: 'LE-027', exercise: 'Der Ausflug', level: 'IV', actual: 88, expected: 72 },
@@ -39,17 +63,17 @@ export const DEMODATEN = [
       ],
     },
     'mittelwert-vergleich': {
-      title: 'Mittlere Lösungsquote im Vergleich',
+      title: text('Mittlere Lösungsquote im Vergleich', 'Mean solution rate compared'),
       domain: 'Leseverstehen',
       rows: [
         { label: '3a Deutsch', mean: 62, ciLow: 55, ciHigh: 69, n: 25 },
-        { label: 'Schule', mean: 60, ciLow: 56, ciHigh: 64, n: 78 },
-        { label: 'Fairer Vergleich', mean: 58, ciLow: 56, ciHigh: 60, fair: true, n: 480 },
-        { label: 'Bundesland', mean: 57, n: 12400 },
+        { label: text('Schule', 'School'), mean: 60, ciLow: 56, ciHigh: 64, n: 78 },
+        { label: text('Fairer Vergleich', 'Fair comparison'), mean: 58, ciLow: 56, ciHigh: 60, fair: true, n: 480 },
+        { label: text('Bundesland', 'State'), mean: 57, n: 12400 },
       ],
     },
     'erwartet-tatsaechlich': {
-      title: 'Erwartete und tatsächliche Lösungsquote',
+      title: text('Erwartete und tatsächliche Lösungsquote', 'Expected and actual solution rate'),
       domain: '3a Deutsch',
       items: [
         { label: 'LE-026', level: 'II', actual: 41, expected: 63 },
@@ -60,7 +84,7 @@ export const DEMODATEN = [
       ],
     },
     perzentilbaender: {
-      title: 'Teilbereiche der Lerngruppe',
+      title: text('Teilbereiche der Lerngruppe', 'Domains of the learning group'),
       items: [
         { label: 'Lesen', bandLeft: 35, bandRight: 70, studentScore: 52 },
         { label: 'Zuhören', bandLeft: 40, bandRight: 75, studentScore: 61 },
@@ -69,9 +93,9 @@ export const DEMODATEN = [
       ],
     },
     'schueler-tabelle': {
-      title: 'Lösungen je Schüler:in',
+      title: text('Lösungen je Schüler:in', 'Solutions per student'),
       domains: [
-        { key: 'total', label: 'Insgesamt' },
+        { key: 'total', label: text('Insgesamt', 'Total') },
         { key: 'reading', label: 'Lesen' },
         { key: 'listening', label: 'Zuhören' },
       ],
@@ -98,13 +122,13 @@ export const DEMODATEN = [
         } },
         // Abwesend: steht am Ende, mit Grund statt mit Balken
         { id: 's5', name: 'Emre F.', gender: 'm', absent: true,
-          absentMessage: 'Am Testtag entschuldigt gefehlt.', domains: {} },
+          absentMessage: text('Am Testtag entschuldigt gefehlt.', 'Excused absence on the test day.'), domains: {} },
       ],
     },
     uebersichtskarten: {
-      title: 'Kompetenzübersicht 3a Deutsch',
+      title: text('Kompetenzübersicht 3a Deutsch', 'Competence overview 3a Deutsch'),
       karten: [
-        { id: 'verteilung', label: 'Kompetenzstufen', wert: 25, einheit: '',
+        { id: 'verteilung', label: text('Kompetenzstufen', 'Competence levels'), wert: 25, einheit: '',
           // Die Stufen tragen eine Ordnung: I ist die schwächste. Ohne eigene
           // Farben liefe die Vorgabe des Bausteins genau andersherum.
           anteile: [
@@ -115,31 +139,31 @@ export const DEMODATEN = [
             { label: 'V', wert: 3, farbe: STUFENFARBEN.V },
           ],
           details: [
-            { label: 'I · Unter Mindeststandard', wert: 2 },
-            { label: 'II · Mindeststandard', wert: 5 },
-            { label: 'III · Regelstandard', wert: 9 },
-            { label: 'IV · Regelstandard plus', wert: 6 },
-            { label: 'V · Optimalstandard', wert: 3 },
+            { label: text('I · Unter Mindeststandard', 'I · Below minimum standard'), wert: 2 },
+            { label: text('II · Mindeststandard', 'II · Minimum standard'), wert: 5 },
+            { label: text('III · Regelstandard', 'III · Regular standard'), wert: 9 },
+            { label: text('IV · Regelstandard plus', 'IV · Regular standard plus'), wert: 6 },
+            { label: text('V · Optimalstandard', 'V · Optimal standard'), wert: 3 },
           ] },
         // Zwei Aussagen, zwei Farben: die Vorgabe des Bausteins läuft von Grün
         // nach Rot durch die Kompetenzstufen und würde hier „nicht erreicht"
         // grün einfärben. Farben, die etwas behaupten, gehören zu den Daten.
-        { id: 'ab-mindest', label: 'Mindeststandard und darüber', wert: 92, einheit: '%',
+        { id: 'ab-mindest', label: text('Mindeststandard und darüber', 'Minimum standard and above'), wert: 92, einheit: '%',
           anteile: [
-            { label: 'erreicht', wert: 23, farbe: '#16a34a' },
-            { label: 'nicht erreicht', wert: 2, farbe: '#94a3b8' },
+            { label: text('erreicht', 'reached'), wert: 23, farbe: '#16a34a' },
+            { label: text('nicht erreicht', 'not reached'), wert: 2, farbe: '#94a3b8' },
           ],
-          details: [{ label: 'Schüler:innen', wert: 23 }] },
-        { id: 'unter-mindest', label: 'Unter Mindeststandard', wert: 8, einheit: '%',
+          details: [{ label: text('Schüler:innen', 'Students'), wert: 23 }] },
+        { id: 'unter-mindest', label: text('Unter Mindeststandard', 'Below minimum standard'), wert: 8, einheit: '%',
           anteile: [
-            { label: 'betroffen', wert: 2, farbe: '#dc2626' },
-            { label: 'übrige', wert: 23, farbe: '#94a3b8' },
+            { label: text('betroffen', 'affected'), wert: 2, farbe: '#dc2626' },
+            { label: text('übrige', 'others'), wert: 23, farbe: '#94a3b8' },
           ],
-          details: [{ label: 'Schüler:innen', wert: 2 }] },
+          details: [{ label: text('Schüler:innen', 'Students'), wert: 2 }] },
       ],
     },
     streudiagramm: {
-      title: 'Schüler:innen nach Stufe und Lösungsquote',
+      title: text('Schüler:innen nach Stufe und Lösungsquote', 'Students by level and solution rate'),
       mittelwert: 62,
       punkte: [
         { id: 's1', name: 'Anna B.', x: 4.2, y: 78, details: [{ label: 'Lesen', wert: 84 }, { label: 'Zuhören', wert: 72 }] },
@@ -151,7 +175,7 @@ export const DEMODATEN = [
       ],
     },
     'bista-verteilung': {
-      title: 'BISTA-Punkte der 3a Deutsch',
+      title: text('BISTA-Punkte der 3a Deutsch', 'BISTA points of 3a Deutsch'),
       mittelwert: 468,
       schueler: [
         { id: 's1', name: 'Anna B.', punkte: 512 },
@@ -164,16 +188,16 @@ export const DEMODATEN = [
       ],
     },
     'lernstands-verlauf': {
-      title: 'Lernstand über drei Erhebungen',
+      title: text('Lernstand über drei Erhebungen', 'Attainment across three assessments'),
       punkte: [
-        { label: 'Herbst', mean: 54, ciLow: 47, ciHigh: 61, n: 25 },
+        { label: text('Herbst', 'Autumn'), mean: 54, ciLow: 47, ciHigh: 61, n: 25 },
         { label: 'Winter', mean: 61, ciLow: 55, ciHigh: 67, n: 25 },
-        { label: 'Frühjahr', mean: 66, ciLow: 60, ciHigh: 72, n: 24 },
+        { label: text('Frühjahr', 'Spring'), mean: 66, ciLow: 60, ciHigh: 72, n: 24 },
       ],
       vergleich: [{ mean: 52 }, { mean: 56 }, { mean: 59 }],
     },
     'aufgaben-heatmap': {
-      title: 'Aufgaben über die Lerngruppen',
+      title: text('Aufgaben über die Lerngruppen', 'Items across the learning groups'),
       zeilen: [
         { id: 'le-026', label: 'LE-026' },
         { id: 'le-027', label: 'LE-027' },
@@ -201,22 +225,22 @@ export const DEMODATEN = [
       ],
     },
     'kennzahl-kachel': {
-      label: 'Mittlere Lösungsquote',
+      label: text('Mittlere Lösungsquote', 'Mean solution rate'),
       wert: 62,
       einheit: '%',
       vergleich: 58,
       verlauf: [54, 57, 59, 62],
-      hinweis: '25 Schüler:innen · Leseverstehen',
+      hinweis: text('25 Schüler:innen · Leseverstehen', '25 students · Leseverstehen'),
     },
     'kontextmerkmal-ring': {
-      label: 'Sprache zuhause',
+      label: text('Sprache zuhause', 'Language at home'),
       segmente: [
-        { label: 'Deutsch', wert: 17, farbe: '#2563eb' },
-        { label: 'andere', wert: 8, farbe: '#eab308' },
+        { label: text('Deutsch', 'German'), wert: 17, farbe: '#2563eb' },
+        { label: text('andere', 'other'), wert: 8, farbe: '#eab308' },
       ],
     },
     'standard-erreichung': {
-      label: 'Mindeststandard erreicht',
+      label: text('Mindeststandard erreicht', 'Minimum standard reached'),
       zeilen: [
         { label: 'Lesen', wert: 84, gesamt: 25 },
         { label: 'Zuhören', wert: 76, gesamt: 25 },
@@ -224,28 +248,31 @@ export const DEMODATEN = [
       ],
     },
     zeugnissaetze: {
-      titel: 'Vorschläge für das Zeugnis',
+      titel: text('Vorschläge für das Zeugnis', 'Suggestions for the report card'),
       werte: { name: 'Anna B.', stufe: 'IV', domaene: 'Leseverstehen', quote: '78' },
       saetze: [
-        { id: 'stufe', stufe: 'IV', vorlage: '{name} erreicht im {domaene} die Kompetenzstufe {stufe} und liegt damit über dem Regelstandard.',
-          grundlage: 'Kompetenzstufe {stufe}, Lösungsquote {quote} %' },
-        { id: 'arbeit', vorlage: '{name} erschließt sich auch längere Texte selbstständig.',
-          grundlage: 'Lösungsquote {quote} % im {domaene}' },
+        { id: 'stufe', stufe: 'IV', vorlage: text(
+            '{name} erreicht im {domaene} die Kompetenzstufe {stufe} und liegt damit über dem Regelstandard.',
+            '{name} reaches competence level {stufe} in {domaene} and is thus above the regular standard.',
+          ),
+          grundlage: text('Kompetenzstufe {stufe}, Lösungsquote {quote} %', 'Competence level {stufe}, solution rate {quote} %') },
+        { id: 'arbeit', vorlage: text('{name} erschließt sich auch längere Texte selbstständig.', '{name} also works through longer texts independently.'),
+          grundlage: text('Lösungsquote {quote} % im {domaene}', 'Solution rate {quote} % in {domaene}') },
       ],
     },
     'lernverlauf-figuren': {
-      title: 'Lesegeschwindigkeit über drei Erhebungen',
-      yTitel: 'Lesegeschwindigkeit',
+      title: text('Lesegeschwindigkeit über drei Erhebungen', 'Reading speed across three assessments'),
+      yTitel: text('Lesegeschwindigkeit', 'Reading speed'),
       zeitpunkte: [
-        { id: 'm25', label: '2025 März' }, { id: 'h25', label: '2025 Herbst' }, { id: 'm26', label: '2026 März' },
+        { id: 'm25', label: text('2025 März', 'March 2025') }, { id: 'h25', label: text('2025 Herbst', 'Autumn 2025') }, { id: 'm26', label: text('2026 März', 'March 2026') },
       ],
       // Benannte Zonen statt Zahlen — das ist der Kern der Vorlage: eine
       // Drittklässlerin liest „Fink", nicht „Kompetenzstufe III".
       zonen: [
-        { label: 'Silbe', von: 0, bis: 35 },
-        { label: 'Wort', von: 35, bis: 60 },
-        { label: 'Fink', von: 60, bis: 80 },
-        { label: 'Adler', von: 80, bis: 100 },
+        { label: text('Silbe', 'Syllable'), von: 0, bis: 35 },
+        { label: text('Wort', 'Word'), von: 35, bis: 60 },
+        { label: text('Fink', 'Finch'), von: 60, bis: 80 },
+        { label: text('Adler', 'Eagle'), von: 80, bis: 100 },
       ],
       personen: [
         { id: 's1', name: 'Anna B.', werte: [{ zeitpunkt: 'm25', wert: 41 }, { zeitpunkt: 'h25', wert: 58 }, { zeitpunkt: 'm26', wert: 74 }] },
@@ -255,7 +282,7 @@ export const DEMODATEN = [
       ],
     },
     selbsteinschaetzung: {
-      title: 'Selbsteinschätzung und Ergebnis',
+      title: text('Selbsteinschätzung und Ergebnis', 'Self-assessment and result'),
       zeilen: [
         { label: 'Lesen', selbst: 82, gemessen: 61 },
         { label: 'Zuhören', selbst: 60, gemessen: 64 },
@@ -264,18 +291,18 @@ export const DEMODATEN = [
       ],
     },
     'merkmal-gradient': {
-      titel: 'Lösungsquote nach Geschlecht',
-      merkmal: 'Geschlecht',
-      auspraegungen: [{ id: 'f', label: 'weiblich' }, { id: 'm', label: 'männlich' }],
+      titel: text('Lösungsquote nach Geschlecht', 'Solution rate by gender'),
+      merkmal: text('Geschlecht', 'Gender'),
+      auspraegungen: [{ id: 'f', label: text('weiblich', 'female') }, { id: 'm', label: text('männlich', 'male') }],
       reihen: [
         { id: 'klasse', label: '3a', werte: { f: 64, m: 57 }, n: { f: 13, m: 12 } },
-        { id: 'schule', label: 'Schule', werte: { f: 60, m: 56 } },
-        { id: 'land', label: 'Land', werte: { f: 58, m: 54 } },
+        { id: 'schule', label: text('Schule', 'School'), werte: { f: 60, m: 56 } },
+        { id: 'land', label: text('Land', 'State'), werte: { f: 58, m: 54 } },
       ],
     },
     'abweichung-je-gruppe': {
-      titel: 'Anteil ab Regelstandard',
-      bezug: { label: 'Schule', wert: 58 },
+      titel: text('Anteil ab Regelstandard', 'Share at or above the regular standard'),
+      bezug: { label: text('Schule', 'School'), wert: 58 },
       gruppen: [
         { id: '3a', label: '3a Deutsch', wert: 64, n: 25 },
         { id: '3b', label: '3b Deutsch', wert: 55, n: 24 },
@@ -283,12 +310,12 @@ export const DEMODATEN = [
       ],
     },
     'gruppen-pyramide': {
-      titel: 'Kompetenzstufen im Vergleich',
+      titel: text('Kompetenzstufen im Vergleich', 'Competence levels compared'),
       links: { label: '3a Deutsch', stufen: [{ stufe: 'I', anteil: 8 }, { stufe: 'II', anteil: 22 }, { stufe: 'III', anteil: 34 }, { stufe: 'IV', anteil: 24 }, { stufe: 'V', anteil: 12 }] },
       rechts: { label: '3b Deutsch', stufen: [{ stufe: 'I', anteil: 16 }, { stufe: 'II', anteil: 28 }, { stufe: 'III', anteil: 30 }, { stufe: 'IV', anteil: 18 }, { stufe: 'V', anteil: 8 }] },
     },
     netzdiagramm: {
-      titel: 'Profil über die Kompetenzbereiche',
+      titel: text('Profil über die Kompetenzbereiche', 'Profile across the competence areas'),
       achsen: [
         { id: 'sz', label: 'Sprechen, Zuhören' }, { id: 'sc', label: 'Schreiben' },
         { id: 'le', label: 'Lesen' }, { id: 'sp', label: 'Sprache untersuchen' },
@@ -296,17 +323,30 @@ export const DEMODATEN = [
       reihen: [
         { id: 'person', label: 'Anna', werte: { sz: 72, sc: 58, le: 81, sp: 49 } },
         { id: 'klasse', label: '3a', werte: { sz: 63, sc: 55, le: 66, sp: 52 } },
-        { id: 'land', label: 'Land', werte: { sz: 60, sc: 57, le: 62, sp: 55 } },
+        { id: 'land', label: text('Land', 'State'), werte: { sz: 60, sc: 57, le: 62, sp: 55 } },
       ],
     },
     glossar: {
-      title: 'Begriffe dieser Rückmeldung',
+      title: text('Begriffe dieser Rückmeldung', 'Terms in this report'),
       eintraege: [
-        { id: 'ks', begriff: 'Kompetenzstufe', erklaerung: 'Fünf Stufen von I bis V. Stufe I liegt unter dem Mindeststandard, ab II gilt er als erreicht.' },
-        { id: 'fv', begriff: 'Fairer Vergleich', erklaerung: 'Der Vergleich mit Schulen ähnlicher sozialer Zusammensetzung statt mit allen.', auch: ['Standorttyp', 'STYPS'] },
-        { id: 'lh', begriff: 'Lösungshäufigkeit', erklaerung: 'Der Anteil der Lernenden, die eine Aufgabe richtig gelöst haben.' },
-        { id: 'ms', begriff: 'Mindeststandard', erklaerung: 'Das Niveau, das am Ende der Jahrgangsstufe alle erreicht haben sollen.' },
-        { id: 'do', begriff: 'Domäne', erklaerung: 'Ein Teilbereich eines Faches, etwa Leseverstehen oder Hörverstehen.', auch: ['Teilbereich'] },
+        { id: 'ks', begriff: text('Kompetenzstufe', 'Competence level'),
+          erklaerung: text(
+            'Fünf Stufen von I bis V. Stufe I liegt unter dem Mindeststandard, ab II gilt er als erreicht.',
+            'Five levels from I to V. Level I is below the minimum standard; from II on, it counts as reached.',
+          ) },
+        { id: 'fv', begriff: text('Fairer Vergleich', 'Fair comparison'),
+          erklaerung: text(
+            'Der Vergleich mit Schulen ähnlicher sozialer Zusammensetzung statt mit allen.',
+            'The comparison with schools of a similar social composition instead of with all schools.',
+          ),
+          auch: [text('Standorttyp', 'Location type'), 'STYPS'] },
+        { id: 'lh', begriff: text('Lösungshäufigkeit', 'Solution frequency'),
+          erklaerung: text('Der Anteil der Lernenden, die eine Aufgabe richtig gelöst haben.', 'The share of learners who solved an item correctly.') },
+        { id: 'ms', begriff: text('Mindeststandard', 'Minimum standard'),
+          erklaerung: text('Das Niveau, das am Ende der Jahrgangsstufe alle erreicht haben sollen.', 'The level everyone should have reached by the end of the school year.') },
+        { id: 'do', begriff: text('Domäne', 'Domain'),
+          erklaerung: text('Ein Teilbereich eines Faches, etwa Leseverstehen oder Hörverstehen.', 'A sub-area of a subject, such as reading or listening comprehension.'),
+          auch: [text('Teilbereich', 'Sub-area')] },
       ],
     },
   },
@@ -316,13 +356,13 @@ export const DEMODATEN = [
       domain: 'Leitidee Zahl',
       rows: [
         { label: '8b Mathematik', total: 22, levels: stufen(24, 31, 27, 13, 5) },
-        { label: 'Schule', total: 91, levels: stufen(18, 27, 31, 17, 7) },
-        { label: 'Fairer Vergleich', total: 520, fair: true, levels: stufen(17, 26, 32, 18, 7) },
-        { label: 'Bundesland', total: 14800, levels: stufen(15, 25, 33, 19, 8) },
+        { label: text('Schule', 'School'), total: 91, levels: stufen(18, 27, 31, 17, 7) },
+        { label: text('Fairer Vergleich', 'Fair comparison'), total: 520, fair: true, levels: stufen(17, 26, 32, 18, 7) },
+        { label: text('Bundesland', 'State'), total: 14800, levels: stufen(15, 25, 33, 19, 8) },
       ],
     },
     'aufgaben-tabelle': {
-      title: 'Aufgaben der Lerngruppe',
+      title: text('Aufgaben der Lerngruppe', 'Items of the learning group'),
       items: [
         { label: 'MA-104', exercise: 'Bruchrechnung', level: 'I', actual: 22, expected: 41 },
         { label: 'MA-108', exercise: 'Prozentsätze', level: 'II', actual: 38, expected: 44 },
@@ -332,17 +372,17 @@ export const DEMODATEN = [
       ],
     },
     'mittelwert-vergleich': {
-      title: 'Mittlere Lösungsquote im Vergleich',
+      title: text('Mittlere Lösungsquote im Vergleich', 'Mean solution rate compared'),
       domain: 'Leitidee Zahl',
       rows: [
         { label: '8b Mathematik', mean: 41, ciLow: 33, ciHigh: 49, n: 22 },
-        { label: 'Schule', mean: 49, ciLow: 45, ciHigh: 53, n: 91 },
-        { label: 'Fairer Vergleich', mean: 50, ciLow: 48, ciHigh: 52, fair: true, n: 520 },
-        { label: 'Bundesland', mean: 52, n: 14800 },
+        { label: text('Schule', 'School'), mean: 49, ciLow: 45, ciHigh: 53, n: 91 },
+        { label: text('Fairer Vergleich', 'Fair comparison'), mean: 50, ciLow: 48, ciHigh: 52, fair: true, n: 520 },
+        { label: text('Bundesland', 'State'), mean: 52, n: 14800 },
       ],
     },
     'erwartet-tatsaechlich': {
-      title: 'Erwartete und tatsächliche Lösungsquote',
+      title: text('Erwartete und tatsächliche Lösungsquote', 'Expected and actual solution rate'),
       domain: '8b Mathematik',
       items: [
         { label: 'MA-104', level: 'I', actual: 22, expected: 41 },
@@ -353,7 +393,7 @@ export const DEMODATEN = [
       ],
     },
     perzentilbaender: {
-      title: 'Teilbereiche der Lerngruppe',
+      title: text('Teilbereiche der Lerngruppe', 'Domains of the learning group'),
       items: [
         { label: 'Zahl', bandLeft: 28, bandRight: 58, studentScore: 33 },
         { label: 'Messen', bandLeft: 33, bandRight: 64, studentScore: 57 },
@@ -363,12 +403,12 @@ export const DEMODATEN = [
       ],
     },
     'schueler-tabelle': {
-      title: 'Lösungen je Schüler:in',
+      title: text('Lösungen je Schüler:in', 'Solutions per student'),
       sortierung: 'name',
       richtung: 'auf',
       auswaehlbar: false,
       domains: [
-        { key: 'total', label: 'Insgesamt' },
+        { key: 'total', label: text('Insgesamt', 'Total') },
         { key: 'arith', label: 'Arithmetik' },
         { key: 'geo', label: 'Geometrie' },
       ],
@@ -391,10 +431,10 @@ export const DEMODATEN = [
       ],
     },
     uebersichtskarten: {
-      title: 'Kompetenzübersicht 8b Mathematik',
+      title: text('Kompetenzübersicht 8b Mathematik', 'Competence overview 8b Mathematik'),
       spalten: 2,
       karten: [
-        { id: 'verteilung', label: 'Kompetenzstufen', wert: 22, einheit: '',
+        { id: 'verteilung', label: text('Kompetenzstufen', 'Competence levels'), wert: 22, einheit: '',
           anteile: [
             { label: 'I', wert: 5, farbe: STUFENFARBEN.I },
             { label: 'II', wert: 7, farbe: STUFENFARBEN.II },
@@ -403,22 +443,22 @@ export const DEMODATEN = [
             { label: 'V', wert: 1, farbe: STUFENFARBEN.V },
           ],
           details: [
-            { label: 'I · Unter Mindeststandard', wert: 5 },
-            { label: 'II · Mindeststandard', wert: 7 },
-            { label: 'III · Regelstandard', wert: 6 },
-            { label: 'IV · Regelstandard plus', wert: 3 },
-            { label: 'V · Optimalstandard', wert: 1 },
+            { label: text('I · Unter Mindeststandard', 'I · Below minimum standard'), wert: 5 },
+            { label: text('II · Mindeststandard', 'II · Minimum standard'), wert: 7 },
+            { label: text('III · Regelstandard', 'III · Regular standard'), wert: 6 },
+            { label: text('IV · Regelstandard plus', 'IV · Regular standard plus'), wert: 3 },
+            { label: text('V · Optimalstandard', 'V · Optimal standard'), wert: 1 },
           ] },
-        { id: 'unter-mindest', label: 'Unter Mindeststandard', wert: 23, einheit: '%',
+        { id: 'unter-mindest', label: text('Unter Mindeststandard', 'Below minimum standard'), wert: 23, einheit: '%',
           anteile: [
-            { label: 'betroffen', wert: 5, farbe: '#dc2626' },
-            { label: 'übrige', wert: 17, farbe: '#94a3b8' },
+            { label: text('betroffen', 'affected'), wert: 5, farbe: '#dc2626' },
+            { label: text('übrige', 'others'), wert: 17, farbe: '#94a3b8' },
           ],
-          details: [{ label: 'Schüler:innen', wert: 5 }] },
+          details: [{ label: text('Schüler:innen', 'Students'), wert: 5 }] },
       ],
     },
     streudiagramm: {
-      title: 'Schüler:innen nach Stufe und Lösungsquote',
+      title: text('Schüler:innen nach Stufe und Lösungsquote', 'Students by level and solution rate'),
       mittelwert: 41,
       punkte: [
         { id: 'm1', name: 'Ilyas K.', x: 2.1, y: 38, details: [{ label: 'Arithmetik', wert: 42 }, { label: 'Geometrie', wert: 34 }] },
@@ -429,13 +469,13 @@ export const DEMODATEN = [
       ],
     },
     'bista-verteilung': {
-      title: 'BISTA-Punkte der 8b Mathematik',
+      title: text('BISTA-Punkte der 8b Mathematik', 'BISTA points of 8b Mathematik'),
       mittelwert: 424,
       punkteMin: 280,
       zonen: [
-        { id: 'ks1', label: 'KS I', von: 280, bis: 415 },
-        { id: 'ks2', label: 'KS II', von: 415, bis: 495 },
-        { id: 'ks3', label: 'KS III', von: 495, bis: 565 },
+        { id: 'ks1', label: text('KS I', 'CL I'), von: 280, bis: 415 },
+        { id: 'ks2', label: text('KS II', 'CL II'), von: 415, bis: 495 },
+        { id: 'ks3', label: text('KS III', 'CL III'), von: 495, bis: 565 },
       ],
       schueler: [
         { id: 'm1', name: 'Ilyas K.', punkte: 408 },
@@ -447,17 +487,17 @@ export const DEMODATEN = [
       ],
     },
     'lernstands-verlauf': {
-      title: 'Lernstand über drei Erhebungen',
-      yTitel: 'Lösungsquote (%)',
+      title: text('Lernstand über drei Erhebungen', 'Attainment across three assessments'),
+      yTitel: text('Lösungsquote (%)', 'Solution rate (%)'),
       punkte: [
-        { label: 'Herbst', mean: 47, ciLow: 39, ciHigh: 55, n: 22 },
+        { label: text('Herbst', 'Autumn'), mean: 47, ciLow: 39, ciHigh: 55, n: 22 },
         { label: 'Winter', mean: 44, ciLow: 37, ciHigh: 51, n: 22 },
-        { label: 'Frühjahr', mean: 41, ciLow: 34, ciHigh: 48, n: 22 },
+        { label: text('Frühjahr', 'Spring'), mean: 41, ciLow: 34, ciHigh: 48, n: 22 },
       ],
       vergleich: [{ mean: 49 }, { mean: 51 }, { mean: 52 }],
     },
     'aufgaben-heatmap': {
-      title: 'Aufgaben über die Lerngruppen',
+      title: text('Aufgaben über die Lerngruppen', 'Items across the learning groups'),
       skala: 'wert',
       zeilen: [
         { id: 'ma-104', label: 'MA-104' },
@@ -478,55 +518,55 @@ export const DEMODATEN = [
       ],
     },
     'kennzahl-kachel': {
-      label: 'Mittlere Lösungsquote',
+      label: text('Mittlere Lösungsquote', 'Mean solution rate'),
       wert: 41,
       einheit: '%',
       vergleich: 50,
       verlauf: [47, 44, 41],
-      hinweis: '22 Schüler:innen · Leitidee Zahl',
+      hinweis: text('22 Schüler:innen · Leitidee Zahl', '22 students · Leitidee Zahl'),
     },
     'kontextmerkmal-ring': {
-      label: 'Sozioökonomischer Status',
+      label: text('Sozioökonomischer Status', 'Socio-economic status'),
       geordnet: true,
-      mitteLabel: 'Schul-Median',
+      mitteLabel: text('Schul-Median', 'School median'),
       segmente: [
-        { label: 'A — sehr niedrig', wert: 6 },
-        { label: 'B — niedrig', wert: 9 },
-        { label: 'C — mittel', wert: 5 },
-        { label: 'D — hoch', wert: 3 },
-        { label: 'E — sehr hoch', wert: 1 },
+        { label: text('A — sehr niedrig', 'A — very low'), wert: 6 },
+        { label: text('B — niedrig', 'B — low'), wert: 9 },
+        { label: text('C — mittel', 'C — medium'), wert: 5 },
+        { label: text('D — hoch', 'D — high'), wert: 3 },
+        { label: text('E — sehr hoch', 'E — very high'), wert: 1 },
       ],
     },
     'standard-erreichung': {
-      label: 'Mindeststandard erreicht',
+      label: text('Mindeststandard erreicht', 'Minimum standard reached'),
       zeilen: [
         { label: 'Lesen', wert: 58, gesamt: 24 },
         { label: 'Zuhören', wert: 46, gesamt: 24 },
         { label: 'Orthografie', wert: 39, gesamt: 24 },
       ],
-      hinweis: 'Deutlich unter dem fairen Vergleich — die Aufschlüsselung zeigt, wo.',
+      hinweis: text('Deutlich unter dem fairen Vergleich — die Aufschlüsselung zeigt, wo.', 'Clearly below the fair comparison — the breakdown shows where.'),
     },
     zeugnissaetze: {
-      titel: 'Vorschläge für das Zeugnis',
+      titel: text('Vorschläge für das Zeugnis', 'Suggestions for the report card'),
       werte: { name: 'Cem D.', stufe: 'II', domaene: 'Leseverstehen', quote: '44' },
       saetze: [
-        { id: 'stufe', stufe: 'II', vorlage: '{name} erreicht im {domaene} die Kompetenzstufe {stufe}.',
-          grundlage: 'Kompetenzstufe {stufe}, Lösungsquote {quote} %' },
-        { id: 'foerder', vorlage: '{name} sollte das sinnentnehmende Lesen weiter üben.',
-          grundlage: 'Lösungsquote {quote} % im {domaene}' },
+        { id: 'stufe', stufe: 'II', vorlage: text('{name} erreicht im {domaene} die Kompetenzstufe {stufe}.', '{name} reaches competence level {stufe} in {domaene}.'),
+          grundlage: text('Kompetenzstufe {stufe}, Lösungsquote {quote} %', 'Competence level {stufe}, solution rate {quote} %') },
+        { id: 'foerder', vorlage: text('{name} sollte das sinnentnehmende Lesen weiter üben.', '{name} should keep practising reading for meaning.'),
+          grundlage: text('Lösungsquote {quote} % im {domaene}', 'Solution rate {quote} % in {domaene}') },
       ],
     },
     'lernverlauf-figuren': {
-      title: 'Lesegeschwindigkeit über drei Erhebungen',
-      yTitel: 'Lesegeschwindigkeit',
+      title: text('Lesegeschwindigkeit über drei Erhebungen', 'Reading speed across three assessments'),
+      yTitel: text('Lesegeschwindigkeit', 'Reading speed'),
       zeitpunkte: [
-        { id: 'm25', label: '2025 März' }, { id: 'h25', label: '2025 Herbst' }, { id: 'm26', label: '2026 März' },
+        { id: 'm25', label: text('2025 März', 'March 2025') }, { id: 'h25', label: text('2025 Herbst', 'Autumn 2025') }, { id: 'm26', label: text('2026 März', 'March 2026') },
       ],
       zonen: [
-        { label: 'Silbe', von: 0, bis: 35 },
-        { label: 'Wort', von: 35, bis: 60 },
-        { label: 'Fink', von: 60, bis: 80 },
-        { label: 'Adler', von: 80, bis: 100 },
+        { label: text('Silbe', 'Syllable'), von: 0, bis: 35 },
+        { label: text('Wort', 'Word'), von: 35, bis: 60 },
+        { label: text('Fink', 'Finch'), von: 60, bis: 80 },
+        { label: text('Adler', 'Eagle'), von: 80, bis: 100 },
       ],
       // Eine Gruppe, die sich kaum bewegt — damit sichtbar wird, dass der
       // Baustein auch das zeigt und nicht nur den erfreulichen Fall.
@@ -537,7 +577,7 @@ export const DEMODATEN = [
       ],
     },
     selbsteinschaetzung: {
-      title: 'Selbsteinschätzung und Ergebnis',
+      title: text('Selbsteinschätzung und Ergebnis', 'Self-assessment and result'),
       zeilen: [
         { label: 'Lesen', selbst: 35, gemessen: 38 },
         { label: 'Zuhören', selbst: 40, gemessen: 42 },
@@ -545,17 +585,17 @@ export const DEMODATEN = [
       ],
     },
     'merkmal-gradient': {
-      titel: 'Lösungsquote nach Geschlecht',
-      merkmal: 'Geschlecht',
-      auspraegungen: [{ id: 'f', label: 'weiblich' }, { id: 'm', label: 'männlich' }, { id: 'd', label: 'divers' }],
+      titel: text('Lösungsquote nach Geschlecht', 'Solution rate by gender'),
+      merkmal: text('Geschlecht', 'Gender'),
+      auspraegungen: [{ id: 'f', label: text('weiblich', 'female') }, { id: 'm', label: text('männlich', 'male') }, { id: 'd', label: text('divers', 'diverse') }],
       reihen: [
         { id: 'klasse', label: '8b', werte: { f: 52, m: 58, d: 47 }, n: { f: 14, m: 12, d: 1 } },
-        { id: 'schule', label: 'Schule', werte: { f: 54, m: 57 } },
-        { id: 'land', label: 'Land', werte: { f: 51, m: 55, d: 50 } },
+        { id: 'schule', label: text('Schule', 'School'), werte: { f: 54, m: 57 } },
+        { id: 'land', label: text('Land', 'State'), werte: { f: 51, m: 55, d: 50 } },
       ],
     },
     'abweichung-je-gruppe': {
-      titel: 'Mittlere Lösungsquote',
+      titel: text('Mittlere Lösungsquote', 'Mean solution rate'),
       bezug: { label: 'Gymnasium Beispielstadt', wert: 61 },
       gruppen: [
         { id: '8a', label: '8a Mathematik', wert: 66, n: 27 },
@@ -565,12 +605,12 @@ export const DEMODATEN = [
       ],
     },
     'gruppen-pyramide': {
-      titel: 'Kompetenzstufen im Vergleich',
+      titel: text('Kompetenzstufen im Vergleich', 'Competence levels compared'),
       links: { label: '8a Mathematik', stufen: [{ stufe: 'I', anteil: 6 }, { stufe: 'II', anteil: 18 }, { stufe: 'III', anteil: 37 }, { stufe: 'IV', anteil: 26 }, { stufe: 'V', anteil: 13 }] },
       rechts: { label: '8d Mathematik', stufen: [{ stufe: 'I', anteil: 21 }, { stufe: 'II', anteil: 32 }, { stufe: 'III', anteil: 29 }, { stufe: 'IV', anteil: 14 }, { stufe: 'V', anteil: 4 }] },
     },
     netzdiagramm: {
-      titel: 'Profil über die Leitideen',
+      titel: text('Profil über die Leitideen', 'Profile across the key ideas'),
       achsen: [
         { id: 'zo', label: 'Zahl und Operation' }, { id: 'gm', label: 'Größen und Messen' },
         { id: 'rf', label: 'Raum und Form' }, { id: 'fz', label: 'Funktionaler Zusammenhang' },
@@ -579,14 +619,14 @@ export const DEMODATEN = [
       reihen: [
         { id: 'person', label: 'Ben', werte: { zo: 68, gm: 41, rf: 77, fz: 52, dz: 60 } },
         { id: 'klasse', label: '8b', werte: { zo: 59, gm: 50, rf: 62, fz: 48, dz: 56 } },
-        { id: 'land', label: 'Land', werte: { zo: 57, gm: 53, rf: 58, fz: 51, dz: 55 } },
+        { id: 'land', label: text('Land', 'State'), werte: { zo: 57, gm: 53, rf: 58, fz: 51, dz: 55 } },
       ],
     },
     glossar: {
-      title: 'Begriffe dieser Rückmeldung',
+      title: text('Begriffe dieser Rückmeldung', 'Terms in this report'),
       eintraege: [
-        { id: 'ks', begriff: 'Kompetenzstufe', erklaerung: 'Fünf Stufen von I bis V.' },
-        { id: 'ms', begriff: 'Mindeststandard', erklaerung: 'Das Niveau, das alle erreicht haben sollen.' },
+        { id: 'ks', begriff: text('Kompetenzstufe', 'Competence level'), erklaerung: text('Fünf Stufen von I bis V.', 'Five levels from I to V.') },
+        { id: 'ms', begriff: text('Mindeststandard', 'Minimum standard'), erklaerung: text('Das Niveau, das alle erreicht haben sollen.', 'The level everyone should have reached.') },
       ],
     },
   },

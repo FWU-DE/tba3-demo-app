@@ -10,6 +10,7 @@
 import { SPALTEN, STANDARD, naechsteSortierung, zeilen } from '../kern/aufgaben-tabelle.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 import { stufenFlaeche, stufenNummer, stufenSchrift, v } from '../kern/thema.js';
 
 const STIL = `
@@ -72,11 +73,11 @@ const STUFENSCHRIFT = (stufe) => {
   return nr ? stufenSchrift(nr) : v('farbe-text-invers');
 };
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const daten = zeilen(zustand);
 
   if (!daten.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Aufgaben' }));
+    wurzel.append(h('p', { class: 'leer', text: t('leer.aufgaben') }));
     return;
   }
 
@@ -96,7 +97,7 @@ function aufbauen(wurzel, zustand, el) {
         el.melden('sortiert', neu);
       },
     }, [
-      sp.titel,
+      t(`tabelle.${sp.id}`),
       h('span', { class: 'pfeil', text: aktiv ? (zustand.richtung === 'auf' ? '▲' : '▼') : '↕' }),
     ]);
     zelle.append(knopf);
@@ -158,6 +159,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'aufgaben-tabelle',
   titel: 'Aufgaben-Tabelle',
+  titelEn: TITEL_EN['aufgaben-tabelle'],
   endpunkt: '/groups/{id}/items',
   standard: STANDARD,
   ereignisse: ['sortiert', 'aufgabe-gewaehlt'],

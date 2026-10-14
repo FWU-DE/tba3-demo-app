@@ -9,7 +9,7 @@ import Tag from 'primevue/tag';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { KompetenzstufenLeiste as CompetenceLevelBar } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, domaene } from '../i18n';
 
 const DOCS = {
   githubFile: 'kompetenzstufen-leiste.js',
@@ -180,8 +180,7 @@ const extractLevels = (vgs, domain) => {
   };
 };
 
-const DOMAIN_NAMES = { ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch', ma: 'Mathematik', en: 'Englisch', fr: 'Französisch' };
-const domainLabel = (d) => (d === null ? t('ansichten.gemeinsam.gesamt') : DOMAIN_NAMES[d] ?? d?.toUpperCase() ?? '');
+const domainLabel = (d) => domaene(d);
 
 // All unique domains present in the group data
 const domains = computed(() => {
@@ -206,9 +205,9 @@ const domainCharts = computed(() => {
 
     const rows = [
       gData  && { label: selectedGroup.value.label, ...gData  },
-      sData  && { label: 'Schule',                   ...sData  },
+      sData  && { label: t('ansichten.gemeinsam.schule'), ...sData  },
       fData  && { label: t('ansichten.stufen.fairSimuliert'), ...fData,  fair: true },
-      stData && { label: 'Bundesland',                ...stData },
+      stData && { label: t('ansichten.gemeinsam.bundesland'), ...stData },
     ].filter(Boolean);
 
     return { domain, label: domainLabel(domain), rows };
@@ -256,7 +255,7 @@ const domainCharts = computed(() => {
               <ToggleSwitch v-model="showFairComparison" input-id="fair-toggle" />
               <label for="fair-toggle" class="fair-toggle-label">
                 <span class="fair-icon">⚖</span>
-                Standorttyp anzeigen
+                {{ t('ansichten.gemeinsam.standorttypAnzeigen') }}
               </label>
             </div>
             <span class="fair-hint">{{ t('ansichten.stufen.fairHinweis') }}</span>
@@ -270,7 +269,7 @@ const domainCharts = computed(() => {
           {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
-          Keine Daten.
+          {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
         <div v-else class="charts-grid">

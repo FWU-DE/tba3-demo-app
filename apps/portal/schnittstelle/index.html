@@ -21,7 +21,7 @@
 
     /* Zweisprachig: beide Fassungen stehen im Markup, sichtbar ist die, die
        <html lang> nennt — umgeschaltet in der Leiste (apps/shared/sprache.js).
-       Die Spezifikation selbst bleibt in ihrer Originalsprache. */
+       Die Spezifikation gibt es als englische Übersetzung (*.en.yml) daneben. */
     html[lang="de"] [lang="en"] { display: none; }
     html[lang="en"] [lang="de"] { display: none; }
     body {
@@ -173,7 +173,8 @@
   extension for accompanying materials from
   <a href="https://github.com/indibit-eu/tba3/pull/54">pull request #54</a>, not yet part of
   the official specification. Its examples answer as well, filters included.
-  The specification itself is written in German.
+  The descriptions in the specification are translated from the German original;
+  field names and example data stay as they are.
 </p>
 
 <div class="reiter" role="tablist" id="reiter">
@@ -212,71 +213,83 @@
 
 <div id="swagger"></div>
 
-<script src="/schnittstelle/swagger-ui-bundle.js" onerror="zeigeFehler()"></script>
 <script>
+  // Global, damit das onerror des Bündels sie findet.
   function zeigeFehler() {
     var laedt = document.getElementById('laedt');
     if (laedt) laedt.style.display = 'none';
     document.getElementById('ladefehler').style.display = 'block';
   }
+</script>
+<script src="/schnittstelle/swagger-ui-bundle.js" onerror="zeigeFehler()"></script>
 
-  var SPECS = {
-    auswertung: '/schnittstelle/tba3-spec.yml',
-    materialien: '/schnittstelle/material-spec.yml',
+<script type="module" src="/gemeinsam/tba3-leiste.js"></script>
+<script type="module">
+  import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
+
+  // Je Reiter die Spezifikation in beiden Sprachen. Die englischen Dateien sind
+  // Übersetzungen der deutschen (Kopfzeile mit deren sha256, geprüft in
+  // spec-en.test.mjs) — nach `npm run spec:update` muss die Übersetzung nach.
+  const SPECS = {
+    auswertung: { de: '/schnittstelle/tba3-spec.yml', en: '/schnittstelle/tba3-spec.en.yml' },
+    materialien: { de: '/schnittstelle/material-spec.yml', en: '/schnittstelle/material-spec.en.yml' },
   };
+
+  let aktuell = location.hash === '#materialien' ? 'materialien' : 'auswertung';
+  let durchlauf = 0;
 
   // Eigene Umschaltung statt Swaggers `urls`-Option: die setzt Swaggers Topbar
   // voraus, und die passt nicht zum übrigen Auftritt.
   function zeichne(name) {
-    var laedt = document.getElementById('laedt');
+    aktuell = name;
+    const dieser = ++durchlauf;
+    const laedt = document.getElementById('laedt');
     document.getElementById('ladefehler').style.display = 'none';
     laedt.style.display = 'flex';
     document.getElementById('swagger').innerHTML = '';
     document.getElementById('entwurfsmarke').hidden = name !== 'materialien';
 
-    document.querySelectorAll('.reiter button').forEach(function (knopf) {
+    document.querySelectorAll('.reiter button').forEach((knopf) => {
       knopf.setAttribute('aria-selected', String(knopf.dataset.spec === name));
     });
 
-    SwaggerUIBundle({
-      url: SPECS[name],
+    window.SwaggerUIBundle({
+      url: text(SPECS[name], sprache()),
       dom_id: '#swagger',
       deepLinking: true,
       defaultModelsExpandDepth: -1,
       docExpansion: 'list',
       tryItOutEnabled: true,
-      presets: [SwaggerUIBundle.presets.apis],
-      onComplete: function () { laedt.style.display = 'none'; },
-      onFailure: zeigeFehler,
+      presets: [window.SwaggerUIBundle.presets.apis],
+      onComplete: () => { if (dieser === durchlauf) laedt.style.display = 'none'; },
+      onFailure: () => { if (dieser === durchlauf) zeigeFehler(); },
     });
 
     // Fällt Swagger UI beim Parsen der Spezifikation um, bleibt onComplete aus.
-    setTimeout(function () {
-      if (laedt.style.display !== 'none') zeigeFehler();
+    // Ein inzwischen neu gestarteter Durchlauf (Reiter, Sprache) zählt nicht.
+    setTimeout(() => {
+      if (dieser === durchlauf && laedt.style.display !== 'none') zeigeFehler();
     }, 20000);
   }
 
   if (!window.SwaggerUIBundle) {
     zeigeFehler();
   } else {
-    document.querySelectorAll('.reiter button').forEach(function (knopf) {
-      knopf.addEventListener('click', function () {
-        history.replaceState(null, '', knopf.dataset.spec === 'materialien' ? '#materialien' : '#');
+    document.querySelectorAll('.reiter button').forEach((knopf) => {
+      knopf.addEventListener('click', () => {
+        history.replaceState(null, '', knopf.dataset.spec === 'materialien' ? '#materialien' : location.pathname + location.search);
         zeichne(knopf.dataset.spec);
       });
     });
 
     // Direkt verlinkbar: /schnittstelle#materialien
-    zeichne(location.hash === '#materialien' ? 'materialien' : 'auswertung');
+    zeichne(aktuell);
+    // Beim Sprachwechsel dieselbe Spezifikation in der anderen Sprache.
+    beiSprachwechsel(() => zeichne(aktuell));
   }
-</script>
 
-<script type="module" src="/gemeinsam/tba3-leiste.js"></script>
-<script type="module">
   // Titel, Beschreibung und die Beschriftung der Reiterleiste stehen in
   // Attributen — die lassen sich nicht über html[lang] umschalten.
-  import { beiSprachwechsel, dokumentKopf, sprache, text } from '/gemeinsam/sprache.js';
-
   dokumentKopf({
     titel: { de: 'TBA3 — Auswertungsschnittstelle', en: 'TBA3 — reporting API' },
     beschreibung: {

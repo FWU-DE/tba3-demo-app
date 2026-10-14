@@ -361,10 +361,10 @@
       <label for="fassung" lang="de">Fassung</label>
       <label for="fassung" lang="en">Flavour</label>
       <select id="fassung">
-        <option value="alle" lang="de">alle drei nebeneinander</option>
-        <option value="0" lang="de">nur Web Component (volle Breite)</option>
-        <option value="1" lang="de">nur Vue (volle Breite)</option>
-        <option value="2" lang="de">nur React (volle Breite)</option>
+        <option value="alle">alle drei nebeneinander</option>
+        <option value="0">nur Web Component (volle Breite)</option>
+        <option value="1">nur Vue (volle Breite)</option>
+        <option value="2">nur React (volle Breite)</option>
       </select>
     </div>
     <div class="feld">
@@ -398,6 +398,7 @@
       look at. <strong>The building blocks</strong> are the same visualisations
       to build in. Every catalogue view draws with the building block listed next
       to it in the table.
+      <span id="stand-en"></span>
     </p>
     <div class="scrolltabelle">
       <table id="zuordnung">
@@ -458,8 +459,54 @@
   // Rückmeldungen herausgezogen — und das stand bisher nirgends, wo jemand
   // Bausteine durchsieht.
   import { BAUSTEINE, EINRICHTUNGEN, originaleZu, rueckmeldungenZu } from '/gemeinsam/konsortium.js';
+  // Die englischen Vorgaben der Bausteine — für die Spalte „Vorgabe" der
+  // Eigenschaften. Ein Baustein zeigt sie selbst, sobald die Seite englisch ist.
+  import { VORGABEN } from '/bausteine/kern/texte.js';
+  import { lokal } from '/bausteine/demodaten.js';
 
   registrieren();
+
+  // ── Zwei Sprachen ────────────────────────────────────────────────────
+  // Statischer Text steht doppelt im Markup, `html[lang]` blendet eine
+  // Fassung aus. Erzeugter Text genauso: `zweisprachig()` baut beide Spans.
+  // Was das nicht kann — Optionen eines <select>, alt-Texte, die Daten in den
+  // Bausteinen —, setzt `spracheAnwenden()` bei jedem Wechsel neu. Die
+  // Bausteine selbst hören auf `lang` und zeichnen ihre eingebauten Texte um.
+
+  const sprache = () => (document.documentElement.lang === 'en' ? 'en' : 'de');
+
+  /** Ein Text in beiden Sprachen als zwei Spans, von denen CSS einen zeigt. */
+  function zweisprachig(de, en = de) {
+    const teile = document.createDocumentFragment();
+    for (const [code, text] of [['de', de], ['en', en]]) {
+      const span = document.createElement('span');
+      span.lang = code;
+      span.append(text);
+      teile.append(span);
+    }
+    return teile;
+  }
+
+  /** `{ de, en }` oder eine Zeichenkette — beides als zwei Spans. */
+  const beide = (text) => (typeof text === 'string' ? zweisprachig(text) : zweisprachig(text.de, text.en));
+
+  const OPTIONEN = {
+    thema: {
+      'thema-fwu': { de: 'FWU / VIDIS', en: 'FWU / VIDIS' },
+      '': { de: 'neutral (Vorgabe der Bibliothek)', en: 'neutral (library default)' },
+      'thema-hoher-kontrast': { de: 'hoher Kontrast', en: 'high contrast' },
+      'thema-dunkel': { de: 'dunkel', en: 'dark' },
+    },
+    fassung: {
+      alle: { de: 'alle drei nebeneinander', en: 'all three side by side' },
+      0: { de: 'nur Web Component (volle Breite)', en: 'web component only (full width)' },
+      1: { de: 'nur Vue (volle Breite)', en: 'Vue only (full width)' },
+      2: { de: 'nur React (volle Breite)', en: 'React only (full width)' },
+    },
+  };
+
+  /** Was bei einem Sprachwechsel neu gesetzt wird, außer den Bausteinen. */
+  const nachSprache = [];
 
   // ── Zusammenhang: Tabelle aus der Zuordnung füllen ───────────────────
   {
@@ -470,12 +517,12 @@
       const katalog = document.createElement('td');
       const link = document.createElement('a');
       link.href = '/katalog';
-      link.textContent = z.anzeige;
+      link.append(beide(z.anzeige));
       katalog.append(link);
       if (z.hinweis) {
         const klein = document.createElement('span');
         klein.className = 'hinweis';
-        klein.textContent = z.hinweis;
+        klein.append(beide(z.hinweis));
         katalog.append(klein);
       }
 
@@ -496,7 +543,9 @@
       const stand = document.createElement('td');
       const marke = document.createElement('span');
       marke.className = 'marke marke-' + z.stand;
-      marke.textContent = z.stand === 'umgezogen' ? 'als Baustein verfügbar' : 'noch nicht';
+      marke.append(z.stand === 'umgezogen'
+        ? zweisprachig('als Baustein verfügbar', 'available as a building block')
+        : zweisprachig('noch nicht', 'not yet'));
       stand.append(marke);
 
       tr.append(katalog, baustein, stand);
@@ -504,6 +553,8 @@
     }
     document.getElementById('stand').textContent =
       `(${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten)`;
+    document.getElementById('stand-en').textContent =
+      `(${ZAHLEN.umgezogen} of ${ZAHLEN.gesamt} views)`;
 
     const liste = document.getElementById('nur-baustein');
     for (const n of NUR_BAUSTEIN) {
@@ -515,8 +566,8 @@
       a.textContent = '<' + PRAEFIX + n.baustein + '>';
       const grund = document.createElement('span');
       grund.className = 'grund';
-      grund.textContent = n.grund;
-      text.append(a, ' — ' + n.anzeige, grund);
+      grund.append(beide(n.grund));
+      text.append(a, ' — ', beide(n.anzeige), grund);
       li.append(vorschau(n.baustein), text);
       liste.append(li);
     }
@@ -541,17 +592,20 @@
     const eintrag = BAUSTEINE.find((b) => b.element === elementName && b.beleg === 'artefakt');
     if (!eintrag) return null;
 
-    const traeger = [...new Set(rueckmeldungenZu(eintrag.id).map((r) => r.einrichtung))]
-      .map((e) => EINRICHTUNGEN[e].de);
+    const traeger = [...new Set(rueckmeldungenZu(eintrag.id).map((r) => r.einrichtung))];
+    const namen = (code) => traeger.map((e) => EINRICHTUNGEN[e][code]).join(', ');
 
     const zeile = document.createElement('p');
     zeile.className = 'herkunft';
     zeile.dataset.herkunft = eintrag.id;
-    zeile.append(`Aus den Rückmeldungen des Konsortiums — gefunden bei ${traeger.join(', ')}. `);
+    zeile.append(zweisprachig(
+      `Aus den Rückmeldungen des Konsortiums — gefunden bei ${namen('de')}. `,
+      `From the consortium's feedback reports — found at ${namen('en')}. `,
+    ));
 
     const verweis = document.createElement('a');
     verweis.href = '/dokumentation/bausteine-der-rueckmeldungen';
-    verweis.textContent = 'Woher die Bausteine kommen';
+    verweis.append(zweisprachig('Woher die Bausteine kommen', 'Where the building blocks come from'));
     zeile.append(verweis);
     return zeile;
   }
@@ -582,7 +636,11 @@
       verweis.target = '_blank';
       verweis.rel = 'noreferrer';
       const bild = document.createElement('img');
-      Object.assign(bild, { src: o.datei, alt: o.alt?.de ?? '', loading: 'lazy', width: o.breite, height: o.hoehe });
+      Object.assign(bild, { src: o.datei, loading: 'lazy', width: o.breite, height: o.hoehe });
+      // Ein Bild hat ein alt, nicht zwei — gesetzt wird die gerade gewählte Sprache.
+      const altSetzen = () => { bild.alt = o.alt?.[sprache()] ?? o.alt?.de ?? ''; };
+      altSetzen();
+      nachSprache.push(altSetzen);
       verweis.append(bild);
       const unterschrift = document.createElement('figcaption');
       const r = o.rueckmeldung;
@@ -621,14 +679,31 @@
    * Bauplans, nicht abgeschrieben. Ein Baustein, der eine Eigenschaft
    * dazubekommt, bringt ihre Dokumentation damit mit.
    */
+  const TYPEN = {
+    Array: { de: 'Array', en: 'Array' },
+    null: { de: 'Zahl oder null', en: 'number or null' },
+    object: { de: 'Objekt', en: 'object' },
+    boolean: { de: 'Boolean', en: 'boolean' },
+    number: { de: 'Zahl', en: 'number' },
+    string: { de: 'Zeichenkette', en: 'string' },
+  };
+
   function eigenschaften(bauplan) {
-    return Object.entries(bauplan.standard).map(([name, vorgabe]) => ({
-      name,
-      typ: Array.isArray(vorgabe) ? 'Array' : vorgabe === null ? 'Zahl oder null' : typeof vorgabe === 'object' ? 'Objekt' : typeof vorgabe === 'boolean' ? 'Boolean' : typeof vorgabe === 'number' ? 'Zahl' : 'Zeichenkette',
-      vorgabe: Array.isArray(vorgabe) ? '[]' : vorgabe === '' ? "''" : JSON.stringify(vorgabe),
-      // Die Daten stecken in den Listen; sie sind das, was man wirklich setzt.
-      wichtig: Array.isArray(vorgabe),
-    }));
+    const zeigen = (vorgabe) => (Array.isArray(vorgabe) ? '[]' : vorgabe === '' ? "''" : JSON.stringify(vorgabe));
+    return Object.entries(bauplan.standard).map(([name, vorgabe]) => {
+      // Eine Vorgabe, die als sichtbarer Text endet, folgt der Sprache der
+      // Seite — die Tabelle zeigt deshalb die Fassung, die man gerade sieht.
+      const fassungen = VORGABEN[bauplan.name]?.[name];
+      return {
+        name,
+        typ: TYPEN[Array.isArray(vorgabe) ? 'Array' : vorgabe === null ? 'null' : typeof vorgabe],
+        vorgabe: fassungen && !Array.isArray(vorgabe)
+          ? { de: zeigen(fassungen.de), en: zeigen(fassungen.en) }
+          : zeigen(vorgabe),
+        // Die Daten stecken in den Listen; sie sind das, was man wirklich setzt.
+        wichtig: Array.isArray(vorgabe),
+      };
+    });
   }
 
   /**
@@ -700,20 +775,24 @@
     block.dataset.nachnutzung = bauplan.name;
 
     const auf = document.createElement('summary');
-    auf.textContent = 'Nachnutzen — Eigenschaften, Einbau, Quelltext';
+    auf.append(zweisprachig('Nachnutzen — Eigenschaften, Einbau, Quelltext', 'Reuse — properties, installation, source code'));
     block.append(auf);
 
     // Eigenschaften
     const tabelle = document.createElement('table');
     tabelle.className = 'eigenschaften';
-    tabelle.innerHTML = '<thead><tr><th>Eigenschaft</th><th>Typ</th><th>Vorgabe</th></tr></thead>';
+    tabelle.innerHTML = '<thead><tr>' +
+      '<th><span lang="de">Eigenschaft</span><span lang="en">Property</span></th>' +
+      '<th><span lang="de">Typ</span><span lang="en">Type</span></th>' +
+      '<th><span lang="de">Vorgabe</span><span lang="en">Default</span></th>' +
+      '</tr></thead>';
     const koerper = document.createElement('tbody');
     for (const e of eigenschaften(bauplan)) {
       const zeile = document.createElement('tr');
       if (e.wichtig) zeile.className = 'wichtig';
       for (const wert of [e.name, e.typ, e.vorgabe]) {
         const zelle = document.createElement('td');
-        zelle.textContent = wert;
+        zelle.append(beide(wert));
         zeile.append(zelle);
       }
       koerper.append(zeile);
@@ -734,12 +813,13 @@
       const kopieren = document.createElement('button');
       kopieren.type = 'button';
       kopieren.className = 'kopieren';
-      kopieren.textContent = 'kopieren';
+      const beschriften = (de, en) => kopieren.replaceChildren(zweisprachig(de, en));
+      beschriften('kopieren', 'copy');
       kopieren.dataset.kopieren = `${bauplan.name}-${fassung}`;
       kopieren.addEventListener('click', () => {
         navigator.clipboard?.writeText?.(code.textContent).catch(() => {});
-        kopieren.textContent = 'kopiert';
-        setTimeout(() => { kopieren.textContent = 'kopieren'; }, 1500);
+        beschriften('kopiert', 'copied');
+        setTimeout(() => beschriften('kopieren', 'copy'), 1500);
       });
 
       const huelle = document.createElement('div');
@@ -756,7 +836,7 @@
     a.target = '_blank';
     a.rel = 'noopener';
     a.textContent = `packages/bausteine/webcomponents/${bauplan.name}.js`;
-    quelle.append('Quelltext: ', a);
+    quelle.append(zweisprachig('Quelltext: ', 'Source code: '), a);
     block.append(quelle);
 
     return block;
@@ -769,13 +849,16 @@
 
     const kopf = document.createElement('header');
     const h2 = document.createElement('h2');
-    h2.textContent = bauplan.titel;
+    h2.append(zweisprachig(bauplan.titel, bauplan.titelEn ?? bauplan.titel));
     const meta = document.createElement('p');
     meta.className = 'meta';
+    const ereignisse = bauplan.ereignisse.join(', ');
     meta.append(
       chip(`<${PRAEFIX}${bauplan.name}>`),
-      chip(bauplan.endpunkt),
-      chip(bauplan.ereignisse.length ? `Ereignisse: ${bauplan.ereignisse.join(', ')}` : 'ohne Ereignisse'),
+      chip(zweisprachig(bauplan.endpunkt, bauplan.endpunktEn ?? bauplan.endpunkt)),
+      chip(bauplan.ereignisse.length
+        ? zweisprachig(`Ereignisse: ${ereignisse}`, `Events: ${ereignisse}`)
+        : zweisprachig('ohne Ereignisse', 'no events')),
     );
     kopf.append(h2, meta);
 
@@ -785,9 +868,9 @@
     const fassungen = document.createElement('div');
     fassungen.className = 'fassungen';
     for (const [titel, tag] of [
-      ['Native Web Component', 'ohne Framework'],
-      ['Vue 3', 'Hülle'],
-      ['React 19', 'Hülle'],
+      ['Native Web Component', { de: 'ohne Framework', en: 'no framework' }],
+      ['Vue 3', { de: 'Hülle', en: 'wrapper' }],
+      ['React 19', { de: 'Hülle', en: 'wrapper' }],
     ]) {
       const karte = document.createElement('div');
       karte.className = 'fassung';
@@ -795,7 +878,7 @@
       h3.append(titel);
       const span = document.createElement('span');
       span.className = 'tag';
-      span.textContent = tag;
+      span.append(beide(tag));
       h3.append(span);
       const buehne = document.createElement('div');
       buehne.className = 'buehne';
@@ -830,10 +913,10 @@
     return kasten;
   }
 
-  function chip(text) {
+  function chip(inhalt) {
     const span = document.createElement('span');
     span.className = 'code-chip mono';
-    span.textContent = text;
+    span.append(inhalt);
     return span;
   }
 
@@ -867,8 +950,9 @@
     return DEMODATEN[Number(datensatzWahl.value)] ?? DEMODATEN[0];
   }
 
+  /** Die Beispieldaten in die Bausteine — Beschriftungen in der gewählten Sprache. */
   function fuellen() {
-    const satz = daten();
+    const satz = lokal(daten(), sprache());
     for (const { el, bauplan } of elemente) {
       el.props = satz[bauplan.name] ?? {};
     }
@@ -877,6 +961,28 @@
       if (el) el.props = satz[kasten.dataset.vorschau] ?? {};
     }
   }
+
+  /** Alles, was nicht über `html[lang]` umschaltet, in die gewählte Sprache setzen. */
+  function spracheAnwenden() {
+    const code = sprache();
+    for (const [feld, texte] of Object.entries(OPTIONEN)) {
+      for (const option of document.getElementById(feld).options) {
+        const text = texte[option.value];
+        if (text) option.textContent = text[code];
+      }
+    }
+    for (const setzen of nachSprache) setzen();
+    fuellen();
+  }
+
+  // `lang` am <html> setzt die Sprachwahl der Leiste — beim Laden und bei
+  // jedem Wechsel. Darauf hört die Seite, wie die Bausteine selbst.
+  let gesetzt = sprache();
+  new MutationObserver(() => {
+    if (sprache() === gesetzt) return;
+    gesetzt = sprache();
+    spracheAnwenden();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
   function themaSetzen() {
     const klasse = themaWahl.value;
@@ -929,7 +1035,7 @@
   ausAdresse();
   themaSetzen();
   fassungSetzen();
-  fuellen();
+  spracheAnwenden();
 </script>
 
 </body>

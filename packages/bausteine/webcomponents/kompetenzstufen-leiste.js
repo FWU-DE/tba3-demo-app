@@ -12,6 +12,7 @@
 import { STANDARD, geometrie } from '../kern/kompetenzstufen-leiste.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .balken-segment { cursor: pointer; transition: opacity var(--tba3-_dauer); }
@@ -31,7 +32,7 @@ const STIL = `
 }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
   const figur = h('figure');
 
@@ -45,7 +46,7 @@ function aufbauen(wurzel, zustand, el) {
   }
 
   if (!g.zeilen.length) {
-    figur.append(h('p', { class: 'leer', text: 'Keine Daten' }));
+    figur.append(h('p', { class: 'leer', text: t('leer.daten') }));
     wurzel.append(figur);
     return;
   }
@@ -55,7 +56,7 @@ function aufbauen(wurzel, zustand, el) {
     height: g.hoehe,
     viewBox: `0 0 ${g.breite} ${g.hoehe}`,
     role: 'img',
-    'aria-label': zustand.title || 'Kompetenzstufenverteilung',
+    'aria-label': zustand.title || t('leiste.aria'),
   });
 
   // Raster
@@ -103,7 +104,7 @@ function aufbauen(wurzel, zustand, el) {
         x: seg.x, y: zeile.y, width: seg.breite, height: 28,
         fill: seg.farbe, rx: 0,
         tabindex: '0', role: 'button',
-        'aria-label': `${zeile.label}, Stufe ${seg.nameShort}: ${Math.round(seg.pct)} Prozent`,
+        'aria-label': t('leiste.segment', { zeile: zeile.label, stufe: seg.nameShort, pct: Math.round(seg.pct) }),
       });
 
       const detail = {
@@ -123,7 +124,7 @@ function aufbauen(wurzel, zustand, el) {
       gruppe.append(feld);
       // Ein <title> im SVG ist der Tooltip, den der Browser selbst zeigt —
       // ohne Skript, ohne Bibliothek, und für Vorleseprogramme lesbar.
-      feld.append(s('title', { text: `Stufe ${seg.nameShort}: ${Math.round(seg.pct)} %` }));
+      feld.append(s('title', { text: t('leiste.hinweis', { stufe: seg.nameShort, pct: Math.round(seg.pct) }) }));
 
       if (seg.beschriftbar) {
         gruppe.append(
@@ -167,7 +168,7 @@ function aufbauen(wurzel, zustand, el) {
           s('rect', { x: 0, y: 0, width: 12, height: 12, fill: l.farbe, rx: 2 }),
           s('text', {
             x: 15, y: 10, 'font-size': 10,
-            fill: 'var(--tba3-_farbe-text-gedaempft)', text: `Stufe ${l.nameShort}`,
+            fill: 'var(--tba3-_farbe-text-gedaempft)', text: t('stufe', { stufe: l.nameShort }),
           }),
         ]),
       ),
@@ -181,6 +182,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'kompetenzstufen-leiste',
   titel: 'Kompetenzstufen-Leiste',
+  titelEn: TITEL_EN['kompetenzstufen-leiste'],
   endpunkt: '/groups/{id}/competence-levels',
   standard: STANDARD,
   ereignisse: ['stufe-gewaehlt', 'stufe-betreten', 'stufe-verlassen'],

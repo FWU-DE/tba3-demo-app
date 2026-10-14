@@ -9,6 +9,7 @@
 import { STANDARD, raster } from '../kern/aufgaben-heatmap.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 table { border-collapse: separate; border-spacing: 2px; font-variant-numeric: tabular-nums; }
@@ -40,16 +41,16 @@ th.zeile { text-align: left; padding-right: var(--tba3-_abstand); white-space: n
 }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = raster(zustand);
 
   if (!g.zeilen.length || !g.spalten.length) {
-    wurzel.append(h('p', { class: 'leer-tafel', text: 'Keine Werte' }));
+    wurzel.append(h('p', { class: 'leer-tafel', text: t('heatmap.leer') }));
     return;
   }
 
   const kopf = h('tr', {}, [
-    h('th', { scope: 'col', 'aria-label': 'Aufgabe' }),
+    h('th', { scope: 'col', 'aria-label': t('heatmap.aufgabe') }),
     ...g.spalten.map((sp) => h('th', { class: 'spalte', scope: 'col', text: sp.label })),
   ]);
 
@@ -64,9 +65,9 @@ function aufbauen(wurzel, zustand, el) {
             disabled: zelle.leer,
             style: `background:${zelle.farbe}`,
             title: zelle.leer
-              ? `${zeile.label} · ${zelle.spaltenLabel}: kein Wert`
+              ? t('heatmap.ohne-wert', { zeile: zeile.label, spalte: zelle.spaltenLabel })
               : `${zeile.label} · ${zelle.spaltenLabel}: ${Math.round(zelle.wert)} %` +
-                (zelle.erwartet === null ? '' : ` (erwartet ${Math.round(zelle.erwartet)} %)`),
+                (zelle.erwartet === null ? '' : t('heatmap.erwartet', { soll: Math.round(zelle.erwartet) })),
             text: zelle.leer ? '·' : String(Math.round(zelle.wert)),
             onclick: () => {
               if (!zelle.leer) el.melden('zelle-gewaehlt', { ...zelle, zeileLabel: zeile.label });
@@ -78,7 +79,7 @@ function aufbauen(wurzel, zustand, el) {
   );
 
   const skala = h('div', { class: 'skala' }, [
-    h('span', { text: g.skala === 'wert' ? 'niedrig' : 'unter Erwartung' }),
+    h('span', { text: g.skala === 'wert' ? t('heatmap.niedrig') : t('heatmap.unter') }),
     h('span', { class: 'verlauf' },
       [-1, -0.5, 0, 0.5, 1].map((wert) =>
         h('i', {
@@ -87,7 +88,7 @@ function aufbauen(wurzel, zustand, el) {
         }),
       ),
     ),
-    h('span', { text: g.skala === 'wert' ? 'hoch' : 'über Erwartung' }),
+    h('span', { text: g.skala === 'wert' ? t('heatmap.hoch') : t('heatmap.ueber') }),
   ]);
 
   wurzel.append(
@@ -105,6 +106,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'aufgaben-heatmap',
   titel: 'Aufgaben-Heatmap',
+  titelEn: TITEL_EN['aufgaben-heatmap'],
   endpunkt: '/groups/{id}/items',
   standard: STANDARD,
   ereignisse: ['zelle-gewaehlt'],

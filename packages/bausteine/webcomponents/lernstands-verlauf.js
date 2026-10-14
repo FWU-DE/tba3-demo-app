@@ -9,6 +9,7 @@
 import { STANDARD, geometrie } from '../kern/lernstands-verlauf.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .band { fill: var(--tba3-_farbe-marke); opacity: 0.14; }
@@ -42,11 +43,11 @@ const STIL = `
 }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
 
   if (!g.punkte.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Erhebungen' }));
+    wurzel.append(h('p', { class: 'leer', text: t('verlauf.leer') }));
     return;
   }
 
@@ -54,7 +55,7 @@ function aufbauen(wurzel, zustand, el) {
     width: '100%',
     viewBox: `0 0 ${g.breite} ${g.hoehe}`,
     role: 'group',
-    'aria-label': g.titel || 'Verlauf über mehrere Erhebungen',
+    'aria-label': g.titel || t('verlauf.aria'),
   });
 
   for (const strich of g.teilstriche) {
@@ -109,11 +110,11 @@ function aufbauen(wurzel, zustand, el) {
   }
 
   const legende = h('div', { class: 'legende' }, [
-    h('span', {}, [h('i', { class: 'strich' }), 'Gruppe']),
+    h('span', {}, [h('i', { class: 'strich' }), t('verlauf.gruppe')]),
     g.vergleichLinie
       ? h('span', {}, [h('i', { class: 'strich gestrichelt' }), g.vergleichLabel])
       : null,
-    g.bandPfad ? h('span', { text: 'Band: Konfidenzintervall' }) : null,
+    g.bandPfad ? h('span', { text: t('verlauf.band') }) : null,
   ]);
 
   // Die Veränderungen ausgeschrieben: „+13, belegt" ist die Aussage, wegen der
@@ -124,7 +125,7 @@ function aufbauen(wurzel, zustand, el) {
       .map((p) =>
         h('span', {
           class: p.belegt ? 'belegt' : '',
-          text: `${p.label}: ${p.delta > 0 ? '+' : ''}${p.delta} ${p.belegt ? '· belegt' : '· nicht belegt'}`,
+          text: `${p.label}: ${p.delta > 0 ? '+' : ''}${p.delta} ${p.belegt ? t('verlauf.belegt') : t('verlauf.nicht-belegt')}`,
         }),
       ),
   );
@@ -142,6 +143,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'lernstands-verlauf',
   titel: 'Lernstands-Verlauf',
+  titelEn: TITEL_EN['lernstands-verlauf'],
   endpunkt: '/groups/{id}/aggregations',
   standard: STANDARD,
   ereignisse: ['zeitpunkt-gewaehlt'],

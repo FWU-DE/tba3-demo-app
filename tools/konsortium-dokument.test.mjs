@@ -11,13 +11,19 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { BAUSTEINE, RUECKMELDUNGEN } from '../apps/shared/konsortium.js';
 import { DOKUMENTE } from './dokumente.mjs';
-import { ZIEL, dokument } from './konsortium-dokument.mjs';
+import { ZIEL, ZIEL_EN, dokument } from './konsortium-dokument.mjs';
 
 const eingecheckt = () => readFileSync(ZIEL, 'utf8');
 
 describe('Bausteine der Rückmeldungen', () => {
   it('ist so eingecheckt, wie es erzeugt wird', () => {
     expect(eingecheckt(), 'npm run konsortium:doc ausführen').toBe(dokument());
+    expect(readFileSync(ZIEL_EN, 'utf8'), 'npm run konsortium:doc ausführen').toBe(dokument('en'));
+  });
+
+  it('führt jeden Baustein auch in der englischen Fassung', () => {
+    const text = readFileSync(ZIEL_EN, 'utf8');
+    for (const b of BAUSTEINE) expect(text, b.id).toContain(`### ${b.name.en}`);
   });
 
   it('steht als eigenes Dokument im Verzeichnis', () => {

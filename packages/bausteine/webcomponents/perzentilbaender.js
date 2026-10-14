@@ -3,6 +3,7 @@
 import { MASSE, STANDARD, geometrie, raute } from '../kern/perzentilbaender.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .zeile { cursor: pointer; }
@@ -23,21 +24,21 @@ const OBEN = 'var(--tba3-_band-oben)';
 const GRUND = 'var(--tba3-_band-grund)';
 const MARKER = 'var(--tba3-_band-marker)';
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
   const figur = h('figure');
 
   if (g.titel) figur.append(h('figcaption', { text: g.titel }));
 
   if (!g.zeilen.length) {
-    figur.append(h('p', { class: 'leer', text: 'Keine Teilbereiche' }));
+    figur.append(h('p', { class: 'leer', text: t('leer.teilbereiche') }));
     wurzel.append(figur);
     return;
   }
 
   const svg = s('svg', {
     width: g.breite, height: g.hoehe, viewBox: `0 0 ${g.breite} ${g.hoehe}`,
-    role: 'img', 'aria-label': g.titel || 'Perzentilbänder',
+    role: 'img', 'aria-label': g.titel || t('baender.aria'),
   });
 
   svg.append(
@@ -79,7 +80,7 @@ function aufbauen(wurzel, zustand, el) {
     const gruppe = s('g', {
       class: 'zeile', tabindex: '0', role: 'button',
       'aria-label': zeile.hatWert
-        ? `${zeile.label}: ${Math.round(zeile.wert)} Prozent`
+        ? `${zeile.label}: ${t('prozent', { wert: Math.round(zeile.wert) })}`
         : zeile.label,
     });
     gruppe.append(
@@ -123,9 +124,9 @@ function aufbauen(wurzel, zustand, el) {
 
   svg.append(
     s('g', { transform: `translate(${MASSE.labelBreite + 8}, ${g.legendeY})` }, [
-      eintrag(0, UNTEN, 'unterdurchschnittlich'),
+      eintrag(0, UNTEN, t('baender.unten')),
       eintrag(152, BAND, g.bandLabel),
-      eintrag(350, OBEN, 'überdurchschnittlich'),
+      eintrag(350, OBEN, t('baender.oben')),
       eintrag(500, null, g.markerLabel, true),
     ]),
     s('text', {
@@ -142,6 +143,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'perzentilbaender',
   titel: 'Perzentilbänder',
+  titelEn: TITEL_EN.perzentilbaender,
   endpunkt: '/groups/{id}/aggregations',
   standard: STANDARD,
   ereignisse: ['bereich-gewaehlt'],

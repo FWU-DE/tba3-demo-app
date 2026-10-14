@@ -7,6 +7,7 @@
 import { STANDARD, ring } from '../kern/kontextmerkmal-ring.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .block { display: flex; flex-direction: column; align-items: center;
@@ -35,14 +36,14 @@ const RUECKFALL = [
   'var(--tba3-_stufe-4)', 'var(--tba3-_stufe-5)',
 ];
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const r = ring(zustand);
   const block = h('div', { class: 'block' });
 
   if (r.label) block.append(h('div', { class: 'titel', text: r.label }));
 
   if (r.leer) {
-    block.append(h('p', { class: 'leer', text: 'Keine Angaben' }));
+    block.append(h('p', { class: 'leer', text: t('ring.leer') }));
     wurzel.append(block);
     return;
   }
@@ -57,7 +58,7 @@ function aufbauen(wurzel, zustand, el) {
       fill: farbe(seg),
       tabindex: '0',
       role: 'button',
-      'aria-label': `${seg.label}: ${seg.prozent} Prozent`,
+      'aria-label': `${seg.label}: ${t('prozent', { wert: seg.prozent })}`,
       onclick: () => el.melden('segment-gewaehlt', { ...seg }),
       onkeydown: (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.melden('segment-gewaehlt', { ...seg }); }
@@ -67,7 +68,7 @@ function aufbauen(wurzel, zustand, el) {
   block.append(
     s('svg', {
       width: groesse, height: groesse, viewBox: `0 0 ${groesse} ${groesse}`,
-      role: 'img', 'aria-label': `${r.label}: ${r.segmente.map((x) => `${x.label} ${x.prozent} Prozent`).join(', ')}`,
+      role: 'img', 'aria-label': `${r.label}: ${r.segmente.map((x) => `${x.label} ${t('prozent', { wert: x.prozent })}`).join(', ')}`,
     }, [
       bogen,
       s('text', {
@@ -93,7 +94,7 @@ function aufbauen(wurzel, zustand, el) {
   );
 
   if (r.median) {
-    block.append(h('p', { class: 'fuss', text: `Median: ${r.median.label}` }));
+    block.append(h('p', { class: 'fuss', text: t('ring.median-fuss', { label: r.median.label }) }));
   }
 
   wurzel.append(block);
@@ -102,6 +103,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'kontextmerkmal-ring',
   titel: 'Kontextmerkmal als Ring',
+  titelEn: TITEL_EN['kontextmerkmal-ring'],
   endpunkt: '/groups/{id}/items?type=students',
   standard: STANDARD,
   ereignisse: ['segment-gewaehlt'],

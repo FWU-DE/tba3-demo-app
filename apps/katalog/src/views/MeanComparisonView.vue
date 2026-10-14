@@ -9,7 +9,7 @@ import Tag from 'primevue/tag';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { MittelwertVergleich as MeanComparisonChart } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, domaene } from '../i18n';
 
 const DOCS = {
   githubFile: 'mittelwert-vergleich.js',
@@ -18,7 +18,7 @@ const DOCS = {
     { name: 'rows',   type: 'Array',  required: true,  pfad: 'ansichten.mittelwert.props.rows' },
     { name: 'title',  type: 'String', default: "''",    pfad: 'ansichten.mittelwert.props.title' },
     { name: 'domain', type: 'String', default: "''",    pfad: 'ansichten.mittelwert.props.domain' },
-    { name: 'xLabel', type: 'String', default: "'Mittlere Lösungsquote (%)'", pfad: 'ansichten.mittelwert.props.xLabel' },
+    { name: 'xLabel', type: 'String', defaultPfad: 'ansichten.mittelwert.vorgabeXLabel', pfad: 'ansichten.mittelwert.props.xLabel' },
   ],
   dataShape: `// rows-Element
 {
@@ -77,7 +77,11 @@ onMounted(async () => {
 
 // Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
 const propsDocs = computed(() =>
-  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+  DOCS.propsDocs.map(({ pfad, defaultPfad, ...rest }) => ({
+    ...rest,
+    ...(defaultPfad && { default: t(defaultPfad) }),
+    description: t(pfad),
+  }))
 );
 const apiEndpoints = computed(() =>
   DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
@@ -127,7 +131,6 @@ const fetchAll = async () => {
 watch(() => selectedGroup.value, fetchAll);
 onMounted(fetchAll);
 
-const DOMAIN_NAMES = { ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch', ma: 'Mathematik', en: 'Englisch', fr: 'Französisch' };
 
 // Calculate mean solution rate (%) from a list of item VGs for a given domain
 const meanForDomain = (vgs, domain) => {
@@ -172,12 +175,12 @@ const domainCharts = computed(() => {
 
     const rows = [
       gMean  != null && { label: selectedGroup.value.label, mean: gMean,  ...ciRange(gMean,  gN), n: gN },
-      sMean  != null && { label: 'Schule',                   mean: sMean,  ...ciRange(sMean,  null) },
+      sMean  != null && { label: t('ansichten.gemeinsam.schule'), mean: sMean,  ...ciRange(sMean,  null) },
       (showFairComparison.value && fMean != null) && { label: t('ansichten.stufen.fairerVergleich'), mean: fMean, ...ciRange(fMean, null), fair: true },
-      stMean != null && { label: 'Bundesland',               mean: stMean, ...ciRange(stMean, null) },
+      stMean != null && { label: t('ansichten.gemeinsam.bundesland'), mean: stMean, ...ciRange(stMean, null) },
     ].filter(Boolean);
 
-    return { domain, label: domain === null ? t('ansichten.gemeinsam.gesamt') : DOMAIN_NAMES[domain] ?? domain, rows };
+    return { domain, label: domaene(domain), rows };
   });
 });
 </script>
@@ -195,7 +198,7 @@ const domainCharts = computed(() => {
             <p class="comp-desc">
               <strong>{{ t('ansichten.mittelwert.titel') }}</strong><br />
               {{ t('ansichten.mittelwert.beschreibung') }}
-              Optionale Konfidenzintervalle als Fehlerbalken. Hintergrundfarben markieren Kompetenzbereiche.
+              {{ t('ansichten.mittelwert.zusatz') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -223,7 +226,7 @@ const domainCharts = computed(() => {
               <ToggleSwitch v-model="showFairComparison" input-id="fair-toggle-mc" />
               <label for="fair-toggle-mc" class="fair-toggle-label">
                 <span class="fair-icon">⚖</span>
-                Standorttyp anzeigen
+                {{ t('ansichten.gemeinsam.standorttypAnzeigen') }}
               </label>
             </div>
             <span class="fair-hint">{{ t('ansichten.stufen.fairHinweis') }}</span>
@@ -237,7 +240,7 @@ const domainCharts = computed(() => {
           {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
-          Keine Daten.
+          {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
         <div v-else class="charts-grid">

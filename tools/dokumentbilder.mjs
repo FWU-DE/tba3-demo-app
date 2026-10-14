@@ -71,71 +71,78 @@ const herunterladen = async (seite, testId, name) => {
   return pfad;
 };
 
-// ── Die Schülerliste im Observer-Modus ───────────────────────────────────────
-{
-  const seite = await laden('/demo/?lang=de&tab=students');
-  await seite.getByTestId('ansicht-schueler').waitFor();
-  await seite.getByTestId('observer-schalter').click();
-  await seite.waitForTimeout(400);
-  const roh = join(tmp, 'observer-roh.png');
-  await seite.getByTestId('schueler-liste').screenshot({ path: roh });
-  // Unten abschneiden, wo die Liste mitten in einer Zeile aufhört: ein
-  // angeschnittener Datensatz sieht nach Fehler aus, nicht nach Ausschnitt.
-  execFileSync('magick', [roh, '-crop', '590x712+0+0', '+repage', '-strip', join(ZIEL, 'observer-liste.png')]);
-  console.log('✓ observer-liste.png');
-  await seite.close();
-}
-
-// ── Die individuelle Rückmeldung ─────────────────────────────────────────────
-{
-  // Eine Schülerin auf Stufe III: dort greifen mehrere Materialien, die Seite
-  // zeigt also auch den Abschnitt, um den es geht.
-  const seite = await laden('/demo/?lang=de&tab=students&student=st-3a-deutsch-4');
-  await seite.getByTestId('schueler-datenblatt').waitFor();
-  seiteAlsBild(await herunterladen(seite, 'datenblatt-pdf', 'rueckmeldung'), 'pdf-rueckmeldung');
-  await seite.close();
-}
-
-// ── Die Materialzuordnung ────────────────────────────────────────────────────
-{
-  const seite = await laden('/demo/?lang=de&tab=materials');
-  await seite.getByTestId('ansicht-materialien').waitFor();
-  await seite.getByTestId('materialien-stufe-II').click();
-  for (const nr of [0, 1, 2]) {
-    const karte = seite.getByTestId(/^material-/).nth(nr);
-    if (await karte.count()) await karte.click();
+// Die Rezepte gibt es auf Deutsch und Englisch, ihre Bilder also auch.
+for (const sprache of ['de', 'en']) {
+  // ── Die Schülerliste im Observer-Modus ───────────────────────────────────────
+  {
+    const seite = await laden(`/demo/?lang=${sprache}&tab=students`);
+    await seite.getByTestId('ansicht-schueler').waitFor();
+    await seite.getByTestId('observer-schalter').click();
+    await seite.waitForTimeout(400);
+    const roh = join(tmp, `observer-roh-${sprache}.png`);
+    await seite.getByTestId('schueler-liste').screenshot({ path: roh });
+    // Unten abschneiden, wo die Liste mitten in einer Zeile aufhört: ein
+    // angeschnittener Datensatz sieht nach Fehler aus, nicht nach Ausschnitt.
+    execFileSync('magick', [roh, '-crop', '590x712+0+0', '+repage', '-strip', join(ZIEL, `observer-liste-${sprache}.png`)]);
+    console.log(`✓ observer-liste-${sprache}.png`);
+    await seite.close();
   }
-  await seite.getByTestId('materialien-zuweisen').click();
-  seiteAlsBild(await herunterladen(seite, 'export-pdf', 'materialzuordnung'), 'pdf-materialzuordnung');
-  await seite.close();
-}
 
-// ── Die Hilfe-Ansicht mit der MCP-Anbindung ──────────────────────────────────
-{
-  const seite = await laden('/demo/?lang=de&tab=help');
-  await seite.getByTestId('ansicht-hilfe').waitFor();
-  await seite.waitForTimeout(300);
-  // Einleitung und Betrieb im Container — und nur die. Der Abschnitt darunter
-  // zeigt die Client-Konfiguration mit einer Adresse aus `window.location.origin`;
-  // in einer Aufnahme stünde dort der Port, unter dem die Vorschau gerade lief.
-  //
-  // Ausgeschnitten wird aus der ganzen Seite statt über das Element: eine
-  // Element-Aufnahme rollt ihr Ziel in den Blick, und dort liegt die
-  // Navigationsleiste darüber.
-  const kasten = await seite.evaluate(() => {
-    const ansicht = document.querySelector('[data-testid="ansicht-hilfe"]');
-    const oben = ansicht.getBoundingClientRect();
-    const zweiter = ansicht.querySelectorAll('section')[1].getBoundingClientRect();
-    return {
-      x: Math.round(oben.left + window.scrollX),
-      y: Math.round(oben.top + window.scrollY),
-      width: Math.round(oben.width),
-      height: Math.round(zweiter.top - oben.top) - 16,
-    };
-  });
-  await seite.screenshot({ path: join(ZIEL, 'mcp-hilfe.png'), fullPage: true, clip: kasten });
-  console.log('✓ mcp-hilfe.png');
-  await seite.close();
+  // ── Die individuelle Rückmeldung ─────────────────────────────────────────────
+  {
+    // Eine Schülerin auf Stufe III: dort greifen mehrere Materialien, die Seite
+    // zeigt also auch den Abschnitt, um den es geht.
+    const seite = await laden(`/demo/?lang=${sprache}&tab=students&student=st-3a-deutsch-4`);
+    await seite.getByTestId('schueler-datenblatt').waitFor();
+    seiteAlsBild(await herunterladen(seite, 'datenblatt-pdf', `rueckmeldung-${sprache}`), `pdf-rueckmeldung-${sprache}`);
+    await seite.close();
+  }
+
+  // ── Die Materialzuordnung ────────────────────────────────────────────────────
+  {
+    const seite = await laden(`/demo/?lang=${sprache}&tab=materials`);
+    // Die Zuordnung des vorigen Durchlaufs liegt noch im localStorage; ein
+    // Klick auf eine schon gewählte Karte nähme sie wieder heraus.
+    await seite.evaluate(() => ['tba3_materials_by_level', 'tba3_external_materials'].forEach((k) => localStorage.removeItem(k)));
+    await seite.reload({ waitUntil: 'networkidle' });
+    await seite.getByTestId('ansicht-materialien').waitFor();
+    await seite.getByTestId('materialien-stufe-II').click();
+    for (const nr of [0, 1, 2]) {
+      const karte = seite.getByTestId(/^material-/).nth(nr);
+      if (await karte.count()) await karte.click();
+    }
+    await seite.getByTestId('materialien-zuweisen').click();
+    seiteAlsBild(await herunterladen(seite, 'export-pdf', `materialzuordnung-${sprache}`), `pdf-materialzuordnung-${sprache}`);
+    await seite.close();
+  }
+
+  // ── Die Hilfe-Ansicht mit der MCP-Anbindung ──────────────────────────────────
+  {
+    const seite = await laden(`/demo/?lang=${sprache}&tab=help`);
+    await seite.getByTestId('ansicht-hilfe').waitFor();
+    await seite.waitForTimeout(300);
+    // Einleitung und Betrieb im Container — und nur die. Der Abschnitt darunter
+    // zeigt die Client-Konfiguration mit einer Adresse aus `window.location.origin`;
+    // in einer Aufnahme stünde dort der Port, unter dem die Vorschau gerade lief.
+    //
+    // Ausgeschnitten wird aus der ganzen Seite statt über das Element: eine
+    // Element-Aufnahme rollt ihr Ziel in den Blick, und dort liegt die
+    // Navigationsleiste darüber.
+    const kasten = await seite.evaluate(() => {
+      const ansicht = document.querySelector('[data-testid="ansicht-hilfe"]');
+      const oben = ansicht.getBoundingClientRect();
+      const zweiter = ansicht.querySelectorAll('section')[1].getBoundingClientRect();
+      return {
+        x: Math.round(oben.left + window.scrollX),
+        y: Math.round(oben.top + window.scrollY),
+        width: Math.round(oben.width),
+        height: Math.round(zweiter.top - oben.top) - 16,
+      };
+    });
+    await seite.screenshot({ path: join(ZIEL, `mcp-hilfe-${sprache}.png`), fullPage: true, clip: kasten });
+    console.log(`✓ mcp-hilfe-${sprache}.png`);
+    await seite.close();
+  }
 }
 
 // ── Machbarkeitsstudie: Material sammeln, MUNDO, Export ─────────────────────
@@ -241,16 +248,19 @@ if (process.env.DOCS_MOODLE) {
 {
   const { BAUSTEINE } = await import('../apps/shared/konsortium.js');
   const elemente = [...new Set(BAUSTEINE.map((b) => b.element).filter(Boolean))];
-  const seite = await laden('/bausteine/?lang=de');
-  for (const name of elemente) {
-    const buehne = seite.locator(`section#${name} .buehne[data-fassung="Native Web Component"]`);
-    await buehne.scrollIntoViewIfNeeded();
-    await seite.waitForTimeout(300);
-    const roh = join(tmp, `baustein-${name}.png`);
-    await buehne.screenshot({ path: roh });
-    execFileSync('magick', [roh, '-trim', '-bordercolor', 'white', '-border', '16', '-resize', `${BREITE}x>`,
-      '-strip', join(ZIEL, `baustein-${name}.png`)]);
-    console.log(`✓ baustein-${name}.png`);
+  for (const sprache of ['de', 'en']) {
+    const seite = await laden(`/bausteine/?lang=${sprache}`);
+    for (const name of elemente) {
+      const buehne = seite.locator(`section#${name} .buehne[data-fassung="Native Web Component"]`);
+      await buehne.scrollIntoViewIfNeeded();
+      await seite.waitForTimeout(300);
+      const roh = join(tmp, `baustein-${name}-${sprache}.png`);
+      await buehne.screenshot({ path: roh });
+      execFileSync('magick', [roh, '-trim', '-bordercolor', 'white', '-border', '16', '-resize', `${BREITE}x>`,
+        '-strip', join(ZIEL, `baustein-${name}-${sprache}.png`)]);
+      console.log(`✓ baustein-${name}-${sprache}.png`);
+    }
+    await seite.close();
   }
 }
 

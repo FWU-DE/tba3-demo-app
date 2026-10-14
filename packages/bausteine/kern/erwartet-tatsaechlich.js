@@ -4,6 +4,8 @@
 // Abweichung ist der eigentliche didaktische Hinweis, deshalb trägt sie die
 // Farbe.
 
+import { text } from './texte.js';
+
 export const NAME = 'erwartet-tatsaechlich';
 
 export const STANDARD = {
@@ -43,17 +45,17 @@ export function bewertung(actual, expected, schwelle) {
 }
 
 /** Die Legende als Daten — die Fassungen bauen daraus ihr eigenes Markup. */
-export function legende(schwelle = STANDARD.schwelle) {
+export function legende(schwelle = STANDARD.schwelle, sprache = 'de') {
   return [
-    { art: 'punkt', bewertung: 'ueber', text: `mehr als ${schwelle} Punkte über Erwartung` },
-    { art: 'punkt', bewertung: 'im-rahmen', text: 'im erwarteten Bereich' },
-    { art: 'punkt', bewertung: 'unter', text: `mehr als ${schwelle} Punkte unter Erwartung` },
-    { art: 'linie', bewertung: null, text: 'Erwartungswert' },
+    { art: 'punkt', bewertung: 'ueber', text: text('erwartung.ueber', sprache, { n: schwelle }) },
+    { art: 'punkt', bewertung: 'im-rahmen', text: text('erwartung.im-rahmen', sprache) },
+    { art: 'punkt', bewertung: 'unter', text: text('erwartung.unter', sprache, { n: schwelle }) },
+    { art: 'linie', bewertung: null, text: text('erwartung.linie', sprache) },
   ];
 }
 
 export function geometrie(props = {}) {
-  const { items, title, domain, schwelle } = { ...STANDARD, ...props };
+  const { items, title, domain, schwelle, sprache } = { ...STANDARD, ...props };
   const liste = Array.isArray(items) ? items : [];
   const m = MASSE;
 
@@ -68,7 +70,7 @@ export function geometrie(props = {}) {
     titel: title,
     domain,
     schwelle,
-    legende: legende(schwelle),
+    legende: legende(schwelle, sprache),
     teilstriche: TEILSTRICHE.map((pct) => ({ pct, x: x(pct) })),
     zeilen: liste.map((it, i) => {
       const actual = it.actual ?? 0;

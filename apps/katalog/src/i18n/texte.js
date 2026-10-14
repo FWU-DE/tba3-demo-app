@@ -55,17 +55,32 @@ export const TEXTE = {
     quelltext: { de: 'Quelltext', en: 'Source' },
     oeffnen: { de: 'Öffnen', en: 'Open' },
     tabelle: { de: 'Tabelle', en: 'Table' },
+    bistaDaten: { de: 'Schülerdaten mit BISTA-Werten', en: 'Student data with BISTA values' },
+    // Beschriftungen in den Vorschaubildern der Kacheln.
+    vorschau: {
+      deutsch: { de: 'Deutsch', en: 'German' },
+      franzoesisch: { de: 'Französisch', en: 'French' },
+      kopieren: { de: 'kopieren', en: 'copy' },
+      insgesamt: { de: 'INSGESAMT ▼', en: 'OVERALL ▼' },
+      lesen: { de: 'LESEN', en: 'READING' },
+      schuelerin: { de: 'Schüler:in {n}', en: 'Student {n}' },
+      testheft: { de: 'Testheft B', en: 'Test booklet B' },
+      kompetenz: { de: 'KOMPETENZ', en: 'COMPETENCE' },
+      stufe: { de: 'STUFE', en: 'LEVEL' },
+      nummer: { de: 'NR.', en: 'NO.' },
+      grafik: { de: 'GRAFIK', en: 'CHART' },
+    },
   },
 
   doku: {
     quellcode: { de: 'Quellcode (GitHub)', en: 'Source code (GitHub)' },
-    apiSpec: { de: 'TBA3 API Spec', en: 'TBA3 API spec' },
+    apiSpec: { de: 'TBA3-API-Spezifikation', en: 'TBA3 API spec' },
     props: { de: 'Props', en: 'Props' },
     spalteProp: { de: 'Prop', en: 'Prop' },
     spalteTyp: { de: 'Typ', en: 'Type' },
-    spalteDefault: { de: 'Default', en: 'Default' },
+    spalteDefault: { de: 'Vorgabe', en: 'Default' },
     spalteBeschreibung: { de: 'Beschreibung', en: 'Description' },
-    pflicht: { de: 'required', en: 'required' },
+    pflicht: { de: 'Pflicht', en: 'required' },
     datenstruktur: { de: 'Datenstruktur', en: 'Data structure' },
     verwendungsbeispiel: { de: 'Verwendungsbeispiel', en: 'Usage example' },
     kopiert: { de: 'Kopiert', en: 'Copied' },
@@ -131,6 +146,7 @@ export const TEXTE = {
       ma: { de: 'Mathematik', en: 'Mathematics' },
       en: { de: 'Englisch', en: 'English' },
       fr: { de: 'Französisch', en: 'French' },
+      rs: { de: 'Rechtschreibung', en: 'Spelling' },
     },
 
     itemDetail: {
@@ -258,6 +274,12 @@ export const TEXTE = {
         en: 'The number everyone asks for first, with its breakdown next to it. 80 % across all subjects with one at 55 % is not a result of 80 % — it is a problem in one subject.',
       },
       label: { de: 'Mindeststandard erreicht', en: 'Minimum standard reached' },
+      bewertung: {
+        ueber: { de: 'über dem Gesamtwert', en: 'above the overall value' },
+        unter: { de: 'unter dem Gesamtwert', en: 'below the overall value' },
+        'im-rahmen': { de: 'im Rahmen', en: 'within range' },
+      },
+      vorgabeLabel: { de: "'Mindeststandard erreicht'", en: "'Minimum standard reached'" },
       props: {
         label: { de: 'Beschriftung neben der großen Zahl.', en: 'Label next to the headline figure.' },
         zeilen: { de: 'Die Aufschlüsselung, je Fach oder Domäne eine Zeile.', en: 'The breakdown, one row per subject or domain.' },
@@ -279,6 +301,10 @@ export const TEXTE = {
         en: 'The only block whose output is text. From kompetenztest.de’s repeated measurement, where “report card sentences” is a tab of its own next to chart and table — the step a teacher takes after the report anyway.',
       },
       vorschlaege: { de: 'Vorschläge für das Zeugnis', en: 'Suggestions for the report card' },
+      vorgabeLeer: {
+        de: "'Zu dieser Auswahl gibt es keinen Satz.'",
+        en: "'There is no sentence for this selection.'",
+      },
       kopiert: { de: 'Satz in die Zwischenablage kopiert.', en: 'Sentence copied to the clipboard.' },
       satzLage: {
         de: 'In der Gruppe {gruppe} erreichen im Bereich {domaene} {abMindest} % der {anzahl} Teilnehmenden mindestens den Mindeststandard; die häufigste Kompetenzstufe ist {stufe}.',
@@ -322,6 +348,12 @@ export const TEXTE = {
       fach: { de: 'Fach', en: 'Subject' },
       ansicht: { de: 'Ansicht', en: 'View' },
       ebene: { de: 'Ebene', en: 'Level' },
+      standorttypAnzeigen: { de: 'Standorttyp anzeigen', en: 'Show site type' },
+      faecher: {
+        deutsch: { de: 'Deutsch', en: 'German' },
+        mathematik: { de: 'Mathematik', en: 'Mathematics' },
+        englisch: { de: 'Englisch', en: 'English' },
+      },
     },
 
     stufen: {
@@ -373,6 +405,11 @@ export const TEXTE = {
 
     band: {
       beispiel: { de: 'Beispiel {n}', en: 'Example {n}' },
+      vorgaben: {
+        markerLabel: { de: "'einzelne Schüler:in'", en: "'individual student'" },
+        bandLabel: { de: "'mittlerer Bereich'", en: "'middle range'" },
+        xAxisLabel: { de: "'Lösungsquote (%)'", en: "'Solution rate (%)'" },
+      },
       eins: {
         titel: { de: 'Klasse vs. Schule — Lösungshäufigkeit', en: 'Class vs. school — solution frequency' },
         beschreibung: {
@@ -401,6 +438,10 @@ export const TEXTE = {
         keineDaten: { de: 'Keine Daten.', en: 'No data.' },
         schuleWaehlen: { de: 'Schule wählen', en: 'Choose a school' },
         referenz: { de: 'Referenz (Bundesland)', en: 'Reference (state)' },
+        apiZeile: {
+          de: '<code>/schools/{id}/items</code> → Diamant &nbsp;·&nbsp; <code>/states/{id}/items</code> → Band (Referenz). Die Schnittstelle liefert MW&nbsp;+&nbsp;SD fertig aggregiert.',
+          en: '<code>/schools/{id}/items</code> → diamond &nbsp;·&nbsp; <code>/states/{id}/items</code> → band (reference). The API delivers mean&nbsp;+&nbsp;SD already aggregated.',
+        },
         apiHinweis: {
           de: 'Beide Werte kommen direkt aus den API-Endpunkten — keine granularen Schülerdaten nötig.',
           en: 'Both values come straight from the API endpoints — no granular student data needed.',
@@ -417,6 +458,12 @@ export const TEXTE = {
         schuelerin: { de: 'Schüler*in', en: 'Student' },
         schuelerinWaehlen: { de: 'Schüler*in wählen', en: 'Choose a student' },
         bandBereich: { de: 'Band (Referenzbereich)', en: 'Band (reference range)' },
+        bereiche: {
+          '25-75': { de: 'P25–P75 (Interquartil, 50%-Bereich)', en: 'P25–P75 (interquartile, 50 % range)' },
+          '10-90': { de: 'P10–P90 (80%-Bereich)', en: 'P10–P90 (80 % range)' },
+          '5-95': { de: 'P5–P95 (90%-Bereich)', en: 'P5–P95 (90 % range)' },
+        },
+        bandLabel: { de: 'Klasse ({bereich})', en: 'Class ({bereich})' },
         achse: { de: 'Perzentilrang in der Klasse', en: 'Percentile rank within the class' },
         einzelHinweis: {
           de: 'Sinnvoll für Einzelpersonen, weil die X-Achse relativer Rang ist, kein absoluter Score.',
@@ -641,6 +688,23 @@ export const TEXTE = {
         de: '{n} Schüler:innen ausgewählt — die Ansicht hält die Auswahl, das Element meldet sie nur.',
         en: '{n} students selected — the view keeps the selection, the element only reports it.',
       },
+      bereiche: {
+        insgesamt: { de: 'Insgesamt', en: 'Overall' },
+        lesen: { de: 'Lesen', en: 'Reading' },
+        zuhoeren: { de: 'Zuhören', en: 'Listening' },
+        arithmetik: { de: 'Arithmetik', en: 'Arithmetic' },
+        geometrie: { de: 'Geometrie', en: 'Geometry' },
+      },
+      vorgabeDomains: { de: '[Insgesamt, Lesen, Zuhören]', en: '[Overall, Reading, Listening]' },
+      schuelerin: { de: 'Schülerin {n}', en: 'Student {n}' },
+      schueler: { de: 'Schüler {n}', en: 'Student {n}' },
+      abwesend: { de: '{name} war am Testtag abwesend.', en: '{name} was absent on the test day.' },
+      hefte: {
+        deutsch: { de: 'Testheft B – Lesen & Zuhören', en: 'Test booklet B – reading & listening' },
+        englisch: { de: 'Testheft A – Lesen & Zuhören', en: 'Test booklet A – reading & listening' },
+        mathe3: { de: 'Testheft A – Arithmetik & Geometrie', en: 'Test booklet A – arithmetic & geometry' },
+        mathe8: { de: 'Testheft B – Algebra & Statistik', en: 'Test booklet B – algebra & statistics' },
+      },
       props: {
         rows: {
           de: 'Schüler:innen-Zeilen. Jede Zeile: { id, name, gender, absent?, absentMessage?, domains }. Weitere Felder bleiben erhalten und stehen im Ereignis wieder zur Verfügung.',
@@ -692,6 +756,11 @@ export const TEXTE = {
         de: 'Diamant-Marker auf einer horizontalen Skala zeigen die mittlere Lösungsquote je Ebene.',
         en: 'Diamond markers on a horizontal scale show the mean solution rate per level.',
       },
+      zusatz: {
+        de: 'Optionale Konfidenzintervalle als Fehlerbalken. Hintergrundfarben markieren Kompetenzbereiche.',
+        en: 'Optional confidence intervals as error bars. Background colours mark competence ranges.',
+      },
+      vorgabeXLabel: { de: "'Mittlere Lösungsquote'", en: "'Mean solution rate'" },
       props: {
         rows: {
           de: 'Ein Eintrag pro Vergleichsebene. Jeder Eintrag: { label, mean, ciLow?, ciHigh?, n?, fair? }. mean in Prozent (0–100).',
@@ -725,6 +794,14 @@ export const TEXTE = {
         en: 'Shows, for every exercise, whether the class is above or below the statistically expected value. The expected value is computed on the client via the <strong>Rasch model</strong>, from the BISTA difficulty parameters and the estimated class level.',
       },
       keinEndpunkt: { de: '— kein zusätzlicher Endpunkt', en: '— no extra endpoint' },
+      rotHinweis: {
+        de: 'Rot = systematisch unter Erwartung → didaktischer Handlungsbedarf.',
+        en: 'Red = systematically below expectation → a need for teaching action.',
+      },
+      formel: {
+        de: 'P<sub>erwartet</sub> = 1 / (1 + e<sup>−(θ<sub>Klasse</sub> − β<sub>Aufgabe</sub>) / 50</sup>)',
+        en: 'P<sub>expected</sub> = 1 / (1 + e<sup>−(θ<sub>class</sub> − β<sub>exercise</sub>) / 50</sup>)',
+      },
       formelZusatz: {
         de: 'θ = mittl. BISTA gelöster Aufgaben',
         en: 'θ = mean BISTA of the solved exercises',
@@ -761,6 +838,13 @@ export const TEXTE = {
       },
       karten: {
         verteilung: { de: 'Kompetenzstufen', en: 'Competence levels' },
+      },
+      stufenNamen: {
+        I: { de: 'Unter Mindeststandard', en: 'Below minimum standard' },
+        II: { de: 'Mindeststandard', en: 'Minimum standard' },
+        III: { de: 'Regelstandard', en: 'Standard' },
+        IV: { de: 'Regelstandard+', en: 'Standard+' },
+        V: { de: 'Optimalstandard', en: 'Optimal standard' },
       },
       beschreibung: {
         de: 'Drei Karten nebeneinander: die Verteilung auf die Kompetenzstufen und die beiden Aussagen, auf die es ankommt — „Mindeststandard und darüber“ gegen „Unter Mindeststandard“. Jede Karte trägt ihre Kennzahl im Ring und klappt auf Wunsch die Einzelwerte auf.',

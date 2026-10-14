@@ -326,14 +326,47 @@ Quelltext, vier Anmutungen.
 
 ---
 
+## Sprache — Deutsch und Englisch
+
+Was ein Baustein selbst mitbringt — Spaltenköpfe, Legenden, Leerhinweise,
+Beschriftungen für Vorleseprogramme —, gibt es auf Deutsch und Englisch. Welche
+Sprache gilt, sagt die Seite über `lang`: das Attribut des nächsten Vorfahren,
+auch über eine Shadow-Grenze hinweg, sonst `<html lang>`. `en`, `en-GB` …
+ergeben Englisch, alles andere Deutsch.
+
+```html
+<html lang="en">            <!-- alle Bausteine englisch -->
+<section lang="de">         <!-- dieser Abschnitt deutsch -->
+```
+
+Ändert sich `lang`, zeichnen sich die betroffenen Bausteine neu — die Seite
+muss dafür nichts tun. Die Bibliothek fragt keine Sprachwahl der Seite ab; ein
+Beobachter auf `lang` genügt.
+
+Vorgaben von Eigenschaften, die als Text sichtbar werden (`markerLabel`,
+`leerHinweis`, die Zonen der BISTA-Verteilung …), folgen derselben Regel.
+**Was ein Aufrufer setzt, gewinnt immer** — nur ein Wert, der einer Vorgabe in
+einer der beiden Sprachen gleicht, gilt als Vorgabe. So übersteht die
+Übersetzung auch die Vue- und React-Hülle, die beim Durchreichen jede
+Eigenschaft setzen.
+
+Alle Texte stehen in `kern/texte.js`: `TEXTE` (eingebaute Texte, mit
+Platzhaltern wie `{n}`), `VORGABEN` (übersetzte Vorgaben je Baustein, `de`
+gleich dem `STANDARD` des Kerns) und `TITEL_EN` für die Namen. `BAUPLAN.titel`
+bleibt die deutsche Zeichenkette, `BAUPLAN.titelEn` kommt dazu. Daten
+übersetzt die Bibliothek nicht: Titel, Namen und Beschriftungen, die von außen
+kommen, zeigt sie, wie sie kommen.
+
 ## Einen Baustein hinzufügen
 
 1. `kern/<name>.js`: `STANDARD` exportieren und eine Funktion, die aus den
    Eigenschaften Geometrie bzw. aufbereitete Zeilen macht — Zahlen und Objekte,
    kein Markup.
 2. `webcomponents/<name>.js`: `BAUPLAN` mit `name`, `titel`, `endpunkt`,
-   `standard`, `ereignisse`, `stil` und `aufbauen(wurzel, zustand, el)`.
-   `elementKlasse(BAUPLAN)` macht daraus das Custom Element.
+   `standard`, `ereignisse`, `stil` und `aufbauen(wurzel, zustand, el, t)`.
+   `elementKlasse(BAUPLAN)` macht daraus das Custom Element. Sichtbarer Text
+   kommt über `t('schluessel')` aus `kern/texte.js`, in beiden Sprachen, und
+   `TITEL_EN` bekommt den englischen Namen.
 3. In `webcomponents/index.js` unter `BAUPLAENE` und `ELEMENTE` eintragen, die
    öffentlichen Namen in `kern/index.js` weiterreichen und den Komponentennamen
    in `vue/index.js` und `react/index.js` mit ausschreiben.

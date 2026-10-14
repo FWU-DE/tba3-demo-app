@@ -8,6 +8,7 @@
 import { STANDARD, gradient } from '../kern/merkmal-gradient.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 svg { display: block; max-width: 100%; height: auto; overflow: visible; }
@@ -33,14 +34,14 @@ svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 
 const marke = (index, x, y, r = 5) => s('circle', { class: `punkt reihe-${index % 4}`, cx: x, cy: y, r });
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = gradient(zustand);
   if (g.titel) wurzel.append(h('div', { class: 'titel', text: g.titel }));
   if (g.merkmal) wurzel.append(h('div', { class: 'merkmal', text: g.merkmal }));
 
   const svg = s('svg', {
     viewBox: `0 0 ${g.breite} ${g.hoehe}`, width: g.breite, height: g.hoehe,
-    role: 'img', 'aria-label': `${g.titel || 'Lösungsquote nach Merkmal'}${g.merkmal ? `: ${g.merkmal}` : ''}`,
+    role: 'img', 'aria-label': `${g.titel || t('gradient.aria')}${g.merkmal ? `: ${g.merkmal}` : ''}`,
   });
   const m = g.masse;
 
@@ -86,6 +87,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'merkmal-gradient',
   titel: 'Lösungsquote nach Merkmal',
+  titelEn: TITEL_EN['merkmal-gradient'],
   endpunkt: '/groups/{id}/aggregations?aggregation=gender',
   standard: STANDARD,
   ereignisse: ['auspraegung-gewaehlt'],

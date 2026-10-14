@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Alles zweisprachig: englische Fassungen aller Dokumente und der OpenAPI-Spezifikationen, Bausteine folgen der Seitensprache, Demonstrator und Katalog vollständig übersetzt.
 - Teilkonzept „Ein Assistent, der die Auswertung lesen kann“ (MCP), zweisprachig, mit Mockups aus echten Werkzeugaufrufen.
 - Mock: `comparison=faircomparison` auf `/items`; der Mittelwert-Vergleich im Katalog nutzt ihn statt Schulwert × 0,96.
 - Ausschnitte der Originale neben jedem Baustein: Demonstrator, Reiter „Rückmeldeelemente“, Dokument „Bausteine der Rückmeldungen“ (mit Nachbau).

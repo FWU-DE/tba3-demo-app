@@ -105,6 +105,6 @@ at home, they are still easy to match in a class of 25 children.
   instead of a built-in list.
 
 The technical details are in the
-[demo application recipes](demo-rezepte.md#ein-assistent-der-die-auswertung-lesen-kann-der-mcp-server)
-(in German). They describe the seven tools, the two transports and operation in
+[demo application recipes](demo-rezepte.md#an-assistant-that-can-read-the-results-the-mcp-server).
+They describe the seven tools, the two transports and operation in
 the container.

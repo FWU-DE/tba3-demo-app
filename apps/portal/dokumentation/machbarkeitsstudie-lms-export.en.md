@@ -219,8 +219,7 @@ colleague who has no access to the report. It needs no learning platform and
 no permissions there. The QR code takes students from the worksheet to the
 material. How the file is built (font, page breaks, QR codes, and why none of
 it happens on a server) is described in detail in the
-[demo application recipes](demo-rezepte.md#eine-rückmeldung-die-das-haus-verlässt-der-pdf-export)
-(in German).
+[demo application recipes](demo-rezepte.md#a-report-that-leaves-the-building-pdf-export).
 
 There is also a second PDF, the **individual report** for a single person,
 created from the data sheet in the "Students" tab. It contains the level
