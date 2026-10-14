@@ -129,6 +129,18 @@ export const DOKUMENTE = [
       en: 'Concept draft: handing a report’s results to a learning system, using AIS.schule as the example — which data, which routes, what is missing on both sides.',
     },
   },
+  {
+    slug: 'machbarkeitsstudie-assistent',
+    datei: 'machbarkeitsstudie-assistent.md',
+    englisch: 'machbarkeitsstudie-assistent.en.md',
+    eigen: true,
+    teil: 'machbarkeitsstudie',
+    kurz: { de: 'Ein Assistent, der die Auswertung liest', en: 'An assistant that reads the results' },
+    beschreibung: {
+      de: 'Ein Sprachmodell stellt über MCP die Abfragen selbst zusammen — drei Gespräche als Mockup mit echten Zahlen, und wo die Grenze liegt.',
+      en: 'A language model assembles the queries itself via MCP — three conversations as mockups with real figures, and where the line is.',
+    },
+  },
 ];
 
 // Ein Eintrag mit `teil` ist eine Unterseite: er steht nicht als eigene Karte

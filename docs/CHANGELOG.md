@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Teilkonzept „Ein Assistent, der die Auswertung lesen kann“ (MCP), zweisprachig, mit Mockups aus echten Werkzeugaufrufen.
 - Mock: `comparison=faircomparison` auf `/items`; der Mittelwert-Vergleich im Katalog nutzt ihn statt Schulwert × 0,96.
 - Ausschnitte der Originale neben jedem Baustein: Demonstrator, Reiter „Rückmeldeelemente“, Dokument „Bausteine der Rückmeldungen“ (mit Nachbau).
 - Karten im Reiter „Rückmeldeelemente“ verlinken auf den Baustein im Demonstrator.

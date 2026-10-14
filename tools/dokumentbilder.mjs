@@ -254,6 +254,36 @@ if (process.env.DOCS_MOODLE) {
   }
 }
 
+// ── Der Assistent aus der Machbarkeitsstudie: Gespräche und Schaubild ────────
+// Die Gespräche rufen die Werkzeuge des MCP-Piloten gegen den Mock auf; die
+// Zahlen darin sind echt, die Formulierungen ausgedacht.
+{
+  const assistent = await import('./assistent-gespraeche.mjs');
+  if (!assistent.bereit()) {
+    console.log('· mcp-server/node_modules fehlt (npm --prefix mcp-server ci) — die Assistenten-Bilder bleiben, wie sie sind');
+  } else {
+    const szenarien = await assistent.aufnehmen(BASIS);
+    // Doppelte Pixeldichte: die Bilder sind Text, und Text soll scharf sein.
+    const kontext = await browser.newContext({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 2 });
+    const seite = await kontext.newPage();
+    for (const sprache of ['de', 'en']) {
+      for (const sz of szenarien) {
+        await seite.setContent(assistent.seite(sz, sprache));
+        const roh = join(tmp, `assistent-${sz.id}-${sprache}.png`);
+        await seite.locator('.gespraech').screenshot({ path: roh });
+        execFileSync('magick', [roh, '-resize', `${BREITE}x>`, '-strip', join(ZIEL, `assistent-${sz.id}-${sprache}.png`)]);
+        console.log(`✓ assistent-${sz.id}-${sprache}.png`);
+      }
+      await seite.setContent(assistent.schaubild(sprache));
+      const roh = join(tmp, `assistent-schaubild-${sprache}.png`);
+      await seite.locator('.schaubild').screenshot({ path: roh });
+      execFileSync('magick', [roh, '-resize', `${BREITE}x>`, '-strip', join(ZIEL, `assistent-schaubild-${sprache}.png`)]);
+      console.log(`✓ assistent-schaubild-${sprache}.png`);
+    }
+    await kontext.close();
+  }
+}
+
 await browser.close();
 console.log(`\nFertig → apps/portal/dokumentation/bilder/`);
 console.log('  Stand prüfen: git diff --stat -- apps/portal/dokumentation/bilder/');
