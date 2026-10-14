@@ -1,5 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useTexte } from '../i18n';
 import HtmlText from '../i18n/HtmlText';
+import { mcpErreichbar } from '../services/mcp';
+
+/** Steht in der Beispielkonfiguration, wenn hier kein Server läuft. */
+const PLATZHALTER = 'https://ihr-server.example/mcp';
 
 /**
  * Help / documentation view: MCP server connection and tools.
@@ -11,11 +16,20 @@ import HtmlText from '../i18n/HtmlText';
 const HelpView = () => {
   const t = useTexte();
 
-  const mcpHttpUrl =
-    import.meta.env.VITE_MCP_HTTP_URL ||
-    (typeof window !== 'undefined'
-      ? `${window.location.origin}/mcp`
-      : 'https://ihr-mcp-server.example/mcp');
+  // Fest eingestellt (VITE_MCP_HTTP_URL) gilt als erreichbar; sonst wird die
+  // Adresse dieser Seite befragt — im Docker-Abbild antwortet dort der Server.
+  const fest = import.meta.env.VITE_MCP_HTTP_URL;
+  const hier = typeof window !== 'undefined' ? `${window.location.origin}/mcp` : null;
+  const [erreichbar, setErreichbar] = useState(fest ? true : null);
+  useEffect(() => {
+    if (fest || !hier) return undefined;
+    const abbruch = new AbortController();
+    mcpErreichbar(hier, { signal: abbruch.signal }).then((ja) => {
+      if (!abbruch.signal.aborted) setErreichbar(ja);
+    });
+    return () => abbruch.abort();
+  }, [fest, hier]);
+  const mcpHttpUrl = fest || (erreichbar ? hier : PLATZHALTER);
 
   const werkzeuge = [
     ['tba3_list_entities', 'hilfe.werkzeuge.listEntities'],
@@ -24,6 +38,7 @@ const HelpView = () => {
     ['tba3_get_competence_levels', 'hilfe.werkzeuge.competenceLevels'],
     ['tba3_get_aggregations', 'hilfe.werkzeuge.aggregations'],
     ['tba3_get_items', 'hilfe.werkzeuge.items'],
+    ['tba3_list_materials', 'hilfe.werkzeuge.materials'],
   ];
 
   return (
@@ -52,10 +67,18 @@ const HelpView = () => {
           <p className="text-xs text-gray-500 mt-0.5">{t('hilfe.clientUnterzeile')}</p>
         </div>
         <div className="p-5 space-y-4 text-sm">
-          <p className="text-gray-700">
-            {t('hilfe.clientUrl')}{' '}
-            <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 break-all">{mcpHttpUrl}</code>
-          </p>
+          {erreichbar === false ? (
+            <HtmlText
+              pfad="hilfe.nichtHier"
+              className="text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3"
+              data-testid="mcp-nicht-hier"
+            />
+          ) : (
+            <p className="text-gray-700" data-testid="mcp-adresse">
+              {t('hilfe.clientUrl')}{' '}
+              <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 break-all">{mcpHttpUrl}</code>
+            </p>
+          )}
           <p className="text-gray-700 font-medium">Cursor</p>
           <HtmlText pfad="hilfe.cursorText" className="text-gray-600" />
           <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto mt-2">

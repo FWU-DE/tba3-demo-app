@@ -907,6 +907,10 @@ export const TEXTE = {
     spalteTool: { de: 'Tool', en: 'Tool' },
     spalteBeschreibung: { de: 'Beschreibung', en: 'Description' },
     werkzeuge: {
+      materials: {
+        de: 'Ein fest eingebauter Materialkatalog („Mathe sicher können“), kein Endpunkt. Optional filtern: <code>subject</code>, <code>grade</code>, <code>type</code>, <code>targetLevel</code>.',
+        en: 'A built-in material catalogue (“Mathe sicher können”), not an endpoint. Optional filters: <code>subject</code>, <code>grade</code>, <code>type</code>, <code>targetLevel</code>.',
+      },
       listEntities: {
         de: 'Schulen, Lerngruppen/Klassen oder Bundesländer mit id, name, ggf. Fach/Klasse/Schulart. Optional filtern: <code>subject</code>, <code>grade</code> (bei group), <code>type</code> (bei school).',
         en: 'Schools, learning groups/classes or states with id, name and, where applicable, subject/grade/school type. Optional filters: <code>subject</code>, <code>grade</code> (for group), <code>type</code> (for school).',
@@ -931,6 +935,10 @@ export const TEXTE = {
         de: 'Item-Statistiken (z. B. Lösungsquote) pro Gruppe/Schule/Land.',
         en: 'Item statistics (e.g. solution rate) per group, school or state.',
       },
+    },
+    nichtHier: {
+      de: '<strong>Auf dieser Seite läuft kein MCP-Server.</strong> Er läuft im Docker-Abbild (siehe oben); dort ist die Adresse <code>https://&lt;Ihr Server&gt;/mcp</code>. Die Beispiele unten zeigen deshalb eine Platzhalteradresse.',
+      en: '<strong>No MCP server runs on this site.</strong> It runs in the Docker image (see above); there the address is <code>https://&lt;your server&gt;/mcp</code>. The examples below therefore show a placeholder address.',
     },
     werkzeugeHinweis: {
       de: 'Bei den get-*-Tools kann optional <strong>type</strong> übergeben werden: <code>group</code>, <code>students</code> oder <code>group,students</code>.',
