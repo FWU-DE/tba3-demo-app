@@ -54,6 +54,10 @@ jobs:
             type=semver,pattern={{version}},value=${{ inputs.tag }}
             type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
             type=semver,pattern={{major}},value=${{ inputs.tag }}
+          # Ohne das hängt die Action an Versions-Tags von selbst `latest` an —
+          # ein Nachbau eines älteren Tags setzte latest dann zurück.
+          flavor: |
+            latest=false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -101,6 +105,10 @@ jobs:
             type=semver,pattern={{version}},value=${{ inputs.tag }}
             type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag }}
             type=semver,pattern={{major}},value=${{ inputs.tag }}
+          # Ohne das hängt die Action an Versions-Tags von selbst `latest` an —
+          # ein Nachbau eines älteren Tags setzte latest dann zurück.
+          flavor: |
+            latest=false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
