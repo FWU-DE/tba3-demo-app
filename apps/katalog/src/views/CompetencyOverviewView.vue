@@ -9,6 +9,7 @@ import Tag from 'primevue/tag';
 import { Uebersichtskarten } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
 import { t } from '../i18n';
+import { GER, GER_FARBEN, stufenOrdnung } from '../../../shared/stufen.js';
 
 const DOCS = {
   githubFile: 'uebersichtskarten.js',
@@ -141,6 +142,11 @@ const fetchData = async () => {
 watch(() => selectedGroup.value, fetchData);
 onMounted(fetchData);
 
+// Englisch und Französisch messen nach dem Referenzrahmen (A1.1 … C1). Für
+// diese Stufen gibt es keinen Mindeststandard; die Verteilung steht trotzdem.
+const istGer = computed(() =>
+  rawData.value.some((vg) => (vg.competenceLevels ?? []).some((cl) => GER.includes(cl.nameShort))));
+
 // Aggregate all domains → one entry per competence level
 const chartData = computed(() => {
   const counts = {};
@@ -152,11 +158,14 @@ const chartData = computed(() => {
       total += freq;
     });
   });
-  return LEVEL_ORDER.map((ns) => ({
+  const reihe = istGer.value
+    ? Object.keys(counts).sort((a, b) => stufenOrdnung(a) - stufenOrdnung(b))
+    : LEVEL_ORDER;
+  return reihe.map((ns) => ({
     level: ns,
     count: counts[ns] ?? 0,
     percentage: total > 0 ? (counts[ns] ?? 0) / total : 0,
-    color: LEVEL_COLORS[ns],
+    color: LEVEL_COLORS[ns] ?? GER_FARBEN[GER.indexOf(ns)] ?? '#9ca3af',
     name: LEVEL_NAMES[ns] ?? ns,
   }));
 });
@@ -172,15 +181,18 @@ const karten = computed(() => {
   const ab = gesamt - unter;
   const anteil = (n) => Math.round((n / gesamt) * 100);
 
+  const verteilung = {
+    id: 'verteilung',
+    label: t('ansichten.uebersicht.karten.verteilung'),
+    wert: gesamt,
+    einheit: '',
+    anteile: chartData.value.map((d) => ({ label: d.level, wert: d.count, farbe: d.color })),
+    details: chartData.value.map((d) => ({ label: istGer.value ? d.level : `${d.level} · ${d.name}`, wert: d.count })),
+  };
+  if (istGer.value) return [verteilung];
+
   return [
-    {
-      id: 'verteilung',
-      label: t('ansichten.uebersicht.karten.verteilung'),
-      wert: gesamt,
-      einheit: '',
-      anteile: chartData.value.map((d) => ({ label: d.level, wert: d.count, farbe: d.color })),
-      details: chartData.value.map((d) => ({ label: `${d.level} · ${d.name}`, wert: d.count })),
-    },
+    verteilung,
     {
       id: 'ab-mindeststandard',
       label: t('bausteine.uebersicht.abMindeststandard'),
@@ -269,8 +281,13 @@ watch(() => selectedGroup.value, () => { geoeffnet.value = []; });
           {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
+        <Message v-if="!loading && !error && hasData && istGer" severity="info" :closable="false"
+          class="mt-2 mb-3" data-testid="hinweis-ger">
+          {{ t('ansichten.uebersicht.ohneMindeststandard') }}
+        </Message>
+
         <Uebersichtskarten
-          v-else
+          v-if="!loading && !error && hasData"
           :karten="karten"
           :title="selectedGroup?.subject"
           :geoeffnet="geoeffnet"

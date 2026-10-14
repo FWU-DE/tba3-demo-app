@@ -751,6 +751,10 @@ export const TEXTE = {
     },
 
     uebersicht: {
+      ohneMindeststandard: {
+        de: 'Stufen nach dem Gemeinsamen Europäischen Referenzrahmen: Für sie gibt es keinen Mindeststandard. Welche Stufe ihm entspräche, hängt am Bildungsgang. Die Verteilung steht deshalb ohne die beiden Kennzahlen.',
+        en: 'Levels of the Common European Framework of Reference: there is no minimum standard for them. Which level would correspond to it depends on the educational track. The distribution is therefore shown without the two key figures.',
+      },
       titel: {
         de: 'Kompetenzübersicht — Ringe und Schlüsselkennzahlen',
         en: 'Competence overview — rings and key figures',
