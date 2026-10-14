@@ -10,6 +10,7 @@
 import { STANDARD, kachel } from '../kern/kennzahl-kachel.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .kachel {
@@ -45,13 +46,13 @@ const STIL = `
   margin-top: var(--tba3-_abstand); }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const k = kachel(zustand);
 
   const knopf = h('button', {
     class: 'kachel',
     type: 'button',
-    'aria-label': `${k.label}: ${k.hatWert ? k.wert + k.einheit : 'kein Wert'}`,
+    'aria-label': `${k.label}: ${k.hatWert ? k.wert + k.einheit : t('kachel.ohne-wert')}`,
     onclick: () => el.melden('kachel-gewaehlt', { ...k }),
   });
 
@@ -65,7 +66,7 @@ function aufbauen(wurzel, zustand, el) {
       ]),
       k.delta === null
         ? null
-        : h('div', { class: `delta delta-${k.bewertung}`, text: `${k.deltaText} ggü. ${k.vergleichLabel}` }),
+        : h('div', { class: `delta delta-${k.bewertung}`, text: t('kachel.delta', { delta: k.deltaText, vergleich: k.vergleichLabel }) }),
     ]),
   );
 
@@ -80,13 +81,13 @@ function aufbauen(wurzel, zustand, el) {
   if (k.verlaufPfad) {
     knopf.append(
       h('div', { class: 'fuss' }, [
-        h('span', { text: 'Verlauf' }),
+        h('span', { text: t('kachel.verlauf') }),
         s('svg', {
           width: k.verlaufMasse.verlaufBreite,
           height: k.verlaufMasse.verlaufHoehe,
           viewBox: `0 0 ${k.verlaufMasse.verlaufBreite} ${k.verlaufMasse.verlaufHoehe}`,
           role: 'img',
-          'aria-label': 'Verlauf der letzten Erhebungen',
+          'aria-label': t('kachel.verlauf-aria'),
         }, [s('path', { class: 'verlauf', d: k.verlaufPfad })]),
       ]),
     );
@@ -100,6 +101,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'kennzahl-kachel',
   titel: 'Kennzahl-Kachel',
+  titelEn: TITEL_EN['kennzahl-kachel'],
   endpunkt: '/groups/{id}/aggregations',
   standard: STANDARD,
   ereignisse: ['kachel-gewaehlt'],

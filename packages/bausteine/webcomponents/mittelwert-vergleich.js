@@ -3,6 +3,7 @@
 import { MASSE, STANDARD, geometrie } from '../kern/mittelwert-vergleich.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .marker { cursor: pointer; }
@@ -17,7 +18,7 @@ const STIL = `
 
 const farbe = (fair) => (fair ? 'var(--tba3-_farbe-marke)' : 'var(--tba3-_farbe-marke)');
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
   const figur = h('figure');
 
@@ -31,14 +32,14 @@ function aufbauen(wurzel, zustand, el) {
   }
 
   if (!g.zeilen.length) {
-    figur.append(h('p', { class: 'leer', text: 'Keine Daten' }));
+    figur.append(h('p', { class: 'leer', text: t('leer.daten') }));
     wurzel.append(figur);
     return;
   }
 
   const svg = s('svg', {
     width: g.breite, height: g.hoehe, viewBox: `0 0 ${g.breite} ${g.hoehe}`,
-    role: 'img', 'aria-label': g.titel || 'Mittelwert-Vergleich',
+    role: 'img', 'aria-label': g.titel || t('vergleich.aria'),
   });
 
   // Zonen
@@ -120,7 +121,7 @@ function aufbauen(wurzel, zustand, el) {
       class: 'marker',
       transform: `translate(${zeile.markerX}, ${zeile.y})`,
       tabindex: '0', role: 'button',
-      'aria-label': `${zeile.label}: ${Math.round(zeile.mean)} Prozent`,
+      'aria-label': `${zeile.label}: ${t('prozent', { wert: Math.round(zeile.mean) })}`,
     }, [
       s('polygon', {
         points: '0,-9 9,0 0,9 -9,0', fill: f,
@@ -171,6 +172,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'mittelwert-vergleich',
   titel: 'Mittelwert-Vergleich',
+  titelEn: TITEL_EN['mittelwert-vergleich'],
   endpunkt: '/groups, /schools, /states (items)',
   standard: STANDARD,
   ereignisse: ['zeile-gewaehlt'],

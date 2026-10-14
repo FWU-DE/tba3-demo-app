@@ -12,7 +12,7 @@ import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import { KontextmerkmalRing } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, hatText } from '../i18n';
 
 const DOCS = {
   githubFile: 'kontextmerkmal-ring.js',
@@ -102,7 +102,7 @@ const ringe = computed(() => {
     typ,
     label: t(pfad),
     segmente: [...zaehler.get(typ)].map(([wert, anzahl], i) => ({
-      label: t(`ansichten.kontext.werte.${wert}`) || wert,
+      label: hatText(`ansichten.kontext.werte.${wert}`) ? t(`ansichten.kontext.werte.${wert}`) : wert,
       wert: anzahl,
       farbe: UNGEORDNET[i % UNGEORDNET.length],
     })),
@@ -126,7 +126,7 @@ const gewaehlt = ref(null);
                   data-testid="gruppe-waehlen" class="w-64" />
         </div>
 
-        <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+        <Message v-if="error" severity="error" :closable="false">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}</Message>
         <Skeleton v-else-if="loading" height="220px" />
         <div v-else class="ringe" data-testid="ringe">
           <KontextmerkmalRing
@@ -144,7 +144,7 @@ const gewaehlt = ref(null);
       </template>
     </Card>
 
-    <ComponentDocs v-bind="DOCS" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" />
+    <ComponentDocs v-bind="DOCS" component-name="tba3-kontextmerkmal-ring" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" :api-note="t(DOCS.apiNotePfad)" />
   </div>
 </template>
 

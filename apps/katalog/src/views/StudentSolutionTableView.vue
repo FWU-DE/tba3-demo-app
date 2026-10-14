@@ -13,7 +13,7 @@ const DOCS_META = {
   githubPath: 'packages/bausteine/webcomponents/schueler-tabelle.js',
   propsDocs: [
     { name: 'rows',        type: 'Array',   required: true, pfad: 'ansichten.schuelerTabelle.props.rows' },
-    { name: 'domains',     type: 'Array',   default: '[Insgesamt, Lesen, Zuhören]', pfad: 'ansichten.schuelerTabelle.props.domains' },
+    { name: 'domains',     type: 'Array',   defaultPfad: 'ansichten.schuelerTabelle.vorgabeDomains', pfad: 'ansichten.schuelerTabelle.props.domains' },
     { name: 'sortierung',  type: 'String',  default: "'total'", pfad: 'ansichten.schuelerTabelle.props.sortierung' },
     { name: 'auswahl',     type: 'Array',   default: '[]',      pfad: 'ansichten.schuelerTabelle.props.auswahl' },
     { name: 'auswaehlbar', type: 'Boolean', default: 'true',    pfad: 'ansichten.schuelerTabelle.props.auswaehlbar' },
@@ -106,7 +106,11 @@ onMounted(async () => {
 
 // Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
 const propsDocs = computed(() =>
-  DOCS_META.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+  DOCS_META.propsDocs.map(({ pfad, defaultPfad, ...rest }) => ({
+    ...rest,
+    ...(defaultPfad && { default: t(defaultPfad) }),
+    description: t(pfad),
+  }))
 );
 const apiEndpoints = computed(() =>
   DOCS_META.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
@@ -114,28 +118,29 @@ const apiEndpoints = computed(() =>
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 const GROUPS = [
-  { id: '3a-deutsch',  label: '3a Deutsch',    subject: 'DE', booklet: 'Testheft B – Lesen & Zuhören' },
-  { id: '3b-deutsch',  label: '3b Deutsch',    subject: 'DE', booklet: 'Testheft B – Lesen & Zuhören' },
-  { id: '8a-englisch', label: '8a Englisch',   subject: 'EN', booklet: 'Testheft A – Reading & Listening' },
-  { id: '3a-mathe',    label: '3a Mathematik', subject: 'MA', booklet: 'Testheft A – Arithmetik & Geometrie' },
-  { id: '8a-mathe',    label: '8a Mathematik', subject: 'MA', booklet: 'Testheft B – Algebra & Statistik' },
+  { id: '3a-deutsch',  label: '3a Deutsch',    subject: 'DE', heft: 'deutsch' },
+  { id: '3b-deutsch',  label: '3b Deutsch',    subject: 'DE', heft: 'deutsch' },
+  { id: '8a-englisch', label: '8a Englisch',   subject: 'EN', heft: 'englisch' },
+  { id: '3a-mathe',    label: '3a Mathematik', subject: 'MA', heft: 'mathe3' },
+  { id: '8a-mathe',    label: '8a Mathematik', subject: 'MA', heft: 'mathe8' },
 ];
 
+// Bereich → Textschlüssel; die Beschriftung holt `domains` beim Rechnen.
 const DOMAINS_BY_SUBJECT = {
   DE: [
-    { key: 'total',     label: 'Insgesamt' },
-    { key: 'reading',   label: 'Lesen' },
-    { key: 'listening', label: 'Zuhören' },
+    { key: 'total',     text: 'insgesamt' },
+    { key: 'reading',   text: 'lesen' },
+    { key: 'listening', text: 'zuhoeren' },
   ],
   EN: [
-    { key: 'total',     label: 'Insgesamt' },
-    { key: 'reading',   label: 'Reading' },
-    { key: 'listening', label: 'Listening' },
+    { key: 'total',     text: 'insgesamt' },
+    { key: 'reading',   text: 'lesen' },
+    { key: 'listening', text: 'zuhoeren' },
   ],
   MA: [
-    { key: 'total',     label: 'Insgesamt' },
-    { key: 'arith',     label: 'Arithmetik' },
-    { key: 'geo',       label: 'Geometrie' },
+    { key: 'total',     text: 'insgesamt' },
+    { key: 'arith',     text: 'arithmetik' },
+    { key: 'geo',       text: 'geometrie' },
   ],
 };
 
@@ -169,7 +174,8 @@ const generateStudents = (group) => {
   return Array.from({ length: count }, (_, i) => {
     const num    = String(i + 1).padStart(3, '0');
     const female = rand() > 0.5;
-    const name   = female ? `Schülerin ${num}` : `Schüler ${num}`;
+    const name   = t(female ? 'ansichten.schuelerTabelle.schuelerin' : 'ansichten.schuelerTabelle.schueler', { n: num });
+    const booklet = t(`ansichten.schuelerTabelle.hefte.${group.heft}`);
     const absent = absentSet.has(i);
 
     if (absent) {
@@ -177,10 +183,10 @@ const generateStudents = (group) => {
         id: `${group.id}-${i}`,
         name,
         gender: female ? 'f' : 'm',
-        testBooklet: { label: group.booklet, url: '#' },
+        testBooklet: { label: booklet, url: '#' },
         solutionUrl: null,
         absent: true,
-        absentMessage: `${name} war am Testtag abwesend.`,
+        absentMessage: t('ansichten.schuelerTabelle.abwesend', { name }),
         domains: {},
       };
     }
@@ -212,7 +218,7 @@ const generateStudents = (group) => {
       id: `${group.id}-${i}`,
       name,
       gender: female ? 'f' : 'm',
-      testBooklet: { label: group.booklet, url: '#' },
+      testBooklet: { label: booklet, url: '#' },
       solutionUrl: '#',
       absent: false,
       absentMessage: null,
@@ -224,7 +230,12 @@ const generateStudents = (group) => {
 // ── State ─────────────────────────────────────────────────────────────────────
 const selectedGroup = ref(GROUPS[0]);
 
-const domains = computed(() => DOMAINS_BY_SUBJECT[selectedGroup.value.subject]);
+const domains = computed(() =>
+  DOMAINS_BY_SUBJECT[selectedGroup.value.subject].map(({ key, text }) => ({
+    key,
+    label: t(`ansichten.schuelerTabelle.bereiche.${text}`),
+  })),
+);
 const rows    = computed(() => generateStudents(selectedGroup.value));
 
 // Die Auswahl hält die Ansicht: das Element meldet sie nur, damit ein

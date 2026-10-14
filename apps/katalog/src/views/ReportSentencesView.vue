@@ -23,7 +23,7 @@ const DOCS = {
     { name: 'titel', type: 'String', default: "''", pfad: 'ansichten.saetze.props.titel' },
     { name: 'saetze', type: 'Array', required: true, pfad: 'ansichten.saetze.props.saetze' },
     { name: 'werte', type: 'Object', default: '{}', pfad: 'ansichten.saetze.props.werte' },
-    { name: 'leerHinweis', type: 'String', default: "'Zu dieser Auswahl gibt es keinen Satz.'", pfad: 'ansichten.saetze.props.leerHinweis' },
+    { name: 'leerHinweis', type: 'String', defaultPfad: 'ansichten.saetze.vorgabeLeer', pfad: 'ansichten.saetze.props.leerHinweis' },
   ],
   dataShape: `// saetze-Element
 {
@@ -45,7 +45,11 @@ const DOCS = {
   apiNotePfad: 'ansichten.saetze.hinweis',
 };
 
-const propsDocs = computed(() => DOCS.propsDocs.map(({ pfad, ...r }) => ({ ...r, description: t(pfad) })));
+const propsDocs = computed(() => DOCS.propsDocs.map(({ pfad, defaultPfad, ...r }) => ({
+  ...r,
+  ...(defaultPfad && { default: t(defaultPfad) }),
+  description: t(pfad),
+})));
 const apiEndpoints = computed(() => DOCS.apiEndpoints.map(({ pfad, ...r }) => ({ ...r, description: t(pfad) })));
 
 const GROUPS = [
@@ -125,7 +129,7 @@ const saetze = computed(() => [
                   data-testid="gruppe-waehlen" class="w-64" />
         </div>
 
-        <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+        <Message v-if="error" severity="error" :closable="false">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}</Message>
         <Skeleton v-else-if="loading" height="180px" />
         <div v-else data-testid="saetze">
           <Zeugnissaetze
@@ -142,7 +146,7 @@ const saetze = computed(() => [
       </template>
     </Card>
 
-    <ComponentDocs v-bind="DOCS" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" />
+    <ComponentDocs v-bind="DOCS" component-name="tba3-zeugnissaetze" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" :api-note="t(DOCS.apiNotePfad)" />
   </div>
 </template>
 

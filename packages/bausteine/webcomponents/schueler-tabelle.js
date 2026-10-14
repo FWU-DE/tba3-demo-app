@@ -20,6 +20,7 @@ import {
 } from '../kern/schueler-tabelle.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
@@ -103,12 +104,12 @@ function balken(bereich) {
   ]);
 }
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const daten = zeilen(zustand);
   const kopf = spalten(zustand);
 
   if (!daten.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Schüler:innen' }));
+    wurzel.append(h('p', { class: 'leer', text: t('leer.schueler') }));
     return;
   }
 
@@ -117,7 +118,7 @@ function aufbauen(wurzel, zustand, el) {
       ANTEILE.map((anteil) =>
         h('span', {}, [
           h('span', { class: 'punkt', style: `background:${ANTEILFARBE[anteil.id]}` }),
-          anteil.label,
+          t(`schueler.${anteil.id}`),
         ]),
       ),
     ),
@@ -147,7 +148,7 @@ function aufbauen(wurzel, zustand, el) {
   });
 
   if (zustand.auswaehlbar) {
-    kopfZellen.unshift(h('th', { scope: 'col', class: 'wahl', 'aria-label': 'Auswahl' }));
+    kopfZellen.unshift(h('th', { scope: 'col', class: 'wahl', 'aria-label': t('schueler.auswahl') }));
   }
 
   const koerper = daten.map((zeile) => {
@@ -156,7 +157,7 @@ function aufbauen(wurzel, zustand, el) {
     if (zustand.auswaehlbar) {
       const kasten = h('input', {
         type: 'checkbox',
-        'aria-label': `${zeile.name} auswählen`,
+        'aria-label': t('schueler.waehlen', { name: zeile.name }),
         onchange: () => {
           const auswahl = auswahlUmschalten(zustand.auswahl, zeile.id);
           el.props = { auswahl };
@@ -187,7 +188,7 @@ function aufbauen(wurzel, zustand, el) {
         h('td', {
           class: 'abwesend',
           colspan: String(kopf.length - 1),
-          text: zeile.absentMessage ?? 'nicht teilgenommen',
+          text: zeile.absentMessage ?? t('schueler.abwesend'),
         }),
       );
     } else {
@@ -212,6 +213,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'schueler-tabelle',
   titel: 'Schüler-Tabelle',
+  titelEn: TITEL_EN['schueler-tabelle'],
   endpunkt: '/groups/{id}/items?type=students',
   standard: STANDARD,
   ereignisse: ['sortiert', 'schueler-gewaehlt', 'auswahl-geaendert'],

@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { DEMODATEN } from './demodaten.js';
+import { DEMODATEN, istText, lokal } from './demodaten.js';
 import { BAUPLAENE } from '../../../packages/bausteine/webcomponents/index.js';
 
 const NAMEN = BAUPLAENE.map((b) => b.name).sort();
@@ -35,5 +35,23 @@ describe('Beispieldaten des Demonstrators', () => {
       }
     }
     expect(unbekannt).toEqual([]);
+  });
+
+  // Beschriftungen stehen als { de, en } in den Daten und werden vor dem
+  // Setzen aufgelöst. Bleibt eine stehen, landet ein Objekt im Baustein, und
+  // der zeigt „[object Object]".
+  it('löst jede Beschriftung in beide Sprachen auf', () => {
+    const offen = (wert, pfad = '') => {
+      if (istText(wert)) return [pfad];
+      if (Array.isArray(wert)) return wert.flatMap((w, i) => offen(w, `${pfad}[${i}]`));
+      if (wert && typeof wert === 'object') return Object.entries(wert).flatMap(([k, w]) => offen(w, `${pfad}.${k}`));
+      return [];
+    };
+    for (const sprache of ['de', 'en']) {
+      expect(offen(lokal(DEMODATEN, sprache)), sprache).toEqual([]);
+    }
+    expect(offen(DEMODATEN).length, 'keine einzige zweisprachige Beschriftung?').toBeGreaterThan(20);
+    expect(lokal(DEMODATEN, 'en')[0]['kompetenzstufen-leiste'].rows[1].label).toBe('School');
+    expect(lokal(DEMODATEN, 'de')[0]['kompetenzstufen-leiste'].rows[1].label).toBe('Schule');
   });
 });

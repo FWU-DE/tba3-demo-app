@@ -157,16 +157,18 @@ const gewaehlt = ref(null);
 watch(() => selectedGroup.value, () => { gewaehlt.value = null; });
 
 // Three example students for the standalone StudentTooltip demo
-const DEMO_ZONE_DATA = {
-  'KS I':   { zone: 'KS I',   competencyLevel: 'Unter Mindeststandard', competencyDesc: 'Grundlegende Kompetenzen noch nicht gesichert.' },
-  'KS II':  { zone: 'KS II',  competencyLevel: 'Mindeststandard',        competencyDesc: 'Grundlegende Kompetenzen vorhanden.'            },
-  'KS III': { zone: 'KS III', competencyLevel: 'Über Mindeststandard',   competencyDesc: 'Regelstandard oder Optimalstandard erreicht.'   },
-};
+// Stufe und Beschreibung je Zone kommen aus texte.js und werden beim Rechnen
+// geholt, damit sie einem Sprachwechsel folgen.
+const zonenDaten = (zone) => ({
+  zone,
+  competencyLevel: t(`bausteine.bista.zonen.${zone}.level`),
+  competencyDesc: t(`bausteine.bista.zonen.${zone}.desc`),
+});
 
 const tooltipDemos = computed(() => [
-  { ...BASE_STUDENTS[4],  bistaScore: 325, ringColor: '#f43f5e', ...DEMO_ZONE_DATA['KS I']   },
-  { ...BASE_STUDENTS[16], bistaScore: 441, ringColor: '#3b82f6', ...DEMO_ZONE_DATA['KS II']  },
-  { ...BASE_STUDENTS[28], bistaScore: 526, ringColor: '#14b8a6', ...DEMO_ZONE_DATA['KS III'] },
+  { ...BASE_STUDENTS[4],  bistaScore: 325, ringColor: '#f43f5e', ...zonenDaten('KS I')   },
+  { ...BASE_STUDENTS[16], bistaScore: 441, ringColor: '#3b82f6', ...zonenDaten('KS II')  },
+  { ...BASE_STUDENTS[28], bistaScore: 526, ringColor: '#14b8a6', ...zonenDaten('KS III') },
 ]);
 </script>
 

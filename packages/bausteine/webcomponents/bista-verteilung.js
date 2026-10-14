@@ -9,6 +9,7 @@
 import { STANDARD, geometrie } from '../kern/bista-verteilung.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 import { stufenFlaeche, stufenSchrift } from '../kern/thema.js';
 
 const STIL = `
@@ -47,11 +48,11 @@ const STIL = `
 /** Die Avatare wechseln reihenweise den Ton, damit ein Stapel lesbar bleibt. */
 const stufe = (schueler) => Math.min(5, 2 + (schueler.reihe % 3));
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
 
   if (!g.schueler.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Schüler:innen' }));
+    wurzel.append(h('p', { class: 'leer', text: t('leer.schueler') }));
     return;
   }
 
@@ -62,7 +63,7 @@ function aufbauen(wurzel, zustand, el) {
     width: '100%',
     viewBox: `0 0 ${g.breite} ${g.hoehe}`,
     role: 'group',
-    'aria-label': g.titel || 'Verteilung auf der Punkteskala',
+    'aria-label': g.titel || t('bista.aria'),
   });
 
   for (const zone of g.zonen) {
@@ -70,7 +71,7 @@ function aufbauen(wurzel, zustand, el) {
       class: 'zone',
       tabindex: '0',
       role: 'button',
-      'aria-label': `Zone ${zone.label}`,
+      'aria-label': t('bista.zone', { label: zone.label }),
     }, [
       s('rect', {
         x: zone.x, y: g.feld.y, width: zone.breite, height: g.feld.hoehe, fill: zone.farbe,
@@ -115,7 +116,7 @@ function aufbauen(wurzel, zustand, el) {
       }),
       s('text', {
         class: 'mittelwertschrift', x: g.mittelwert.x, y: g.hoehe - 8, 'text-anchor': 'middle',
-        text: `Mittelwert ${Math.round(g.mittelwert.wert)}`,
+        text: t('bista.mittelwert', { wert: Math.round(g.mittelwert.wert) }),
       }),
     );
   }
@@ -125,7 +126,7 @@ function aufbauen(wurzel, zustand, el) {
       class: 'kopf',
       tabindex: '0',
       role: 'button',
-      'aria-label': `${schueler.name}, ${schueler.punkte ?? '—'} Punkte`,
+      'aria-label': t('bista.kopf', { name: schueler.name, punkte: schueler.punkte ?? '—' }),
     }, [
       s('circle', {
         cx: schueler.x, cy: schueler.y, r: g.radius,
@@ -140,7 +141,7 @@ function aufbauen(wurzel, zustand, el) {
     const zeigen = () => {
       hinweis.replaceChildren(
         h('strong', { text: schueler.name }),
-        h('span', { text: ` · ${schueler.punkte ?? '—'} Punkte` }),
+        h('span', { text: t('bista.punkte', { punkte: schueler.punkte ?? '—' }) }),
       );
       hinweis.style.left = `${(schueler.x / g.breite) * 100}%`;
       hinweis.style.top = `${(schueler.y / g.hoehe) * 100}%`;
@@ -177,6 +178,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'bista-verteilung',
   titel: 'BISTA-Verteilung',
+  titelEn: TITEL_EN['bista-verteilung'],
   endpunkt: '/groups/{id}/aggregations',
   standard: STANDARD,
   ereignisse: ['schueler-gewaehlt', 'zone-gewaehlt'],

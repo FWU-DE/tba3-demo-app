@@ -12,6 +12,7 @@
 import { STANDARD, saetze } from '../kern/zeugnissaetze.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .block { display: flex; flex-direction: column; gap: var(--tba3-_abstand); }
@@ -34,7 +35,7 @@ const STIL = `
 .leer { color: var(--tba3-_farbe-text-gedaempft); font-size: 0.9em; }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const z = saetze(zustand);
   const block = h('div', { class: 'block' });
 
@@ -51,7 +52,7 @@ function aufbauen(wurzel, zustand, el) {
       const knopf = h('button', {
         class: 'kopieren',
         type: 'button',
-        'aria-label': `Satz kopieren: ${satz.text}`,
+        'aria-label': t('saetze.kopieren-aria', { text: satz.text }),
         onclick: () => {
           // Die Zwischenablage darf fehlen (kein sicherer Kontext, kein Recht).
           // Der Baustein meldet den Satz trotzdem — die Seite kann ihn dann
@@ -59,7 +60,7 @@ function aufbauen(wurzel, zustand, el) {
           navigator.clipboard?.writeText?.(satz.text).catch(() => {});
           el.melden('satz-kopiert', { ...satz });
         },
-      }, ['kopieren']);
+      }, [t('saetze.kopieren')]);
 
       return h('li', {}, [
         h('div', { class: 'satz' }, [
@@ -80,6 +81,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'zeugnissaetze',
   titel: 'Zeugnissätze',
+  titelEn: TITEL_EN.zeugnissaetze,
   endpunkt: '/groups/{id}/competence-levels',
   standard: STANDARD,
   ereignisse: ['satz-kopiert'],

@@ -12,13 +12,13 @@ import Skeleton from 'primevue/skeleton';
 import Message from 'primevue/message';
 import { StandardErreichung } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, hatText } from '../i18n';
 
 const DOCS = {
   githubFile: 'standard-erreichung.js',
   githubPath: 'packages/bausteine/webcomponents/standard-erreichung.js',
   propsDocs: [
-    { name: 'label', type: 'String', default: "'Mindeststandard erreicht'", pfad: 'ansichten.standard.props.label' },
+    { name: 'label', type: 'String', defaultPfad: 'ansichten.standard.vorgabeLabel', pfad: 'ansichten.standard.props.label' },
     { name: 'zeilen', type: 'Array', required: true, pfad: 'ansichten.standard.props.zeilen' },
     { name: 'wert', type: 'Number', default: 'null', pfad: 'ansichten.standard.props.wert' },
     { name: 'schwelle', type: 'Number', default: '10', pfad: 'ansichten.standard.props.schwelle' },
@@ -39,7 +39,11 @@ const DOCS = {
   apiNotePfad: 'ansichten.standard.hinweis',
 };
 
-const propsDocs = computed(() => DOCS.propsDocs.map(({ pfad, ...r }) => ({ ...r, description: t(pfad) })));
+const propsDocs = computed(() => DOCS.propsDocs.map(({ pfad, defaultPfad, ...r }) => ({
+  ...r,
+  ...(defaultPfad && { default: t(defaultPfad) }),
+  description: t(pfad),
+})));
 const apiEndpoints = computed(() => DOCS.apiEndpoints.map(({ pfad, ...r }) => ({ ...r, description: t(pfad) })));
 
 const GROUPS = [
@@ -105,7 +109,7 @@ const gewaehlt = ref(null);
                   data-testid="gruppe-waehlen" class="w-64" />
         </div>
 
-        <Message v-if="error" severity="error" :closable="false">{{ error }}</Message>
+        <Message v-if="error" severity="error" :closable="false">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}</Message>
         <Skeleton v-else-if="loading" height="220px" />
         <div v-else data-testid="erreichung">
           <StandardErreichung
@@ -116,12 +120,12 @@ const gewaehlt = ref(null);
         </div>
 
         <p v-if="gewaehlt" class="auswahl" data-testid="auswahl">
-          {{ gewaehlt.label }}: {{ gewaehlt.wert }} % ({{ gewaehlt.bewertung }})
+          {{ gewaehlt.label }}: {{ gewaehlt.wert }} % ({{ hatText(`ansichten.standard.bewertung.${gewaehlt.bewertung}`) ? t(`ansichten.standard.bewertung.${gewaehlt.bewertung}`) : gewaehlt.bewertung }})
         </p>
       </template>
     </Card>
 
-    <ComponentDocs v-bind="DOCS" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" />
+    <ComponentDocs v-bind="DOCS" component-name="tba3-standard-erreichung" :propsDocs="propsDocs" :apiEndpoints="apiEndpoints" :api-note="t(DOCS.apiNotePfad)" />
   </div>
 </template>
 

@@ -10,6 +10,7 @@
 import { STANDARD, verlauf } from '../kern/lernverlauf-figuren.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { ENDPUNKT_EN, TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .zone { opacity: .5; }
@@ -38,12 +39,12 @@ const STIL = `
 const FARBEN = ['var(--tba3-_stufe-1)', 'var(--tba3-_stufe-2)', 'var(--tba3-_stufe-3)',
   'var(--tba3-_stufe-4)', 'var(--tba3-_stufe-5)'];
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const v = verlauf(zustand);
   const m = v.masse;
 
   if (v.leer) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Messwerte' }));
+    wurzel.append(h('p', { class: 'leer', text: t('figuren.leer') }));
     return;
   }
 
@@ -108,7 +109,7 @@ function aufbauen(wurzel, zustand, el) {
       s('svg', {
         width: m.breite, height: m.hoehe, viewBox: `0 0 ${m.breite} ${m.hoehe}`,
         role: 'img',
-        'aria-label': v.title || 'Lernverlauf über mehrere Messzeitpunkte',
+        'aria-label': v.title || t('figuren.aria'),
       }, inhalt),
     ]),
   );
@@ -117,7 +118,9 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'lernverlauf-figuren',
   titel: 'Lernverlauf als Figuren',
+  titelEn: TITEL_EN['lernverlauf-figuren'],
   endpunkt: 'mehrere Erhebungen je Schüler:in',
+  endpunktEn: ENDPUNKT_EN['lernverlauf-figuren'],
   standard: STANDARD,
   ereignisse: ['person-gewaehlt'],
   stil: STIL,

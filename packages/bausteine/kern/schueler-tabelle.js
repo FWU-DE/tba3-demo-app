@@ -8,6 +8,8 @@
 // Wie bei der Aufgaben-Tabelle hält der Kern keinen Zustand: Sortierung und
 // Auswahl kommen herein, die fertigen Zeilen gehen heraus.
 
+import { text } from './texte.js';
+
 export const NAME = 'schueler-tabelle';
 
 export const STANDARD = {
@@ -127,10 +129,10 @@ export function auswahlUmschalten(auswahl, id) {
 
 /** Die Spaltenköpfe, samt Zustand für aria-sort. */
 export function spalten(props = {}) {
-  const { domains, sortierung, richtung } = { ...STANDARD, ...props };
+  const { domains, sortierung, richtung, sprache } = { ...STANDARD, ...props };
   const liste = Array.isArray(domains) && domains.length ? domains : STANDARD.domains;
   return [
-    { key: 'name', label: 'Schüler:in', zahl: false },
+    { key: 'name', label: text('schueler.name', sprache), zahl: false },
     ...liste.map((sp) => ({ key: sp.key, label: sp.label ?? sp.key, zahl: true })),
   ].map((sp) => ({
     ...sp,

@@ -13,6 +13,7 @@
 import { STANDARD, glossar } from '../kern/glossar.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { ENDPUNKT_EN, TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .block { display: flex; flex-direction: column; gap: var(--tba3-_abstand); }
@@ -50,7 +51,7 @@ const STIL = `
 .leer { color: var(--tba3-_farbe-text-gedaempft); font-size: 0.9em; }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = glossar(zustand);
   const block = h('div', { class: 'block' });
 
@@ -69,7 +70,9 @@ function aufbauen(wurzel, zustand, el) {
   block.append(h('p', {
     class: 'anzahl',
     'aria-live': 'polite',
-    text: g.gefiltert ? `${g.eintraege.length} von ${g.gesamt} Begriffen` : `${g.gesamt} Begriffe`,
+    text: g.gefiltert
+      ? t('glossar.gefiltert', { n: g.eintraege.length, gesamt: g.gesamt })
+      : t('glossar.alle', { gesamt: g.gesamt }),
   }));
 
   if (g.leer) {
@@ -89,7 +92,7 @@ function aufbauen(wurzel, zustand, el) {
           h('div', { class: `begriff ${eintrag.imBegriff ? 'treffer' : ''}`.trim(), text: eintrag.begriff }),
           eintrag.erklaerung ? h('div', { class: 'erklaerung', text: eintrag.erklaerung }) : null,
           eintrag.auch?.length
-            ? h('div', { class: 'auch', text: `auch: ${eintrag.auch.join(', ')}` })
+            ? h('div', { class: 'auch', text: t('glossar.auch', { liste: eintrag.auch.join(', ') }) })
             : null,
         ]),
       ]))),
@@ -101,7 +104,9 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'glossar',
   titel: 'Glossar mit Suche',
+  titelEn: TITEL_EN.glossar,
   endpunkt: 'keine — datenunabhängig gehalten',
+  endpunktEn: ENDPUNKT_EN.glossar,
   standard: STANDARD,
   ereignisse: ['suche-geaendert', 'begriff-gewaehlt'],
   stil: STIL,

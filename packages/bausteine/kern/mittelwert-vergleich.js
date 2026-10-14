@@ -3,6 +3,8 @@
 // Diamant-Marker auf gemeinsamer Skala, optional mit Konfidenzintervall.
 // Liefert Geometrie, kein Markup.
 
+import { text } from './texte.js';
+
 export const NAME = 'mittelwert-vergleich';
 
 export const STANDARD = {
@@ -37,7 +39,7 @@ export const ZONEN = [
 ];
 
 export function geometrie(props = {}) {
-  const { rows, title, domain, xLabel } = { ...STANDARD, ...props };
+  const { rows, title, domain, xLabel, sprache } = { ...STANDARD, ...props };
   const daten = Array.isArray(rows) ? rows : [];
   const m = MASSE;
 
@@ -54,6 +56,7 @@ export function geometrie(props = {}) {
     xLabel,
     zonen: ZONEN.map((z) => ({
       ...z,
+      text: text(`vergleich.${z.variable}`, sprache),
       x: x(z.von),
       breite: ((z.bis - z.von) / 100) * m.chartBreite,
       mitte: x((z.von + z.bis) / 2),

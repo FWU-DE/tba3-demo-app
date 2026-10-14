@@ -218,7 +218,7 @@ const StudentDetailModal = ({ student, onClose, onGroupsChange }) => {
             onClick={onClose}
             className="text-sm text-gray-500 hover:text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Schließen
+            {t('einstellungen.schliessen')}
           </button>
         </div>
       </div>

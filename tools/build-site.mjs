@@ -56,20 +56,27 @@ for (const [from, to, required] of PARTS) {
 // erreichbar sind: die eigenen Beispieldaten und — über denselben Host geleitet —
 // der Referenzserver. Die eingecheckte Datei bleibt die unveränderte Kopie aus
 // indibit-eu/tba3, damit `npm run spec:update` konfliktfrei bleibt.
-const specDatei = join(dist, 'schnittstelle/tba3-spec.yml');
-const spec = readFileSync(specDatei, 'utf8');
-const serverBlock = /^servers:\n(?: {2}[-\s].*\n)+/m;
-if (!serverBlock.test(spec)) {
-  console.error('✗ servers-Block in tba3-spec.yml nicht gefunden — Aufbau der Spezifikation geändert?');
-  process.exit(1);
-}
-writeFileSync(specDatei, spec.replace(serverBlock, `servers:
+// Die englische Fassung (tba3-spec.en.yml) bekommt dieselben Server, englisch beschrieben.
+const SERVER = {
+  'tba3-spec.yml': ['Diese Seite — eigene Beispieldaten', 'Referenzserver von indibit (über diese Seite geleitet)'],
+  'tba3-spec.en.yml': ['This site — our own sample data', "indibit's reference server (routed through this site)"],
+};
+for (const [name, [eigene, referenz]] of Object.entries(SERVER)) {
+  const specDatei = join(dist, 'schnittstelle', name);
+  const spec = readFileSync(specDatei, 'utf8');
+  const serverBlock = /^servers:\n(?: {2}[-\s].*\n)+/m;
+  if (!serverBlock.test(spec)) {
+    console.error(`✗ servers-Block in ${name} nicht gefunden — Aufbau der Spezifikation geändert?`);
+    process.exit(1);
+  }
+  writeFileSync(specDatei, spec.replace(serverBlock, `servers:
   # Ergänzt von tools/build-site.mjs — im Quell-Repository steht nur der Referenzserver.
   - url: /
-    description: Diese Seite — eigene Beispieldaten
+    description: ${eigene}
   - url: /referenz-api
-    description: Referenzserver von indibit (über diese Seite geleitet)
+    description: ${referenz}
 `));
+}
 console.log('✓ Server der Spezifikation ergänzt');
 
 // Die erklärenden Dokumente der Spezifikation liegen als Markdown-Kopie unter

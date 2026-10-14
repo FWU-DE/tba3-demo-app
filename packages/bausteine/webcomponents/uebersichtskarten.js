@@ -11,6 +11,7 @@
 import { RING, STANDARD, karten, umschalten } from '../kern/uebersichtskarten.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .raster { display: grid; gap: calc(var(--tba3-_abstand) * 2); }
@@ -76,11 +77,11 @@ function ring(karte) {
   ]);
 }
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const liste = karten(zustand);
 
   if (!liste.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Teilbereiche' }));
+    wurzel.append(h('p', { class: 'leer', text: t('leer.teilbereiche') }));
     return;
   }
 
@@ -136,7 +137,7 @@ function aufbauen(wurzel, zustand, el) {
             el.props = { geoeffnet };
             el.melden('karte-geoeffnet', { geoeffnet, karte: karte.id });
           },
-        }, [karte.offen ? '▾ weniger' : '▸ mehr']),
+        }, [karte.offen ? t('karten.weniger') : t('karten.mehr')]),
       );
 
       if (karte.offen) {
@@ -161,6 +162,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'uebersichtskarten',
   titel: 'Übersichtskarten',
+  titelEn: TITEL_EN.uebersichtskarten,
   endpunkt: '/groups/{id}/aggregations',
   standard: STANDARD,
   ereignisse: ['karte-gewaehlt', 'karte-geoeffnet'],

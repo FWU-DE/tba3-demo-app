@@ -1,0 +1,729 @@
+# Übersetzung von tba3-spec.yml, sha256:13b43e4270b32b5eb3b432c1b7dbe6007f2a509e6edf0bfe3c50a14ff1683901
+# Englische Fassung für /schnittstelle?lang=en. Übersetzt sind nur Beschreibungstexte
+# (title, summary, description, Namen der Beispiele); Struktur und Werte gleichen dem Original.
+openapi: 3.1.0
+info:
+  title: TBA III
+  summary: API for accessing VERA reporting data
+  description: >-
+    This API provides access to VERA reporting data. It offers endpoints for querying performance
+    data at different levels (learning group, school, federal state) and for different kinds of data
+    (competence levels, item statistics, aggregations).
+  version: '1.2'
+  license:
+    name: MIT
+    url: https://opensource.org/license/MIT
+servers:
+  - url: https://apps.indibit.eu/tba3-api
+    description: indibit's mock server
+security: []
+tags:
+  - name: groups
+    description: Results at the level of a learning group
+  - name: schools
+    description: Results summarised by school
+  - name: states
+    description: Results at federal state level
+paths:
+  /groups/{id}/competence-levels:
+    get:
+      operationId: getGroupCompetenceLevels
+      summary: Distribution of competence levels in the learning group
+      tags:
+        - groups
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Distribution of competence levels in the learning group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/competence-levels'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Learning group or its distribution of competence levels not found
+  /groups/{id}/items:
+    get:
+      operationId: getGroupItems
+      summary: Solution rates per item in the learning group
+      tags:
+        - groups
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Solution rates per item in the learning group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/items'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Learning group or its solution rates not found
+  /groups/{id}/aggregations:
+    get:
+      operationId: getGroupAggregations
+      summary: Aggregated values (e.g. solution rates) in the learning group
+      tags:
+        - groups
+      parameters:
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/aggregation'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Aggregation for the learning group, calculated according to type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/aggregations'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Learning group or its values not found
+  /schools/{id}/competence-levels:
+    get:
+      operationId: getSchoolCompetenceLevels
+      summary: Distribution of competence levels at the school
+      tags:
+        - schools
+      parameters:
+        - $ref: '#/components/parameters/schoolId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Distribution of competence levels at the school
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/competence-levels'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: School or its distribution of competence levels not found
+  /schools/{id}/items:
+    get:
+      operationId: getSchoolItems
+      summary: Solution rates per item at the school
+      tags:
+        - schools
+      parameters:
+        - $ref: '#/components/parameters/schoolId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Solution rates per item at the school
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/items'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: School or its solution rates per item not found
+  /schools/{id}/aggregations:
+    get:
+      operationId: getSchoolAggregations
+      summary: Aggregated values (e.g. solution rates) at the school
+      tags:
+        - schools
+      parameters:
+        - $ref: '#/components/parameters/schoolId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/aggregation'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Aggregation for the school, calculated according to type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/aggregations'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: School or its values not found
+  /states/{id}/competence-levels:
+    get:
+      operationId: getStateCompetenceLevels
+      summary: Distribution of competence levels in the federal state
+      tags:
+        - states
+      parameters:
+        - $ref: '#/components/parameters/stateId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Distribution of competence levels in the federal state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/competence-levels'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Federal state or its distribution of competence levels not found
+  /states/{id}/items:
+    get:
+      operationId: getStateItems
+      summary: Solution rates per item in the federal state
+      tags:
+        - states
+      parameters:
+        - $ref: '#/components/parameters/stateId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Solution rates per item in the federal state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/items'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Federal state or its solution rates per item not found
+  /states/{id}/aggregations:
+    get:
+      operationId: getStateAggregations
+      summary: Aggregated values (e.g. solution rates) in the federal state
+      tags:
+        - states
+      parameters:
+        - $ref: '#/components/parameters/stateId'
+        - $ref: '#/components/parameters/type'
+        - $ref: '#/components/parameters/aggregation'
+        - $ref: '#/components/parameters/comparison'
+      responses:
+        '200':
+          description: Aggregation for the federal state, calculated according to type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/aggregations'
+        '400':
+          description: Invalid request, e.g. invalid parameter values
+        '404':
+          description: Federal state or its values not found
+components:
+  parameters:
+    groupId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID of the learning group
+      examples:
+        German, primary school (average):
+          value: 3a-deutsch
+          description: Learning group 3a (average), subject German
+        German, primary school (good):
+          value: 3b-deutsch
+          description: Learning group 3b (good), subject German
+        German, primary school (poor):
+          value: 3c-deutsch
+          description: Learning group 3c (poor), subject German
+        Mathematics, primary school (average):
+          value: 3a-mathe
+          description: Learning group 3a (average), subject mathematics
+        Mathematics, primary school (good):
+          value: 3b-mathe
+          description: Learning group 3b (good), subject mathematics
+        Mathematics, primary school (poor):
+          value: 3c-mathe
+          description: Learning group 3c (poor), subject mathematics
+        German (average):
+          value: 8a-deutsch
+          description: Learning group 8a (average), subject German
+        German (good):
+          value: 8b-deutsch
+          description: Learning group 8b (good), subject German
+        German (poor):
+          value: 8c-deutsch
+          description: Learning group 8c (poor), subject German
+        English (average):
+          value: 8a-englisch
+          description: Learning group 8a (average), subject English
+        English (good):
+          value: 8b-englisch
+          description: Learning group 8b (good), subject English
+        English (poor):
+          value: 8c-englisch
+          description: Learning group 8c (poor), subject English
+        Mathematics (average):
+          value: 8a-mathe
+          description: Learning group 8a (average), subject mathematics
+        Mathematics (good):
+          value: 8b-mathe
+          description: Learning group 8b (good), subject mathematics
+        Mathematics (poor):
+          value: 8c-mathe
+          description: Learning group 8c (poor), subject mathematics
+    type:
+      in: query
+      name: type
+      explode: false
+      schema:
+        type: string
+      description: Value groups to be returned
+      examples:
+        Learning group:
+          value: ''
+          description: Returns performance data at group level (default).
+        Students:
+          value: students
+          description: Returns performance data at student level.
+        Learning group and students:
+          value: group,students
+          description: Returns performance data at group and student level.
+        State and school districts:
+          value: state,district
+          description: Returns performance data at state and district level (only for /state endpoints).
+    comparison:
+      in: query
+      name: comparison
+      explode: false
+      schema:
+        type: string
+      description: Filter for specific comparison groups to be returned.
+    aggregation:
+      in: query
+      name: aggregation
+      explode: false
+      schema:
+        type: string
+      description: Aggregation types to be calculated
+      examples:
+        Competences:
+          value: competence
+          description: Aggregates performance data by the competences assigned to the individual items.
+        Gender:
+          value: gender
+          description: Aggregates performance data by the students' gender.
+    schoolId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID of the school
+      examples:
+        Primary school:
+          value: gs-musterstadt
+          description: Sample primary school
+        Grammar school (Gymnasium):
+          value: gym-beispielstadt
+          description: Sample grammar school (Gymnasium)
+    stateId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: ID of the federal state
+      examples:
+        Sample state:
+          value: beispielland
+          description: Sample federal state
+  schemas:
+    domain:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name of the domain
+          examples:
+            - Rechtschreibung
+            - Leseverstehen
+    subject:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name of the subject
+          examples:
+            - Deutsch
+            - Mathematik
+    characteristic:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          type: string
+          description: Type of characteristic
+          examples:
+            - languageAtHome
+            - gender
+            - SES
+            - schoolType
+        label:
+          type: string
+          description: Label for the characteristic
+          examples:
+            - Sprache zu Hause
+            - Geschlecht
+            - Sozioökonomischer Status
+            - Schulart
+        value:
+          type: string
+          description: Specific value of the characteristic
+          examples:
+            - german
+            - male
+            - low
+            - gymnasium
+    covariates:
+      type: array
+      description: Covariates of the test group
+      items:
+        $ref: '#/components/schemas/characteristic'
+    value-group:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 32fbeb80-224a-4d13-a23c-0eec6c0d3ea7
+        type:
+          type: string
+          description: Type of the value group, e.g. `group`, `student`, `school`
+          examples:
+            - group
+            - student
+            - school
+        name:
+          type: string
+          description: Label of the value group
+          examples:
+            - Klasse 8a
+            - Schüler 1
+            - Korrigierter Landesmittelwert
+        domain:
+          $ref: '#/components/schemas/domain'
+          description: Domain of the value group (optional)
+        subject:
+          $ref: '#/components/schemas/subject'
+          description: Subject of the value group (optional)
+        covariates:
+          $ref: '#/components/schemas/covariates'
+          description: Covariates of the value group
+        properties:
+          type: array
+          description: >-
+            List of key-value pairs with additional information, e.g. test duration or other
+            system-specific attributes
+          items:
+            type: object
+            required:
+              - key
+              - value
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+    competence-level:
+      type: object
+      required:
+        - nameShort
+      properties:
+        id:
+          type: string
+          examples:
+            - 18488a76-0cb6-4d16-9f7b-d2c69f73e058
+        name:
+          type: string
+          description: Name of the competence level
+          examples:
+            - Optimalstandard
+            - Regularstandard
+        nameShort:
+          type: string
+          description: Short name of the competence level
+          examples:
+            - V
+            - Ia
+            - A2.1
+        description:
+          type: string
+          description: Description of the competence level
+          examples:
+            - Kann Aussagen zu zentralen Aspekten des Textes selbstständig begründen
+    competence-level-descriptive-statistics:
+      type: object
+      required:
+        - descriptiveStatistics
+      properties:
+        descriptiveStatistics:
+          type: object
+          required:
+            - total
+            - mean
+            - frequency
+          properties:
+            total:
+              type: integer
+              description: Total number of students in the value group
+              examples:
+                - 4
+            mean:
+              type: number
+              description: Share of all students who reached this competence level.
+              minimum: 0
+              maximum: 1
+              examples:
+                - 0.75
+            frequency:
+              type: integer
+              description: Number of students who reached this competence level.
+              examples:
+                - 3
+    competence-level-statistics:
+      type: array
+      description: Distribution of competence levels in the value group
+      items:
+        allOf:
+          - $ref: '#/components/schemas/competence-level'
+          - $ref: '#/components/schemas/competence-level-descriptive-statistics'
+    competence-levels:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/value-group'
+          - type: object
+            required:
+              - competenceLevels
+            properties:
+              competenceLevels:
+                $ref: '#/components/schemas/competence-level-statistics'
+    exercise:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        name:
+          type: string
+          description: Name of the exercise
+          examples:
+            - At the Summer Camp
+    competence:
+      type: object
+      properties:
+        id:
+          type: string
+          examples:
+            - 4ddfdc3e-79fd-47be-bbc0-341f403ac5db
+        type:
+          type: string
+          description: Type of competence
+          examples:
+            - Kompetenz
+            - Leitidee
+            - Allgemeine Kompetenz
+        name:
+          type: string
+          description: Name of the competence
+          examples:
+            - 2.5.1
+            - L1
+        description:
+          type: string
+          description: Description of the competence
+          examples:
+            - Richtig schreiben
+            - Leitidee Zahl
+    item-parameters:
+      type: object
+      description: >-
+        (Imported) item parameters from the IQB's item statistics. So far an incomplete,
+        illustrative list.
+      properties:
+        logit:
+          description: Difficulty of the item in logits
+          type: number
+        bistaPoints:
+          description: Difficulty of the item in points on the German educational standards scale
+          type: number
+        solutionFrequencyGymnasium:
+          description: Mean solution rate in the pilot study at grammar schools (Gymnasien)
+          type: number
+        solutionFrequencyNonGymnasium:
+          description: Mean solution rate in the pilot study at other secondary schools
+          type: number
+        solutionFrequencyPrimarySchool:
+          description: Mean solution rate in the pilot study at primary schools
+          type: number
+        subject:
+          description: Subject of the item
+          type: string
+        domain:
+          description: Competence area of the item
+          type: string
+        competenceLevel:
+          description: Competence level of the item
+          $ref: '#/components/schemas/competence-level'
+        competences:
+          description: List of competences assigned to the item
+          type: array
+          items:
+            $ref: '#/components/schemas/competence'
+    item:
+      type: object
+      required:
+        - name
+        - iqbId
+        - exercise
+      properties:
+        id:
+          type: string
+          examples:
+            - b8d23653-3881-40de-a45a-d34e2dd191ed
+        name:
+          type: string
+          description: Label of the item in the test booklet (often the question number)
+          examples:
+            - '2.1'
+            - '2.2'
+        position:
+          type: integer
+          description: Position of the item in the test booklet
+          examples:
+            - 1
+            - 2
+        iqbId:
+          type: string
+          description: IQB item ID of the item
+          examples:
+            - AB1021
+            - AB1022
+        exercise:
+          description: Exercise the item belongs to
+          $ref: '#/components/schemas/exercise'
+        parameters:
+          description: IQB item statistics for the item
+          $ref: '#/components/schemas/item-parameters'
+    descriptive-statistics:
+      type: object
+      required:
+        - descriptiveStatistics
+      properties:
+        descriptiveStatistics:
+          type: object
+          required:
+            - total
+            - mean
+            - frequency
+            - standardDeviation
+          properties:
+            total:
+              type: integer
+              description: Total number of items
+              examples:
+                - 4
+            mean:
+              type: number
+              description: Share of correctly solved items / mean solution rate
+              minimum: 0
+              maximum: 1
+              examples:
+                - 0.75
+            frequency:
+              type: integer
+              description: Absolute number of correctly solved items
+              examples:
+                - 3
+            standardDeviation:
+              type: number
+              description: Standard deviation of the mean solution rate
+    item-statistics:
+      type: array
+      description: Statistics for individual items in the value group
+      items:
+        allOf:
+          - $ref: '#/components/schemas/item'
+          - $ref: '#/components/schemas/descriptive-statistics'
+    items:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/value-group'
+          - type: object
+            required:
+              - items
+            properties:
+              items:
+                $ref: '#/components/schemas/item-statistics'
+    aggregation:
+      type: object
+      required:
+        - type
+        - value
+      properties:
+        type:
+          type: string
+          description: >-
+            Aggregation type (e.g. competence standard, exercise); custom aggregation types can be
+            defined.
+          examples:
+            - competences
+            - exercise
+            - gender
+        value:
+          type: string
+          description: Einzelne aggregierte Gruppe, z.B. der Aufgabenname, die Bezeichnung der Kompetenz, ...
+          examples:
+            - 2.5.3
+        includedIqbIds:
+          type: array
+          description: List of IQB item IDs included in calculating the aggregation.
+          items:
+            type: string
+    aggregations:
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/value-group'
+          - type: object
+            required:
+              - aggregations
+            properties:
+              aggregations:
+                type: array
+                description: Individual aggregations
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/aggregation'
+                    - $ref: '#/components/schemas/descriptive-statistics'

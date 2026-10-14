@@ -8,6 +8,7 @@
 import { STANDARD, netz } from '../kern/netzdiagramm.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 svg { display: block; max-width: 100%; height: auto; overflow: visible; }
@@ -32,16 +33,16 @@ svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 .leer { color: var(--tba3-_farbe-text-gedaempft); font-size: 0.9em; padding: var(--tba3-_abstand) 0; }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const n = netz(zustand);
   if (n.titel) wurzel.append(h('div', { class: 'titel', text: n.titel }));
   if (n.zuWenigAchsen) {
-    wurzel.append(h('p', { class: 'leer', text: 'Ein Netz braucht mindestens drei Teilkompetenzen.' }));
+    wurzel.append(h('p', { class: 'leer', text: t('netz.zu-wenig') }));
     return;
   }
   const svg = s('svg', {
     viewBox: `0 ${n.obenRand} ${n.breite} ${n.hoehe - 2 * n.obenRand}`, width: n.breite, height: n.hoehe - 2 * n.obenRand,
-    role: 'img', 'aria-label': `${n.titel || 'Netzdiagramm'}: ${n.reihen.map((r) => r.label).join(', ')}`,
+    role: 'img', 'aria-label': `${n.titel || t('netz.aria')}: ${n.reihen.map((r) => r.label).join(', ')}`,
   });
   for (const r of n.ringe) svg.append(s('path', { class: 'ring', d: r.pfad }));
   for (const r of n.ringe) svg.append(s('text', { class: 'ring-text', x: n.mitte + 3, y: r.y - 2, text: r.text }));
@@ -77,6 +78,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'netzdiagramm',
   titel: 'Netzdiagramm der Teilkompetenzen',
+  titelEn: TITEL_EN.netzdiagramm,
   endpunkt: '/groups/{id}/items?type=students',
   standard: STANDARD,
   ereignisse: ['reihe-gewaehlt'],

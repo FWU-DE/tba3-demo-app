@@ -8,6 +8,7 @@
 import { STANDARD, abweichung } from '../kern/abweichung-je-gruppe.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 svg { display: block; max-width: 100%; height: auto; overflow: visible; }
@@ -30,13 +31,13 @@ svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 .delta-im-rahmen { fill: var(--tba3-_farbe-text-gedaempft); }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const a = abweichung(zustand);
   if (a.titel) wurzel.append(h('div', { class: 'titel', text: a.titel }));
   const m = a.masse;
   const svg = s('svg', {
     viewBox: `0 0 ${a.breite} ${a.hoehe}`, width: a.breite, height: a.hoehe,
-    role: 'img', 'aria-label': `${a.titel || 'Abweichung je Lerngruppe'}${a.bezug ? ` gegenüber ${a.bezug.label} (${a.bezug.wertText})` : ''}`,
+    role: 'img', 'aria-label': `${a.titel || t('abweichung.aria')}${a.bezug ? t('abweichung.bezug', { label: a.bezug.label, wert: a.bezug.wertText }) : ''}`,
   });
 
   for (const t of a.ticks) {
@@ -53,7 +54,7 @@ function aufbauen(wurzel, zustand, el) {
     const melden = () => el.melden('gruppe-gewaehlt', { id: z.id, label: z.label, wert: z.wert, delta: z.delta });
     const gruppe = s('g', {
       class: 'zeile', tabindex: 0, role: 'button',
-      'aria-label': `${z.label}: ${z.wertText}, ${z.deltaText} Prozentpunkte`,
+      'aria-label': t('abweichung.zeile', { label: z.label, wert: z.wertText, delta: z.deltaText }),
     });
     gruppe.addEventListener('click', melden);
     gruppe.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); melden(); } });
@@ -78,6 +79,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'abweichung-je-gruppe',
   titel: 'Abweichung je Lerngruppe',
+  titelEn: TITEL_EN['abweichung-je-gruppe'],
   endpunkt: '/groups/{id}/competence-levels · /schools/{id}/competence-levels',
   standard: STANDARD,
   ereignisse: ['gruppe-gewaehlt'],

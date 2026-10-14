@@ -8,7 +8,7 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import { Streudiagramm } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, domaene } from '../i18n';
 
 const DOCS = {
   githubFile: 'streudiagramm.js',
@@ -202,7 +202,7 @@ const students = computed(() => {
       initialen: toInitials(name),
       x,
       y,
-      details: details.map((d) => ({ label: d.domain, wert: d.pct })),
+      details: details.map((d) => ({ label: domaene(d.domain), wert: d.pct })),
     });
   }
 

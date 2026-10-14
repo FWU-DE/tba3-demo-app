@@ -651,3 +651,163 @@ describe('Die Hüllen reichen Ereignisse durch', () => {
     app.unmount();
   });
 });
+
+// ── Zweisprachig ───────────────────────────────────────────────────────────
+//
+// Ein Baustein zeigt Text, den niemand von außen setzt — Spaltenköpfe,
+// Legenden, Leerhinweise, Vorgaben wie „einzelne Schüler:in". Der folgt dem
+// `lang` des Dokuments, und ein Wechsel zeichnet neu. Was ein Aufrufer setzt,
+// bleibt stehen.
+
+describe('Zweisprachig — eingebaute Texte folgen lang', () => {
+  const html = document.documentElement;
+  const warten = () => new Promise((r) => setTimeout(r, 0));
+
+  beforeEach(() => {
+    html.lang = 'de';
+  });
+
+  /** Was ein Mensch oder ein Vorleseprogramm vom Baustein mitbekommt. */
+  function lesbar(el) {
+    const teile = [...el.shadowRoot.children].filter((k) => k.tagName !== 'STYLE').map((k) => k.textContent);
+    for (const k of el.shadowRoot.querySelectorAll('*')) {
+      for (const attr of ['aria-label', 'title', 'placeholder']) {
+        if (k.getAttribute(attr)) teile.push(k.getAttribute(attr));
+      }
+    }
+    return teile.join(' | ');
+  }
+
+  it('zeigt unter <html lang="en"> englische Vorgaben und nach dem Umschalten deutsche', async () => {
+    html.lang = 'en';
+    const el = element('perzentilbaender', { items: DATEN.perzentilbaender.items });
+    await warten();
+    expect(lesbar(el)).toContain('individual student');
+    expect(lesbar(el)).toContain('below average');
+    expect(lesbar(el)).toContain('Solution rate (%)');
+    expect(lesbar(el)).not.toContain('Lösungsquote');
+    expect(el.sprache).toBe('en');
+    expect(el.markerLabel).toBe('individual student');
+
+    html.lang = 'de';
+    await warten();
+    expect(lesbar(el)).toContain('einzelne Schüler:in');
+    expect(lesbar(el)).toContain('unterdurchschnittlich');
+    expect(lesbar(el)).not.toContain('individual student');
+    expect(el.sprache).toBe('de');
+  });
+
+  it('übersetzt Spaltenköpfe und Leerhinweise', async () => {
+    html.lang = 'en-GB';
+    const tabelle = element('aufgaben-tabelle', DATEN['aufgaben-tabelle']);
+    const leer = element('netzdiagramm', { achsen: [] });
+    await warten();
+    const koepfe = [...tabelle.shadowRoot.querySelectorAll('thead .sortknopf')].map((k) => k.firstChild.textContent);
+    expect(koepfe).toEqual(['Item', 'Exercise', 'Level', 'Solution rate', 'Expected', 'Deviation']);
+    expect(leer.shadowRoot.textContent).toContain('A radar chart needs at least three sub-competences.');
+
+    html.lang = 'de';
+    await warten();
+    expect(tabelle.shadowRoot.querySelector('thead .sortknopf').firstChild.textContent).toBe('Aufgabe');
+    expect(leer.shadowRoot.textContent).toContain('Ein Netz braucht mindestens drei Teilkompetenzen.');
+  });
+
+  it('überschreibt keine gesetzte Eigenschaft', async () => {
+    html.lang = 'en';
+    const el = element('perzentilbaender', {
+      items: DATEN.perzentilbaender.items,
+      markerLabel: 'Anna B.',
+      bandLabel: 'Mittelfeld',
+    });
+    await warten();
+    expect(lesbar(el)).toContain('Anna B.');
+    expect(lesbar(el)).toContain('Mittelfeld');
+    expect(lesbar(el)).not.toContain('individual student');
+    // Was nicht gesetzt wurde, folgt weiter der Sprache.
+    expect(lesbar(el)).toContain('Solution rate (%)');
+
+    html.lang = 'de';
+    await warten();
+    expect(lesbar(el)).toContain('Anna B.');
+    expect(lesbar(el)).toContain('Lösungsquote (%)');
+  });
+
+  it('nimmt lang vom nächsten Vorfahren, nicht nur vom Dokument', async () => {
+    registrieren();
+    const huelle = document.createElement('section');
+    huelle.lang = 'en';
+    const el = document.createElement('tba3-standard-erreichung');
+    huelle.append(el);
+    document.body.append(huelle);
+    await warten();
+    expect(el.shadowRoot.textContent).toContain('Minimum standard reached');
+
+    huelle.lang = 'de';
+    await warten();
+    expect(el.shadowRoot.textContent).toContain('Mindeststandard erreicht');
+  });
+
+  it('übersetzt auch durch die Hüllen, die jede Eigenschaft durchreichen', async () => {
+    html.lang = 'en';
+    const host = document.createElement('div');
+    document.body.append(host);
+    const app = createApp({ render: () => h(VUE.StandardErreichung, { zeilen: DATEN['standard-erreichung'].zeilen }) });
+    app.use(bausteine);
+    app.mount(host);
+    await warten();
+    const el = host.querySelector('tba3-standard-erreichung');
+    expect(el.shadowRoot.textContent).toContain('Minimum standard reached');
+    app.unmount();
+  });
+
+  it('lässt unter Englisch keinen eingebauten deutschen Text stehen', async () => {
+    const { TEXTE, VORGABEN } = await import('../kern/texte.js');
+    // Deutsche Bruchstücke aus allen Texten und Vorgaben, die es auf Englisch nicht gibt.
+    const stuecke = (wert) => (typeof wert === 'string' ? wert.split(/\{\w+\}/) : JSON.stringify(wert)
+      .match(/"label":"([^"]+)"|"[^"]+"/g)?.map((x) => x.replace(/^"label":/, '').replaceAll('"', '')) ?? []);
+    const deutsch = new Set();
+    for (const eintrag of [...Object.values(TEXTE), ...Object.values(VORGABEN).flatMap(Object.values)]) {
+      const en = JSON.stringify(eintrag.en);
+      for (const s of stuecke(eintrag.de)) {
+        const sauber = s.replace(/^[\s·:,()▸▾]+|[\s·:,()▸▾]+$/g, '');
+        if (sauber.length >= 4 && !en.includes(sauber)) deutsch.add(sauber);
+      }
+    }
+    expect(deutsch.size).toBeGreaterThan(40);
+
+    html.lang = 'en';
+    for (const bauplan of BAUPLAENE) {
+      const daten = DATEN[bauplan.name];
+      const el = element(bauplan.name, daten);
+      await warten();
+      const text = lesbar(el);
+      // Was in den Beispieldaten steht, darf deutsch sein — das sind Daten.
+      const ausDaten = JSON.stringify(daten);
+      const uebrig = [...deutsch].filter((s) => text.includes(s) && !ausDaten.includes(s));
+      expect(uebrig, bauplan.name).toEqual([]);
+    }
+  });
+
+  it('führt jeden Text in beiden Sprachen, mit denselben Platzhaltern', async () => {
+    const { TEXTE, VORGABEN, TITEL_EN } = await import('../kern/texte.js');
+    const platzhalter = (s) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+    for (const [schluessel, eintrag] of Object.entries(TEXTE)) {
+      expect(eintrag.de, schluessel).toBeTypeOf('string');
+      expect(eintrag.en, schluessel).toBeTypeOf('string');
+      expect(platzhalter(eintrag.en), schluessel).toEqual(platzhalter(eintrag.de));
+    }
+    for (const bauplan of BAUPLAENE) {
+      expect(bauplan.titelEn, bauplan.name).toBe(TITEL_EN[bauplan.name]);
+      expect(bauplan.titelEn, bauplan.name).toBeTruthy();
+      // Die deutsche Fassung einer Vorgabe ist genau die aus STANDARD — sonst
+      // erkennte das Element die Vorgabe nicht mehr als solche.
+      for (const [schluessel, fassungen] of Object.entries(VORGABEN[bauplan.name] ?? {})) {
+        expect(fassungen.de, `${bauplan.name}.${schluessel}`).toEqual(bauplan.standard[schluessel]);
+        expect(fassungen.en, `${bauplan.name}.${schluessel}`).toBeDefined();
+      }
+    }
+    for (const name of Object.keys(VORGABEN)) {
+      expect(BAUPLAENE.map((b) => b.name), name).toContain(name);
+    }
+  });
+});

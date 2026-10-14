@@ -8,6 +8,7 @@
 import { STANDARD, erreichung } from '../kern/standard-erreichung.js';
 import { elementKlasse } from './baustein-element.js';
 import { h } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .block { display: flex; flex-direction: column; gap: var(--tba3-_abstand); }
@@ -35,7 +36,7 @@ const STIL = `
 .leer { color: var(--tba3-_farbe-text-gedaempft); font-size: 0.9em; }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const e = erreichung(zustand);
   const block = h('div', { class: 'block' });
 
@@ -50,7 +51,7 @@ function aufbauen(wurzel, zustand, el) {
   );
 
   if (e.zeilen.length === 0) {
-    block.append(h('p', { class: 'leer', text: 'Keine Aufschlüsselung vorhanden' }));
+    block.append(h('p', { class: 'leer', text: t('erreichung.leer') }));
     wurzel.append(block);
     return;
   }
@@ -83,6 +84,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'standard-erreichung',
   titel: 'Standard-Erreichung',
+  titelEn: TITEL_EN['standard-erreichung'],
   endpunkt: '/groups/{id}/competence-levels',
   standard: STANDARD,
   ereignisse: ['zeile-gewaehlt'],

@@ -45,7 +45,7 @@ const { observerMode } = useFilters();
 Zwei Klassen, nicht eine: `blur` zeichnet weich, `select-none` verhindert, dass man
 den unleserlichen Namen mit der Maus markiert und in die Zwischenablage zieht.
 
-![Schülerliste im Observer-Modus: an der Stelle der Namen stehen graue Schlieren, daneben stehen Lerngruppe, Fach, Klassenstufe und Kompetenzstufe unverändert lesbar da.](/dokumentation/bilder/observer-liste.png "Die Schülerliste bei eingeschaltetem Observer-Modus. Weichgezeichnet ist nur die erste Spalte; Lerngruppe, Fach, Klassenstufe und Kompetenzstufe bleiben stehen — sonst wäre die Ansicht für das Gespräch wertlos, für das man sie geöffnet hat.")
+![Schülerliste im Observer-Modus: an der Stelle der Namen stehen graue Schlieren, daneben stehen Lerngruppe, Fach, Klassenstufe und Kompetenzstufe unverändert lesbar da.](/dokumentation/bilder/observer-liste-de.png "Die Schülerliste bei eingeschaltetem Observer-Modus. Weichgezeichnet ist nur die erste Spalte; Lerngruppe, Fach, Klassenstufe und Kompetenzstufe bleiben stehen — sonst wäre die Ansicht für das Gespräch wertlos, für das man sie geöffnet hat.")
 
 ### Was verdeckt wird
 
@@ -156,9 +156,9 @@ Zeichenhelfer benutzen, beantworten aber verschiedene Fragen:
 | Inhalt | erreichte Stufe, Ergebnisse nach Teilbereich, empfohlene Materialien | zugewiesene Materialien nach Kompetenzstufe |
 | Dateiname | `Rueckmeldung_{Nachname}_{Vorname}.pdf` | `tba3_{Gruppe}_{Datum}.pdf` |
 
-![Eine Seite im Format A4: oben ein blaues Band mit dem Namen der Schülerin, darunter ein farbiges Feld mit der erreichten Kompetenzstufe, eine Liste der Teilbereiche mit je eigener Stufe und drei Materialkarten mit QR-Code.](/dokumentation/bilder/pdf-rueckmeldung.png "Die individuelle Rückmeldung. Der Name steht im Kopf — der Observer-Modus greift hier mit Absicht nicht. Die Fußzeile weist die Adressen als Demo-URLs aus.")
+![Eine Seite im Format A4: oben ein blaues Band mit dem Namen der Schülerin, darunter ein farbiges Feld mit der erreichten Kompetenzstufe, eine Liste der Teilbereiche mit je eigener Stufe und drei Materialkarten mit QR-Code.](/dokumentation/bilder/pdf-rueckmeldung-de.png "Die individuelle Rückmeldung. Der Name steht im Kopf — der Observer-Modus greift hier mit Absicht nicht. Die Fußzeile weist die Adressen als Demo-URLs aus.")
 
-![Eine Seite im Format A4 mit dem Titel „Nach Kompetenzstufe“, darunter ein farbiger Balken für die Kompetenzstufe und drei Materialkarten mit QR-Code.](/dokumentation/bilder/pdf-materialzuordnung.png "Die Materialzuordnung, hier der Abschnitt zu einer Kompetenzstufe. Beide Ausgaben teilen sich Kopf, Fuß, Materialkarte und QR-Code — deshalb sehen sie gleich aus, obwohl sie aus verschiedenen Modulen kommen.")
+![Eine Seite im Format A4 mit dem Titel „Nach Kompetenzstufe“, darunter ein farbiger Balken für die Kompetenzstufe und drei Materialkarten mit QR-Code.](/dokumentation/bilder/pdf-materialzuordnung-de.png "Die Materialzuordnung, hier der Abschnitt zu einer Kompetenzstufe. Beide Ausgaben teilen sich Kopf, Fuß, Materialkarte und QR-Code — deshalb sehen sie gleich aus, obwohl sie aus verschiedenen Modulen kommen.")
 
 Daneben steht derselbe Stoff als Common Cartridge (`.imscc`,
 `commonCartridgeExport.js`) — für das Lernmanagementsystem statt für den Drucker.
@@ -412,7 +412,7 @@ im selben Container. Das Abbild wird zusätzlich einzeln gebaut
 (`ghcr.io/FWU-DE/tba3-demo-app-mcp`), damit man den Server ohne die Seite
 betreiben kann.
 
-![Der Reiter „Hilfe“ der Demoanwendung: Überschrift „MCP-Server für TBA3-Ergebnisdaten“, darunter ein Kasten „Auf dem Server: MCP-Server in Docker betreiben“ mit dem Beispielaufruf für den Container.](/dokumentation/bilder/mcp-hilfe.png "Der Reiter „Hilfe“ der Demoanwendung erklärt die Anbindung. Darunter — hier abgeschnitten — steht die Client-Konfiguration mit einer Adresse, die aus `window.location.origin` gebildet wird: auf der öffentlichen Seite zeigt sie deshalb ins Leere.")
+![Der Reiter „Hilfe“ der Demoanwendung: Überschrift „MCP-Server für TBA3-Ergebnisdaten“, darunter ein Kasten „Auf dem Server: MCP-Server in Docker betreiben“ mit dem Beispielaufruf für den Container.](/dokumentation/bilder/mcp-hilfe-de.png "Der Reiter „Hilfe“ der Demoanwendung erklärt die Anbindung. Darunter — hier abgeschnitten — steht die Client-Konfiguration mit einer Adresse, die aus `window.location.origin` gebildet wird: auf der öffentlichen Seite zeigt sie deshalb ins Leere.")
 
 **Nicht** auf dem öffentlichen Deployment: `vercel.json` kennt keine Route `/mcp`,
 und eine Funktion, die MCP spräche, gibt es dort nicht. Die Hilfe-Ansicht bildet

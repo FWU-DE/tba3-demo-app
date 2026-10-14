@@ -30,6 +30,7 @@ export const DOKUMENTE = [
     slug: 'konzepte',
     zielgruppe: 'technik',
     datei: 'konzepte.md',
+    englisch: 'konzepte.en.md',
     kurz: { de: 'Konzepte', en: 'Concepts' },
     beschreibung: {
       de: 'Lerngruppe, Bericht, Berichtselement — die Begriffe hinter der Schnittstelle und wie sie zusammenhängen.',
@@ -40,6 +41,7 @@ export const DOKUMENTE = [
     slug: 'endpunkt-referenz',
     zielgruppe: 'technik',
     datei: 'endpunkt-referenz.md',
+    englisch: 'endpunkt-referenz.en.md',
     kurz: { de: 'Endpunkt-Referenz', en: 'Endpoint reference' },
     beschreibung: {
       de: 'Konventionen für die offen gestalteten Teile der Spezifikation: Parameter, Typen und was eine Antwort enthält.',
@@ -50,6 +52,7 @@ export const DOKUMENTE = [
     slug: 'rezepte',
     zielgruppe: 'technik',
     datei: 'rezepte.md',
+    englisch: 'rezepte.en.md',
     kurz: { de: 'Rezepte', en: 'Recipes' },
     beschreibung: {
       de: 'Wiederkehrende Aufgaben und wie man sie mit der Schnittstelle löst — mit Anfragen und Antworten.',
@@ -60,6 +63,7 @@ export const DOKUMENTE = [
     slug: 'bausteine-der-rueckmeldungen',
     zielgruppe: 'alle',
     datei: 'bausteine-der-rueckmeldungen.md',
+    englisch: 'bausteine-der-rueckmeldungen.en.md',
     eigen: true,
     // Erzeugt aus apps/shared/konsortium.js (`npm run konsortium:doc`), nicht
     // von Hand geschrieben — deshalb steht die Datei zwar hier, ist aber keine
@@ -74,6 +78,7 @@ export const DOKUMENTE = [
     slug: 'demo-rezepte',
     zielgruppe: 'technik',
     datei: 'demo-rezepte.md',
+    englisch: 'demo-rezepte.en.md',
     eigen: true,
     kurz: { de: 'Rezepte der Demoanwendung', en: 'Demo application recipes' },
     beschreibung: {
@@ -149,8 +154,10 @@ export const DOKUMENTE = [
 // (/dokumentation/<slug>), damit Querverweise wie bei allen anderen funktionieren.
 // Ein Eintrag mit `englisch` bringt eine zweite Datei mit. Beide Fassungen
 // stehen dann in derselben Seite und werden über html[lang] umgeschaltet, wie
-// überall sonst auf der Seite. Die Kopien von oben haben keine — dort bleibt
-// der Hinweis, dass das Dokument nur auf Deutsch gepflegt wird.
+// überall sonst auf der Seite. Bei den Kopien von oben ist die englische
+// Fassung eine Übersetzung: ihre erste Zeile nennt den sha256 der deutschen
+// Datei, und tools/dokumente.test.mjs schlägt an, sobald `docs:update` die
+// deutsche Kopie ändert und die Übersetzung nachgezogen werden muss.
 // Zwei Zielgruppen lesen hier mit: Ministerien und Institute ohne
 // Technikkenntnisse und Entwickler:innen. Jede Karte und jede Seite sagt, für
 // wen sie geschrieben ist. Unterseiten erben die Zielgruppe ihrer Landeseite.
@@ -380,7 +387,8 @@ export function seite(dok, markdown, standDaten = null, markdownEn = null) {
       ? `<h1><span lang="de">${titel || dok.kurz.de}</span><span lang="en">${en.titel || dok.kurz.en}</span></h1>`
       : `<h1>${titel || dok.kurz.de}</h1>`}
     <p class="herkunft">
-      ${zweisprachig(woher)}${en ? '' : `
+      ${zweisprachig(woher)}${en && !dok.eigen ? `
+      <span lang="en"><br />Translated from the German original, which is authoritative.</span>` : ''}${en ? '' : `
       <span lang="en"><br />This document is maintained in German and shown here unchanged.</span>`}
     </p>
   </header>
@@ -450,7 +458,7 @@ export function uebersicht(dokumente, standDaten = null) {
            Most come from <a href="https://github.com/${QUELLE.repo}">${QUELLE.repo}</a> and are kept in this
            site as a copy${datum ? ` (as of ${datum.en})` : ''}; what concerns the demo application itself is
            maintained here. Each card says where its text comes from. The endpoints themselves are in the
-           <a href="/schnittstelle">API reference</a>. The documents are written in German.`,
+           <a href="/schnittstelle">API reference</a>. The copies are translations of the German originals.`,
     })}</p>
   </header>
 

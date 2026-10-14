@@ -3,6 +3,7 @@
 import { MASSE, STANDARD, geometrie } from '../kern/erwartet-tatsaechlich.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 import { stufenFlaeche, stufenNummer, stufenSchrift, v } from '../kern/thema.js';
 
 const STIL = `
@@ -39,7 +40,7 @@ const STUFENSCHRIFT = (stufe) => {
   return nr ? stufenSchrift(nr) : v('farbe-text-invers');
 };
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
   const figur = h('figure');
 
@@ -66,14 +67,14 @@ function aufbauen(wurzel, zustand, el) {
   );
 
   if (!g.zeilen.length) {
-    figur.append(h('p', { class: 'leer', text: 'Keine Aufgaben' }));
+    figur.append(h('p', { class: 'leer', text: t('leer.aufgaben') }));
     wurzel.append(figur);
     return;
   }
 
   const svg = s('svg', {
     width: g.breite, height: g.hoehe, viewBox: `0 0 ${g.breite} ${g.hoehe}`,
-    role: 'img', 'aria-label': g.titel || 'Erwartete und tatsächliche Lösungsquote',
+    role: 'img', 'aria-label': g.titel || t('erwartung.aria'),
   });
 
   svg.append(
@@ -93,7 +94,7 @@ function aufbauen(wurzel, zustand, el) {
     const f = BEWERTUNGSFARBE[zeile.bewertung];
     const gruppe = s('g', {
       class: 'zeile', tabindex: '0', role: 'button',
-      'aria-label': `${zeile.label}: ${Math.round(zeile.actual)} Prozent, erwartet ${Math.round(zeile.expected)} Prozent`,
+      'aria-label': t('erwartung.zeile', { label: zeile.label, ist: Math.round(zeile.actual), soll: Math.round(zeile.expected) }),
     });
 
     gruppe.append(
@@ -147,9 +148,9 @@ function aufbauen(wurzel, zustand, el) {
       s('text', {
         x: MASSE.chartX + MASSE.chartBreite + 5, y: zeile.y + 17,
         'dominant-baseline': 'middle', 'font-size': 8.5,
-        fill: 'var(--tba3-_farbe-text-gedaempft)', text: `erw. ${Math.round(zeile.expected)}%`,
+        fill: 'var(--tba3-_farbe-text-gedaempft)', text: t('erwartung.kurz', { soll: Math.round(zeile.expected) }),
       }),
-      s('title', { text: `${zeile.label}: ${Math.round(zeile.actual)} % (erwartet ${Math.round(zeile.expected)} %)` }),
+      s('title', { text: t('erwartung.hinweis', { label: zeile.label, ist: Math.round(zeile.actual), soll: Math.round(zeile.expected) }) }),
     );
 
     const detail = { index: i, ...zeile };
@@ -168,7 +169,7 @@ function aufbauen(wurzel, zustand, el) {
     s('text', {
       x: MASSE.chartX + MASSE.chartBreite / 2, y: g.hoehe - 6,
       'text-anchor': 'middle', 'font-size': 9.5,
-      fill: 'var(--tba3-_farbe-text-gedaempft)', text: 'Lösungsquote (%)',
+      fill: 'var(--tba3-_farbe-text-gedaempft)', text: t('erwartung.achse'),
     }),
   );
 
@@ -179,6 +180,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'erwartet-tatsaechlich',
   titel: 'Erwartete und tatsächliche Lösungsquote',
+  titelEn: TITEL_EN['erwartet-tatsaechlich'],
   endpunkt: '/groups/{id}/items',
   standard: STANDARD,
   ereignisse: ['aufgabe-gewaehlt'],

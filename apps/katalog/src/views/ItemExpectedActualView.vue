@@ -8,7 +8,7 @@ import Message from 'primevue/message';
 import Tag from 'primevue/tag';
 import { ErwartetTatsaechlich as ItemExpectedActualChart } from '@tba3/bausteine/vue';
 import ComponentDocs from '../components/ComponentDocs.vue';
-import { t } from '../i18n';
+import { t, domaene } from '../i18n';
 
 const DOCS = {
   githubFile: 'erwartet-tatsaechlich.js',
@@ -134,10 +134,6 @@ const estimateClassBista = (vgs) => {
   return passed.reduce((s, it) => s + (it.parameters?.bistaPoints ?? 400), 0) / passed.length;
 };
 
-const DOMAIN_NAMES = {
-  ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch',
-  ma: 'Mathematik',   en: 'Englisch',      fr: 'Französisch',
-};
 
 const domains = computed(() => {
   const seen = new Set();
@@ -168,7 +164,7 @@ const domainCharts = computed(() => {
       .filter(it => it.level !== '?')
       .sort((a, b) => LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level));
 
-    return { domain, label: DOMAIN_NAMES[domain] ?? domain, items };
+    return { domain, label: domaene(domain), items };
   }).filter(Boolean);
 });
 </script>
@@ -186,7 +182,7 @@ const domainCharts = computed(() => {
             <p class="comp-desc">
               <strong>{{ t('ansichten.erwartung.titel') }}</strong><br />
               <span v-html="t('ansichten.erwartung.beschreibung')" />
-              Rot = systematisch unter Erwartung → didaktischer Handlungsbedarf.
+              {{ t('ansichten.erwartung.rotHinweis') }}
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
@@ -195,7 +191,7 @@ const domainCharts = computed(() => {
             <div class="use-case-note use-case-formula">
               <i class="pi pi-calculator" />
               <span>
-                P<sub>erwartet</sub> = 1 / (1 + e<sup>−(θ<sub>Klasse</sub> − β<sub>Aufgabe</sub>) / 50</sup>)
+                <span v-html="t('ansichten.erwartung.formel')" />
                 &nbsp;·&nbsp; {{ t('ansichten.erwartung.formelZusatz') }} &nbsp;·&nbsp; β = parameters.bistaPoints
               </span>
             </div>
@@ -224,7 +220,7 @@ const domainCharts = computed(() => {
           {{ t('ansichten.gemeinsam.mockHinweis', { fehler: error }) }}
         </Message>
         <Message v-else-if="!domainCharts.length" severity="info" :closable="false" class="mt-2">
-          Keine Daten.
+          {{ t('ansichten.gemeinsam.keineDaten') }}
         </Message>
 
         <div v-else class="charts-grid">

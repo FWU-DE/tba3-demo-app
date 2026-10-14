@@ -13,6 +13,8 @@
 // Kategorien geordnet sind — die mittlere Kategorie. Zwei Zahlen in der Mitte
 // eines Rings liest niemand.
 
+import { text } from './texte.js';
+
 export const NAME = 'kontextmerkmal-ring';
 
 export const STANDARD = {
@@ -62,7 +64,7 @@ export function ringPfad(von, bis, { groesse, aussen, innen } = MASSE) {
 }
 
 export function ring(props = {}) {
-  const { label, segmente, mitte, mitteLabel, geordnet } = { ...STANDARD, ...props };
+  const { label, segmente, mitte, mitteLabel, geordnet, sprache } = { ...STANDARD, ...props };
 
   const gueltig = (Array.isArray(segmente) ? segmente : [])
     .filter((s) => s && Number.isFinite(s.wert) && s.wert > 0);
@@ -102,7 +104,7 @@ export function ring(props = {}) {
     summe,
     leer: teile.length === 0,
     mitte: mitte || (median ? median.label : String(summe)),
-    mitteLabel: mitteLabel || (median ? 'Median' : ''),
+    mitteLabel: mitteLabel || (median ? text('ring.median', sprache) : ''),
     median,
     masse: MASSE,
   };

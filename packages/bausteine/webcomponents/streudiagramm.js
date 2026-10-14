@@ -12,6 +12,7 @@ import { MASSE, STANDARD, geometrie } from '../kern/streudiagramm.js';
 import { stufenFlaeche, stufenSchrift } from '../kern/thema.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 .buehne { position: relative; }
@@ -52,11 +53,11 @@ const stufe = (wertX) => Math.max(1, Math.min(5, Math.round(wertX ?? 1)));
 const STUFENFARBE = (wertX) => stufenFlaeche(stufe(wertX));
 const STUFENSCHRIFT = (wertX) => stufenSchrift(stufe(wertX));
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const g = geometrie(zustand);
 
   if (!g.punkte.length) {
-    wurzel.append(h('p', { class: 'leer', text: 'Keine Schüler:innen' }));
+    wurzel.append(h('p', { class: 'leer', text: t('leer.schueler') }));
     return;
   }
 
@@ -67,9 +68,9 @@ function aufbauen(wurzel, zustand, el) {
     hinweis.replaceChildren(
       h('div', { class: 'name', text: punkt.name }),
       h('dl', {}, [
-        h('dt', { text: 'Lösungsquote' }),
+        h('dt', { text: t('streu.quote') }),
         h('dd', { text: `${Math.round(punkt.wertY ?? 0)} %` }),
-        h('dt', { text: 'Stufe' }),
+        h('dt', { text: t('streu.stufe') }),
         h('dd', { text: String(punkt.wertX ?? '—') }),
         ...punkt.details.flatMap((d) => [
           h('dt', { text: d.label ?? d.domain ?? '' }),
@@ -90,7 +91,7 @@ function aufbauen(wurzel, zustand, el) {
     width: '100%',
     viewBox: `0 0 ${g.breite} ${g.hoehe}`,
     role: 'group',
-    'aria-label': g.titel || 'Streudiagramm',
+    'aria-label': g.titel || t('streu.aria'),
   });
 
   for (const strich of g.teilstriche) {
@@ -144,7 +145,7 @@ function aufbauen(wurzel, zustand, el) {
       class: 'punkt',
       tabindex: '0',
       role: 'button',
-      'aria-label': `${punkt.name}, ${Math.round(punkt.wertY ?? 0)} Prozent`,
+      'aria-label': t('streu.punkt', { name: punkt.name, wert: Math.round(punkt.wertY ?? 0) }),
     }, [
       s('circle', { cx: punkt.x, cy: punkt.y, r: g.radius, fill: STUFENFARBE(punkt.wertX) }),
       s('text', {
@@ -186,6 +187,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'streudiagramm',
   titel: 'Streudiagramm der Schüler:innen',
+  titelEn: TITEL_EN.streudiagramm,
   endpunkt: '/groups/{id}/items?type=students',
   standard: STANDARD,
   ereignisse: ['punkt-gewaehlt', 'punkt-betreten', 'punkt-verlassen'],

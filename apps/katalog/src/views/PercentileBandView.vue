@@ -16,9 +16,9 @@ const DOCS = {
   propsDocs: [
     { name: 'items',       type: 'Array',  required: true,  pfad: 'ansichten.band.props.items' },
     { name: 'title',       type: 'String', default: "''",   pfad: 'ansichten.band.props.title' },
-    { name: 'markerLabel', type: 'String', default: "'Schüler*in'", pfad: 'ansichten.band.props.markerLabel' },
-    { name: 'bandLabel',   type: 'String', default: "'Streuungsband (MW ± 1 SD)'", pfad: 'ansichten.band.props.bandLabel' },
-    { name: 'xAxisLabel',  type: 'String', default: "'Lösungshäufigkeit (%)'", pfad: 'ansichten.band.props.xAxisLabel' },
+    { name: 'markerLabel', type: 'String', defaultPfad: 'ansichten.band.vorgaben.markerLabel', pfad: 'ansichten.band.props.markerLabel' },
+    { name: 'bandLabel',   type: 'String', defaultPfad: 'ansichten.band.vorgaben.bandLabel', pfad: 'ansichten.band.props.bandLabel' },
+    { name: 'xAxisLabel',  type: 'String', defaultPfad: 'ansichten.band.vorgaben.xAxisLabel', pfad: 'ansichten.band.props.xAxisLabel' },
   ],
   dataShape: `// items-Element
 {
@@ -92,7 +92,11 @@ onMounted(async () => {
 
 // Die Doku-Texte folgen der Sprachwahl, die technischen Angaben bleiben.
 const propsDocs = computed(() =>
-  DOCS.propsDocs.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
+  DOCS.propsDocs.map(({ pfad, defaultPfad, ...rest }) => ({
+    ...rest,
+    ...(defaultPfad && { default: t(defaultPfad) }),
+    description: t(pfad),
+  }))
 );
 const apiEndpoints = computed(() =>
   DOCS.apiEndpoints.map(({ pfad, ...rest }) => ({ ...rest, description: t(pfad) }))
@@ -227,11 +231,11 @@ const s2Items = computed(() =>
 // SECTION 3 — Schüler*in Perzentilrang
 // Computes true percentile rank per exercise from all student responses
 // ════════════════════════════════════════════════════════════════════════════════
-const BAND_RANGES = [
-  { label: 'P25–P75 (Interquartil, 50%-Bereich)',  value: '25-75' },
-  { label: 'P10–P90 (80%-Bereich)',                value: '10-90' },
-  { label: 'P5–P95 (90%-Bereich)',                 value: '5-95'  },
-];
+// Gewählt wird über den Wert; die Beschriftung folgt der Sprache.
+const BAND_RANGES = ['25-75', '10-90', '5-95'];
+const bandRanges = computed(() =>
+  BAND_RANGES.map((value) => ({ value, label: t(`ansichten.band.drei.bereiche.${value}`) })),
+);
 
 const s3Group = ref(GROUPS[0]);
 const s3StudentId = ref(null);
@@ -319,7 +323,7 @@ const s3Items = computed(() => {
       return ((below + tied * 0.5) / n) * 100;
     };
 
-    const [loQ, hiQ] = (s3BandRange.value?.value ?? '25-75').split('-').map(Number);
+    const [loQ, hiQ] = (s3BandRange.value ?? '25-75').split('-').map(Number);
     const myPct   = scoreToPct(myScore);
     const p25pct  = scoreToPct(allScores[Math.floor(n * loQ / 100)]);
     const p75pct  = scoreToPct(allScores[Math.min(Math.floor(n * hiQ / 100), n - 1)]);
@@ -363,7 +367,7 @@ const s3Items = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="s1Group" :options="GROUPS" option-label="label"
               :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
@@ -378,7 +382,7 @@ const s3Items = computed(() => {
         <div v-if="s1Loading" class="skeleton-wrap">
           <Skeleton v-for="n in 14" :key="n" height="22px" class="mb-1" />
         </div>
-        <Message v-else-if="s1Error" severity="error" :closable="false" class="mt-2">{{ s1Error }}</Message>
+        <Message v-else-if="s1Error" severity="error" :closable="false" class="mt-2">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: s1Error }) }}</Message>
         <Message v-else-if="!s1Items.length" severity="info" :closable="false" class="mt-2">{{ t('ansichten.band.eins.keineAufgaben') }}</Message>
         <div v-else class="chart-wrap">
           <PercentileBandChart
@@ -407,11 +411,7 @@ const s3Items = computed(() => {
             </p>
             <div class="use-case-note use-case-api">
               <i class="pi pi-server" />
-              <span>
-                <code>/schools/{id}/items</code> → Diamant &nbsp;·&nbsp;
-                <code>/states/{id}/items</code> → Band (Referenz).
-                API liefert MW&nbsp;+&nbsp;SD fertig aggregiert.
-              </span>
+              <span v-html="t('ansichten.band.zwei.apiZeile')" />
             </div>
           </div>
           <Tag value="SVG" severity="info" />
@@ -420,7 +420,7 @@ const s3Items = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Schule</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.schule') }}</label>
             <Select v-model="s2School" :options="SCHOOLS" option-label="label"
               :placeholder="t('ansichten.band.zwei.schuleWaehlen')" class="ctrl-select" />
           </div>
@@ -435,7 +435,7 @@ const s3Items = computed(() => {
         <div v-if="s2Loading" class="skeleton-wrap">
           <Skeleton v-for="n in 14" :key="n" height="22px" class="mb-1" />
         </div>
-        <Message v-else-if="s2Error" severity="error" :closable="false" class="mt-2">{{ s2Error }}</Message>
+        <Message v-else-if="s2Error" severity="error" :closable="false" class="mt-2">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: s2Error }) }}</Message>
         <Message v-else-if="!s2Items.length" severity="info" :closable="false" class="mt-2">{{ t('ansichten.band.zwei.keineDaten') }}</Message>
         <div v-else class="chart-wrap">
           <PercentileBandChart
@@ -473,7 +473,7 @@ const s3Items = computed(() => {
       <template #content>
         <div class="controls">
           <div class="ctrl-field">
-            <label class="ctrl-label">Lerngruppe</label>
+            <label class="ctrl-label">{{ t('ansichten.gemeinsam.lerngruppe') }}</label>
             <Select v-model="s3Group" :options="GROUPS" option-label="label"
               :placeholder="t('ansichten.gemeinsam.gruppeWaehlen')" class="ctrl-select" />
           </div>
@@ -485,20 +485,20 @@ const s3Items = computed(() => {
           </div>
           <div class="ctrl-field">
             <label class="ctrl-label">{{ t('ansichten.band.drei.bandBereich') }}</label>
-            <Select v-model="s3BandRange" :options="BAND_RANGES" option-label="label"
-              class="ctrl-select-wide" />
+            <Select v-model="s3BandRange" :options="bandRanges" option-label="label"
+              option-value="value" class="ctrl-select-wide" />
           </div>
         </div>
         <div v-if="s3Loading" class="skeleton-wrap">
           <Skeleton v-for="n in 14" :key="n" height="22px" class="mb-1" />
         </div>
-        <Message v-else-if="s3Error" severity="error" :closable="false" class="mt-2">{{ s3Error }}</Message>
+        <Message v-else-if="s3Error" severity="error" :closable="false" class="mt-2">{{ t('ansichten.gemeinsam.mockHinweis', { fehler: s3Error }) }}</Message>
         <div v-else-if="s3Items.length" class="chart-wrap">
           <PercentileBandChart
             :items="s3Items"
             :title="s3Group?.label"
             :marker-label="s3Student?.name ?? t('ansichten.band.drei.schuelerin')"
-            :band-label="`Klasse (${s3BandRange?.label?.split(' ')[0] ?? 'P25–P75'})`"
+            :band-label="t('ansichten.band.drei.bandLabel', { bereich: `P${s3BandRange.replace('-', '–P')}` })"
             :x-axis-label="t('ansichten.band.drei.achse')"
           />
         </div>

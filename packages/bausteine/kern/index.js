@@ -31,6 +31,19 @@ export {
   pruefeThema,
 } from './kontrast.js';
 
+// Die eingebauten Texte, Deutsch und Englisch. Welche gilt, sagt `lang` des
+// Dokuments; `text()` holt einen davon für eine feste Sprache.
+export {
+  TEXTE,
+  VORGABEN as TEXT_VORGABEN,
+  TITEL_EN,
+  ENDPUNKT_EN,
+  SPRACHEN,
+  spracheAus,
+  text,
+  uebersetzer,
+} from './texte.js';
+
 export {
   NAME as LEISTE_NAME,
   STANDARD as LEISTE_STANDARD,

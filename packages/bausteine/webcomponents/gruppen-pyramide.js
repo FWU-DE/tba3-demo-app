@@ -8,6 +8,7 @@
 import { STANDARD, pyramide } from '../kern/gruppen-pyramide.js';
 import { elementKlasse } from './baustein-element.js';
 import { h, s } from './svg.js';
+import { TITEL_EN } from '../kern/texte.js';
 
 const STIL = `
 svg { display: block; max-width: 100%; height: auto; overflow: visible; }
@@ -22,13 +23,13 @@ ${[1, 2, 3, 4, 5].map((n) => `.stufe-${n} { fill: var(--tba3-_stufe-${n}); }`).j
 .rechts { opacity: 0.85; }
 `;
 
-function aufbauen(wurzel, zustand, el) {
+function aufbauen(wurzel, zustand, el, t) {
   const p = pyramide(zustand);
   if (p.titel) wurzel.append(h('div', { class: 'titel', text: p.titel }));
   const m = p.masse;
   const svg = s('svg', {
     viewBox: `0 0 ${p.breite} ${p.hoehe}`, width: p.breite, height: p.hoehe,
-    role: 'img', 'aria-label': `${p.titel || 'Zwei Gruppen gespiegelt'}: ${p.linksLabel} gegen ${p.rechtsLabel}`,
+    role: 'img', 'aria-label': t('pyramide.aria', { titel: p.titel || t('pyramide.titel'), links: p.linksLabel, rechts: p.rechtsLabel }),
   });
   svg.append(
     s('text', { class: 'kopf', x: p.achseLinks - 4, y: m.oben - 14, 'text-anchor': 'end', text: p.linksLabel }),
@@ -39,7 +40,9 @@ function aufbauen(wurzel, zustand, el) {
     const melden = () => el.melden('stufe-gewaehlt', { stufe: z.stufe, links: z.links.anteil, rechts: z.rechts.anteil, differenz: z.differenz });
     const gruppe = s('g', {
       class: 'zeile', tabindex: 0, role: 'button',
-      'aria-label': `Stufe ${z.stufe}: ${p.linksLabel} ${z.links.text}, ${p.rechtsLabel} ${z.rechts.text}`,
+      'aria-label': t('pyramide.zeile', {
+        stufe: z.stufe, links: p.linksLabel, linksWert: z.links.text, rechts: p.rechtsLabel, rechtsWert: z.rechts.text,
+      }),
     });
     gruppe.addEventListener('click', melden);
     gruppe.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); melden(); } });
@@ -60,6 +63,7 @@ function aufbauen(wurzel, zustand, el) {
 export const BAUPLAN = {
   name: 'gruppen-pyramide',
   titel: 'Zwei Gruppen gespiegelt',
+  titelEn: TITEL_EN['gruppen-pyramide'],
   endpunkt: '/groups/{id}/competence-levels',
   standard: STANDARD,
   ereignisse: ['stufe-gewaehlt'],

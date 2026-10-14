@@ -39,7 +39,7 @@ import { BAUPLAN as GRADIENT, MerkmalGradientElement } from './merkmal-gradient.
 import { BAUPLAN as ABWEICHUNG, AbweichungJeGruppeElement } from './abweichung-je-gruppe.js';
 import { BAUPLAN as PYRAMIDE, GruppenPyramideElement } from './gruppen-pyramide.js';
 import { BAUPLAN as NETZ, NetzdiagrammElement } from './netzdiagramm.js';
-import { elementKlasse } from './baustein-element.js';
+import { elementKlasse, spracheVon } from './baustein-element.js';
 
 export const PRAEFIX = 'tba3-';
 
@@ -106,5 +106,5 @@ export function registrieren(praefix = PRAEFIX) {
   return vergeben;
 }
 
-export { elementKlasse };
+export { elementKlasse, spracheVon };
 export default registrieren;

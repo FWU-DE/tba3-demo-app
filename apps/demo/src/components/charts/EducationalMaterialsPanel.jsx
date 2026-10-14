@@ -77,7 +77,7 @@ const LevelCard = ({ levelKey, count, total, isActive, onClick, assignedCount })
         </span>
       )}
       <div className="text-lg font-bold mb-1" style={{ color: cfg.color }}>
-        Stufe {levelKey}
+        {t('gemeinsam.stufe', { n: levelKey })}
       </div>
       <div className="text-2xl font-bold text-gray-900">{count}</div>
       <div className="text-xs text-gray-500 mt-0.5">{t('materialien.schuelerAnteil', { pct })}</div>

@@ -11,10 +11,51 @@
 //   - Neuzeichnen zusammenfassen, statt bei jeder Zuweisung einmal
 //   - Shadow DOM mit Thema und Stil
 //   - Ereignisse nach außen geben
+//   - die Sprache: eingebaute Texte folgen dem `lang` des Dokuments
 //
-// Was der Baustein selbst tut: `aufbauen(wurzel)`.
+// Was der Baustein selbst tut: `aufbauen(wurzel, zustand, el, t)`.
 
 import { themaCss } from '../kern/thema.js';
+import { VORGABEN, spracheAus, uebersetzer } from '../kern/texte.js';
+
+// ── Sprache ────────────────────────────────────────────────────────────────
+//
+// Ein Baustein spricht die Sprache der Stelle, an der er steht: `lang` des
+// nächsten Vorfahren, auch über eine Shadow-Grenze hinweg, sonst
+// `<html lang>`. Die Bibliothek fragt keine Einstellung der Seite ab — sie
+// wird als eigenes Paket ausgeliefert und kennt deren Sprachwahl nicht. `lang`
+// ist das, was jede Seite ohnehin setzt.
+//
+// Ändert sich `lang` irgendwo im Dokument, zeichnet sich jeder Baustein neu,
+// dessen Sprache sich dadurch ändert. Ein einziger Beobachter für alle.
+
+/** Die Sprache an der Stelle von `el`: 'de' oder 'en'. */
+export function spracheVon(el) {
+  let knoten = el;
+  while (knoten) {
+    const traeger = knoten.closest?.('[lang]:not([lang=""])');
+    if (traeger) return spracheAus(traeger.getAttribute('lang'));
+    knoten = knoten.getRootNode?.()?.host ?? null;
+  }
+  return spracheAus(typeof document === 'undefined' ? '' : document.documentElement?.lang);
+}
+
+const PRUEFEN = Symbol('sprachePruefen');
+const angemeldet = new Set();
+let beobachter = null;
+
+function anmelden(el) {
+  angemeldet.add(el);
+  if (beobachter || typeof MutationObserver === 'undefined' || typeof document === 'undefined') return;
+  beobachter = new MutationObserver(() => {
+    for (const baustein of angemeldet) baustein[PRUEFEN]();
+  });
+  beobachter.observe(document.documentElement, {
+    attributes: true, attributeFilter: ['lang'], subtree: true,
+  });
+}
+
+const gleich = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /** Aus einem Attributwert einen brauchbaren Wert machen. */
 function ausAttribut(roh, vorgabe) {
@@ -40,14 +81,19 @@ function ausAttribut(roh, vorgabe) {
  * @param {string} bauplan.name       Elementname ohne Präfix
  * @param {object} bauplan.standard   Eigenschaften mit Vorgabewerten
  * @param {string} bauplan.stil       CSS für das Shadow DOM
- * @param {(wurzel: DocumentFragment|HTMLElement, zustand: object, el: HTMLElement) => void} bauplan.aufbauen
+ * @param {(wurzel: DocumentFragment|HTMLElement, zustand: object, el: HTMLElement,
+ *          t: (schluessel: string, werte?: object) => string) => void} bauplan.aufbauen
+ *        `zustand.sprache` und `t` sind die Sprache an der Stelle des Elements;
+ *        `t` liest die Texte aus kern/texte.js.
  */
 export function elementKlasse({ name, standard, stil, aufbauen }) {
   const eigenschaften = Object.keys(standard);
+  // Eigenschaften, deren Vorgabe als sichtbarer Text endet: `{ de, en }` je Schlüssel.
+  const uebersetzt = Object.entries(VORGABEN[name] ?? {});
 
   return class BausteinElement extends HTMLElement {
     static get observedAttributes() {
-      return eigenschaften.map((e) => e.toLowerCase());
+      return [...eigenschaften.map((e) => e.toLowerCase()), 'lang'];
     }
 
     /** Der Elementname ohne Präfix — für Fehlermeldungen und Tests. */
@@ -56,6 +102,7 @@ export function elementKlasse({ name, standard, stil, aufbauen }) {
     #werte = structuredClone(standard);
     #geplant = false;
     #verbunden = false;
+    #sprache = null;
 
     constructor() {
       super();
@@ -68,15 +115,21 @@ export function elementKlasse({ name, standard, stil, aufbauen }) {
         if (attr !== null) this.#werte[e] = ausAttribut(attr, standard[e]);
       }
       this.#verbunden = true;
+      anmelden(this);
       this.#zeichnen();
     }
 
     disconnectedCallback() {
       this.#verbunden = false;
+      angemeldet.delete(this);
     }
 
     attributeChangedCallback(attr, alt, neu) {
       if (alt === neu) return;
+      if (attr === 'lang') {
+        this[PRUEFEN]();
+        return;
+      }
       const e = eigenschaften.find((k) => k.toLowerCase() === attr);
       if (!e) return;
       this.#werte[e] = ausAttribut(neu, standard[e]);
@@ -96,16 +149,45 @@ export function elementKlasse({ name, standard, stil, aufbauen }) {
       });
     }
 
+    /** Neu zeichnen, wenn sich die Sprache an dieser Stelle geändert hat. */
+    [PRUEFEN]() {
+      if (this.#verbunden && spracheVon(this) !== this.#sprache) this.#planen();
+    }
+
+    /**
+     * Die Werte, wie sie gezeichnet werden: Vorgaben in der Sprache des
+     * Dokuments. Was ein Aufrufer gesetzt hat, bleibt stehen — nur ein Wert,
+     * der einer Vorgabe in irgendeiner Sprache gleicht, gilt als Vorgabe. So
+     * übersteht die Übersetzung auch die Hüllen, die beim Durchreichen jede
+     * Eigenschaft setzen, und ein `el.props = { ...el.props, … }`.
+     */
+    #lokal(sprache) {
+      const werte = { ...this.#werte };
+      for (const [schluessel, fassungen] of uebersetzt) {
+        if (Object.values(fassungen).some((f) => gleich(werte[schluessel], f))) {
+          werte[schluessel] = structuredClone(fassungen[sprache] ?? fassungen.de);
+        }
+      }
+      return werte;
+    }
+
+    /** Die Sprache, in der der Baustein gerade zeichnet: 'de' oder 'en'. */
+    get sprache() {
+      return spracheVon(this);
+    }
+
     #zeichnen() {
       if (!this.shadowRoot) return;
       this.shadowRoot.replaceChildren();
+      const sprache = spracheVon(this);
+      this.#sprache = sprache;
 
       const stilElement = document.createElement('style');
       stilElement.textContent = `${themaCss()}\n${GRUNDSTIL}\n${stil}`;
       this.shadowRoot.append(stilElement);
 
       const fragment = document.createDocumentFragment();
-      aufbauen(fragment, this.#werte, this);
+      aufbauen(fragment, { ...this.#lokal(sprache), sprache }, this, uebersetzer(sprache));
       this.shadowRoot.append(fragment);
     }
 
@@ -123,7 +205,7 @@ export function elementKlasse({ name, standard, stil, aufbauen }) {
     }
 
     get props() {
-      return { ...this.#werte };
+      return this.#lokal(spracheVon(this));
     }
 
     /** Von außen neu zeichnen lassen — für Fälle, die wir nicht beobachten. */

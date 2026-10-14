@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '../i18n';
+import { t, aktuelleSprache } from '../i18n';
 // Woher ein Baustein stammt, steht in den Daten des Konsortiums — nicht hier
 // abgeschrieben. Drei der zwölf Ansichten sind nicht aus dieser Schau
 // gewachsen, sondern aus fremden Rückmeldungen herausgezogen, und das war auf
@@ -14,7 +14,7 @@ const herkunft = (baustein) => {
   const eintrag = BAUSTEINE.find((b) => b.element === baustein && b.beleg === 'artefakt');
   if (!eintrag) return null;
   const traeger = [...new Set(rueckmeldungenZu(eintrag.id).map((r) => r.einrichtung))]
-    .map((e) => EINRICHTUNGEN[e].de);
+    .map((e) => EINRICHTUNGEN[e][aktuelleSprache.value] ?? EINRICHTUNGEN[e].de);
   return { id: eintrag.id, traeger: traeger.join(', ') };
 };
 
@@ -48,7 +48,7 @@ const COMPONENTS = [
     baustein: 'bista-verteilung',
     tag: 'SVG',
     tagSeverity: 'info',
-    api: 'Schülerdaten mit BISTA-Werten',
+    api: 'index.bistaDaten',
     preview: 'bista',
   },
   {
@@ -181,10 +181,10 @@ const COMPONENTS = [
             <text x="14" y="34" font-size="26" font-weight="700" fill="#0000c4">80<tspan font-size="11">%</tspan></text>
             <text x="70" y="32" font-size="7" fill="#64748b">{{ t('ansichten.standard.label') }}</text>
             <g font-size="6.5" fill="#334155">
-              <text x="14" y="58">Deutsch</text><text x="186" y="58" text-anchor="end" font-weight="700">83 %</text>
+              <text x="14" y="58">{{ t('index.vorschau.deutsch') }}</text><text x="186" y="58" text-anchor="end" font-weight="700">83 %</text>
               <rect x="14" y="62" width="172" height="7" rx="3.5" fill="#e2e8f0" />
               <rect x="14" y="62" width="143" height="7" rx="3.5" fill="#0000c4" />
-              <text x="14" y="86">Französisch</text><text x="186" y="86" text-anchor="end" font-weight="700">61 %</text>
+              <text x="14" y="86">{{ t('index.vorschau.franzoesisch') }}</text><text x="186" y="86" text-anchor="end" font-weight="700">61 %</text>
               <rect x="14" y="90" width="172" height="7" rx="3.5" fill="#e2e8f0" />
               <rect x="14" y="90" width="105" height="7" rx="3.5" fill="#dc2626" />
             </g>
@@ -199,13 +199,13 @@ const COMPONENTS = [
             <rect x="40" y="22" width="112" height="4" rx="2" fill="#334155" />
             <rect x="40" y="30" width="86" height="4" rx="2" fill="#334155" />
             <rect x="40" y="41" width="64" height="3" rx="1.5" fill="#cbd5e1" />
-            <text x="180" y="30" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">kopieren</text>
+            <text x="180" y="30" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">{{ t('index.vorschau.kopieren') }}</text>
 
             <rect x="10" y="62" width="180" height="44" rx="6" fill="#fff" stroke="#e2e8f0" />
             <rect x="18" y="74" width="134" height="4" rx="2" fill="#334155" />
             <rect x="18" y="82" width="98" height="4" rx="2" fill="#334155" />
             <rect x="18" y="93" width="58" height="3" rx="1.5" fill="#cbd5e1" />
-            <text x="180" y="80" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">kopieren</text>
+            <text x="180" y="80" text-anchor="end" font-size="6" font-weight="700" fill="#0000c4">{{ t('index.vorschau.kopieren') }}</text>
           </svg>
 
           <svg v-else-if="comp.preview === 'donut'" viewBox="0 0 200 120" class="preview-svg">
@@ -263,14 +263,14 @@ const COMPONENTS = [
             <!-- Header -->
             <rect x="0" y="0" width="200" height="14" fill="#f1f5f9" />
             <text x="4"   y="10" font-size="5" fill="#94a3b8" font-weight="700">{{ t('vokabular.schuelerinKurz') }}</text>
-            <text x="72"  y="10" font-size="5" fill="#94a3b8" font-weight="700">INSGESAMT ▼</text>
-            <text x="130" y="10" font-size="5" fill="#94a3b8" font-weight="700">LESEN</text>
+            <text x="72"  y="10" font-size="5" fill="#94a3b8" font-weight="700">{{ t('index.vorschau.insgesamt') }}</text>
+            <text x="130" y="10" font-size="5" fill="#94a3b8" font-weight="700">{{ t('index.vorschau.lesen') }}</text>
             <!-- Rows -->
             <g v-for="(row, ri) in [[68,52],[81,74],[45,38],[92,88]]" :key="ri">
               <rect x="0" :y="14+ri*24" width="200" :height="24" :fill="ri%2===0?'#fff':'#fafafa'" />
               <!-- Name -->
-              <text x="4" :y="26+ri*24" font-size="6" font-weight="600" fill="#1e293b">Schüler:in 0{{ ri+1 }}1</text>
-              <text x="4" :y="34+ri*24" font-size="4.5" fill="#0369a1">Testheft B</text>
+              <text x="4" :y="26+ri*24" font-size="6" font-weight="600" fill="#1e293b">{{ t('index.vorschau.schuelerin', { n: `0${ri + 1}1` }) }}</text>
+              <text x="4" :y="34+ri*24" font-size="4.5" fill="#0369a1">{{ t('index.vorschau.testheft') }}</text>
               <!-- Bar 1 (insgesamt) -->
               <rect x="72" :y="19+ri*24" width="52" height="7" rx="2" fill="#f1f5f9" />
               <rect x="72" :y="19+ri*24" :width="row[0]*52/100" height="7" rx="2" fill="#3b82f6" />
@@ -287,10 +287,10 @@ const COMPONENTS = [
             <rect x="0" y="0" width="200" height="120" fill="#f8fafc" rx="4" />
             <!-- Header row -->
             <rect x="0" y="0" width="200" height="16" fill="#f1f5f9" rx="0" />
-            <text x="4"   y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">KOMPETENZ</text>
-            <text x="52"  y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">STUFE</text>
-            <text x="78"  y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">NR.</text>
-            <text x="110" y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">GRAFIK</text>
+            <text x="4"   y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">{{ t('index.vorschau.kompetenz') }}</text>
+            <text x="52"  y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">{{ t('index.vorschau.stufe') }}</text>
+            <text x="78"  y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">{{ t('index.vorschau.nummer') }}</text>
+            <text x="110" y="11" font-size="5.5" fill="#94a3b8" font-weight="700" font-family="system-ui">{{ t('index.vorschau.grafik') }}</text>
             <!-- Data rows -->
             <g v-for="(row, ri) in [[30,'#0369a1','#e0f2fe','1','#ef4444','HO-001',62,44,38],[20,'#0369a1','#e0f2fe','2','#f97316','HO-002',78,60,52],[30,'#0369a1','#e0f2fe','3','#eab308','LE-026',45,50,55],[20,'#0369a1','#e0f2fe','4','#22c55e','LE-027',90,82,74],[30,'#0369a1','#e0f2fe','5','#15803d','MA-001',55,61,67]]" :key="ri">
               <rect x="0" :y="16+ri*20" width="200" :height="20" :fill="ri%2===0?'#fff':'#f8fafc'" />
@@ -384,7 +384,7 @@ const COMPONENTS = [
             <text   x="172" y="55" text-anchor="middle" font-size="9">👩</text>
             <!-- x-axis -->
             <line x1="4" y1="90" x2="196" y2="90" stroke="#94a3b8" stroke-width="0.8" />
-            <text x="100" y="105" text-anchor="middle" font-size="7" fill="#64748b">BISTA Werte</text>
+            <text x="100" y="105" text-anchor="middle" font-size="7" fill="#64748b">{{ t('bausteine.bista.achse') }}</text>
           </svg>
 
           <!-- Item expected vs actual preview -->
@@ -517,7 +517,7 @@ const COMPONENTS = [
           <!-- Für Entwickler:innen: technischer Name und Endpunkt, klein darunter. -->
           <div class="card-name-row">
             <code class="card-name">{{ comp.name }}</code>
-            <span class="card-api-badge">{{ comp.api }}</span>
+            <span class="card-api-badge">{{ comp.api.startsWith('/') ? comp.api : t(comp.api) }}</span>
           </div>
           <!-- Was die Ansicht tatsächlich rendert: der Baustein aus dem Paket. -->
           <code class="card-element">&lt;tba3-{{ comp.baustein }}&gt;</code>
