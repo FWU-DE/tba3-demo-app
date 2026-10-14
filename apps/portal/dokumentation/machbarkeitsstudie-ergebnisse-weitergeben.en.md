@@ -1,7 +1,7 @@
 # Handing over result data for further work: a concept draft using AIS.schule
 
 Part of the [feasibility study](machbarkeitsstudie.md). Unlike the other
-questions, this is **a concept draft, not a prototype**. Nothing was built. The
+sub-concepts, this one has **no prototype**; nothing was built. The
 page describes which data the reporting API provides, where it could take
 effect in a learning system, and what is missing on both sides. AIS.schule
 serves as the example. Information on AIS comes from the public project site
@@ -40,7 +40,7 @@ quickly.
 ## The question
 
 A report is an end point: the teacher reads it, draws conclusions and plans
-accordingly, mostly in their head. The previous questions examined how
+accordingly, mostly in their head. The previous sub-concepts examined how
 *material* gets from the report into the learning platform. This one is about
 the *results themselves*: can they be handed to a system that keeps working
 with them, for example by suggesting learning paths or by knowing a class's
@@ -317,7 +317,7 @@ the decision about passing on data where it belongs, with the teacher.
   and an export.
 - **The identifiers are the lever again.** Without them the media library
   search fails, and without them a learning system cannot do anything with the
-  results either. Filling `competences[].id` helps all three questions at once.
+  results either. Filling `competences[].id` helps all three sub-concepts at once.
 - **The real work lies in the learning system.** It has to map educational
   standards to its own learning objectives. That is subject-matter work, not
   technical work, and it decides whether the suggestions are any good.

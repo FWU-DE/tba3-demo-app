@@ -228,7 +228,7 @@ die Oberfläche beschreibt, gehört hierher.
 **Unterseiten.** Ein Eintrag mit `teil: '<slug>'` hängt unter einer Landeseite:
 keine eigene Karte auf der Übersicht, der Pfad oben führt über die Landeseite
 zurück, die Adresse bleibt flach. So ist die Machbarkeitsstudie gebaut
-(`machbarkeitsstudie.md` + `machbarkeitsstudie-<frage>.md`). Wer eine Teilfrage
+(`machbarkeitsstudie.md` + `machbarkeitsstudie-<thema>.md`). Wer ein Teilkonzept
 hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite
 (beider Sprachen); der Test prüft das Zweite.
 
@@ -236,7 +236,7 @@ hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite
 `englisch: '<slug>.en.md'` eine englische Fassung mitbringen. Beide stehen auf
 derselben Seite in `<div lang="de">` und `<div lang="en">` und werden wie
 überall über `html[lang]` umgeschaltet. Die Machbarkeitsstudie ist durchgehend
-zweisprachig; wer eine Teilfrage hinzufügt, schreibt beide Fassungen. Bilder
+zweisprachig; wer ein Teilkonzept hinzufügt, schreibt beide Fassungen. Bilder
 mit Oberfläche gibt es dann ebenfalls zweimal (`<name>-de.png`,
 `<name>-en.png`), erzeugt von `npm run docs:bilder`. Die Überschriften beider
 Fassungen dürfen nicht gleich lauten, sonst vergibt die Seite eine `id`

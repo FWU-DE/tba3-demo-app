@@ -83,8 +83,8 @@ export const DOKUMENTE = [
     eigen: true,
     kurz: { de: 'Machbarkeitsstudie', en: 'Feasibility study' },
     beschreibung: {
-      de: 'Fragen, die über die Schnittstelle hinausgehen — je eine Seite: was der Prototyp tut, was technisch geht und was es im Unterricht bringt.',
-      en: 'Questions that go beyond the API — one page each: what the prototype does, what is technically possible and what it is worth in the classroom.',
+      de: 'Teilkonzepte für das, was über die Schnittstelle hinausgeht — je eine Seite: was der Prototyp tut, was technisch geht und was es im Unterricht bringt.',
+      en: 'Sub-concepts for what goes beyond the API — one page each: what the prototype does, what is technically possible and what it is worth in the classroom.',
     },
   },
   {
