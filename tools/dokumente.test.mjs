@@ -7,7 +7,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { DOKUMENTE, ORDNER, anker, githubUrl, lokalerVerweis, oberseite, rendere, seite, uebersicht } from './dokumente.mjs';
+import { DOKUMENTE, ORDNER, anker, githubUrl, lokalerVerweis, oberseite, rendere, seite, uebersicht, zielgruppeVon } from './dokumente.mjs';
 
 const ankerIn = (html) => [...html.matchAll(/<h[1-6] id="([^"]+)"/g)].map((m) => m[1]);
 
@@ -195,6 +195,21 @@ describe('die Seiten', () => {
 
   // Eine Unterseite hat keine eigene Karte. Gefunden wird sie nur über ihre
   // Landeseite — verlinkt die das nicht, ist die Seite gebaut, aber unerreichbar.
+  // Zwei Zielgruppen lesen mit; jede Karte sagt, für wen sie ist.
+  it('markiert jede Karte und jede Seite mit ihrer Zielgruppe', () => {
+    const html = uebersicht(DOKUMENTE, null);
+    const karten = DOKUMENTE.filter((d) => !d.teil);
+    expect(html.match(/class="zielgruppe zielgruppe-/g)).toHaveLength(karten.length);
+    expect(html).toContain('Ohne Technikkenntnisse');
+    expect(html).toContain('Für Entwickler:innen');
+    for (const dok of DOKUMENTE) {
+      expect(['alle', 'technik']).toContain(zielgruppeVon(dok));
+      expect(seite(dok, '# T\n', null)).toContain(`zielgruppe-${zielgruppeVon(dok)}`);
+    }
+    const unter = DOKUMENTE.find((d) => d.teil);
+    expect(zielgruppeVon(unter)).toBe(zielgruppeVon(oberseite(unter)));
+  });
+
   it('erreicht jede Unterseite über ihre Landeseite, nicht über eine eigene Karte', () => {
     const unterseiten = DOKUMENTE.filter((d) => d.teil);
     expect(unterseiten.length).toBeGreaterThan(0);

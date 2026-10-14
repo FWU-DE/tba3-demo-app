@@ -232,6 +232,14 @@ zurück, die Adresse bleibt flach. So ist die Machbarkeitsstudie gebaut
 hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite
 (beider Sprachen); der Test prüft das Zweite.
 
+**Zwei Zielgruppen.** Die Seite lesen Ministerien und pädagogische Institute
+(ohne Technikkenntnisse) und Entwickler:innen. Jeder Bereich trägt oben eine
+Marke `.zielgruppe` („Ohne Technikkenntnisse“ grün, „Für Entwickler:innen“
+blau), jede Karte und Seite der Dokumentation über `zielgruppe` in `DOKUMENTE`
+(`'alle'` oder `'technik'`; Unterseiten erben). Wer einen Bereich oder ein
+Dokument hinzufügt, ordnet es zu, und was für beide gedacht ist, beginnt mit dem
+Satz, den man ohne Technikkenntnisse versteht.
+
 **Zweisprachige Dokumente.** Ein eigenes Dokument kann mit
 `englisch: '<slug>.en.md'` eine englische Fassung mitbringen. Beide stehen auf
 derselben Seite in `<div lang="de">` und `<div lang="en">` und werden wie

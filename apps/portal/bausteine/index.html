@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bausteine — TBA3</title>
-  <meta name="description" content="Die TBA3-Visualisierungen als Web Component, Vue- und React-Komponente. Themebar, ohne Abhängigkeiten." />
+  <title>Bausteine zum Einbauen — TBA3</title>
+  <meta name="description" content="Für Entwickler:innen: die Diagramme der TBA3-Rückmeldungen als Softwarepaket zum Einbauen in eigene Anwendungen, mit frei wählbarer Gestaltung." />
   <link rel="stylesheet" href="/gemeinsam/tokens.css" />
   <link rel="stylesheet" href="/gemeinsam/container.css" />
   <style>
@@ -105,6 +105,13 @@
       font-weight: var(--gewicht-ueberschrift); margin: 0 0 var(--abstand-sm);
     }
     .zusammenhang p { margin: 0 0 var(--abstand-md); }
+    .zusammenhang h3 { font-size: var(--text-lg); font-weight: var(--gewicht-ueberschrift); margin: var(--abstand-xl) 0 0; }
+    .zielgruppe {
+      display: inline-block; margin: 0 0 var(--abstand-sm);
+      font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--farbe-marke); background: var(--farbe-marke-zart);
+      padding: 3px 8px; border-radius: 4px;
+    }
     .scrolltabelle { overflow-x: auto; }
     .zusammenhang table {
       border-collapse: collapse; width: 100%; font-size: var(--text-sm);
@@ -291,26 +298,37 @@
 <main class="wrap">
 
   <section class="hero">
-    <h1 lang="de">Bausteine zum Mitnehmen</h1>
-    <h1 lang="en">Building blocks to take away</h1>
+    <p class="zielgruppe"><span lang="de">Für Entwickler:innen</span><span lang="en">For developers</span></p>
+    <h1 lang="de">Bausteine zum Einbauen</h1>
+    <h1 lang="en">Building blocks for your own software</h1>
     <p lang="de">
-      Jede Visualisierung gibt es als <strong>native Web Component</strong>, als
-      <strong>Vue-</strong> und als <strong>React-Komponente</strong>. Dieselbe
-      Implementierung, drei Fassungen — unten stehen sie nebeneinander.
+      Wer eine eigene Rückmeldung baut, muss die Diagramme nicht neu zeichnen.
+      Jede Visualisierung aus dem <a href="/katalog">Komponentenkatalog</a> gibt
+      es hier als fertiges Softwarepaket (<code>@tba3/bausteine</code>), das sich
+      in eine eigene Anwendung einbauen lässt: als
+      <strong>Web Component</strong>, die in jeder Webseite läuft, und als
+      Komponente für <strong>Vue</strong> und <strong>React</strong>. Alle drei
+      Fassungen zeichnen mit demselben Code; unten stehen sie nebeneinander.
     </p>
     <p lang="en">
-      Every visualisation comes as a <strong>native web component</strong>, a
-      <strong>Vue</strong> and a <strong>React</strong> component. One
-      implementation, three flavours — shown side by side below.
+      If you build your own report, you do not have to draw the charts again.
+      Every visualisation from the <a href="/katalog">component catalogue</a> is
+      available here as a ready-made software package (<code>@tba3/bausteine</code>)
+      for your own application: as a <strong>web component</strong> that runs in
+      any web page, and as a component for <strong>Vue</strong> and
+      <strong>React</strong>. All three draw with the same code; they are shown
+      side by side below.
     </p>
     <p lang="de">
-      Sie bringen <strong>kein Design mit</strong>: Farben, Schrift und Maße
-      kommen über CSS-Variablen von außen. Probier die Themen oben rechts aus —
-      das ist derselbe Quelltext.
+      Das Aussehen bestimmt die Anwendung, die einbaut: Farben, Schrift und
+      Abstände werden von außen vorgegeben (über CSS-Variablen). Mit der Auswahl
+      „Thema“ lässt sich ausprobieren, wie dieselben Diagramme in einer anderen
+      Gestaltung aussehen.
     </p>
     <p lang="en">
-      They ship <strong>without a design</strong>: colours, type and metrics come
-      in through CSS variables. Try the themes above — it is the same source.
+      The application that builds them in decides how they look: colours, type
+      and spacing are set from outside (through CSS variables). Use the "Theme"
+      selector to see the same charts in a different design.
     </p>
   </section>
 
@@ -344,35 +362,28 @@
       </select>
     </div>
     <p class="protokoll" id="protokoll" aria-live="polite">
-      <span lang="de">Klick auf einen Balken, eine Zeile oder eine Spaltenüberschrift — die Ereignisse erscheinen hier.</span>
-      <span lang="en">Click a bar, a row or a column header — events show up here.</span>
+      <span lang="de">Die Bausteine melden Klicks an die Anwendung zurück. Klick auf einen Balken, eine Zeile oder eine Spaltenüberschrift: die Meldung erscheint hier.</span>
+      <span lang="en">The building blocks report clicks back to the application. Click a bar, a row or a column header: the message appears here.</span>
     </p>
   </div>
 
   <section class="zusammenhang">
-    <h2 lang="de">Katalog und Bausteine — wie das zusammenhängt</h2>
-    <h2 lang="en">Catalogue and building blocks — how they relate</h2>
+    <h2 lang="de">Katalog und Bausteine</h2>
+    <h2 lang="en">Catalogue and building blocks</h2>
     <p lang="de">
-      Zwei Bereiche zeigen Visualisierungen, und das verwirrt zu Recht.
-      <a href="/katalog"><strong>Der Katalog</strong></a> ist die Schau: jede
-      Visualisierung mit echten Daten aus der Schnittstelle, mit Einsatzzweck,
-      Endpunkt und Quelltext — zum Anschauen und Verstehen.
-      <strong>Die Bausteine</strong> sind die Bibliothek: dieselben
-      Visualisierungen als Paket zum Mitnehmen, in drei Fassungen und themebar —
-      zum Einbauen.
+      <a href="/katalog"><strong>Der Katalog</strong></a> zeigt jede
+      Visualisierung mit Beispieldaten und erklärt, wofür sie gedacht ist. Er ist
+      zum Anschauen da. <strong>Die Bausteine</strong> sind dieselben
+      Visualisierungen zum Einbauen. Jede Katalog-Ansicht zeichnet mit dem
+      Baustein, der in der Tabelle neben ihr steht.
+      <span id="stand"></span>
     </p>
     <p lang="en">
-      Two sections show visualisations, and that is rightly confusing.
-      <a href="/katalog"><strong>The catalogue</strong></a> is the showcase:
-      every visualisation with live data, purpose, endpoint and source — to look
-      at and understand. <strong>The building blocks</strong> are the library:
-      the same visualisations as a package to take away, in three flavours and
-      themeable — to build with.
-    </p>
-    <p lang="de">
-      Der Katalog ist älter. Seine Ansichten ziehen nach und nach auf die
-      Bausteine um — eine umgezogene Ansicht zeigt dann denselben Quelltext, den
-      auch ein fremdes Projekt bekommt. <strong id="stand"></strong>
+      <a href="/katalog"><strong>The catalogue</strong></a> shows every
+      visualisation with sample data and explains what it is for. It is there to
+      look at. <strong>The building blocks</strong> are the same visualisations
+      to build in. Every catalogue view draws with the building block listed next
+      to it in the table.
     </p>
     <div class="scrolltabelle">
       <table id="zuordnung">
@@ -386,15 +397,8 @@
         <tbody></tbody>
       </table>
     </div>
-    <p lang="de">
-      Umgekehrt ist die Bibliothek keine Teilmenge der Schau: diese Bausteine
-      haben keine Katalog-Ansicht, weil sie aus einer anderen Frage entstehen.
-    </p>
-    <p lang="en">
-      The other way round, the library is not a subset of the showcase: these
-      building blocks have no catalogue view, because they answer a different
-      question.
-    </p>
+    <h3 lang="de">Bausteine ohne Katalog-Ansicht</h3>
+    <h3 lang="en">Building blocks without a catalogue view</h3>
     <ul id="nur-baustein" class="nur-baustein"></ul>
   </section>
 
@@ -485,7 +489,7 @@
       koerper.append(tr);
     }
     document.getElementById('stand').textContent =
-      `Stand: ${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten laufen über Bausteine.`;
+      `(${ZAHLEN.umgezogen} von ${ZAHLEN.gesamt} Ansichten)`;
 
     const liste = document.getElementById('nur-baustein');
     for (const n of NUR_BAUSTEIN) {

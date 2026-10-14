@@ -302,3 +302,19 @@ h2:hover .sprungmarke, h3:hover .sprungmarke, h4:hover .sprungmarke,
     padding: 16px 18px;
   }
 }
+
+/* Zielgruppe: Ministerien und Institute ohne Technikkenntnisse oder
+   Entwickler:innen. Steht auf jeder Karte und über jedem Dokument. */
+.zielgruppe {
+  display: inline-block;
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.zielgruppe-alle { color: var(--farbe-erfolg-text); background: var(--farbe-erfolg); }
+.zielgruppe-technik { color: var(--farbe-marke); background: var(--farbe-marke-zart); }
+.karte .zielgruppe { align-self: flex-start; }

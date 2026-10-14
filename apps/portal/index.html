@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TBA3 — Rückmeldungen aus VERA-Daten</title>
-  <meta name="description" content="Demoanwendung, Komponentenbibliothek und die Rückmeldungen des Konsortiums zur TBA3-Auswertungsschnittstelle." />
+  <meta name="description" content="Was sich aus VERA-Ergebnissen für Lehrkräfte, Schulleitungen und Schulaufsicht machen lässt: Beispiele, Demoanwendung und Machbarkeitsstudie für Ministerien und Institute; Schnittstelle, Dokumentation und Bausteine für Entwickler:innen." />
   <!-- Eine Spalte für alle Bereiche, ausgerichtet an der Leiste darüber -->
   <!-- Design-Tokens aus dem VIDIS Design System, siehe apps/shared/tokens.css -->
   <link rel="stylesheet" href="/gemeinsam/tokens.css" />
@@ -155,9 +155,8 @@
     /* ── Karten ────────────────────────────────────────────── */
     .karten {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
-      padding-bottom: 56px;
     }
     .karte {
       display: flex;
@@ -180,7 +179,7 @@
        drei Fassungen, und alle drei gehören auf die Karte. Auf schmalen
        Schirmen fällt die Gruppe als Ganzes unter die Überschrift. */
     .schilder { display: flex; gap: 6px; flex-wrap: wrap; }
-    .karte h2 { font-size: 17px; font-weight: 650; color: var(--tinte); margin: 0; letter-spacing: -0.01em; }
+    .karte h2, .karte h3 { font-size: 17px; font-weight: 650; color: var(--tinte); margin: 0; letter-spacing: -0.01em; }
     .karte p { font-size: 14.5px; margin: 0 0 18px; }
     .karte .fuss {
       margin-top: auto;
@@ -237,14 +236,33 @@
       border-top: 1px solid var(--linie);
       padding-block: 48px;
     }
-    .schnittstelle h2 {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--grau);
-      margin: 0 0 20px;
-      font-weight: 600;
+    /* Zwei Zielgruppen, zwei Bereiche: jeder trägt oben seine Marke. */
+    .bereich { padding-block: 8px 48px; scroll-margin-top: 80px; }
+    .schnittstelle { scroll-margin-top: 80px; }
+    .bereich > h2, .schnittstelle > h2 {
+      font-size: 24px; font-weight: 650; color: var(--tinte);
+      letter-spacing: -0.015em; margin: 0 0 8px;
     }
+    .bereich-text { max-width: 70ch; margin: 0 0 24px; font-size: 15px; }
+    .bereich-text a { color: var(--blau); text-decoration: none; font-weight: 500; }
+    .bereich-text a:hover { text-decoration: underline; }
+    .bereich .karten ~ .bereich-text { margin: 24px 0 0; }
+    .zielgruppe {
+      display: inline-block; margin: 0 0 10px;
+      font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--farbe-erfolg-text); background: var(--farbe-erfolg);
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .zielgruppe-technik { color: var(--blau); background: var(--farbe-marke-zart); }
+    .wege { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .weg {
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 12px 16px; border: 1px solid var(--linie); border-radius: 12px;
+      background: var(--farbe-karte); color: var(--tinte); text-decoration: none;
+      font-weight: 500; font-size: 15px;
+    }
+    .weg:hover { border-color: var(--blau); }
+    .weg .zielgruppe { margin: 0 0 4px; align-self: flex-start; }
     .verweise {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -310,23 +328,31 @@
     <h1 lang="de">Rückmeldungen aus VERA-Daten — von der Schnittstelle bis zur fertigen Ansicht</h1>
     <h1 lang="en">Reports from VERA data — from the API to the finished view</h1>
     <p lang="de">
-      Die TBA3-Auswertungsschnittstelle liefert Kompetenzstufen, Aufgabenstatistiken und
-      Aggregationen auf Lerngruppen-, Schul- und Landesebene. Hier liegt alles, was zeigt,
-      was sich daraus bauen lässt: eine vollständige Demoanwendung, die einzelnen
-      Visualisierungs-Bausteine und Beispiele fertiger Rückmeldungen.
+      Über die TBA3-Auswertungsschnittstelle kommen die Ergebnisse aus VERA dorthin, wo
+      sie gebraucht werden: zu Lehrkräften, Schulleitungen und Schulaufsicht, je als
+      Rückmeldung für die Klasse, die Schule oder das Land. Diese Seite zeigt, was sich
+      daraus machen lässt, und stellt bereit, was man zum Nachbauen braucht.
     </p>
     <p lang="en">
-      The TBA3 reporting API delivers competence levels, item statistics and aggregations
-      at learning group, school and state level. Everything that shows what can be built
-      from it lives here: a complete demo application, the individual visualisation
-      building blocks, and examples of finished reports.
+      Through the TBA3 reporting API, VERA results reach the people who need them:
+      teachers, school leaders and school supervision, each as a report for the class,
+      the school or the state. This site shows what can be made of them and provides
+      what you need to build it yourself.
     </p>
-    <p class="spec-hinweis" lang="de">
-      Alle Ansichten sprechen dieselbe API — <code>/groups</code>, <code>/schools</code>, <code>/states</code>.
-    </p>
-    <p class="spec-hinweis" lang="en">
-      Every view speaks the same API — <code>/groups</code>, <code>/schools</code>, <code>/states</code>.
-    </p>
+    <div class="wege">
+      <a class="weg" href="#ohne-technik">
+        <span class="zielgruppe" lang="de">Ohne Technikkenntnisse</span>
+        <span class="zielgruppe" lang="en">No technical background needed</span>
+        <span lang="de">Ministerien und pädagogische Institute →</span>
+        <span lang="en">Ministries and educational institutes →</span>
+      </a>
+      <a class="weg" href="#fuer-entwickler">
+        <span class="zielgruppe zielgruppe-technik" lang="de">Für Entwickler:innen</span>
+        <span class="zielgruppe zielgruppe-technik" lang="en">For developers</span>
+        <span lang="de">Anbieter und Implementierende →</span>
+        <span lang="en">Vendors and implementers →</span>
+      </a>
+    </div>
    </div>
 
    <!-- Illustration: Endpunkt rein, Kompetenzstufenverteilung raus. Rein
@@ -364,143 +390,128 @@
    </div>
   </section>
 
-  <section class="karten">
+  <section class="bereich" id="ohne-technik">
+    <p class="zielgruppe" lang="de">Ohne Technikkenntnisse</p>
+    <p class="zielgruppe" lang="en">No technical background needed</p>
+    <h2 lang="de">Für Ministerien und pädagogische Institute</h2>
+    <h2 lang="en">For ministries and educational institutes</h2>
+    <p class="bereich-text" lang="de">
+      Was sich aus VERA-Daten machen lässt, wenn die Auswertung über eine gemeinsame
+      Schnittstelle läuft. Nichts davon ist ein fertiges Produkt oder eine Vorgabe.
+    </p>
+    <p class="bereich-text" lang="en">
+      What can be made of VERA data once the analysis runs through a shared API. None
+      of it is a finished product or a specification to follow.
+    </p>
 
-    <a class="karte" href="/demo">
-      <div class="karte-kopf">
-        <h2 lang="de">Demoanwendung</h2>
-        <h2 lang="en">Demo application</h2>
-        <span class="schild schild-react">React</span>
-      </div>
-      <p lang="de">
-        Das vollständige Bild: Filter nach Fach, Klassenstufe und Gruppe, Kompetenzstufen
-        und Aufgabenstatistiken, Schülerdetails, Materialzuweisung über MUNDO sowie Export
-        als PDF und Common Cartridge.
-      </p>
-      <p lang="en">
-        The full picture: filters by subject, grade and group, competence levels and item
-        statistics, student details, material assignment via MUNDO, and export as PDF and
-        Common Cartridge.
-      </p>
-      <span class="fuss" lang="de">Anwendung öffnen →</span>
-      <span class="fuss" lang="en">Open the application →</span>
-    </a>
+    <div class="karten">
 
-    <a class="karte" href="/katalog">
-      <div class="karte-kopf">
-        <h2 lang="de">Komponentenbibliothek</h2>
-        <h2 lang="en">Component library</h2>
-        <span class="schilder">
-          <span class="schild schild-wc">Web Component</span>
-          <span class="schild schild-react">React</span>
-          <span class="schild schild-vue">Vue 3</span>
-        </span>
-      </div>
-      <p lang="de">
-        Die Visualisierungen einzeln — von der Kompetenzstufen-Leiste über die
-        Perzentilbänder bis zum Vergleich von erwarteter und tatsächlicher Lösungsquote.
-        Jede mit Einsatzzweck, genutztem Endpunkt und Quelltext, und jede in allen drei
-        Fassungen: native Web Component, React und Vue.
-      </p>
-      <p lang="en">
-        The visualisations one by one — from the competence level bar and the percentile
-        bands to the comparison of expected and actual solution rates. Each with its
-        purpose, the endpoint it uses, and its source code, and each in all three
-        flavours: native web component, React and Vue.
-      </p>
-      <span class="fuss" lang="de">Bausteine ansehen →</span>
-      <span class="fuss" lang="en">View the building blocks →</span>
-    </a>
-
-    <a class="karte" href="/beispiele">
-      <div class="karte-kopf">
-        <h2 lang="de">Rückmeldungen des Konsortiums</h2>
-        <h2 lang="en">Reports of the consortium</h2>
-        <span class="schild schild-bald" lang="de">10 Rückmeldungen</span>
-        <span class="schild schild-bald" lang="en">10 reports</span>
-      </div>
-      <p lang="de">
-        Die Rückmeldungen der vier entwickelnden Einrichtungen, wie sie bei Lehrkräften,
-        Schulleitungen und Schüler:innen ankommen — mit Demo, Quelltext und Dokumentation
-        nebeneinander. Filterbar nach Einrichtung, Fach, Klassenstufe und Zielgruppe.
-      </p>
-      <p lang="en">
-        The reports of the four developing institutions as they reach teachers, school
-        leaders and students — with demo, source code and documentation side by side.
-        Filterable by institution, subject, grade and audience.
-      </p>
-      <span class="fuss" lang="de">Übersicht öffnen →</span>
-      <span class="fuss" lang="en">Open the overview →</span>
-    </a>
-
-  </section>
-
-  <section class="zielgruppen" id="fuer-wen">
-    <h2 lang="de">Für wen ist das hier?</h2>
-    <h2 lang="en">Who is this for?</h2>
-    <div class="adressaten">
-
-      <div class="adressat">
-        <h3 lang="de">Ministerien und pädagogische Institute</h3>
-        <h3 lang="en">Ministries and educational institutes</h3>
+      <a class="karte" href="/beispiele">
+        <div class="karte-kopf">
+          <h3 lang="de">Rückmeldungen des Konsortiums</h3>
+          <h3 lang="en">Reports of the consortium</h3>
+          <span class="schild schild-bald" lang="de">10 Rückmeldungen</span>
+          <span class="schild schild-bald" lang="en">10 reports</span>
+        </div>
         <p lang="de">
-          Zum Anschauen und Anregen lassen: Die Rückmeldungen zeigen, was sich aus VERA-Daten
-          machen lässt, wenn die Auswertung über eine gemeinsame Schnittstelle läuft — von
-          der Kompetenzstufenverteilung einer Klasse bis zur Rückmeldung an die Schulaufsicht.
+          Die Rückmeldungen der vier entwickelnden Einrichtungen, wie sie bei Lehrkräften,
+          Schulleitungen und Schüler:innen ankommen. Filterbar nach Einrichtung, Fach,
+          Klassenstufe und Zielgruppe.
         </p>
         <p lang="en">
-          For inspiration: the reports show what can be made of VERA data once the
-          analysis runs through a shared API — from the competence level distribution of a
-          class to the report that reaches school supervision.
+          The reports of the four developing institutions as they reach teachers, school
+          leaders and students. Filterable by institution, subject, grade and audience.
         </p>
-        <p lang="de">
-          Nichts davon ist ein fertiges Produkt oder eine Vorgabe. Was die zehn gemeinsam
-          haben, steht technologieagnostisch im
-          <a href="/dokumentation/bausteine-der-rueckmeldungen">Katalog der Bausteine</a> —
-          und die Rückmeldungen selbst unter
-          <a href="/beispiele">Rückmeldungen des Konsortiums</a>.
-        </p>
-        <p lang="en">
-          None of it is a finished product or a specification to follow. What the ten have
-          in common is set out, independently of technology, in the
-          <a href="/dokumentation/bausteine-der-rueckmeldungen">catalogue of building blocks</a> —
-          and the reports themselves are under
-          <a href="/beispiele">reports of the consortium</a>.
-        </p>
-      </div>
+        <span class="fuss" lang="de">Rückmeldungen ansehen →</span>
+        <span class="fuss" lang="en">View the reports →</span>
+      </a>
 
-      <div class="adressat">
-        <h3 lang="de">Anbieter und Implementierende von Rückmeldungen</h3>
-        <h3 lang="en">Vendors and implementers of reports</h3>
+      <a class="karte" href="/demo">
+        <div class="karte-kopf">
+          <h3 lang="de">Demoanwendung</h3>
+          <h3 lang="en">Demo application</h3>
+        </div>
         <p lang="de">
-          Zum direkten Nachnutzen: Demoanwendung, Komponentenbibliothek und die einzelnen
-          Rückmeldungen liegen offen auf GitHub — samt Mock-Daten, mit denen sich alles
-          ohne eigenes Backend ausprobieren lässt.
+          Eine vollständige Rückmeldung zum Ausprobieren: Ergebnisse nach Fach, Klasse und
+          Kompetenzstufe, einzelne Schüler:innen, passendes Lernmaterial und die Ausgabe
+          als PDF oder für die Lernplattform.
         </p>
         <p lang="en">
-          To reuse directly: the demo application, the component library and the individual
-          reports are all on GitHub — including mock data, so everything can be tried out
-          without a backend of your own.
+          A complete report to try out: results by subject, class and competence level,
+          individual students, matching learning material and output as a PDF or for the
+          learning platform.
         </p>
+        <span class="fuss" lang="de">Anwendung öffnen →</span>
+        <span class="fuss" lang="en">Open the application →</span>
+      </a>
+
+      <a class="karte" href="/katalog">
+        <div class="karte-kopf">
+          <h3 lang="de">Komponentenkatalog</h3>
+          <h3 lang="en">Component catalogue</h3>
+        </div>
         <p lang="de">
-          Anpassungen, eigene Visualisierungen und weitere Rückmeldungen sind ausdrücklich
-          erwünscht — als
-          <a href="https://github.com/FWU-DE/tba3-demo-app/issues">GitHub Issue</a> oder
-          <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">Pull Request</a>.
+          Jede Darstellung einzeln, von der Verteilung auf die Kompetenzstufen bis zum
+          Vergleich von erwarteter und erreichter Lösungsquote: was sie zeigt und wofür sie
+          gedacht ist.
         </p>
         <p lang="en">
-          Adaptations, your own visualisations and further reports are expressly welcome —
-          as a <a href="https://github.com/FWU-DE/tba3-demo-app/issues">GitHub issue</a> or a
-          <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">pull request</a>.
+          Every chart on its own, from the distribution across competence levels to the
+          comparison of expected and achieved solution rates: what it shows and what it is
+          for.
         </p>
-      </div>
+        <span class="fuss" lang="de">Katalog öffnen →</span>
+        <span class="fuss" lang="en">Open the catalogue →</span>
+      </a>
+
+      <a class="karte" href="/dokumentation/machbarkeitsstudie">
+        <div class="karte-kopf">
+          <h3 lang="de">Machbarkeitsstudie</h3>
+          <h3 lang="en">Feasibility study</h3>
+        </div>
+        <p lang="de">
+          Was über die Rückmeldung hinausgeht: Material aus Mediatheken, Übergabe an die
+          Lernplattform, Ergebnisse für Lernsysteme wie AIS.schule. Je mit Einschätzung, was
+          es im Unterricht bringt.
+        </p>
+        <p lang="en">
+          What goes beyond the report: material from media libraries, handover to the
+          learning platform, results for learning systems such as AIS.schule. Each with an
+          assessment of what it is worth in the classroom.
+        </p>
+        <span class="fuss" lang="de">Studie lesen →</span>
+        <span class="fuss" lang="en">Read the study →</span>
+      </a>
 
     </div>
+
+    <p class="bereich-text" lang="de">
+      Was die zehn Rückmeldungen gemeinsam haben, steht unabhängig von der Technik im
+      <a href="/dokumentation/bausteine-der-rueckmeldungen">Katalog der Bausteine der Rückmeldungen</a>.
+    </p>
+    <p class="bereich-text" lang="en">
+      What the ten reports have in common is set out, independently of technology, in the
+      <a href="/dokumentation/bausteine-der-rueckmeldungen">catalogue of report building blocks</a>.
+    </p>
   </section>
 
-  <section class="schnittstelle" id="schnittstelle">
-    <h2 lang="de">Die Schnittstelle</h2>
-    <h2 lang="en">The API</h2>
+  <section class="schnittstelle" id="fuer-entwickler">
+    <p class="zielgruppe zielgruppe-technik" lang="de">Für Entwickler:innen</p>
+    <p class="zielgruppe zielgruppe-technik" lang="en">For developers</p>
+    <h2 lang="de">Für Anbieter und Implementierende von Rückmeldungen</h2>
+    <h2 lang="en">For vendors and implementers of reports</h2>
+    <p class="bereich-text" lang="de">
+      Alles hier liegt offen auf GitHub, samt Beispieldaten, mit denen sich alles ohne
+      eigenes Backend ausprobieren lässt. Anpassungen und weitere Rückmeldungen sind
+      erwünscht, als <a href="https://github.com/FWU-DE/tba3-demo-app/issues">Issue</a>
+      oder <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">Pull Request</a>.
+    </p>
+    <p class="bereich-text" lang="en">
+      Everything here is on GitHub, including sample data so you can try it all without
+      a backend of your own. Adaptations and further reports are welcome, as an
+      <a href="https://github.com/FWU-DE/tba3-demo-app/issues">issue</a> or a
+      <a href="https://github.com/FWU-DE/tba3-demo-app/pulls">pull request</a>.
+    </p>
 
     <a class="referenz" href="/schnittstelle">
       <div>
@@ -542,6 +553,23 @@
       <span class="knopf" lang="en">Open the documentation →</span>
     </a>
 
+    <a class="referenz" href="/bausteine">
+      <div>
+        <h3 lang="de">Bausteine</h3>
+        <h3 lang="en">Building blocks</h3>
+        <p lang="de">
+          Die Darstellungen des Katalogs als Softwarepaket zum Einbauen in eigene
+          Anwendungen: als Web Component und für Vue und React, Gestaltung frei wählbar.
+        </p>
+        <p lang="en">
+          The catalogue's charts as a software package for your own applications: as a
+          web component and for Vue and React, with a design of your choice.
+        </p>
+      </div>
+      <span class="knopf" lang="de">Bausteine ansehen →</span>
+      <span class="knopf" lang="en">View the building blocks →</span>
+    </a>
+
     <div class="verweise">
       <div>
         <a href="/dokumentation/konzepte" lang="de">Konzepte</a>
@@ -580,8 +608,8 @@
         <div class="erklaerung" lang="en">Proposal for accompanying materials — open pull request</div>
       </div>
       <div>
-        <a href="https://apps.indibit.eu/tba3-api" lang="de">Referenz-Backend</a>
-        <a href="https://apps.indibit.eu/tba3-api" lang="en">Reference backend</a>
+        <a href="https://apps.indibit.eu/tba3-api/docs" lang="de">Referenz-Backend</a>
+        <a href="https://apps.indibit.eu/tba3-api/docs" lang="en">Reference backend</a>
         <div class="erklaerung" lang="de">Der Mock-Server, den diese Seiten abfragen</div>
         <div class="erklaerung" lang="en">The mock server these pages query</div>
       </div>

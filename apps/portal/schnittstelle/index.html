@@ -41,6 +41,17 @@
       padding-inline: var(--rand);
     }
 
+
+    /* Zielgruppe dieses Bereichs, wie auf der Startseite. */
+    .zielgruppe {
+      display: inline-block; margin: 0 0 10px;
+      font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .zielgruppe-alle { color: var(--farbe-erfolg-text, #0f766e); background: var(--farbe-erfolg, #f0fdfa); }
+    .zielgruppe-technik { color: var(--farbe-marke, #0000c4); background: var(--farbe-marke-zart, #f7f7fd); }
+    .seitenmarke { max-width: var(--breite); margin-inline: auto; padding: 18px var(--rand) 0; }
+    .seitenmarke .zielgruppe { margin: 0; }
     .hinweis {
       padding-top: 18px;
       font-size: 14.5px;
@@ -127,6 +138,10 @@
 
 <tba3-leiste aktiv="schnittstelle"></tba3-leiste>
 
+<div class="seitenmarke">
+  <span class="zielgruppe zielgruppe-technik" lang="de">Für Entwickler:innen</span>
+  <span class="zielgruppe zielgruppe-technik" lang="en">For developers</span>
+</div>
 <p class="hinweis" lang="de">
   <strong>Ausprobieren erwünscht:</strong> „Try it out“ fragt dieselben Demodaten ab,
   die auch Demoanwendung und Komponentenbibliothek zeigen — etwa die Lerngruppe
