@@ -62,6 +62,7 @@ function ablesen() {
     zaehler: {
       svg: zaehl('svg'), canvas: zaehl('canvas'), tabelle: zaehl('table'),
       auswahl: zaehl('select'), eingabe: zaehl('input'),
+      bild: zaehl('img'), echartsWurzel: zaehl('[_echarts_instance_]'),
     },
     // Custom Elements verraten die Komponentennamen — bei Angular-Anwendungen
     // ist das praktisch das Inhaltsverzeichnis der Bibliothek.
@@ -71,6 +72,13 @@ function ablesen() {
       echarts: !!window.echarts, d3: !!window.d3, Tabulator: !!window.Tabulator,
       Chart: !!window.Chart, Highcharts: !!window.Highcharts, leaflet: !!window.L,
       quasar: !!window.Quasar,
+      // React und Vue hinterlassen keine globale Variable, aber Spuren am
+      // Wurzelelement. Die erste Erhebung hatte das von Hand ergänzt; ohne diese
+      // Prüfung sah jede spätere so aus, als hätten die Demos React verloren.
+      React: [...document.querySelectorAll('body *')].slice(0, 50)
+        .some((e) => Object.keys(e).some((k) => k.startsWith('__react'))),
+      Vue: !!document.querySelector('[data-v-app]') || !!window.__VUE__,
+      Angular: !!document.querySelector('[ng-version]'),
     }).filter(([, da]) => da)),
   };
 }

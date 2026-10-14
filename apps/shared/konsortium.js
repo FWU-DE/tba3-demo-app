@@ -32,6 +32,11 @@
 // Repositorium von indibit war noch nicht veröffentlicht; dort ist die Quelle
 // die laufende Anwendung, deren Angular-Komponenten im DOM stehen.
 //
+// Die zweite Erhebung lief am 14.10.2026, diesmal über alle Reiter statt nur die
+// Startseiten. indibit hat seine Bibliothek inzwischen als `tba3-elements`
+// veröffentlicht. Zuordnungen aus dieser Runde tragen den Vermerk
+// „Erhebung 14.10.2026“ und ihren Beleg im Kommentar.
+//
 // Alle sichtbaren Texte stehen als `{ de, en }` und werden von der jeweiligen
 // Seite über `text()` aus /gemeinsam/sprache.js aufgelöst. Diese Datei
 // importiert davon bewusst nichts: so bleibt sie reine Daten und Logik, läuft
@@ -171,6 +176,12 @@ export const RUECKMELDUNGEN = [
       'aufgabenbrowser', // TaskBrowserPage.vue
       'uebersichtskarten', // ResultDonutsSection.vue, FeedbackCircleD3.vue
       'personen-tabelle', // TableauCard.vue, TableauGroupRow.vue
+          'kompetenzstufen-verteilung', // CompetenceLevelBand.vue, StudentsInCompetenceBoxes.vue (Erhebung 14.10.2026)
+          'loesungshaeufigkeit-je-aufgabe', // TaskBarChart.vue, TaskList.vue (Erhebung 14.10.2026)
+          'vergleichsebenen', // SubDomainChart.vue: Klasse gegen fairen Vergleich (Erhebung 14.10.2026)
+          'auszeichnungen', // conferenceTaskList/utils.ts: „Exzellent“ … „Nicht gut“, Regel im README (Erhebung 14.10.2026)
+          'erklaertexte', // InterpretationPanel.vue, TeacherWelcomeModal.vue (Erhebung 14.10.2026)
+          'aufgabenvorschau', // TaskDetailPanel.vue: Lösung, Item- und Stimulusbild (Erhebung 14.10.2026)
     ],
   },
   {
@@ -200,6 +211,7 @@ export const RUECKMELDUNGEN = [
       'gefuehrter-ablauf',
       'einzelbericht',
       'kompetenzstufen-verteilung', // StackedBarChart.vue, SingleBarChart.vue
+          'staerken-und-entwicklungsbedarfe', // GuidingIdeaView, BadResultsView (Erhebung 14.10.2026)
     ],
   },
   {
@@ -218,11 +230,11 @@ export const RUECKMELDUNGEN = [
     stufen: ['V8'],
     zielgruppen: ['lehrkraft'],
     demo: 'https://apps.indibit.eu/tba3/class-teacher',
-    code: 'https://github.com/indibit-eu',
+    code: 'https://github.com/indibit-eu/tba3-elements',
     doku: 'https://apps.indibit.eu/tba3/docs/',
     hinweis: {
-      de: 'Der Repositoriumsname folgt mit der Veröffentlichung. Lizenz: MIT.',
-      en: 'The repository name follows on publication. Licence: MIT.',
+      de: 'Die Komponentenbibliothek ist als tba3-elements veröffentlicht. Lizenz: MIT.',
+      en: 'The component library is published as tba3-elements. Licence: MIT.',
     },
     technik: {
       de: 'Angular 21 in modulfreier Bauweise mit signalbasierter Reaktivität, TypeScript im strikten Modus, Bootstrap 5, ECharts 6. Sieben Rückmeldeelemente sind als Web Components framework-unabhängig einbettbar.',
@@ -237,6 +249,9 @@ export const RUECKMELDUNGEN = [
       'einzelbericht',
           'personen-tabelle', // Reiter „Schülerübersicht“
       'vergleichsebenen', // Reiter „Vergleich“
+          'staerken-und-entwicklungsbedarfe', // app-competence-summary: „Das kann die Klasse gut“ / „Steigerungspotential“ (Erhebung 14.10.2026)
+          'uebersichtskarten', // app-group-summary, app-participants-card (Erhebung 14.10.2026)
+          'kontextmerkmal-ring', // app-donut-chart (Erhebung 14.10.2026)
     ],
   },
   {
@@ -255,7 +270,7 @@ export const RUECKMELDUNGEN = [
     stufen: [],
     zielgruppen: ['schulleitung'],
     demo: 'https://apps.indibit.eu/tba3/school-manager',
-    code: 'https://github.com/indibit-eu',
+    code: 'https://github.com/indibit-eu/tba3-elements',
     doku: 'https://apps.indibit.eu/tba3/docs/',
     hinweis: null,
     technik: {
@@ -270,6 +285,11 @@ export const RUECKMELDUNGEN = [
           'kontextmerkmal-ring', // vier Ringe auf der Übersicht: Status, Teilnahme, Geschlecht, Sprache
       'standard-erreichung', // „Mindeststandard erreicht“ mit Balken je Fach
       'uebersichtskarten', // app-school-summary, app-participants-card
+          'kennzahl-mit-vergleich', // app-comparison-stat-card, Reiter „Schulentwicklung“ (Erhebung 14.10.2026)
+          'profil-heatmap', // „Schul-Profil Teilkompetenzen“: Teilkompetenz × Klasse (Erhebung 14.10.2026)
+          'sozialer-gradient', // app-covariate-gradient-chart, Element covariate-gradient (Erhebung 14.10.2026)
+          'staerken-und-entwicklungsbedarfe', // app-competence-summary (Erhebung 14.10.2026)
+          'automatische-hinweise', // „Empfohlene Handlungsfelder“ (Erhebung 14.10.2026)
     ],
   },
   {
@@ -288,7 +308,7 @@ export const RUECKMELDUNGEN = [
     stufen: [],
     zielgruppen: ['schulaufsicht'],
     demo: 'https://apps.indibit.eu/tba3/school-supervision',
-    code: 'https://github.com/indibit-eu',
+    code: 'https://github.com/indibit-eu/tba3-elements',
     doku: 'https://apps.indibit.eu/tba3/docs/',
     hinweis: {
       de: 'Das Land Hessen setzt für seine Rückmeldungen an die Schulaufsicht auf diesem Entwicklungsstand auf.',
@@ -305,6 +325,8 @@ export const RUECKMELDUNGEN = [
       'filterleiste',
           'kennzahl-mit-vergleich', // app-comparison-stat-card
       'uebersichtskarten', // app-overview-dashboard
+          'sozialer-gradient', // app-covariate-gradient-chart (Erhebung 14.10.2026)
+          'automatische-hinweise', // „Empfohlene Handlungsfelder“ (Erhebung 14.10.2026)
     ],
   },
   {
@@ -326,8 +348,8 @@ export const RUECKMELDUNGEN = [
     code: 'https://git.imp.fu-berlin.de/isq/feedbacksysteme/tbaiii',
     doku: null,
     hinweis: {
-      de: 'Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant. Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.',
-      en: 'Demo available until 31 Oct 2027; the repository is scheduled to move. Design decisions, architecture and API documentation live in the repository. The support system, item recommendations and AI items are marked beta.',
+      de: 'Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant, die bisherige Adresse verlangt eine Anmeldung (Stand 14.10.2026). Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.',
+      en: 'Demo available until 31 Oct 2027; the repository is scheduled to move, and the current address requires a login (as of 14 Oct 2026). Design decisions, architecture and API documentation live in the repository. The support system, item recommendations and AI items are marked beta.',
     },
     technik: {
       de: 'Frontend React 19 mit TypeScript, Vite, Material-UI, ECharts und Leaflet; Backend Node.js/Express mit REST-API und JWT-Prüfung. Datenhaltung: MongoDB für Testergebnisse, MySQL für den Aufgabenbrowser, Supabase/PostgreSQL für Auth, Profile und Arbeitsstände. Technische Umsetzung im Wesentlichen durch eine Entwicklerperson.',
@@ -388,6 +410,7 @@ export const RUECKMELDUNGEN = [
           'glossar-mit-suche', // MaGlossarySearchModule, maGlossary.js
       'aufgabenvorschau', // ItemPreviewOverlay
       'export-mit-auswahl', // ExportService, ExportSelectionManager
+          'arbeitsstand', // notesController.js: Notizen je Ansicht, im Browser gespeichert (Erhebung 14.10.2026)
     ],
   },
   {
@@ -422,6 +445,9 @@ export const RUECKMELDUNGEN = [
           'glossar-mit-suche', // enGlossary.js
       'aufgabenvorschau', // ItemPreviewOverlay
       'export-mit-auswahl', // ExportService, ExportSelectionManager
+          'punktwolke', // scatterplotConfig (Erhebung 14.10.2026)
+          'netzdiagramm', // styleSpiderChart.js (Erhebung 14.10.2026)
+          'arbeitsstand', // notesController.js (Erhebung 14.10.2026)
     ],
   },
   {
@@ -456,6 +482,11 @@ export const RUECKMELDUNGEN = [
       'glossar-mit-suche', // slGlossary.js
       'export-mit-auswahl', // ExportService, ExportSelectionManager
       'kontextmerkmal-ring', // slStudentCovariates
+          'abweichung-je-lerngruppe', // classDeviationConfig (Erhebung 14.10.2026)
+          'gruppen-gegenueberstellung', // groupComparisonConfig (Erhebung 14.10.2026)
+          'automatische-hinweise', // infoBoxModule: Lob- und Hinweistexte aus den Daten (Erhebung 14.10.2026)
+          'fragebogenskalen', // selfEfficacyConfig, teachingQualityConfig (Erhebung 14.10.2026)
+          'arbeitsstand', // notesController.js (Erhebung 14.10.2026)
     ],
   },
 ];
@@ -704,6 +735,63 @@ export const BAUSTEINE = [
     beleg: 'sachbericht',
   },
 
+  {
+    id: 'sozialer-gradient',
+    schicht: 'anzeige',
+    name: { de: 'Lösungsquote nach Merkmal', en: 'Solution rate by characteristic' },
+    zweck: {
+      de: 'Wie hängt das Ergebnis mit einem Hintergrundmerkmal zusammen? Die Lösungsquote je Ausprägung (Sozialindex, Geschlecht, Herkunftssprache) neben den Vergleichsgruppen, mit Spannweite. Zeigt Ungleichheit als Verlauf statt als Einzelwert.',
+      en: 'How does the result relate to a background characteristic? The solution rate per value (social index, gender, home language) next to the comparison groups, with its range. Shows inequality as a gradient instead of a single figure.',
+    },
+    daten: { de: 'Aggregationen nach Kovariaten', en: 'Aggregations by covariates' },
+    element: null,
+    quelle: null,
+    reiter: 'aggregations',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'abweichung-je-lerngruppe',
+    schicht: 'anzeige',
+    name: { de: 'Abweichung je Lerngruppe', en: 'Deviation per learning group' },
+    zweck: {
+      de: 'Wie weit liegt jede Klasse über oder unter dem Wert der Schule? Ein Balken je Klasse um eine Nulllinie. Für die Schulleitung die schnellste Antwort auf die Frage, wo es sich zu reden lohnt.',
+      en: 'How far is each class above or below the school value? One bar per class around a zero line. For school leadership, the quickest answer to where a conversation is worthwhile.',
+    },
+    daten: { de: 'Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule', en: 'Competence levels or solution rates per learning group and school' },
+    element: null,
+    quelle: null,
+    reiter: 'delta',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'gruppen-gegenueberstellung',
+    schicht: 'anzeige',
+    name: { de: 'Zwei Gruppen gespiegelt', en: 'Two groups mirrored' },
+    zweck: {
+      de: 'Zwei Gruppen links und rechts einer Mittelachse, nach Kompetenzstufen oder Punkten — wie eine Bevölkerungspyramide. Macht Unterschiede in der Form der Verteilung sichtbar, nicht nur im Mittelwert.',
+      en: 'Two groups to the left and right of a central axis, by competence level or score — like a population pyramid. Makes differences in the shape of the distribution visible, not just in the mean.',
+    },
+    daten: { de: 'Kompetenzstufen zweier Lerngruppen', en: 'Competence levels of two learning groups' },
+    element: null,
+    quelle: null,
+    reiter: 'competence',
+    beleg: 'artefakt',
+  },
+  {
+    id: 'netzdiagramm',
+    schicht: 'anzeige',
+    name: { de: 'Netzdiagramm der Teilkompetenzen', en: 'Radar chart of sub-competences' },
+    zweck: {
+      de: 'Mehrere Teilkompetenzen auf je einer Achse, eine Person gegen Klasse und Vergleichsgruppen. Das Profil ist die Aussage — ob es rund ist oder an einer Stelle einknickt.',
+      en: 'Several sub-competences, one per axis, a person against the class and comparison groups. The profile is the message — whether it is round or dents in one place.',
+    },
+    daten: { de: 'Ergebnisse je Teilkompetenz und Person', en: 'Results per sub-competence and person' },
+    element: null,
+    quelle: null,
+    reiter: 'students',
+    beleg: 'artefakt',
+  },
+
   // ── Schicht 2: Rückmeldeelemente ─────────────────────────────────────────
   {
     id: 'vergleichsebenen',
@@ -830,6 +918,21 @@ export const BAUSTEINE = [
     quelle: null,
     reiter: null,
     beleg: 'sachbericht',
+  },
+
+  {
+    id: 'fragebogenskalen',
+    schicht: 'element',
+    name: { de: 'Fragebogenskalen neben dem Testergebnis', en: 'Questionnaire scales next to the test result' },
+    zweck: {
+      de: 'Selbstwirksamkeit und Unterrichtsqualität aus dem Begleitfragebogen, je Klasse als Boxplot oder gestapelter Balken und im Verlauf. Stellt neben das Testergebnis, wie die Klasse ihren Unterricht und sich selbst sieht.',
+      en: 'Self-efficacy and teaching quality from the accompanying questionnaire, per class as a box plot or stacked bar and over time. Puts how the class sees its teaching and itself next to the test result.',
+    },
+    daten: { de: 'Fragebogendaten — nicht Teil der Schnittstelle', en: 'Questionnaire data — not part of the API' },
+    element: null,
+    quelle: null,
+    reiter: null,
+    beleg: 'artefakt',
   },
 
   // ── Schicht 3: Rahmen ────────────────────────────────────────────────────
