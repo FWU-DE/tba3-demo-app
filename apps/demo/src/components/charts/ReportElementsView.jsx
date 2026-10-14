@@ -16,7 +16,7 @@
 import { useMemo, useState } from 'react';
 import { KOMPONENTEN } from '@tba3/bausteine/react';
 import {
-  EINRICHTUNGEN, RUECKMELDUNGEN, nachSchichten, rueckmeldungenZu,
+  EINRICHTUNGEN, RUECKMELDUNGEN, nachSchichten, originaleZu, rueckmeldungenZu,
 } from '../../../../shared/konsortium.js';
 import { text as ausWoerterbuch } from '../../../../shared/sprache.js';
 import { useFilters } from '../../context/useFilters';
@@ -154,6 +154,58 @@ const Traeger = ({ ids, t, gewaehlt }) => (
     )}
   </div>
 );
+
+/**
+ * Das Original eines Bausteins: der Ausschnitt aus der Rückmeldung, aus der er
+ * stammt, verlinkt auf deren Demo. Gibt es keinen Ausschnitt, steht die erste
+ * Rückmeldung als Ganzes da — ein Bild der Seite ist besser als keines.
+ */
+const Original = ({ baustein, t, gewaehlt }) => {
+  const originale = originaleZu(baustein.id);
+  const ersatz = originale.length === 0
+    ? rueckmeldungenZu(baustein.id).find((r) => r.bild?.datei)
+    : null;
+  if (originale.length === 0 && !ersatz) return null;
+
+  const bilder = originale.length > 0
+    ? originale.map((o) => ({
+      datei: o.datei, breite: o.breite, hoehe: o.hoehe, adresse: o.adresse,
+      alt: ausWoerterbuch(o.alt, gewaehlt), rueckmeldung: o.rueckmeldung,
+    }))
+    : [{ datei: ersatz.bild.datei, adresse: ersatz.demo, alt: ersatz.bild.alt, rueckmeldung: ersatz }];
+
+  return (
+    <div className="mt-4" data-testid={`original-${baustein.id}`}>
+      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+        {t('elemente.imOriginal')}
+        {!originale.length && <span className="normal-case font-normal tracking-normal"> · {t('elemente.ganzeRueckmeldung')}</span>}
+      </p>
+      <div className="flex flex-wrap gap-4 items-start">
+        {bilder.map((b, i) => (
+          <figure key={b.datei} className={i === 0 ? 'max-w-xl' : 'max-w-xs'}>
+            <a href={b.datei} target="_blank" rel="noreferrer">
+              <img
+                src={b.datei} alt={b.alt} loading="lazy" width={b.breite} height={b.hoehe}
+                className="block w-auto h-auto max-h-80 border border-gray-200 rounded-lg bg-white"
+              />
+            </a>
+            {b.rueckmeldung && (
+              <figcaption className="text-xs text-gray-500 mt-1">
+                {i > 0 && `${t('elemente.auchBei')} `}
+                {ausWoerterbuch(EINRICHTUNGEN[b.rueckmeldung.einrichtung], gewaehlt)}
+                {' · '}{ausWoerterbuch(b.rueckmeldung.titel, gewaehlt)}
+                {' · '}
+                <a href={b.adresse ?? b.rueckmeldung.demo} target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">
+                  {t('elemente.originalOeffnen')}
+                </a>
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ReportElementsView = () => {
   const t = useTexte();
@@ -305,7 +357,14 @@ const ReportElementsView = () => {
                   <p className="text-sm text-gray-600 mb-3">{ausWoerterbuch(baustein.zweck, gewaehlt)}</p>
                   <p className="text-xs text-gray-400 mb-4">
                     {t('elemente.daten', { daten: ausWoerterbuch(baustein.daten, gewaehlt) })}
-                    {baustein.element && ` · <tba3-${baustein.element}>`}
+                    {baustein.element && (
+                      <>
+                        {' · '}
+                        <a href={`/bausteine/#${baustein.element}`} title={t('elemente.imDemonstrator')} className="text-blue-700 hover:underline" data-testid={`demonstrator-${baustein.id}`}>
+                          {`<tba3-${baustein.element}>`}
+                        </a>
+                      </>
+                    )}
                   </p>
 
                   {laedt && baustein.quelle && <LoadingSkeleton height="220px" />}
@@ -339,6 +398,8 @@ const ReportElementsView = () => {
                       {baustein.offen && ` ${ausWoerterbuch(baustein.offen, gewaehlt)}`}
                     </p>
                   )}
+
+                  <Original baustein={baustein} t={t} gewaehlt={gewaehlt} />
                 </Card>
               );
             })}

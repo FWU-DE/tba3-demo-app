@@ -235,6 +235,25 @@ if (process.env.DOCS_MOODLE) {
   console.log('· DOCS_MOODLE nicht gesetzt — die Moodle-Bilder bleiben, wie sie sind');
 }
 
+// ── Die Nachbauten der Bausteine, für „Bausteine der Rückmeldungen“ ─────────
+// Je Baustein, den der Katalog einem Element zuordnet, die Fassung als Web
+// Component aus dem Demonstrator — neben das Original aus der Rückmeldung.
+{
+  const { BAUSTEINE } = await import('../apps/shared/konsortium.js');
+  const elemente = [...new Set(BAUSTEINE.map((b) => b.element).filter(Boolean))];
+  const seite = await laden('/bausteine/?lang=de');
+  for (const name of elemente) {
+    const buehne = seite.locator(`section#${name} .buehne[data-fassung="Native Web Component"]`);
+    await buehne.scrollIntoViewIfNeeded();
+    await seite.waitForTimeout(300);
+    const roh = join(tmp, `baustein-${name}.png`);
+    await buehne.screenshot({ path: roh });
+    execFileSync('magick', [roh, '-trim', '-bordercolor', 'white', '-border', '16', '-resize', `${BREITE}x>`,
+      '-strip', join(ZIEL, `baustein-${name}.png`)]);
+    console.log(`✓ baustein-${name}.png`);
+  }
+}
+
 await browser.close();
 console.log(`\nFertig → apps/portal/dokumentation/bilder/`);
 console.log('  Stand prüfen: git diff --stat -- apps/portal/dokumentation/bilder/');

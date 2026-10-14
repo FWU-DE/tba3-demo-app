@@ -21,6 +21,9 @@ npm run rueckmeldungen:erheben
                        #  Bilder nach apps/beispiele/bilder/ (braucht Netz, magick)
 npm test               # Vitest (apps/demo + apps/shared mit jsdom; tools/,
                        #  apps/beispiele, apps/katalog als Node)
+npm run originale:aufnehmen
+                       # Ausschnitte der Originale je Baustein aus den Demos
+                       #  (Rezepte: tools/originale-rezepte.json; braucht Netz, magick)
 npm run test:watch     # dasselbe im Beobachtungsmodus
 npm run e2e            # Playwright gegen den gebauten Stand (baut und startet selbst)
 npm run e2e:ui         # dasselbe mit Oberfläche zum Nachvollziehen
@@ -313,6 +316,16 @@ nach einer Anmeldung kommt und was erst in den Reitern liegt. Ergiebig
 sind dabei besonders die eigenen Elementnamen im DOM — die Angular-Anwendungen
 von indibit tragen ihr Komponentenverzeichnis sichtbar mit sich
 (`app-school-summary`, `app-comparison-stat-card`).
+
+**Jeder Baustein zeigt sein Original.** Neben dem Nachbau steht der Ausschnitt
+der Komponente aus der Rückmeldung, aus der er stammt, im Demonstrator, im
+Reiter „Rückmeldeelemente“ und im erzeugten Dokument; was keinen Nachbau hat,
+zeigt wenigstens das Original. Die Ausschnitte nimmt `npm run originale:aufnehmen`
+nach Rezepten auf (Adresse, Klickschritte, CSS-Wähler in
+`tools/originale-rezepte.json`) und schreibt dazu `apps/shared/originale.js`. Wer
+einen Baustein nachbaut, legt ein Rezept an. Hakt eine fremde Demo, bleibt das
+alte Bild stehen. Die Nachbauten fürs Dokument nimmt `npm run docs:bilder` aus
+dem Demonstrator auf.
 
 Nach jeder Änderung an den Daten: **`npm run konsortium:doc`**. Die erzeugte
 Datei ist eingecheckt, weil `tools/build-site.mjs` sie auf der Platte erwartet

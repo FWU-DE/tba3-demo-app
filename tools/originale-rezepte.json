@@ -1,0 +1,1316 @@
+[
+  {
+    "baustein": "abweichung-je-lerngruppe",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#summary",
+    "schritte": [
+      {
+        "warteAuf": "#sl-summary-row-deutsch-rs svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".summary-row-card:has(#sl-summary-row-deutsch-rs)",
+    "alt": {
+      "de": "Abweichung der Klassen vom Schulwert in Prozentpunkten, ein Balken je Klasse um eine Nulllinie, für Deutsch Rechtschreibung",
+      "en": "Deviation of classes from the school value in percentage points, one bar per class around a zero line, for German spelling"
+    },
+    "notiz": "Ansicht Überblick (#summary), erste Zeile „Deutsch: Rechtschreibung“: Schulwert 78 % links, Landesschnitt und Klassen 8a–8c als Abweichung."
+  },
+  {
+    "baustein": "arbeitsstand",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#class",
+    "schritte": [
+      {
+        "warteAuf": "#ma-class-table-container .tabulator-row"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "klick": "[aria-label='Notizen öffnen']"
+      },
+      {
+        "warte": 1200
+      }
+    ],
+    "auswahl": ".notes-drawer.visible",
+    "alt": {
+      "de": "Notizen-Schublade mit Seitenreitern, Formatierungsleiste und Knopf zum Verknüpfen mit einem Modul",
+      "en": "Notes drawer with page tabs, formatting bar and a button to link a module"
+    },
+    "notiz": "Klasse-Ansicht, Knopf „Notizen öffnen“; im frischen Browser leer (Notizen liegen im localStorage)."
+  },
+  {
+    "baustein": "aufgabenbrowser",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/task-browser']"
+      },
+      {
+        "warte": 2500
+      }
+    ],
+    "auswahl": "main > div > div",
+    "hoehe": 470,
+    "alt": {
+      "de": "Seite „Fördermaterialien“: Hinweis auf den Aufgabenbrowser mit Vorschaubild und Knopf „Zum Aufgabenbrowser“",
+      "en": "“Support materials” page: pointer to the task browser with preview image and a “To the task browser” button"
+    },
+    "notiz": "Im Lernstand-Barometer nur eine Einstiegsseite; der Knopf führt extern zu aufgabenbrowser.de (dort Anmeldung). Der eigentliche Browser ist nicht Teil der Demo."
+  },
+  {
+    "baustein": "aufgabenvorschau",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/results/tests']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "div[data-iqb-id='iDL11201']"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "div[data-iqb-id='iDL11201']",
+    "hoehe": 300,
+    "alt": {
+      "de": "Aufgeklappte Aufgabe 1.1 „Sportunterricht“: Klassenmittelwert und fairer Vergleichswert, richtige Lösung, Teilaufgabenmerkmale und Vorschaubilder von Stimulus und Aufgabe",
+      "en": "Expanded item 1.1 “PE lesson”: class mean and fair comparison value, correct solution, item characteristics and preview images of stimulus and item"
+    },
+    "notiz": "Klick auf die erste Zeile der Aufgabenliste im Fachbericht. Demo-Inhalte sind Platzhalter (Lorem ipsum); darunter folgt ein langer Kommentar, der abgeschnitten ist."
+  },
+  {
+    "baustein": "aufgabenvorschau",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#item",
+    "schritte": [
+      {
+        "warteAuf": ".tabulator-row .item-preview-trigger"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "klick": ".tabulator-row:nth-child(1) .item-preview-trigger"
+      },
+      {
+        "warteAuf": ".item-preview-overlay.visible .item-preview-overlay-content"
+      },
+      {
+        "warte": 1200
+      }
+    ],
+    "auswahl": ".item-preview-overlay-content",
+    "alt": {
+      "de": "Überlagerungsfenster zur Aufgabe 1.0 „Drei_Ziffern“ mit Domäne und Niveau; Aufgabentext, Bild und Audio sind noch Platzhalter",
+      "en": "Overlay for item 1.0 “Drei_Ziffern” with domain and level; item text, image and audio are still placeholders"
+    },
+    "notiz": "Ansicht Aufgaben, Augen-Symbol der ersten Zeile. Die Demo zeigt ausdrücklich nur einen Platzhalter statt der Aufgabe."
+  },
+  {
+    "baustein": "auszeichnungen",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/results/conference']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "aside button[aria-label='Menü schließen']"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "#conference-list",
+    "alt": {
+      "de": "Fachkonferenz-Ansicht: je Aufgabe und Klasse ein farbiges Feld „Exzellent“, „Gut“, „Okay“, „Nicht gut“ relativ zum fairen Vergleichswert",
+      "en": "Subject department view: per item and class a coloured cell “Excellent”, “Good”, “Okay”, “Not good” relative to the fair comparison value"
+    },
+    "notiz": "Menü „Fachkonferenz“, Ansicht A; Seitenleiste eingeklappt, damit die Spalte 8c ganz sichtbar ist. Klasse 8c ohne Daten (grau)."
+  },
+  {
+    "baustein": "automatische-hinweise",
+    "rueckmeldung": "indibit-schulrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/school-manager/school-development",
+    "schritte": [
+      {
+        "warteAuf": "app-school-manager-school-development section"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "app-school-manager-school-development main > section:last-of-type",
+    "hoehe": 700,
+    "alt": {
+      "de": "Empfohlene Handlungsfelder: automatisch priorisierte Hinweiskarten mit Dringlichkeit, Begründung aus den Daten und Handlungsimpulsen.",
+      "en": "Recommended fields of action: automatically prioritised cards with urgency, a data-based rationale and suggested actions."
+    },
+    "notiz": "Schulleitung, Schulentwicklung, letzter Abschnitt, oberer Teil (erste Hinweise, z. B. „Oberer Leistungsbereich liegt deutlich zurück“, Stufe Hoch)."
+  },
+  {
+    "baustein": "automatische-hinweise",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#overview",
+    "schritte": [
+      {
+        "warteAuf": ".overview-kasten-card li, .overview-kasten-card p"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": ".overview-kasten-card",
+    "zusatz": true,
+    "alt": {
+      "de": "Hinweiskasten mit drei Reitern und einem aus den Daten erzeugten Satz zum Anteil ab Kompetenzstufe III",
+      "en": "Notice box with three tabs and a sentence generated from the data on the share at level III and above"
+    },
+    "notiz": "Ansicht Übersicht, Karte „Hinweise“ (Reiter Allgemein/Lob/Warnung). Reichhaltiger ist der Kasten im Selbstwirksamkeit-Detailfenster."
+  },
+  {
+    "baustein": "bericht-ausgeben",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/download']"
+      },
+      {
+        "warte": 2500
+      }
+    ],
+    "auswahl": "main > div > div",
+    "hoehe": 735,
+    "alt": {
+      "de": "Seite „Berichte downloaden“: Fachbericht, Klassenbericht, Fachkonferenz und Selbsteinschätzung als PDF je Klasse, tabellarische Auswertung als HTML, ODS und CSV",
+      "en": "“Download reports” page: subject report, class report, subject department and self-assessment as PDF per class, tabular evaluation as HTML, ODS and CSV"
+    },
+    "notiz": "Menü „Berichte downloaden“; die Downloads selbst wurden nicht ausgelöst."
+  },
+  {
+    "baustein": "einzelbericht",
+    "rueckmeldung": "kt-m8-kompetenzstand",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "waehle": "#studentCode",
+        "wert": "aaa"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button:has-text('Start')"
+      },
+      {
+        "klick": "button:has-text('Start')"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 5000
+      }
+    ],
+    "auswahl": "main [class*='_page_']",
+    "alt": {
+      "de": "Schülerbericht, Schritt „Das ist uns aufgefallen“: Balken richtig gelöst 60 % gegen falsch gelöst 40 % und eine persönliche Einordnung",
+      "en": "Student report, step “What we noticed”: bar of 60 % solved correctly against 40 % incorrectly and a personal interpretation"
+    },
+    "notiz": "Demo-Zugang „Ja“, Code aaa (Auswahlliste, Schritt „waehle“), Start, ein Schritt weiter. Der Bericht ist ein geführter Ablauf; dies ist die dritte von neun Stationen."
+  },
+  {
+    "baustein": "einzelbericht",
+    "rueckmeldung": "indibit-klassenrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/class-teacher/student",
+    "schritte": [
+      {
+        "text": "berg.sonne.42"
+      },
+      {
+        "warteAuf": "app-student-competence-level"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "app-student-dashboard",
+    "hoehe": 680,
+    "alt": {
+      "de": "Bericht zu einer Schülerin: Kopf mit Code, Geschlecht, Sozialstatus und erreichten Stufen, darunter die Tabelle der Kompetenzstufen mit Standardbeschreibungen und markierter erreichter Stufe.",
+      "en": "Report on one student: header with code, gender, social status and levels reached, below it the table of competence levels with standard descriptions and the level reached highlighted."
+    },
+    "notiz": "Klassenleitung, Schülerübersicht, Klick auf berg.sonne.42: oberer Teil des Dashboards (Kopf und erste Domäne). Darunter folgen zweite Domäne und Lösungsquoten der Person. Die Sicht ist für die Lehrkraft, nicht für die Schülerin."
+  },
+  {
+    "baustein": "erklaertexte",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "text": "So funktioniert's"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "[class*='_modalContainer_']",
+    "hoehe": 650,
+    "alt": {
+      "de": "Seitenpanel „Ergebnisse im Detail – Hilfe & Bedienung“ mit Vorlese-Knopf und nummerierten Erklärungen zu Ansichten, Optionen, Merkmalen und Sortierung",
+      "en": "Side panel “Results in detail – help & operation” with a read-aloud button and numbered explanations of views, options, characteristics and sorting"
+    },
+    "notiz": "Schritt 4, Klick auf „So funktioniert’s“. Weitere Erklärtexte: „Über diese Rückmeldung“ auf der Startseite (in Du-Form, offenbar aus dem Schülerbericht übernommen) und „Anregungen zur Weiterarbeit“ mit Checkliste in Schritt 7."
+  },
+  {
+    "baustein": "erklaertexte",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#class",
+    "schritte": [
+      {
+        "warteAuf": "#ma-class-table-container .tabulator-row"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "klick": "[aria-label='Rundgang starten']"
+      },
+      {
+        "warteAuf": ".tutorial-tour-overlay.is-ready .tutorial-tour-card"
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": ".tutorial-tour-card",
+    "zusatz": true,
+    "alt": {
+      "de": "Erste Karte des Rundgangs in der Klassenansicht: erklärt die Kompetenzstufenverteilung und wie man sie liest",
+      "en": "First card of the class view tour: explains the competence-level distribution and how to read it"
+    },
+    "notiz": "Klasse-Ansicht, Knopf „Rundgang starten“; nur die Tourkarte, ohne hervorgehobenes Modul."
+  },
+  {
+    "baustein": "erwartung-gegen-ergebnis",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/results/tests']"
+      },
+      {
+        "warte": 2500
+      }
+    ],
+    "auswahl": "section:has(#aufgabenliste)",
+    "hoehe": 650,
+    "alt": {
+      "de": "Aufgabenliste des Fachberichts: je Aufgabe Klassenmittelwert neben dem fairen Vergleichswert als zwei Balken",
+      "en": "Item list of the subject report: per item the class mean next to the fair comparison value as two bars"
+    },
+    "notiz": "Fachbericht (Fachlehrkraft), Abschnitt „Aufgabenliste“, oberer Teil. Tatsächliche gegen erwartete Lösungsquote je Aufgabe als zwei Balken nebeneinander, kein Streudiagramm mit Diagonale."
+  },
+  {
+    "baustein": "export-mit-auswahl",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#overview",
+    "schritte": [
+      {
+        "warteAuf": "#ma-overview-ksDistribution svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 1000
+      },
+      {
+        "klick": ".overview-ks-chart-container [data-header-action-button='batch-select']"
+      },
+      {
+        "klick": ".overview-task-ring-chart-container [data-header-action-button='batch-select']"
+      },
+      {
+        "klick": "[data-batch-export-action='export']"
+      },
+      {
+        "warteAuf": "#ma-report-container"
+      },
+      {
+        "warte": 2500
+      }
+    ],
+    "auswahl": "#ma-report-container",
+    "hoehe": 700,
+    "alt": {
+      "de": "Berichtsansicht mit zwei vorgemerkten Modulen auf einer Seitenvorschau und dem Knopf „Als PDF exportieren“",
+      "en": "Report view with two marked modules on a page preview and the “export as PDF” button"
+    },
+    "notiz": "Auf Übersicht zwei Module per Kästchen-Symbol vorgemerkt, dann „Bericht öffnen“; obere 700 px der Berichtsansicht."
+  },
+  {
+    "baustein": "filterleiste",
+    "rueckmeldung": "indibit-schulaufsicht",
+    "adresse": "https://apps.indibit.eu/tba3/school-supervision/districts",
+    "schritte": [
+      {
+        "warteAuf": "app-districts-dashboard app-filter-button-group"
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": "app-districts-dashboard",
+    "hoehe": 92,
+    "alt": {
+      "de": "Filterleiste: Auswahlliste Schulamt, darunter Knöpfe für Jahrgang (V3, V8) und Fach (Deutsch, Mathematik).",
+      "en": "Filter bar: a school authority drop-down, below it buttons for year (V3, V8) and subject (German, Mathematics)."
+    },
+    "notiz": "Schulaufsicht, Reiter Schulämter, oberer Rand von app-districts-dashboard. Die Auswahl steht nicht in der Adresszeile."
+  },
+  {
+    "baustein": "foerdergruppen",
+    "rueckmeldung": "indibit-klassenrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/class-teacher/further-work",
+    "schritte": [
+      {
+        "warteAuf": "table.foerdergruppen-heatmap"
+      },
+      {
+        "text": "3.3.7"
+      },
+      {
+        "warteAuf": ".foerdergruppen-card"
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": "app-foerdergruppen section:has(#foerdergruppen-competence-select)",
+    "alt": {
+      "de": "Vier Förderbuckets zu einer Teilkompetenz: Intensivförderung, Förderung, Sicherung und Forderung, je mit Spanne der Lösungsquote und den zugeordneten Schüler:innen.",
+      "en": "Four support buckets for one sub-competence: intensive support, support, consolidation and extension, each with its solution-rate range and the assigned students."
+    },
+    "notiz": "Klassenleitung, Weiterarbeit, Reiter Teilkompetenzen, nach Klick auf den Spaltenkopf 3.3.7 der Heatmap: „Detail-Ansicht: Förderbuckets“ (12/13/1/0); jede Person per Menü in einen anderen Bucket verschiebbar. Achtung: Die Auswahlliste zeigt in der Demo weiter „1.4.3“ an, obwohl die Buckets zu 3.3.7 gehören."
+  },
+  {
+    "baustein": "fragebogenskalen",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#overview",
+    "schritte": [
+      {
+        "warteAuf": "#overview-module-preview-0 svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "klick": "#overview-module-preview-0"
+      },
+      {
+        "warteAuf": ".sl-detail-overlay.visible .overlay-panel--main svg"
+      },
+      {
+        "klick": ".sl-detail-overlay-kasten"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".sl-detail-overlay .overlay-panel--main",
+    "alt": {
+      "de": "Gestapelte Balken der Selbstwirksamkeit je Klasse und Schule in vier Bewertungsstufen",
+      "en": "Stacked bars of self-efficacy per class and for the school in four rating bands"
+    },
+    "notiz": "Ansicht Übersicht, Vorschaukarte „Selbstwirksamkeit“ öffnet ein Detailfenster; Ausschnitt ist dessen Hauptdiagramm mit Klassen- und Bewertungslegende."
+  },
+  {
+    "baustein": "gefuehrter-ablauf",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": "nav[class*='_navigationBar_']",
+    "alt": {
+      "de": "Fußleiste des Klassenberichts mit Zurück- und Weiter-Knopf und sieben Punkten für die Schritte, der zweite aktiv",
+      "en": "Footer of the class report with back and next buttons and seven dots for the steps, the second active"
+    },
+    "notiz": "Schrittnavigation auf Schritt 2 (Zusammenfassung). Der Schülerbericht kt-m8-kompetenzstand hat dieselbe Leiste mit neun Punkten."
+  },
+  {
+    "baustein": "glossar-mit-suche",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#help",
+    "schritte": [
+      {
+        "warteAuf": ".help-section-glossary .help-item"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "klick": ".help-item[data-id='KS'] .help-item-header"
+      },
+      {
+        "warte": 800
+      }
+    ],
+    "auswahl": ".help-section-glossary",
+    "hoehe": 640,
+    "alt": {
+      "de": "Glossar mit Suchfeld und aufklappbaren Begriffen, der erste Eintrag „Kompetenzstufe (primar)“ geöffnet",
+      "en": "Glossary with a search field and expandable terms, the first entry “competence level (primary)” opened"
+    },
+    "notiz": "Ansicht Hilfe, Abschnitt „Glossar“; obere 640 px, ein Eintrag aufgeklappt."
+  },
+  {
+    "baustein": "gruppen-gegenueberstellung",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#comparison",
+    "schritte": [
+      {
+        "warteAuf": "#sl-comparison-group-chart svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".comparison-chart-card",
+    "alt": {
+      "de": "Gespiegelte Kompetenzstufenverteilung: Mädchen links, Jungen rechts der Mittelachse, wie eine Bevölkerungspyramide",
+      "en": "Mirrored competence-level distribution: girls left, boys right of the central axis, like a population pyramid"
+    },
+    "notiz": "Ansicht Vergleich, Karte „Gegenüberstellung ausgewählter Gruppen“ mit Auswahlleiste (Fach, Ebene, Kategorie, Gruppe 1/2); Standard Geschlecht, Deutsch Rechtschreibung."
+  },
+  {
+    "baustein": "kennzahl-mit-vergleich",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "[class*='_conclusionContainer_'] [class*='_results_']",
+    "alt": {
+      "de": "Gesamtergebnis der Klasse 50 % als Balken über dem korrigierten Landesmittelwert 42 %",
+      "en": "Class total of 50 % as a bar above the corrected state average of 42 %"
+    },
+    "notiz": "Zusammenfassung (Schritt 2). Zahl plus Bezugswert als zwei Balken; kein kleiner Verlauf."
+  },
+  {
+    "baustein": "kompetenzstufen-verteilung",
+    "rueckmeldung": "indibit-klassenrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/class-teacher",
+    "schritte": [
+      {
+        "warteAuf": "app-competence-levels-distribution canvas"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "app-competence-levels-distribution",
+    "alt": {
+      "de": "Säulendiagramm je Domäne: Anzahl der Schüler:innen auf den Kompetenzstufen Ia bis V, Mindeststandard unter Stufe II markiert, daneben Kennzahlen zu Optimal- und Mindeststandard.",
+      "en": "Column chart per domain: number of students at competence levels Ia to V, minimum standard marked under level II, with key figures for optimal and minimum standard alongside."
+    },
+    "notiz": "Klassenleitung, Übersicht: zwei Domänen (Sprechen und Zuhören, Sprachgebrauch), Säulen je Stufe in Stufenfarben, rechts Optimalstandard / % Mindeststandard / unter Mindeststandard."
+  },
+  {
+    "baustein": "kompetenzstufen-verteilung",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#overview",
+    "schritte": [
+      {
+        "warteAuf": "#ma-overview-ksDistribution svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".overview-ks-chart-container",
+    "zusatz": true,
+    "alt": {
+      "de": "Gestapelte Säulen der Kompetenzstufen I bis V für Klasse 3a, Schulschnitt und Landesschnitt",
+      "en": "Stacked columns of competence levels I to V for class 3a, school average and state average"
+    },
+    "notiz": "Ansicht Übersicht, Karte „Kompetenzstufenverteilung im Vergleich“."
+  },
+  {
+    "baustein": "kontextmerkmal-ring",
+    "rueckmeldung": "indibit-schulrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/school-manager",
+    "schritte": [
+      {
+        "warteAuf": "app-school-summary app-donut-chart canvas"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "app-school-summary > div.row.mt-2",
+    "alt": {
+      "de": "Drei Ringdiagramme nebeneinander: Teilnahmequote 80 %, Geschlecht und Sprache zuhause mit Gesamtzahl 214 in der Mitte und Legende darunter.",
+      "en": "Three ring charts side by side: participation rate 80 %, gender and home language with the total 214 in the centre and a legend below."
+    },
+    "notiz": "Schulleitung, Übersicht: zweite Reihe von app-school-summary mit drei app-donut-chart. Der vierte Ring (Sozioökonomischer Status) steht eine Reihe darüber."
+  },
+  {
+    "baustein": "lernverlauf-figuren",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "warte": 3000
+      }
+    ],
+    "auswahl": ".view-container",
+    "alt": {
+      "de": "Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, Herbst 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler",
+      "en": "Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, autumn 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle"
+    },
+    "notiz": "Startansicht „Grafik“. Die Vögel sind leicht animiert; Positionen innerhalb eines Messzeitpunkts werden zufällig gestreut, das Bild variiert also zwischen Läufen geringfügig."
+  },
+  {
+    "baustein": "loesungshaeufigkeit-je-aufgabe",
+    "rueckmeldung": "indibit-klassenrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/class-teacher/solution-rate",
+    "schritte": [
+      {
+        "text": "Aufgaben"
+      },
+      {
+        "warte": 800
+      },
+      {
+        "klick": "#comp-Landesmittelwert"
+      },
+      {
+        "warteAuf": "app-solution-rate-chart"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "app-solution-rate-chart",
+    "alt": {
+      "de": "Waagerechte Balken je Aufgabe mit der Lösungsquote der Klasse, grün über und rot unter dem Landesmittelwert, der als senkrechter Strich mit Beschriftung „Ø L“ markiert ist.",
+      "en": "Horizontal bars per item with the class solution rate, green above and red below the state average, which is marked as a vertical line labelled “Ø L”."
+    },
+    "notiz": "Klassenleitung, Lösungsquote, Reiter Aufgaben, Vergleichswert Landesmittelwert angehakt: sieben Aufgaben mit Link „zur Aufgabe“. Die Beschriftung des letzten Strichs ragt im Original unter das Element und ist unten angeschnitten."
+  },
+  {
+    "baustein": "materialanbindung",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "klick": ".training-group-button-container button.high"
+      },
+      {
+        "warte": 3000
+      }
+    ],
+    "auswahl": ".view-container",
+    "alt": {
+      "de": "Messzeitpunkt März 2026 mit geöffnetem Fördermaterial „Flugtraining“ für die Gruppe Text/Adler: Lesetandem, Lesepass, Textabschnitte sortieren, Lesepilot, Lesetheater und weitere",
+      "en": "March 2026 measurement point with the “flight training” support material opened for the text/eagle group: reading tandem, reading pass, sorting text sections, reading pilot, reader’s theatre and more"
+    },
+    "notiz": "Klick auf die Gruppe „Text/Adler“ am rechten Rand öffnet die Materialleiste; Schüler:innen außerhalb der Gruppe werden blass. Materialien sind Kacheln, die Links öffnen."
+  },
+  {
+    "baustein": "mittelwert-mit-unsicherheit",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "fehlt": "In keiner der vier kt-Demos ein Mittelwert mit Konfidenz- oder Unsicherheitsbereich gesehen; der Klassenbericht zeigt nur Punktwerte (Balken/Säulen) gegen den korrigierten Landesmittelwert."
+  },
+  {
+    "baustein": "netzdiagramm",
+    "rueckmeldung": "zepf-en8",
+    "adresse": "https://zepf-rptu.github.io/TBA3/en/#student",
+    "schritte": [
+      {
+        "warteAuf": "#student-spider-styleSpider svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".chart-section:has(#student-spider-styleSpider)",
+    "alt": {
+      "de": "Netzdiagramm mit sechs Achsen (Hören und Lesen je global, detailliert, selektiv): eine Schülerin gegen Klasse, Schule und Land",
+      "en": "Radar chart with six axes (listening and reading, each global, detailed, selective): one student against class, school and state"
+    },
+    "notiz": "Ansicht Schüler:in, Karte „Individuelle Lösungsquoten nach Stilen“ (styleSpiderChart), erste Person der Liste."
+  },
+  {
+    "baustein": "personen-tabelle",
+    "rueckmeldung": "zepf-ma3",
+    "adresse": "https://zepf-rptu.github.io/TBA3/ma/#class",
+    "schritte": [
+      {
+        "warteAuf": "#ma-class-table-container .tabulator-row"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "#ma-class-table-container",
+    "hoehe": 640,
+    "alt": {
+      "de": "Klassentabelle der Mathematik-Rückmeldung mit einer Zeile je Schüler:in: Richtig-Anzahl, Verteilungsbalken und Kompetenzstufe",
+      "en": "Class table of the mathematics report with one row per student: number correct, distribution bar and competence level"
+    },
+    "notiz": "Ansicht Klasse, Karte „Klassenübersicht“ (Tabulator) mit Filterknöpfen Stärkste/Schwächste 5 und Schwellenwert; obere 640 px."
+  },
+  {
+    "baustein": "positionsskala-mit-zonen",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "text": "2026 März"
+      },
+      {
+        "warte": 3000
+      }
+    ],
+    "auswahl": ".view-container",
+    "alt": {
+      "de": "Messwiederholung Lesen: Vögel als Schüler:innen auf der Lesegeschwindigkeits-Skala zum Messzeitpunkt März 2026, rechts die Zonen Silben/Möwe, Wort/Fink, Text/Adler",
+      "en": "Repeated reading measurement: birds as students on the reading-speed scale at the March 2026 measurement point, with the zones syllables/gull, word/finch, text/eagle on the right"
+    },
+    "notiz": "Einzelner Messzeitpunkt (Klick auf „2026 März“). Die Höhe jedes Vogels ist die Position auf der Skala, die Zonen stehen als senkrechte Beschriftung am rechten Rand statt als Bänder unter der Skala; keine Zahlenachse."
+  },
+  {
+    "baustein": "profil-heatmap",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "[class*='_resultsInDetailContainer_']",
+    "hoehe": 690,
+    "alt": {
+      "de": "„Ergebnisse im Detail“: Matrix Schüler:innen × Aufgaben, gelöste Aufgaben grün, nach Lösungshäufigkeit gruppiert, mit Halbjahresnote und Merkmalsspalten",
+      "en": "“Results in detail”: matrix of students × items, solved items green, grouped by solution frequency, with half-year grade and characteristic columns"
+    },
+    "notiz": "Schritt 4, Ansicht „Allgemein“ mit „Aufgaben gruppieren“; oberer Teil (hoehe). Färbung nach richtig/falsch/nicht bearbeitet bzw. nach Kompetenzstufe, Anforderungsbereich, Leitidee umschaltbar, nicht nach Abweichung."
+  },
+  {
+    "baustein": "profil-heatmap",
+    "rueckmeldung": "indibit-klassenrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/class-teacher/further-work",
+    "schritte": [
+      {
+        "warteAuf": "table.foerdergruppen-heatmap"
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": "app-foerdergruppen section:has(.foerdergruppen-heatmap)",
+    "hoehe": 700,
+    "alt": {
+      "de": "Heatmap: Zeilen sind Schüler:innen, Spalten Teilkompetenzen, sortiert nach Klassen-Mittel; Zellen rot, orange, grau oder grün je nach Lösungsquote.",
+      "en": "Heat map: rows are students, columns sub-competences sorted by class mean; cells red, orange, grey or green by solution rate."
+    },
+    "notiz": "Klassenleitung, Weiterarbeit, „Übersicht: Profile aller Schüler:innen“, oberer Teil. Die Tabelle scrollt waagerecht, rechte Spalten sind im Original abgeschnitten."
+  },
+  {
+    "baustein": "pseudonymisierung",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "klick": ".code-toggle button:has-text('Codes')"
+      },
+      {
+        "warte": 800
+      },
+      {
+        "klick": "button:has-text('Codes einblenden')"
+      },
+      {
+        "warte": 3000
+      }
+    ],
+    "auswahl": ".super-container",
+    "hoehe": 690,
+    "alt": {
+      "de": "Umschalter „Namen / Codes“ auf „Codes“, die Vögel tragen statt Namen dreibuchstabige Codes",
+      "en": "“Names / Codes” toggle set to “Codes”, the birds carry three-letter codes instead of names"
+    },
+    "notiz": "Umschalter auf „Codes“ und „Codes einblenden“: Überschrift, Bedienleiste und Grafik mit Code-Etiketten; die Namensliste darunter zeigt ebenfalls Codes, liegt aber außerhalb des Zuschnitts."
+  },
+  {
+    "baustein": "punktwolke",
+    "rueckmeldung": "zepf-en8",
+    "adresse": "https://zepf-rptu.github.io/TBA3/en/#overview",
+    "schritte": [
+      {
+        "warteAuf": "#en-overview-scatterplot svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".en-overview-center",
+    "alt": {
+      "de": "Punktwolke: Lösungsquote Hörverstehen gegen Leseverstehen je Schüler:in, mit GER-Schwellen und Markern für Klasse, Schule und Land",
+      "en": "Scatter plot: listening against reading solution rate per student, with CEFR thresholds and markers for class, school and state"
+    },
+    "notiz": "Ansicht Übersicht, Karte „Streuung der Schüler:innen“; Schwellen als gestrichelte Linien, Legende unten."
+  },
+  {
+    "baustein": "rollensichten",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "klick": ".student-list button.name-button"
+      },
+      {
+        "warte": 1500
+      },
+      {
+        "klick": ".bird-text:visible i:has-text('child_care')"
+      },
+      {
+        "warteAuf": ".q-page-container h1:has-text('Testergebnis')"
+      },
+      {
+        "warte": 5000
+      }
+    ],
+    "auswahl": ".q-page-container > div",
+    "hoehe": 690,
+    "alt": {
+      "de": "Schüler:innensicht derselben Daten: „Adrian – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über drei Messzeitpunkte",
+      "en": "Student view of the same data: “Adrian – here is your test result” with his own bird and flight path across three measurement points"
+    },
+    "notiz": "Keine ausdrückliche Rollenwahl; die Lehrkraft wechselt über das Kindsymbol am Namensetikett in die Schüler:innensicht (/schuelerin-detail/…; Direktaufruf lädt nicht). Konfetti-Animation und Lobwort („Super!“, „Genial!“ …) wechseln zufällig. Eine echte Rollenwahl gibt es auf der kt-d8-Anmeldeseite (Lehrer:in / Schüler:in)."
+  },
+  {
+    "baustein": "selbsteinschaetzung",
+    "rueckmeldung": "kt-d8-lernstand-barometer",
+    "adresse": "https://lernstand-barometer.ktest.de/login",
+    "schritte": [
+      {
+        "text": "Lehrer:in"
+      },
+      {
+        "text": "Ja"
+      },
+      {
+        "klick": "form button[type=submit]"
+      },
+      {
+        "klick": "[role=dialog] button:has-text('Verstanden')"
+      },
+      {
+        "warte": 500
+      },
+      {
+        "klick": "aside a[href='/results/self-evaluation']"
+      },
+      {
+        "warte": 2500
+      }
+    ],
+    "auswahl": "main div.grid.items-start.gap-12",
+    "alt": {
+      "de": "Gesprächsprotokoll der Selbsteinschätzung für Leseverstehen und Orthografie: Selbsteinschätzung und Ergebnis als Stufenleisten mit Schlüsselsymbolen, daneben „Noch zu üben“ und „Bereits geschafft“",
+      "en": "Self-assessment conversation summary for reading comprehension and spelling: self-assessment and result as level bars with key icons, next to “Still to practise” and “Already achieved”"
+    },
+    "notiz": "Demo-Zugang Lehrer:in, Menü „Selbsteinschätzung“, Schüler:in aaa. In der Demo ist bei allen geprüften Codes keine Selbsteinschätzung gespeichert („nicht gespeichert“), die obere Leiste bleibt leer; sichtbar ist nur die Ergebnisleiste."
+  },
+  {
+    "baustein": "sozialer-gradient",
+    "rueckmeldung": "indibit-schulrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/school-manager/school-development",
+    "schritte": [
+      {
+        "warteAuf": "app-covariate-gradient-chart canvas"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "app-school-manager-school-development section:has(app-covariate-gradient-chart) .card",
+    "alt": {
+      "de": "Gruppiertes Säulendiagramm: Lösungsquote nach Sozialstatus A bis E für die eigene Schule, die Vergleichsschule und den Landesmittelwert, mit Spannweite und erläuterndem Satz.",
+      "en": "Grouped column chart: solution rate by social status A to E for the school, the comparison school and the state average, with range and an explanatory sentence."
+    },
+    "notiz": "Schulleitung, Schulentwicklung, Abschnitt Bildungsgerechtigkeit: Karte „Lösungsquote nach Sozialstatus“, Spannweite 31 Pp."
+  },
+  {
+    "baustein": "staerken-und-entwicklungsbedarfe",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "main > div",
+    "alt": {
+      "de": "„Top Aufgaben“: drei Aufgaben, die die Klasse im Vergleich zum Landesmittelwert besonders gut gelöst hat, als Podest mit Klassen- und Landeswert",
+      "en": "“Top items”: three items the class solved particularly well compared with the state average, as a podium with class and state value"
+    },
+    "notiz": "Schritt 5. Das Gegenstück „Flop Aufgaben“ ist Schritt 6; die Leitideen-Karten der Zusammenfassung zeigen dieselbe Logik je Leitidee. Im Schülerbericht entsprechend „Hier bist du stark“ und je Leitidee „Dein Ergebnis“."
+  },
+  {
+    "baustein": "standard-erreichung",
+    "rueckmeldung": "indibit-schulrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/school-manager",
+    "schritte": [
+      {
+        "warteAuf": "app-mindeststandard-card"
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "app-mindeststandard-card",
+    "alt": {
+      "de": "80 % Mindeststandard erreicht als große Zahl, darunter je ein Balken für Deutsch (83 %) und Französisch (76 %).",
+      "en": "80 % reaching the minimum standard as a large figure, below it one bar each for German (83 %) and French (76 %)."
+    },
+    "notiz": "Schulleitung, Übersicht, Karte oben rechts. Schmal (rund 154 × 170 CSS-px)."
+  },
+  {
+    "baustein": "streubereich-je-merkmal",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "warte": 1500
+      }
+    ],
+    "auswahl": "[class*='_homogeneity_']",
+    "alt": {
+      "de": "„Homogenität der Klasse“: eine Markierung „Klasse“ auf einer Skala von eher homogener bis eher heterogener Klasse",
+      "en": "“Homogeneity of the class”: a marker “class” on a scale from rather homogeneous to rather heterogeneous"
+    },
+    "notiz": "Zusammenfassung (Schritt 2). Nur ein Streuungswert für die ganze Klasse auf einer unbeschrifteten Skala, nicht je Merkmal und ohne mittleren Bereich oder Einzelposition."
+  },
+  {
+    "baustein": "uebersichtskarten",
+    "rueckmeldung": "indibit-schulrueckmeldung",
+    "adresse": "https://apps.indibit.eu/tba3/school-manager",
+    "schritte": [
+      {
+        "warteAuf": "app-school-summary app-donut-chart canvas"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "app-school-summary",
+    "hoehe": 600,
+    "alt": {
+      "de": "Übersicht der Schule: Zahl der Teilnehmenden, Ring zum sozioökonomischen Status, Anteil mit erreichtem Mindeststandard je Fach sowie Ringe zu Teilnahmequote, Geschlecht und Sprache zuhause.",
+      "en": "School overview: number of participants, ring for socio-economic status, share reaching the minimum standard per subject, and rings for participation rate, gender and home language."
+    },
+    "notiz": "Schulleitung, Übersicht, oberer Teil von app-school-summary (die Kopfkarten bis zu den Ringen, ohne „Standard-Erreichung je Domäne“). Nicht aufklappbar."
+  },
+  {
+    "baustein": "vergleichsebenen",
+    "rueckmeldung": "kt-m8-klassenbericht",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/",
+    "schritte": [
+      {
+        "klick": "button.demo-access-option:has-text('Ja')"
+      },
+      {
+        "klick": "button[type=submit]"
+      },
+      {
+        "warteAuf": "button.startBtn"
+      },
+      {
+        "klick": "button.startBtn"
+      },
+      {
+        "warte": 3000
+      },
+      {
+        "klick": "button[aria-label='accessibility.next_page']"
+      },
+      {
+        "warte": 2500
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": "[class*='_pageContainer_']",
+    "alt": {
+      "de": "„Ergebnisse der Klasse in Teilbereichen“: Säulen Klassendurchschnitt gegen korrigierten Landesmittelwert für Gesamt, Leitideen, prozessbezogene Kompetenzen, Anforderungsbereiche und Kompetenzstufen, Schalter für Schuldurchschnitt",
+      "en": "“Class results in sub-areas”: bars of class average against corrected state average for total, key ideas, process competences, requirement levels and competence levels, toggle for school average"
+    },
+    "notiz": "Schritt 3 (ECharts). Ebenen Klasse, korrigierter Landesmittelwert und Schuldurchschnitt (laut Beschriftung „bisher nur Deko“, standardmäßig aus)."
+  },
+  {
+    "baustein": "vergleichsebenen",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#welcome",
+    "schritte": [
+      {
+        "warteAuf": "#sl-welcome-chart-svg svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".welcome-chart-card",
+    "zusatz": true,
+    "alt": {
+      "de": "Kompetenzstufenverteilung je Fach nebeneinander für Land, Schule und die Klassen 8a bis 8d, mit Legende",
+      "en": "Competence-level distribution per subject side by side for state, school and classes 8a to 8d, with legend"
+    },
+    "notiz": "Ansicht Willkommen (alternativ), Karte „Kompetenzstufenverteilung über alle Klassen und Fächer“; L/S/Klassen als Ebenen, Diagramm scrollt horizontal (letztes Fach angeschnitten)."
+  },
+  {
+    "baustein": "verlauf-ueber-messzeitpunkte",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "warteAuf": ".view-container .bird-container"
+      },
+      {
+        "klick": ".student-list button.name-button"
+      },
+      {
+        "warte": 3000
+      }
+    ],
+    "auswahl": ".view-container",
+    "alt": {
+      "de": "Lernverlauf einer Schülerin über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund",
+      "en": "Learning trajectory of one student across three measurement points as a line through the flock, the other students faded in the background"
+    },
+    "notiz": "Nach Klick auf die erste Namensschaltfläche (Adrian) wird dessen Flugbahn über die Messzeitpunkte hervorgehoben. Kein Unsicherheitsband und keine eigene Vergleichslinie; der Vergleich ist die blasse Klasse dahinter."
+  },
+  {
+    "baustein": "verlauf-ueber-messzeitpunkte",
+    "rueckmeldung": "zepf-sl",
+    "adresse": "https://zepf-rptu.github.io/TBA3/sl/#longitudinal",
+    "schritte": [
+      {
+        "warteAuf": "#sl-long-teaching-quality svg"
+      },
+      {
+        "klick": ".header-module-subtitle"
+      },
+      {
+        "warte": 2000
+      }
+    ],
+    "auswahl": ".longitudinal-chart-card:has(#sl-long-teaching-quality)",
+    "zusatz": true,
+    "alt": {
+      "de": "Linien über die Jahre 2022 bis 2026: Anteil der Schüler:innen je Bewertungsstufe der Unterrichtsqualität",
+      "en": "Lines across the years 2022 to 2026: share of students per rating band of teaching quality"
+    },
+    "notiz": "Ansicht Entwicklung, erste Karte „Unterrichtsqualität“ (Punkte & Linien). Die Karte „Kompetenzverteilung“ liegt weiter unten und wird beim Scrollen von der klebenden Kopfzeile verdeckt, daher diese. Kein Band, keine Vergleichslinie."
+  },
+  {
+    "baustein": "zeugnissaetze",
+    "rueckmeldung": "kt-d3-messwiederholung",
+    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "schritte": [
+      {
+        "klick": "a.q-tab[href$='zeugnissaetze']"
+      },
+      {
+        "warteAuf": "table.q-table"
+      },
+      {
+        "warte": 1000
+      }
+    ],
+    "auswahl": ".q-page-container .q-px-none",
+    "hoehe": 650,
+    "alt": {
+      "de": "Reiter „Zeugnissätze“: Tabelle mit Schüler:in, Gesamtwert und formuliertem Zeugnissatz mit Kopierknopf",
+      "en": "“Report card sentences” tab: table with student, total score and a generated report card sentence with a copy button"
+    },
+    "notiz": "Reiter „Zeugnissätze“, oberer Teil der Tabelle (hoehe). Je Schüler:in ein generierter Satz mit Kopierknopf; Satzbausteine abhängig von Ergebnis und Entwicklung."
+  }
+]

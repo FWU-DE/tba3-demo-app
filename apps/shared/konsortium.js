@@ -44,6 +44,13 @@
 // importiert davon bewusst nichts: so bleibt sie reine Daten und Logik, läuft
 // unverändert im Node-Test und lässt sich sowohl über /gemeinsam/konsortium.js
 // im Browser als auch als Modul in der Demoanwendung einbinden.
+//
+// Die Ausschnitte der Originale je Baustein stehen in ./originale.js, erzeugt
+// von `npm run originale:aufnehmen`.
+
+import { ORIGINALE } from './originale.js';
+
+export { ORIGINALE, ORIGINALE_STAND } from './originale.js';
 
 export const QUELLE = {
   titel: { de: 'TBA III — Steuergruppensitzung', en: 'TBA III — steering group meeting' },
@@ -1253,6 +1260,17 @@ export function bausteineVon(rueckmeldung) {
 /** Die Rückmeldungen, die einen Baustein nennen. */
 export function rueckmeldungenZu(bausteinId) {
   return RUECKMELDUNGEN.filter((r) => r.bausteine.includes(bausteinId));
+}
+
+/**
+ * Die Ausschnitte der Originale eines Bausteins, je mit ihrer Rückmeldung.
+ * Der erste ist das Original, aus dem der Baustein stammt.
+ */
+export function originaleZu(bausteinId) {
+  return (ORIGINALE[bausteinId] ?? []).map((o) => ({
+    ...o,
+    rueckmeldung: RUECKMELDUNGEN.find((r) => r.id === o.rueckmeldung) ?? null,
+  }));
 }
 
 /** Der Katalog, nach Schichten gruppiert — in der Reihenfolge von SCHICHTEN. */

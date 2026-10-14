@@ -228,6 +228,20 @@
     .herkunft a { color: inherit; font-weight: 600; }
     .thema-dunkel .herkunft { background: #2a2418; color: #fcd34d; border-left-color: #b45309; }
 
+    /* ── Original ───────────────────────────────────────────── */
+    /* Der Ausschnitt aus der Rückmeldung, aus der ein Baustein stammt —
+       neben dem Nachbau, damit man beide vergleichen kann. */
+    .originale { margin: var(--abstand-sm) 0 var(--abstand-md); }
+    .originale h3 { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--text-gedaempft, #6b7280); margin: 0 0 8px; }
+    .originale-reihe { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+    .originale figure { margin: 0; max-width: 560px; }
+    .originale figure + figure { max-width: 320px; }
+    .originale img { display: block; max-width: 100%; height: auto; max-height: 360px; width: auto;
+      border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; }
+    .originale figcaption { font-size: var(--text-xs, 12px); color: #6b7280; margin-top: 4px; }
+    .thema-dunkel .originale img { border-color: #374151; }
+
     /* ── Nachnutzen ──────────────────────────────────────────── */
     /* Diese Seite heißt „die Bibliothek" und soll zum Einbauen taugen. Bis
        hierhin zeigte sie nur, wie ein Baustein aussieht. */
@@ -443,7 +457,7 @@
   // fünfzehn sind nicht aus eigener Anschauung entstanden, sondern aus fremden
   // Rückmeldungen herausgezogen — und das stand bisher nirgends, wo jemand
   // Bausteine durchsieht.
-  import { BAUSTEINE, EINRICHTUNGEN, rueckmeldungenZu } from '/gemeinsam/konsortium.js';
+  import { BAUSTEINE, EINRICHTUNGEN, originaleZu, rueckmeldungenZu } from '/gemeinsam/konsortium.js';
 
   registrieren();
 
@@ -540,6 +554,57 @@
     verweis.textContent = 'Woher die Bausteine kommen';
     zeile.append(verweis);
     return zeile;
+  }
+
+  /**
+   * Die Originale zu einem Baustein: die Ausschnitte aus den Rückmeldungen
+   * aller Katalogeinträge, die ihn zeichnen — die Kompetenzstufen-Leiste
+   * trägt zwei davon.
+   */
+  function originalBlock(elementName) {
+    const gesehen = new Set();
+    const originale = BAUSTEINE.filter((b) => b.element === elementName)
+      .flatMap((b) => originaleZu(b.id))
+      .filter((o) => !gesehen.has(o.datei) && gesehen.add(o.datei));
+    if (originale.length === 0) return null;
+
+    const block = document.createElement('div');
+    block.className = 'originale';
+    block.dataset.originale = elementName;
+    const h3 = document.createElement('h3');
+    h3.innerHTML = '<span lang="de">Im Original</span><span lang="en">In the original</span>';
+    const reihe = document.createElement('div');
+    reihe.className = 'originale-reihe';
+    for (const o of originale) {
+      const figur = document.createElement('figure');
+      const verweis = document.createElement('a');
+      verweis.href = o.datei;
+      verweis.target = '_blank';
+      verweis.rel = 'noreferrer';
+      const bild = document.createElement('img');
+      Object.assign(bild, { src: o.datei, alt: o.alt?.de ?? '', loading: 'lazy', width: o.breite, height: o.hoehe });
+      verweis.append(bild);
+      const unterschrift = document.createElement('figcaption');
+      const r = o.rueckmeldung;
+      if (r) {
+        for (const sprache of ['de', 'en']) {
+          const teil = document.createElement('span');
+          teil.lang = sprache;
+          teil.append(`${EINRICHTUNGEN[r.einrichtung][sprache]} · ${r.titel[sprache]} · `);
+          const demo = document.createElement('a');
+          demo.href = o.adresse ?? r.demo;
+          demo.target = '_blank';
+          demo.rel = 'noreferrer';
+          demo.textContent = sprache === 'de' ? 'Rückmeldung öffnen' : 'Open the feedback';
+          teil.append(demo);
+          unterschrift.append(teil);
+        }
+      }
+      figur.append(verweis, unterschrift);
+      reihe.append(figur);
+    }
+    block.append(h3, reihe);
+    return block;
   }
 
   /** camelCase → kebab-case, wie ein Attribut im HTML heißt. */
@@ -739,7 +804,10 @@
       fassungen.append(karte);
     }
 
-    sektion.append(kopf, fassungen, nachnutzung(bauplan));
+    sektion.append(kopf);
+    const original = originalBlock(bauplan.name);
+    if (original) sektion.append(original);
+    sektion.append(fassungen, nachnutzung(bauplan));
     return sektion;
   }
 

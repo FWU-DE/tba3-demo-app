@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  BAUSTEINE, EINRICHTUNGEN, FILTER, RUECKMELDUNGEN, SCHICHTEN,
+  BAUSTEINE, EINRICHTUNGEN, FILTER, ORIGINALE, RUECKMELDUNGEN, SCHICHTEN,
   bausteineVon, filtern, nachSchichten, optionen, rueckmeldungenZu,
 } from './konsortium.js';
 import { SPRACHEN, text } from './sprache.js';
@@ -273,6 +273,28 @@ describe('Zahlen im Fließtext', () => {
     expect(gefunden.length, 'keine Fundstelle — Formulierung geändert?').toBeGreaterThan(1);
     for (const { datei, ganz, zahl } of gefunden) {
       expect(zahl, `${datei}: „${ganz}"`).toBe(BAUSTEINE.length);
+    }
+  });
+});
+
+describe('Originale', () => {
+  const BEISPIELE = join(dirname(fileURLToPath(import.meta.url)), '../beispiele');
+
+  it('gehören zu einem Baustein und zu einer der Rückmeldungen', () => {
+    for (const [id, liste] of Object.entries(ORIGINALE)) {
+      expect(BAUSTEINE.some((b) => b.id === id), id).toBe(true);
+      for (const o of liste) {
+        expect(RUECKMELDUNGEN.some((r) => r.id === o.rueckmeldung), `${id} → ${o.rueckmeldung}`).toBe(true);
+        zweisprachig(o.alt, `${id}: alt`);
+      }
+    }
+  });
+
+  it('liegen als Datei vor', () => {
+    for (const liste of Object.values(ORIGINALE)) {
+      for (const o of liste) {
+        expect(existsSync(join(BEISPIELE, o.datei.replace('/beispiele/', ''))), o.datei).toBe(true);
+      }
     }
   });
 });

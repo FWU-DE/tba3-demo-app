@@ -63,11 +63,19 @@ Wie verteilt sich eine Gruppe über die Kompetenzstufen? Gestapelt, mit dem Mind
 
 *Daten:* Kompetenzstufen je Ebene · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
+![Säulendiagramm je Domäne: Anzahl der Schüler:innen auf den Kompetenzstufen Ia bis V, Mindeststandard unter Stufe II markiert, daneben Kennzahlen zu Optimal- und Mindeststandard.](/beispiele/bilder/originale/kompetenzstufen-verteilung.jpg "Original: indibit, Klassenrückmeldung")
+
+![Nachbau als <tba3-kompetenzstufen-leiste>](/dokumentation/bilder/baustein-kompetenzstufen-leiste.png "Nachbau: <tba3-kompetenzstufen-leiste>, mit Beispieldaten")
+
 ### Lösungshäufigkeit je Aufgabe
 
 Welche Aufgaben sind auffällig? Die Lösungshäufigkeit der Gruppe gegen den Referenzbereich, sortierbar — die Abweichung ist die Information, nicht der absolute Wert.
 
 *Daten:* Aufgaben je Ebene · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
+
+![Waagerechte Balken je Aufgabe mit der Lösungsquote der Klasse, grün über und rot unter dem Landesmittelwert, der als senkrechter Strich mit Beschriftung „Ø L“ markiert ist.](/beispiele/bilder/originale/loesungshaeufigkeit-je-aufgabe.jpg "Original: indibit, Klassenrückmeldung")
+
+![Nachbau als <tba3-aufgaben-tabelle>](/dokumentation/bilder/baustein-aufgaben-tabelle.png "Nachbau: <tba3-aufgaben-tabelle>, mit Beispieldaten")
 
 ### Erwartung gegen Ergebnis
 
@@ -75,11 +83,17 @@ Dieselbe Frage als Bild: tatsächliche gegen erwartete Lösungsquote je Aufgabe.
 
 *Daten:* Aufgaben je Ebene, mit Referenzwert · *Bibliothek:* `<tba3-erwartet-tatsaechlich>` · *Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek
 
+![Aufgabenliste des Fachberichts: je Aufgabe Klassenmittelwert neben dem fairen Vergleichswert als zwei Balken](/beispiele/bilder/originale/erwartung-gegen-ergebnis.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
+
+![Nachbau als <tba3-erwartet-tatsaechlich>](/dokumentation/bilder/baustein-erwartet-tatsaechlich.png "Nachbau: <tba3-erwartet-tatsaechlich>, mit Beispieldaten")
+
 ### Mittelwert mit Unsicherheit
 
 Ein Wert je Bezugsgruppe auf einer gemeinsamen Skala, mit Unsicherheitsbereich. Kleine Kohorten sollen keine überdeutlichen Aussagen ergeben — der Bereich sagt, wie weit man dem Punkt trauen darf.
 
 *Daten:* Aggregationen je Ebene · *Bibliothek:* `<tba3-mittelwert-vergleich>` · *Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek
+
+![Nachbau als <tba3-mittelwert-vergleich>](/dokumentation/bilder/baustein-mittelwert-vergleich.png "Nachbau: <tba3-mittelwert-vergleich>, mit Beispieldaten")
 
 ### Streubereich je Merkmal
 
@@ -87,11 +101,19 @@ Wo liegt der mittlere Bereich je Teilbereich — und wo darin steht eine einzeln
 
 *Daten:* Aggregationen je Teilbereich · *Bibliothek:* `<tba3-perzentilbaender>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
+![„Homogenität der Klasse“: eine Markierung „Klasse“ auf einer Skala von eher homogener bis eher heterogener Klasse](/beispiele/bilder/originale/streubereich-je-merkmal.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
+![Nachbau als <tba3-perzentilbaender>](/dokumentation/bilder/baustein-perzentilbaender.png "Nachbau: <tba3-perzentilbaender>, mit Beispieldaten")
+
 ### Verlauf über Messzeitpunkte
 
 Mehrere Erhebungen als Linie, mit Band und Vergleichslinie. Der einzige Baustein, der eine Entwicklung zeigen kann statt eines Zustands.
 
 *Daten:* Mehrere Erhebungen derselben Gruppe · *Bibliothek:* `<tba3-lernstands-verlauf>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin, zepf (RPTU)
+
+![Lernverlauf einer Schülerin über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund](/beispiele/bilder/originale/verlauf-ueber-messzeitpunkte.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
+![Nachbau als <tba3-lernstands-verlauf>](/dokumentation/bilder/baustein-lernstands-verlauf.png "Nachbau: <tba3-lernstands-verlauf>, mit Beispieldaten")
 
 ### Profil-Heatmap
 
@@ -99,11 +121,19 @@ Aufgaben oder Merkmale gegen Personen oder Lerngruppen, gefärbt nach Abweichung
 
 *Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-aufgaben-heatmap>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
 
+![„Ergebnisse im Detail“: Matrix Schüler:innen × Aufgaben, gelöste Aufgaben grün, nach Lösungshäufigkeit gruppiert, mit Halbjahresnote und Merkmalsspalten](/beispiele/bilder/originale/profil-heatmap.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
+![Nachbau als <tba3-aufgaben-heatmap>](/dokumentation/bilder/baustein-aufgaben-heatmap.png "Nachbau: <tba3-aufgaben-heatmap>, mit Beispieldaten")
+
 ### Tabelle je Person
 
 Lösungsanteile je Schüler:in und Teilbereich, sortierbar und auswählbar. Die Tabelle ist die ehrlichste Darstellung: sie verdichtet nichts und verschweigt nichts.
 
 *Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-schueler-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, zepf (RPTU)
+
+![Klassentabelle der Mathematik-Rückmeldung mit einer Zeile je Schüler:in: Richtig-Anzahl, Verteilungsbalken und Kompetenzstufe](/beispiele/bilder/originale/personen-tabelle.jpg "Original: zepf (RPTU), Mathematik, Klasse 3")
+
+![Nachbau als <tba3-schueler-tabelle>](/dokumentation/bilder/baustein-schueler-tabelle.png "Nachbau: <tba3-schueler-tabelle>, mit Beispieldaten")
 
 ### Punktwolke
 
@@ -111,11 +141,19 @@ Schüler:innen als Punkte in zwei Dimensionen. Zeigt Gruppen und Ausreißer, die
 
 *Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-streudiagramm>` · *Genannt von:* zepf (RPTU)
 
+![Punktwolke: Lösungsquote Hörverstehen gegen Leseverstehen je Schüler:in, mit GER-Schwellen und Markern für Klasse, Schule und Land](/beispiele/bilder/originale/punktwolke.jpg "Original: zepf (RPTU), Englisch, Klasse 8")
+
+![Nachbau als <tba3-streudiagramm>](/dokumentation/bilder/baustein-streudiagramm.png "Nachbau: <tba3-streudiagramm>, mit Beispieldaten")
+
 ### Positionsskala mit Zonen
 
 Jede Schüler:in als eigene Marke auf einer durchgehenden Punkteskala, die Kompetenzstufen als Zonen darunter. Macht sichtbar, wie nah jemand an der nächsten Stufe steht — die Stufe allein sagt das nicht.
 
 *Daten:* Punktwerte je Schüler:in · *Bibliothek:* `<tba3-bista-verteilung>` · *Genannt von:* kompetenztest.de (FSU Jena)
+
+![Messwiederholung Lesen: Vögel als Schüler:innen auf der Lesegeschwindigkeits-Skala zum Messzeitpunkt März 2026, rechts die Zonen Silben/Möwe, Wort/Fink, Text/Adler](/beispiele/bilder/originale/positionsskala-mit-zonen.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
+![Nachbau als <tba3-bista-verteilung>](/dokumentation/bilder/baustein-bista-verteilung.png "Nachbau: <tba3-bista-verteilung>, mit Beispieldaten")
 
 ### Kennzahl mit Vergleich
 
@@ -123,11 +161,19 @@ Eine Zahl, ein Bezugswert, ein kleiner Verlauf. Der Einstieg in jede Übersicht 
 
 *Daten:* Kompetenzstufen oder Aggregationen je Ebene · *Bibliothek:* `<tba3-kennzahl-kachel>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
 
+![Gesamtergebnis der Klasse 50 % als Balken über dem korrigierten Landesmittelwert 42 %](/beispiele/bilder/originale/kennzahl-mit-vergleich.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
+![Nachbau als <tba3-kennzahl-kachel>](/dokumentation/bilder/baustein-kennzahl-kachel.png "Nachbau: <tba3-kennzahl-kachel>, mit Beispieldaten")
+
 ### Übersichtskarten
 
 Je Bereich eine Karte mit Ring, Kennzahl und aufklappbarem Detail. Die Zusammenfassung, die man aufklappen kann, statt der Zusammenfassung, der man glauben muss.
 
 *Daten:* Kompetenzstufen je Domäne · *Bibliothek:* `<tba3-uebersichtskarten>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
+
+![Übersicht der Schule: Zahl der Teilnehmenden, Ring zum sozioökonomischen Status, Anteil mit erreichtem Mindeststandard je Fach sowie Ringe zu Teilnahmequote, Geschlecht und Sprache zuhause.](/beispiele/bilder/originale/uebersichtskarten.jpg "Original: indibit, Schulrückmeldung")
+
+![Nachbau als <tba3-uebersichtskarten>](/dokumentation/bilder/baustein-uebersichtskarten.png "Nachbau: <tba3-uebersichtskarten>, mit Beispieldaten")
 
 ### Gebietskarte
 
@@ -141,11 +187,19 @@ Wie hängt das Ergebnis mit einem Hintergrundmerkmal zusammen? Die Lösungsquote
 
 *Daten:* Aggregationen nach Kovariaten · *Bibliothek:* `<tba3-merkmal-gradient>` · *Gefunden bei:* indibit
 
+![Gruppiertes Säulendiagramm: Lösungsquote nach Sozialstatus A bis E für die eigene Schule, die Vergleichsschule und den Landesmittelwert, mit Spannweite und erläuterndem Satz.](/beispiele/bilder/originale/sozialer-gradient.jpg "Original: indibit, Schulrückmeldung")
+
+![Nachbau als <tba3-merkmal-gradient>](/dokumentation/bilder/baustein-merkmal-gradient.png "Nachbau: <tba3-merkmal-gradient>, mit Beispieldaten")
+
 ### Abweichung je Lerngruppe
 
 Wie weit liegt jede Klasse über oder unter dem Wert der Schule? Ein Balken je Klasse um eine Nulllinie. Für die Schulleitung die schnellste Antwort auf die Frage, wo es sich zu reden lohnt.
 
 *Daten:* Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule · *Bibliothek:* `<tba3-abweichung-je-gruppe>` · *Gefunden bei:* zepf (RPTU)
+
+![Abweichung der Klassen vom Schulwert in Prozentpunkten, ein Balken je Klasse um eine Nulllinie, für Deutsch Rechtschreibung](/beispiele/bilder/originale/abweichung-je-lerngruppe.jpg "Original: zepf (RPTU), Schulleitung")
+
+![Nachbau als <tba3-abweichung-je-gruppe>](/dokumentation/bilder/baustein-abweichung-je-gruppe.png "Nachbau: <tba3-abweichung-je-gruppe>, mit Beispieldaten")
 
 ### Zwei Gruppen gespiegelt
 
@@ -153,11 +207,19 @@ Zwei Gruppen links und rechts einer Mittelachse, nach Kompetenzstufen oder Punkt
 
 *Daten:* Kompetenzstufen zweier Lerngruppen · *Bibliothek:* `<tba3-gruppen-pyramide>` · *Gefunden bei:* zepf (RPTU)
 
+![Gespiegelte Kompetenzstufenverteilung: Mädchen links, Jungen rechts der Mittelachse, wie eine Bevölkerungspyramide](/beispiele/bilder/originale/gruppen-gegenueberstellung.jpg "Original: zepf (RPTU), Schulleitung")
+
+![Nachbau als <tba3-gruppen-pyramide>](/dokumentation/bilder/baustein-gruppen-pyramide.png "Nachbau: <tba3-gruppen-pyramide>, mit Beispieldaten")
+
 ### Netzdiagramm der Teilkompetenzen
 
 Mehrere Teilkompetenzen auf je einer Achse, eine Person gegen Klasse und Vergleichsgruppen. Das Profil ist die Aussage — ob es rund ist oder an einer Stelle einknickt.
 
 *Daten:* Ergebnisse je Teilkompetenz und Person · *Bibliothek:* `<tba3-netzdiagramm>` · *Gefunden bei:* zepf (RPTU)
+
+![Netzdiagramm mit sechs Achsen (Hören und Lesen je global, detailliert, selektiv): eine Schülerin gegen Klasse, Schule und Land](/beispiele/bilder/originale/netzdiagramm.jpg "Original: zepf (RPTU), Englisch, Klasse 8")
+
+![Nachbau als <tba3-netzdiagramm>](/dokumentation/bilder/baustein-netzdiagramm.png "Nachbau: <tba3-netzdiagramm>, mit Beispieldaten")
 
 ### Kontextmerkmal als Ring
 
@@ -165,11 +227,19 @@ Ein kategoriales Merkmal der Gruppe — sozioökonomischer Status, Teilnahmequot
 
 *Daten:* Kovariaten je Schüler:in · *Bibliothek:* `<tba3-kontextmerkmal-ring>` · *Gefunden bei:* indibit, zepf (RPTU)
 
+![Drei Ringdiagramme nebeneinander: Teilnahmequote 80 %, Geschlecht und Sprache zuhause mit Gesamtzahl 214 in der Mitte und Legende darunter.](/beispiele/bilder/originale/kontextmerkmal-ring.jpg "Original: indibit, Schulrückmeldung")
+
+![Nachbau als <tba3-kontextmerkmal-ring>](/dokumentation/bilder/baustein-kontextmerkmal-ring.png "Nachbau: <tba3-kontextmerkmal-ring>, mit Beispieldaten")
+
 ### Lernverlauf als Figuren
 
 Jede Schüler:in als eigene Figur auf einer Fläche aus Messzeitpunkt und Fähigkeit, die Kompetenzstufen als benannte Zonen statt als Zahlen. In der Messwiederholung sind es Vögel, deren Art die Stufe trägt — eine Darstellung, die eine Drittklässlerin über sich selbst lesen kann.
 
 *Daten:* Mehrere Erhebungen je Schüler:in · *Bibliothek:* `<tba3-lernverlauf-figuren>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
+
+![Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, Herbst 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler](/beispiele/bilder/originale/lernverlauf-figuren.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
+![Nachbau als <tba3-lernverlauf-figuren>](/dokumentation/bilder/baustein-lernverlauf-figuren.png "Nachbau: <tba3-lernverlauf-figuren>, mit Beispieldaten")
 
 ## Rückmeldeelemente
 
@@ -181,11 +251,19 @@ Dieselbe Größe auf mehreren Bezugsebenen nebeneinander: Klasse, Schule, fairer
 
 *Daten:* Dieselbe Ressource auf mehreren Ebenen · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
+![„Ergebnisse der Klasse in Teilbereichen“: Säulen Klassendurchschnitt gegen korrigierten Landesmittelwert für Gesamt, Leitideen, prozessbezogene Kompetenzen, Anforderungsbereiche und Kompetenzstufen, Schalter für Schuldurchschnitt](/beispiele/bilder/originale/vergleichsebenen.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
+![Nachbau als <tba3-kompetenzstufen-leiste>](/dokumentation/bilder/baustein-kompetenzstufen-leiste.png "Nachbau: <tba3-kompetenzstufen-leiste>, mit Beispieldaten")
+
 ### Stärken und Entwicklungsbedarfe
 
 Merkmale nach dem Abstand zur Erwartung geordnet — oben abgelesen sind es Stärken, unten Entwicklungsbedarfe. Dieselbe Rechnung, zwei Enden, und keine Rangliste von Personen.
 
 *Daten:* Aufgaben oder Merkmale gegen Referenzwert · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin
+
+![„Top Aufgaben“: drei Aufgaben, die die Klasse im Vergleich zum Landesmittelwert besonders gut gelöst hat, als Podest mit Klassen- und Landeswert](/beispiele/bilder/originale/staerken-und-entwicklungsbedarfe.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
+![Nachbau als <tba3-aufgaben-tabelle>](/dokumentation/bilder/baustein-aufgaben-tabelle.png "Nachbau: <tba3-aufgaben-tabelle>, mit Beispieldaten")
 
 ### Fördergruppen
 
@@ -193,11 +271,17 @@ Lernende nach Förderniveau gebündelt, von Hand nachjustierbar. Der Übergabepu
 
 *Daten:* Ergebnisse je Schüler:in plus eine Regel · *Bibliothek:* `<tba3-schueler-tabelle>` · *Genannt von:* indibit, ISQ Berlin
 
+![Vier Förderbuckets zu einer Teilkompetenz: Intensivförderung, Förderung, Sicherung und Forderung, je mit Spanne der Lösungsquote und den zugeordneten Schüler:innen.](/beispiele/bilder/originale/foerdergruppen.jpg "Original: indibit, Klassenrückmeldung")
+
+![Nachbau als <tba3-schueler-tabelle>](/dokumentation/bilder/baustein-schueler-tabelle.png "Nachbau: <tba3-schueler-tabelle>, mit Beispieldaten")
+
 ### Materialanbindung
 
 Von einem Befund zu passendem Fördermaterial, ohne die Anwendung zu verlassen. Der Schritt, an dem sich entscheidet, ob eine Rückmeldung etwas verändert oder nur beschreibt.
 
 *Daten:* Merkmal oder Fördergruppe als Suchanfrage · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
+
+![Messzeitpunkt März 2026 mit geöffnetem Fördermaterial „Flugtraining“ für die Gruppe Text/Adler: Lesetandem, Lesepass, Textabschnitte sortieren, Lesepilot, Lesetheater und weitere](/beispiele/bilder/originale/materialanbindung.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
 
 ### Aufgabenbrowser
 
@@ -205,11 +289,15 @@ Aufgaben suchen, ansehen, sammeln und zuweisen — die Aufgabe selbst statt nur 
 
 *Daten:* Aufgabenkatalog mit Inhalt · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
+![Seite „Fördermaterialien“: Hinweis auf den Aufgabenbrowser mit Vorschaubild und Knopf „Zum Aufgabenbrowser“](/beispiele/bilder/originale/aufgabenbrowser.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
+
 ### Einzelbericht
 
 Die Rückmeldung einer einzelnen Person: Was konnte ich schon, wo liegt der nächste Schritt — ohne Rangliste und ohne Note. Dieselben Daten wie die Gruppensicht, eine andere Verantwortung.
 
 *Daten:* Ergebnisse einer Schüler:in · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin
+
+![Schülerbericht, Schritt „Das ist uns aufgefallen“: Balken richtig gelöst 60 % gegen falsch gelöst 40 % und eine persönliche Einordnung](/beispiele/bilder/originale/einzelbericht.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Schülerbericht, Klasse 8")
 
 ### Geführter Ablauf
 
@@ -217,11 +305,15 @@ Der Bericht als nummerierte Schrittfolge statt als Dashboard. Wer nicht täglich
 
 *Daten:* Dieselben Daten, nur in fester Reihenfolge · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena)
 
+![Fußleiste des Klassenberichts mit Zurück- und Weiter-Knopf und sieben Punkten für die Schritte, der zweite aktiv](/beispiele/bilder/originale/gefuehrter-ablauf.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
+
 ### Automatische Hinweise
 
 Aus Verteilung, Vergleich und Entwicklung erzeugte Sätze, abhängig von den gesetzten Filtern. Nimmt der Leserin das Ablesen ab — und die Möglichkeit, es anders abzulesen. Deshalb gehört dazu, dass der Satz seine Rechnung nennt.
 
 *Daten:* Die gesetzten Filter und ihre Ergebnisse · *Bibliothek:* noch keiner · *Genannt von:* indibit, ISQ Berlin, zepf (RPTU)
+
+![Empfohlene Handlungsfelder: automatisch priorisierte Hinweiskarten mit Dringlichkeit, Begründung aus den Daten und Handlungsimpulsen.](/beispiele/bilder/originale/automatische-hinweise.jpg "Original: indibit, Schulrückmeldung")
 
 ### Auszeichnungen
 
@@ -229,11 +321,15 @@ Regelbasierte Hervorhebungen — „deutlich über dem Bezirksdurchschnitt", „
 
 *Daten:* Vergleichswerte plus eine offengelegte Regel · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
+![Fachkonferenz-Ansicht: je Aufgabe und Klasse ein farbiges Feld „Exzellent“, „Gut“, „Okay“, „Nicht gut“ relativ zum fairen Vergleichswert](/beispiele/bilder/originale/auszeichnungen.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
+
 ### Fragebogenskalen neben dem Testergebnis
 
 Selbstwirksamkeit und Unterrichtsqualität aus dem Begleitfragebogen, je Klasse als Boxplot oder gestapelter Balken und im Verlauf. Stellt neben das Testergebnis, wie die Klasse ihren Unterricht und sich selbst sieht.
 
 *Daten:* Fragebogendaten — nicht Teil der Schnittstelle · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
+![Gestapelte Balken der Selbstwirksamkeit je Klasse und Schule in vier Bewertungsstufen](/beispiele/bilder/originale/fragebogenskalen.jpg "Original: zepf (RPTU), Schulleitung")
 
 ### Standard-Erreichung
 
@@ -241,11 +337,19 @@ Ein Prozentwert als Schlagzeile — wie viele erreichen den Mindeststandard —,
 
 *Daten:* Kompetenzstufen je Domäne · *Bibliothek:* `<tba3-standard-erreichung>` · *Gefunden bei:* indibit
 
+![80 % Mindeststandard erreicht als große Zahl, darunter je ein Balken für Deutsch (83 %) und Französisch (76 %).](/beispiele/bilder/originale/standard-erreichung.jpg "Original: indibit, Schulrückmeldung")
+
+![Nachbau als <tba3-standard-erreichung>](/dokumentation/bilder/baustein-standard-erreichung.png "Nachbau: <tba3-standard-erreichung>, mit Beispieldaten")
+
 ### Zeugnissätze
 
 Aus den Ergebnissen formulierte Sätze zum Übernehmen und Abwandeln. Der Schritt, den eine Lehrkraft nach der Rückmeldung ohnehin tut — und der einzige Baustein hier, dessen Ausgabe Text ist und kein Bild.
 
 *Daten:* Kompetenzstufen je Schüler:in oder Gruppe · *Bibliothek:* `<tba3-zeugnissaetze>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
+
+![Reiter „Zeugnissätze“: Tabelle mit Schüler:in, Gesamtwert und formuliertem Zeugnissatz mit Kopierknopf](/beispiele/bilder/originale/zeugnissaetze.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
+![Nachbau als <tba3-zeugnissaetze>](/dokumentation/bilder/baustein-zeugnissaetze.png "Nachbau: <tba3-zeugnissaetze>, mit Beispieldaten")
 
 ### Selbsteinschätzung gegen Ergebnis
 
@@ -253,11 +357,17 @@ Was die Schüler:in sich zutraut, neben dem, was der Test misst. Die Lücke zwis
 
 *Daten:* Erhobene Selbsteinschätzung, nicht Teil der Schnittstelle · *Bibliothek:* `<tba3-selbsteinschaetzung>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
+![Gesprächsprotokoll der Selbsteinschätzung für Leseverstehen und Orthografie: Selbsteinschätzung und Ergebnis als Stufenleisten mit Schlüsselsymbolen, daneben „Noch zu üben“ und „Bereits geschafft“](/beispiele/bilder/originale/selbsteinschaetzung.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
+
+![Nachbau als <tba3-selbsteinschaetzung>](/dokumentation/bilder/baustein-selbsteinschaetzung.png "Nachbau: <tba3-selbsteinschaetzung>, mit Beispieldaten")
+
 ### Aufgabenvorschau
 
 Die Aufgabe selbst in einem Überlagerungsfenster, aus der Tabelle heraus geöffnet. Ohne sie ist eine auffällige Lösungshäufigkeit eine Zahl, über die sich nicht entscheiden lässt, ob sie am Können lag oder an der Aufgabe.
 
 *Daten:* Aufgabeninhalt, nicht nur Kennung und Statistik · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena), zepf (RPTU)
+
+![Aufgeklappte Aufgabe 1.1 „Sportunterricht“: Klassenmittelwert und fairer Vergleichswert, richtige Lösung, Teilaufgabenmerkmale und Vorschaubilder von Stimulus und Aufgabe](/beispiele/bilder/originale/aufgabenvorschau.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
 
 ## Rahmen
 
@@ -269,11 +379,15 @@ Kaskadierende Sichten auf dieselbe Datenlage: Schulaufsicht sieht den Bezirk, Sc
 
 *Daten:* Ebene und Rechte der angemeldeten Person · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
+![Schüler:innensicht derselben Daten: „Adrian – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über drei Messzeitpunkte](/beispiele/bilder/originale/rollensichten.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
 ### Filterleiste
 
 Ebene, Fach, Jahrgang, Datentyp. Die Auswahl gehört in die Adresszeile, sonst lässt sich eine Ansicht nicht verschicken und der Zurück-Knopf tut das Falsche.
 
 *Daten:* Das Vokabular der Schnittstelle · *Bibliothek:* noch keiner · *Genannt von:* indibit, ISQ Berlin
+
+![Filterleiste: Auswahlliste Schulamt, darunter Knöpfe für Jahrgang (V3, V8) und Fach (Deutsch, Mathematik).](/beispiele/bilder/originale/filterleiste.jpg "Original: indibit, Schulaufsichtsrückmeldung")
 
 ### Arbeitsstand
 
@@ -281,17 +395,23 @@ Gesetzte Filter, Notizen und Kommentare speichern und wieder aufrufen. Eine Rüc
 
 *Daten:* Profil der angemeldeten Person · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin, zepf (RPTU)
 
+![Notizen-Schublade mit Seitenreitern, Formatierungsleiste und Knopf zum Verknüpfen mit einem Modul](/beispiele/bilder/originale/arbeitsstand.jpg "Original: zepf (RPTU), Mathematik, Klasse 3")
+
 ### Bericht ausgeben
 
 Eine Fassung, die das Gerät verlässt — an die gesetzten Filter gebunden und, wo sinnvoll, vor dem Export bearbeitbar. In der Konferenz liegt Papier auf dem Tisch, kein Dashboard.
 
 *Daten:* Der aktuelle Stand der Ansicht · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
+![Seite „Berichte downloaden“: Fachbericht, Klassenbericht, Fachkonferenz und Selbsteinschätzung als PDF je Klasse, tabellarische Auswertung als HTML, ODS und CSV](/beispiele/bilder/originale/bericht-ausgeben.jpg "Original: kompetenztest.de (FSU Jena), Lernstand-Barometer Deutsch, Klasse 8")
+
 ### Erklärtexte
 
 Tooltips, Glossar, Einführungstouren je Rolle. Datenunabhängig gehalten — bei zepf in eigenen JSON-Dateien —, damit sich der Text ändern lässt, ohne die Auswertung anzufassen.
 
 *Daten:* Keine — bewusst getrennt gehalten · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin, zepf (RPTU)
+
+![Seitenpanel „Ergebnisse im Detail – Hilfe & Bedienung“ mit Vorlese-Knopf und nummerierten Erklärungen zu Ansichten, Optionen, Merkmalen und Sortierung](/beispiele/bilder/originale/erklaertexte.jpg "Original: kompetenztest.de (FSU Jena), Kompetenzstand Mathematik: Klassenbericht, Klasse 8")
 
 ### Zweisprachigkeit
 
@@ -311,17 +431,25 @@ Ein Umschalter, der Namen durch Codes ersetzt und die Ergebnisse stehen lässt. 
 
 *Daten:* Keine — eine Darstellungsentscheidung · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
+![Umschalter „Namen / Codes“ auf „Codes“, die Vögel tragen statt Namen dreibuchstabige Codes](/beispiele/bilder/originale/pseudonymisierung.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+
 ### Glossar mit Suche
 
 Die Fachbegriffe an einer Stelle, durchsuchbar, aus jeder Ansicht erreichbar. „Kompetenzstufe", „fairer Vergleich", „Lösungshäufigkeit" sind für die Lesenden nicht selbsterklärend, und ein Tooltip beantwortet nur die Frage, die man an genau dieser Stelle stellt.
 
 *Daten:* Keine — datenunabhängig gehalten · *Bibliothek:* `<tba3-glossar>` · *Gefunden bei:* zepf (RPTU)
 
+![Glossar mit Suchfeld und aufklappbaren Begriffen, der erste Eintrag „Kompetenzstufe (primar)“ geöffnet](/beispiele/bilder/originale/glossar-mit-suche.jpg "Original: zepf (RPTU), Mathematik, Klasse 3")
+
+![Nachbau als <tba3-glossar>](/dokumentation/bilder/baustein-glossar.png "Nachbau: <tba3-glossar>, mit Beispieldaten")
+
 ### Export mit Auswahl
 
 Vor dem Export auswählen, was hineinkommt. Ein Bericht, der alles enthält, wird nicht gelesen; die Auswahl ist der Unterschied zwischen einer Ausgabe und einer Vorlage für die Konferenz.
 
 *Daten:* Der aktuelle Stand der Ansicht plus eine Auswahl · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
+![Berichtsansicht mit zwei vorgemerkten Modulen auf einer Seitenvorschau und dem Knopf „Als PDF exportieren“](/beispiele/bilder/originale/export-mit-auswahl.jpg "Original: zepf (RPTU), Mathematik, Klasse 3")
 
 ## Bilanz
 
