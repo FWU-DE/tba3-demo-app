@@ -7,7 +7,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { DOKUMENTE, ORDNER, anker, githubUrl, lokalerVerweis, rendere, seite, uebersicht } from './dokumente.mjs';
+import { DOKUMENTE, ORDNER, anker, githubUrl, lokalerVerweis, oberseite, rendere, seite, uebersicht } from './dokumente.mjs';
 
 const ankerIn = (html) => [...html.matchAll(/<h[1-6] id="([^"]+)"/g)].map((m) => m[1]);
 
@@ -177,11 +177,35 @@ describe('die Seiten', () => {
 
   it('führt auf der Übersicht jedes Dokument in beiden Sprachen', () => {
     const html = uebersicht(DOKUMENTE, null);
-    for (const dok of DOKUMENTE) {
+    for (const dok of DOKUMENTE.filter((d) => !d.teil)) {
       expect(html).toContain(`href="/dokumentation/${dok.slug}"`);
       expect(html).toContain(dok.kurz.de);
       expect(html).toContain(dok.kurz.en);
     }
+  });
+
+  // Eine Unterseite hat keine eigene Karte. Gefunden wird sie nur über ihre
+  // Landeseite — verlinkt die das nicht, ist die Seite gebaut, aber unerreichbar.
+  it('erreicht jede Unterseite über ihre Landeseite, nicht über eine eigene Karte', () => {
+    const unterseiten = DOKUMENTE.filter((d) => d.teil);
+    expect(unterseiten.length).toBeGreaterThan(0);
+    const html = uebersicht(DOKUMENTE, null);
+    for (const dok of unterseiten) {
+      const oben = oberseite(dok);
+      expect(oben, `${dok.slug}: teil „${dok.teil}“ steht nicht in DOKUMENTE`).toBeTruthy();
+      expect(oben.teil, 'nur eine Ebene tief').toBeUndefined();
+      expect(html).not.toContain(`href="/dokumentation/${dok.slug}"`);
+      const landeseite = readFileSync(join(ORDNER, oben.datei), 'utf8');
+      expect(landeseite, `${oben.datei} verlinkt ${dok.datei} nicht`).toContain(`](${dok.datei}`);
+    }
+  });
+
+  it('führt den Pfad einer Unterseite über ihre Landeseite zurück', () => {
+    const dok = DOKUMENTE.find((d) => d.teil);
+    const html = seite(dok, '# Titel\n', null);
+    const pfad = html.slice(html.indexOf('class="brotkrumen"'), html.indexOf('</nav>'));
+    expect(pfad).toContain('href="/dokumentation"');
+    expect(pfad).toContain(`href="/dokumentation/${dok.teil}"`);
   });
 
   it('schreibt auf jede Karte, woher ihr Text kommt', () => {

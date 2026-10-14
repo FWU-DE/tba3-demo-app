@@ -225,6 +225,13 @@ neben den Kopien, ohne beim nächsten Nachziehen zu verschwinden. Die Regel daf�
 ist einfach: was die Schnittstelle beschreibt, gehört nach `indibit-eu/tba3`; was
 die Oberfläche beschreibt, gehört hierher.
 
+**Unterseiten.** Ein Eintrag mit `teil: '<slug>'` hängt unter einer Landeseite:
+keine eigene Karte auf der Übersicht, der Pfad oben führt über die Landeseite
+zurück, die Adresse bleibt flach. So ist die Machbarkeitsstudie gebaut
+(`machbarkeitsstudie.md` + `machbarkeitsstudie-<frage>.md`). Wer eine Teilfrage
+hinzufügt, trägt sie in `DOKUMENTE` ein **und** in die Tabelle der Landeseite;
+der Test prüft das Zweite.
+
 ### Die Rückmeldungen des Konsortiums
 
 `apps/beispiele/` ist statisches HTML ohne Build — die 10 Rückmeldungen liegen
