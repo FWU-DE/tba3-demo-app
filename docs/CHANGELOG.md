@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht (kompetenztest.de, seit 08.10.2026).
 - Baustein-Katalog neu erhoben (14.10.2026): 26 neue Zuordnungen, fünf neue Bausteine (43).
 - Beispielwerte für alle Parameter von `/materials` in der API-Referenz.
