@@ -46,10 +46,11 @@ export const TEXTE = {
       de: 'Aus den Rückmeldungen des Konsortiums — gefunden bei {traeger}, nicht hier erfunden.',
       en: 'From the reports of the consortium — found at {traeger}, not invented here.',
     },
-    ueberschrift: { de: 'Komponenten', en: 'Components' },
+    ueberschrift: { de: 'Komponentenkatalog', en: 'Component catalogue' },
+    zielgruppe: { de: 'Ohne Technikkenntnisse', en: 'No technical background needed' },
     einleitung: {
-      de: 'Vue 3 SVG-Visualisierungen für VERA-Auswertungsdaten. Alle Komponenten lesen die TBA3-Auswertungsschnittstelle direkt — keine granularen Schülerdaten nötig.',
-      en: 'Vue 3 SVG visualisations for VERA reporting data. Every component reads the TBA3 reporting API directly — no granular student data needed.',
+      de: 'Die Darstellungen, aus denen sich eine Rückmeldung zusammensetzt, jede mit Beispieldaten aus der Auswertungsschnittstelle: was sie zeigt und wofür sie gedacht ist. Zum Einbauen in eigene Anwendungen gibt es sie unter „Bausteine“.',
+      en: 'The charts a report is made of, each with sample data from the reporting API: what it shows and what it is for. To build them into your own application, see “Building blocks”.',
     },
     quelltext: { de: 'Quelltext', en: 'Source' },
     oeffnen: { de: 'Öffnen', en: 'Open' },
@@ -783,6 +784,7 @@ export const TEXTE = {
     // Schlüssel aus dem Komponentennamen gebaut. `index.test.mjs` daneben
     // schließt die Lücke.
     ContextRing: {
+      titel: { de: 'Kontextmerkmal als Ring', en: 'Context characteristic as a ring' },
       beschreibung: {
         de: 'Ein kategoriales Merkmal der Gruppe als Ring — Geschlecht, Sprache zuhause, sozioökonomischer Status. Die Mitte trägt die Gesamtzahl, bei geordneten Kategorien den Median. Aus der Schulrückmeldung von indibit, wo vier davon nebeneinander stehen.',
         en: 'One categorical characteristic of the group as a ring — gender, language at home, socio-economic status. The centre carries the total, or the median for ordered categories. From indibit’s school report, where four of them stand side by side.',
@@ -801,6 +803,7 @@ export const TEXTE = {
       },
     },
     StandardAttainment: {
+      titel: { de: 'Erreichung der Bildungsstandards', en: 'Attainment of the educational standards' },
       beschreibung: {
         de: 'Eine große Zahl mit ihrer Aufschlüsselung: wie viele erreichen den Mindeststandard, und wie verteilt sich das über die Domänen. Beides gehört zusammen — 80 % gesamt, davon eine Domäne bei 55 %, ist kein Ergebnis von 80 %.',
         en: 'One headline figure with its breakdown: how many reach the minimum standard, and how that spreads across the domains. The two belong together — 80 % overall with one domain at 55 % is not a result of 80 %.',
@@ -819,6 +822,7 @@ export const TEXTE = {
       },
     },
     ReportSentences: {
+      titel: { de: 'Zeugnissätze', en: 'Report card sentences' },
       beschreibung: {
         de: 'Der einzige Baustein, dessen Ausgabe Text ist: aus Vorlagen gefüllte Sätze zum Übernehmen. Jeder nennt die Zahl, aus der er stammt. Aus der Messwiederholung des kompetenztest.de, wo „Zeugnissätze" ein eigener Reiter neben Grafik und Tabelle ist.',
         en: 'The only block whose output is text: sentences filled from templates, ready to adopt. Each names the figure it came from. From kompetenztest.de’s repeated measurement, where “report card sentences” is a tab of its own.',
@@ -838,6 +842,7 @@ export const TEXTE = {
     },
 
     ItemExpectedActualChart: {
+      titel: { de: 'Aufgaben: erwartet und erreicht', en: 'Tasks: expected and achieved' },
       beschreibung: {
         de: 'Tatsächliche vs. erwartete Lösungsquote pro Aufgabe. Der Erwartungswert kommt aus dem Rasch-Modell (BISTA-Parameter). Rot = unter Erwartung → direkter didaktischer Hinweis.',
         en: 'Actual vs. expected solution rate per exercise. The expected value comes from the Rasch model (BISTA parameters). Red = below expectation → a direct pedagogical cue.',
@@ -856,6 +861,7 @@ export const TEXTE = {
       },
     },
     MeanComparisonChart: {
+      titel: { de: 'Mittlere Lösungsquote im Vergleich', en: 'Mean solution rate compared' },
       beschreibung: {
         de: 'Mittlere Lösungsquote als Diamant-Marker auf einer horizontalen Skala. Vergleicht Klasse, Schule, Fairen Vergleich (⚖ Standorttyp) und Bundesland — inkl. optionaler Konfidenzintervalle.',
         en: 'Mean solution rate as a diamond marker on a horizontal scale. Compares class, school, fair comparison (⚖ site type) and state — with optional confidence intervals.',
@@ -874,6 +880,7 @@ export const TEXTE = {
       },
     },
     BistaDistributionChart: {
+      titel: { de: 'Schüler:innen auf der Kompetenzskala', en: 'Students on the competence scale' },
       beschreibung: {
         de: 'Alle Schüler*innen als Avatar-Icons auf einem horizontalen BISTA-Wertestrahl. Drei Kompetenzstreifen (KS I–III) als Hintergrund. Mouseover zeigt StudentTooltip mit Detailinformationen.',
         en: 'Every student as an avatar icon on a horizontal BISTA scale. Three competence bands (levels I–III) in the background. Hovering shows StudentTooltip with the details.',
@@ -890,6 +897,7 @@ export const TEXTE = {
       },
     },
     CompetencyOverviewCards: {
+      titel: { de: 'Kompetenzübersicht', en: 'Competence overview' },
       beschreibung: {
         de: 'Zwei Karten nebeneinander: SVG-Donut-Diagramm mit Kompetenzstufenverteilung und Schlüsselkennzahlen (Mindeststandard und darüber vs. darunter).',
         en: 'Two cards side by side: an SVG donut chart of the competence level distribution, and the key figures (at or above the minimum standard vs. below).',
@@ -906,6 +914,7 @@ export const TEXTE = {
       },
     },
     PercentileBandChart: {
+      titel: { de: 'Lösungshäufigkeit mit Streuungsband', en: 'Solution frequency with a spread band' },
       beschreibung: {
         de: 'Visualisiert Lösungshäufigkeit oder Perzentilrang pro Aufgabe als Diamant-Marker, überlagert mit einem Streuungsband der Referenzgruppe.',
         en: 'Shows the solution frequency or percentile rank per exercise as a diamond marker, laid over the spread band of the reference group.',
@@ -924,6 +933,7 @@ export const TEXTE = {
       },
     },
     CompetenceLevelBar: {
+      titel: { de: 'Verteilung auf die Kompetenzstufen', en: 'Distribution across competence levels' },
       beschreibung: {
         de: 'Zeigt die Kompetenzstufenverteilung (I–V) als horizontale Stapelbalken. Mehrere Ebenen (Klasse, Schule, Bundesland) direkt vergleichbar.',
         en: 'Shows the competence level distribution (I–V) as horizontal stacked bars. Several levels (class, school, state) can be compared directly.',
@@ -940,6 +950,7 @@ export const TEXTE = {
       },
     },
     StudentSolutionTable: {
+      titel: { de: 'Lösungen je Schüler:in', en: 'Results per student' },
       beschreibung: {
         de: 'Lösungshäufigkeiten auf Schüler:innen-Ebene. Barrierefreie Balken (Blau/Orange statt Rot/Grün), sortierbar nach Lösungsquote, Verlinkung zu Testheft und SuS-Lösungen.',
         en: 'Solution frequencies at student level. Accessible bars (blue/orange instead of red/green), sortable by solution rate, with links to the test booklet and the students’ answers.',
@@ -958,6 +969,7 @@ export const TEXTE = {
       },
     },
     ItemSolutionTable: {
+      titel: { de: 'Lösungsquoten je Aufgabe', en: 'Solution rates per task' },
       beschreibung: {
         de: 'Lösungsquoten auf Aufgabenebene als sortierbare Tabelle mit internen Balkendiagrammen. Spaltentoggle und Textsuche für Kompetenz, Stufe und Aufgabentitel.',
         en: 'Solution rates at exercise level as a sortable table with inline bar charts. Column toggles and a text search across competence, level and exercise title.',
@@ -976,6 +988,7 @@ export const TEXTE = {
       },
     },
     StudentScatterPlot: {
+      titel: { de: 'Schüler:innen nach Stufe und Rohwert', en: 'Students by level and raw score' },
       beschreibung: {
         de: 'Schüler*innen-Scatter: Kompetenzstufe (X) × Rohwert % (Y) mit K-Means-Clustering, Konvex-Hüll-Regionen (dashed) und interaktiver Detailcard.',
         en: 'Student scatter plot: competence level (x) × raw score % (y) with k-means clustering, convex hull regions (dashed) and an interactive detail card.',

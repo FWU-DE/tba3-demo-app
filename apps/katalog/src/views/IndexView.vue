@@ -138,6 +138,7 @@ const COMPONENTS = [
 <template>
   <main class="index-main">
     <div class="index-intro">
+      <span class="zielgruppe" data-testid="katalog-zielgruppe">{{ t('index.zielgruppe') }}</span>
       <h2 class="intro-heading">{{ t('index.ueberschrift') }}</h2>
       <p class="intro-text">{{ t('index.einleitung') }}</p>
       <p class="intro-stack">{{ t('huelle.stack') }}</p>
@@ -249,11 +250,11 @@ const COMPONENTS = [
             <path d="M84 70 L87 73 L84 76 L81 73 Z" fill="#1e3a5f" stroke="white" stroke-width="0.5" />
             <path d="M72 90 L75 93 L72 96 L69 93 Z" fill="#1e3a5f" stroke="white" stroke-width="0.5" />
             <!-- Labels -->
-            <text x="55" y="13" text-anchor="end" font-size="7" fill="#64748b" font-family="monospace">HO-001</text>
-            <text x="55" y="33" text-anchor="end" font-size="7" fill="#64748b" font-family="monospace">HO-002</text>
-            <text x="55" y="53" text-anchor="end" font-size="7" fill="#64748b" font-family="monospace">LE-026</text>
-            <text x="55" y="73" text-anchor="end" font-size="7" fill="#64748b" font-family="monospace">LE-027</text>
-            <text x="55" y="93" text-anchor="end" font-size="7" fill="#64748b" font-family="monospace">LE-028</text>
+            <text x="2" y="13" text-anchor="start" font-size="7" fill="#64748b" font-family="monospace">HO-001</text>
+            <text x="2" y="33" text-anchor="start" font-size="7" fill="#64748b" font-family="monospace">HO-002</text>
+            <text x="2" y="53" text-anchor="start" font-size="7" fill="#64748b" font-family="monospace">LE-026</text>
+            <text x="2" y="73" text-anchor="start" font-size="7" fill="#64748b" font-family="monospace">LE-027</text>
+            <text x="2" y="93" text-anchor="start" font-size="7" fill="#64748b" font-family="monospace">LE-028</text>
           </svg>
 
           <!-- Student solution preview -->
@@ -446,21 +447,21 @@ const COMPONENTS = [
             <line x1="134" y1="12" x2="134" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
             <line x1="200" y1="12" x2="200" y2="108" stroke="#e2e8f0" stroke-width="0.8" />
             <!-- Row 1: Klasse -->
-            <text x="46" y="34" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.klasse') }}</text>
+            <text x="2" y="34" text-anchor="start" font-size="7" fill="#374151">{{ t('vokabular.klasse') }}</text>
             <line x1="60" y1="30" x2="95" y2="30" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="60" y1="25" x2="60" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="95" y1="25" x2="95" y2="35" stroke="#3b82f6" stroke-width="1.5"/>
             <polygon points="77,21 85,30 77,39 69,30" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
             <text x="77" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">55</text>
             <!-- Row 2: Schule -->
-            <text x="46" y="56" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.schule') }}</text>
+            <text x="2" y="56" text-anchor="start" font-size="7" fill="#374151">{{ t('vokabular.schule') }}</text>
             <line x1="72" y1="52" x2="105" y2="52" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="72" y1="47" x2="72" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="105" y1="47" x2="105" y2="57" stroke="#3b82f6" stroke-width="1.5"/>
             <polygon points="88,43 96,52 88,61 80,52" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1"/>
             <text x="88" y="54" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">62</text>
             <!-- Row 3: Fairer Vergleich (teal) -->
-            <text x="40" y="78" text-anchor="end" font-size="7" fill="#0f766e">{{ t('vokabular.fairerVergleichKurz') }}</text>
+            <text x="2" y="78" text-anchor="start" font-size="7" fill="#0f766e">{{ t('vokabular.fairerVergleichKurz') }}</text>
             <text x="46" y="78" text-anchor="end" font-size="9">⚖</text>
             <line x1="68" y1="74" x2="103" y2="74" stroke="#0d9488" stroke-width="2" stroke-linecap="round"/>
             <line x1="68" y1="69" x2="68" y2="79" stroke="#0d9488" stroke-width="1.5"/>
@@ -468,7 +469,7 @@ const COMPONENTS = [
             <polygon points="85,65 93,74 85,83 77,74" fill="#0d9488" stroke="#0f766e" stroke-width="1"/>
             <text x="85" y="76" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">60</text>
             <!-- Row 4: Bundesland -->
-            <text x="46" y="100" text-anchor="end" font-size="7" fill="#374151">{{ t('vokabular.bundesland') }}</text>
+            <text x="2" y="100" text-anchor="start" font-size="7" fill="#374151">{{ t('vokabular.bundesland') }}</text>
             <line x1="90" y1="96" x2="130" y2="96" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
             <line x1="90" y1="91" x2="90" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
             <line x1="130" y1="91" x2="130" y2="101" stroke="#3b82f6" stroke-width="1.5"/>
@@ -480,21 +481,21 @@ const COMPONENTS = [
           <svg v-else-if="comp.preview === 'stacked'" viewBox="0 0 200 120" class="preview-svg">
             <g transform="translate(50, 15)">
               <!-- Row 1: Klasse -->
-              <text x="-4" y="17" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.klasse') }}</text>
+              <text x="-48" y="17" text-anchor="start" font-size="8" fill="#64748b">{{ t('vokabular.klasse') }}</text>
               <rect x="0" y="5" width="42" height="16" fill="#ef4444" rx="1" />
               <rect x="42" y="5" width="30" height="16" fill="#f97316" rx="1" />
               <rect x="72" y="5" width="28" height="16" fill="#eab308" rx="1" />
               <rect x="100" y="5" width="22" height="16" fill="#22c55e" rx="1" />
               <rect x="122" y="5" width="28" height="16" fill="#15803d" rx="1" />
               <!-- Row 2: Schule -->
-              <text x="-4" y="52" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.schule') }}</text>
+              <text x="-48" y="52" text-anchor="start" font-size="8" fill="#64748b">{{ t('vokabular.schule') }}</text>
               <rect x="0" y="40" width="32" height="16" fill="#ef4444" rx="1" />
               <rect x="32" y="40" width="34" height="16" fill="#f97316" rx="1" />
               <rect x="66" y="40" width="30" height="16" fill="#eab308" rx="1" />
               <rect x="96" y="40" width="26" height="16" fill="#22c55e" rx="1" />
               <rect x="122" y="40" width="28" height="16" fill="#15803d" rx="1" />
               <!-- Row 3: Land -->
-              <text x="-4" y="87" text-anchor="end" font-size="8" fill="#64748b">{{ t('vokabular.land') }}</text>
+              <text x="-48" y="87" text-anchor="start" font-size="8" fill="#64748b">{{ t('vokabular.land') }}</text>
               <rect x="0" y="75" width="24" height="16" fill="#ef4444" rx="1" />
               <rect x="24" y="75" width="28" height="16" fill="#f97316" rx="1" />
               <rect x="52" y="75" width="34" height="16" fill="#eab308" rx="1" />
@@ -512,6 +513,8 @@ const COMPONENTS = [
 
         <!-- Info -->
         <div class="card-body">
+          <h3 class="card-titel" :data-testid="`kachel-titel-${comp.baustein}`">{{ t(`komponenten.${comp.name}.titel`) }}</h3>
+          <!-- Für Entwickler:innen: technischer Name und Endpunkt, klein darunter. -->
           <div class="card-name-row">
             <code class="card-name">{{ comp.name }}</code>
             <span class="card-api-badge">{{ comp.api }}</span>
@@ -570,6 +573,12 @@ const COMPONENTS = [
 }
 
 .index-intro { margin-bottom: 28px; }
+.zielgruppe {
+  display: inline-block; margin: 0 0 10px;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px;
+  color: var(--farbe-erfolg-text, #0f766e); background: var(--farbe-erfolg, #f0fdfa);
+}
 .intro-heading { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
 .intro-text { font-size: 0.88rem; color: #475569; max-width: 600px; }
 /* Stand bis eben im Kopfbalken des Katalogs — er sagt etwas über den Katalog
@@ -578,7 +587,7 @@ const COMPONENTS = [
 
 .index-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
   gap: 20px;
 }
 
@@ -617,9 +626,16 @@ const COMPONENTS = [
   gap: 8px;
   margin-bottom: 8px;
 }
+.card-titel {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--farbe-text, #0a0a0a);
+}
 .card-name {
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   font-family: ui-monospace, monospace;
   color: #1e3a5f;
   background: #eff6ff;

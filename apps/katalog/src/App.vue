@@ -5,18 +5,28 @@ import { t } from './i18n';
 
 const route = useRoute();
 
+// Ansicht → Komponente. Angezeigt wird der sprechende Titel aus texte.js
+// (`komponenten.<Name>.titel`), nicht der technische Name.
 const ROUTE_NAMES = {
+  '/item-expected-actual':   'ItemExpectedActualChart',
+  '/mean-comparison':        'MeanComparisonChart',
+  '/bista-distribution':     'BistaDistributionChart',
+  '/context-ring':           'ContextRing',
+  '/standard-attainment':    'StandardAttainment',
+  '/report-sentences':       'ReportSentences',
+  '/competency-overview':    'CompetencyOverviewCards',
   '/percentile-band':        'PercentileBandChart',
   '/competence-levels':      'CompetenceLevelBar',
-  '/item-solution-table':    'ItemSolutionTable',
-  '/competency-overview':    'CompetencyOverviewCards',
-  '/student-scatter':        'StudentScatterPlot',
-  '/bista-distribution':     'BistaDistributionChart',
   '/student-solution-table': 'StudentSolutionTable',
+  '/item-solution-table':    'ItemSolutionTable',
+  '/student-scatter':        'StudentScatterPlot',
 };
 
 const isHome        = computed(() => route.path === '/');
-const componentName = computed(() => ROUTE_NAMES[route.path] ?? null);
+const componentName = computed(() => {
+  const name = ROUTE_NAMES[route.path];
+  return name ? t(`komponenten.${name}.titel`) : null;
+});
 
 // Der Titel im Browser-Reiter folgt der Sprachwahl; das Markup kann das nicht.
 watchEffect(() => {

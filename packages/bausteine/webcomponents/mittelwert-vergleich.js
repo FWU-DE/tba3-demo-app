@@ -85,7 +85,7 @@ function aufbauen(wurzel, zustand, el) {
         stroke: 'var(--tba3-_farbe-raster)', 'stroke-width': 1,
       }),
       s('text', {
-        x: MASSE.labelBreite - 10, y: zeile.y, 'text-anchor': 'end',
+        x: 4, y: zeile.y, 'text-anchor': 'start',
         'dominant-baseline': 'middle', 'font-size': 12,
         fill: 'var(--tba3-_farbe-text)', text: zeile.label,
       }),

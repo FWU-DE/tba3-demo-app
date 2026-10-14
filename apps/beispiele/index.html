@@ -42,6 +42,15 @@
     html[lang="en"] [lang="de"] { display: none; }
 
     .hero { padding-block: 56px 28px; max-width: 720px; }
+    /* Zielgruppe dieses Bereichs, wie auf der Startseite. */
+    .zielgruppe {
+      display: inline-block; margin: 0 0 10px;
+      font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .zielgruppe-alle { color: var(--farbe-erfolg-text); background: var(--farbe-erfolg); }
+    .zielgruppe-technik { color: var(--farbe-marke); background: var(--farbe-marke-zart); }
+
     .hero h1 {
       font-size: clamp(28px, 4.5vw, 40px);
       line-height: 1.15;
@@ -241,6 +250,8 @@
 <main class="wrap">
 
   <section class="hero">
+    <span class="zielgruppe zielgruppe-alle" lang="de">Ohne Technikkenntnisse</span>
+    <span class="zielgruppe zielgruppe-alle" lang="en">No technical background needed</span>
     <h1 lang="de">Rückmeldungen des Konsortiums</h1>
     <h1 lang="en">Reports of the consortium</h1>
     <p lang="de">

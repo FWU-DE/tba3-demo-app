@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Zwei Zielgruppen, klar gekennzeichnet.** Die Seite wird von Ministerien und
+  pädagogischen Instituten gelesen und von Entwickler:innen. Die Startseite ist
+  jetzt in zwei Bereiche geteilt:
+  - „Ohne Technikkenntnisse“: Rückmeldungen, Demoanwendung, Komponentenkatalog,
+    Machbarkeitsstudie.
+  - „Für Entwickler:innen“: API-Referenz, Dokumentation, Bausteine, Quelltext.
+
+  Dieselbe Marke steht oben auf den Rückmeldungen, dem Katalog, den Bausteinen
+  und der Schnittstelle und auf jeder Karte und Seite der Dokumentation
+  (`zielgruppe` in `DOKUMENTE`, Unterseiten erben sie). Die Navigationsleiste
+  bleibt ungeteilt: „Dokumentation“ enthält beides.
+- **Katalog: sprechende Namen.** Kacheln, Brotkrumen und Tab-Titel nennen, was
+  eine Darstellung zeigt („Aufgaben: erwartet und erreicht“), statt des
+  technischen Namens (`ItemExpectedActualChart`). Der steht klein darunter.
+- **Y-Achsen-Beschriftungen linksbündig**, in den Bausteinen
+  Kompetenzstufen-Leiste, Mittelwert-Vergleich, Perzentilbänder,
+  Erwartet-tatsächlich und Selbsteinschätzung sowie in den Vorschaubildern des
+  Katalogs. Zahlen an Achsen bleiben rechtsbündig.
+- **Bausteine-Seite neu geschrieben**: wofür die Bausteine da sind, für wen,
+  und wie sie sich zum Katalog verhalten. Titel und Beschreibung ohne Jargon.
+
+### Fixed
+- Der Verweis „Referenz-Backend“ auf der Startseite führte auf eine 404 (die
+  Basisadresse des Backends antwortet nicht). Er zeigt jetzt auf dessen
+  Swagger-Oberfläche (`/tba3-api/docs`).
+- Der Katalog lief auf Telefonen 2 px seitlich über (Rastermindestbreite 380 px).
+
 ### Added
 - **Grafik auf der Landeseite der Machbarkeitsstudie**, deutsch und englisch:
   wie Lernstandserhebung, Auswertungsschnittstelle, Rückmeldung, Mediathek,

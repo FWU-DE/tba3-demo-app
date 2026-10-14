@@ -84,7 +84,7 @@ function aufbauen(wurzel, zustand, el) {
     });
     gruppe.append(
       s('text', {
-        x: MASSE.labelBreite - 8, y: zeile.y, 'text-anchor': 'end',
+        x: 4, y: zeile.y, 'text-anchor': 'start',
         'dominant-baseline': 'middle', 'font-size': 11,
         fill: 'var(--tba3-_farbe-text)', 'font-family': 'var(--tba3-_schrift-mono)',
         text: zeile.label,

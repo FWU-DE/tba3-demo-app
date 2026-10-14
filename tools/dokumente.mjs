@@ -28,6 +28,7 @@ export const EIGENES = { repo: 'FWU-DE/tba3-demo-app', zweig: 'main', ordner: 'a
 export const DOKUMENTE = [
   {
     slug: 'konzepte',
+    zielgruppe: 'technik',
     datei: 'konzepte.md',
     kurz: { de: 'Konzepte', en: 'Concepts' },
     beschreibung: {
@@ -37,6 +38,7 @@ export const DOKUMENTE = [
   },
   {
     slug: 'endpunkt-referenz',
+    zielgruppe: 'technik',
     datei: 'endpunkt-referenz.md',
     kurz: { de: 'Endpunkt-Referenz', en: 'Endpoint reference' },
     beschreibung: {
@@ -46,6 +48,7 @@ export const DOKUMENTE = [
   },
   {
     slug: 'rezepte',
+    zielgruppe: 'technik',
     datei: 'rezepte.md',
     kurz: { de: 'Rezepte', en: 'Recipes' },
     beschreibung: {
@@ -55,6 +58,7 @@ export const DOKUMENTE = [
   },
   {
     slug: 'bausteine-der-rueckmeldungen',
+    zielgruppe: 'alle',
     datei: 'bausteine-der-rueckmeldungen.md',
     eigen: true,
     // Erzeugt aus apps/shared/konsortium.js (`npm run konsortium:doc`), nicht
@@ -68,6 +72,7 @@ export const DOKUMENTE = [
   },
   {
     slug: 'demo-rezepte',
+    zielgruppe: 'technik',
     datei: 'demo-rezepte.md',
     eigen: true,
     kurz: { de: 'Rezepte der Demoanwendung', en: 'Demo application recipes' },
@@ -78,6 +83,7 @@ export const DOKUMENTE = [
   },
   {
     slug: 'machbarkeitsstudie',
+    zielgruppe: 'alle',
     datei: 'machbarkeitsstudie.md',
     englisch: 'machbarkeitsstudie.en.md',
     eigen: true,
@@ -133,6 +139,20 @@ export const DOKUMENTE = [
 // stehen dann in derselben Seite und werden über html[lang] umgeschaltet, wie
 // überall sonst auf der Seite. Die Kopien von oben haben keine — dort bleibt
 // der Hinweis, dass das Dokument nur auf Deutsch gepflegt wird.
+// Zwei Zielgruppen lesen hier mit: Ministerien und Institute ohne
+// Technikkenntnisse und Entwickler:innen. Jede Karte und jede Seite sagt, für
+// wen sie geschrieben ist. Unterseiten erben die Zielgruppe ihrer Landeseite.
+export const ZIELGRUPPEN = {
+  alle: { de: 'Ohne Technikkenntnisse', en: 'No technical background needed' },
+  technik: { de: 'Für Entwickler:innen', en: 'For developers' },
+};
+export const zielgruppeVon = (dok) =>
+  dok.zielgruppe ?? DOKUMENTE.find((d) => d.slug === dok.teil)?.zielgruppe ?? 'technik';
+const zielgruppenMarke = (dok) => {
+  const z = zielgruppeVon(dok);
+  return `<span class="zielgruppe zielgruppe-${z}">${zweisprachig(ZIELGRUPPEN[z])}</span>`;
+};
+
 export const oberseite = (dok) => (dok.teil ? DOKUMENTE.find((d) => d.slug === dok.teil) : null);
 
 const hier = dirname(fileURLToPath(import.meta.url));
@@ -343,6 +363,7 @@ export function seite(dok, markdown, standDaten = null, markdownEn = null) {
   </nav>
 
   <header class="dokument-kopf">
+    ${zielgruppenMarke(dok)}
     ${en
       ? `<h1><span lang="de">${titel || dok.kurz.de}</span><span lang="en">${en.titel || dok.kurz.en}</span></h1>`
       : `<h1>${titel || dok.kurz.de}</h1>`}
@@ -393,6 +414,7 @@ export function uebersicht(dokumente, standDaten = null) {
     .filter((dok) => !dok.teil)
     .map((dok) => `
     <a class="karte" href="${seitenPfad(dok)}">
+      ${zielgruppenMarke(dok)}
       <p class="quelle">${zweisprachig(dok.eigen
         ? { de: 'Zu dieser Seite', en: 'Part of this site' }
         : { de: `Kopie aus ${QUELLE.repo}`, en: `A copy from ${QUELLE.repo}` })}</p>

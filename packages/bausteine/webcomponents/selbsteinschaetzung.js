@@ -74,8 +74,8 @@ function aufbauen(wurzel, zustand, el) {
         },
       }, [
         s('text', {
-          class: 'zeile-label', x: m.labelBreite - 12, y: z.y,
-          'text-anchor': 'end', 'dominant-baseline': 'central', text: z.label,
+          class: 'zeile-label', x: 4, y: z.y,
+          'text-anchor': 'start', 'dominant-baseline': 'central', text: z.label,
         }),
         s('line', {
           class: `luecke luecke-${z.lage}`,
