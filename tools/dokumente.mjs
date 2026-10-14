@@ -111,6 +111,18 @@ export const DOKUMENTE = [
       en: 'Collecting material for a report and handing it to the learning platform as a Common Cartridge or to paper as a PDF — with the import into Moodle and what it revealed.',
     },
   },
+  {
+    slug: 'machbarkeitsstudie-ergebnisse-weitergeben',
+    datei: 'machbarkeitsstudie-ergebnisse-weitergeben.md',
+    englisch: 'machbarkeitsstudie-ergebnisse-weitergeben.en.md',
+    eigen: true,
+    teil: 'machbarkeitsstudie',
+    kurz: { de: 'Ergebnisdaten übergeben', en: 'Handing over result data' },
+    beschreibung: {
+      de: 'Konzeptentwurf: Ergebnisse einer Rückmeldung an ein Lernsystem übergeben, am Beispiel AIS.schule — welche Daten, welche Wege, was auf beiden Seiten fehlt.',
+      en: 'Concept draft: handing a report’s results to a learning system, using AIS.schule as the example — which data, which routes, what is missing on both sides.',
+    },
+  },
 ];
 
 // Ein Eintrag mit `teil` ist eine Unterseite: er steht nicht als eigene Karte

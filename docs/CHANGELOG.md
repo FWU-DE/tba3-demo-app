@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Dritte Teilfrage der Machbarkeitsstudie:
+  `/dokumentation/machbarkeitsstudie-ergebnisse-weitergeben`**, deutsch und
+  englisch. Ein Konzeptentwurf, kein Prototyp: Ergebnisse einer Rückmeldung an
+  ein Lernsystem übergeben, am Beispiel AIS.schule. Die Seite beschreibt, welche
+  Antworten der Schnittstelle in Frage kommen, und vier Wege, nach Eignung
+  geordnet. Dazu ein Entwurf für ein Übergabeformat und was auf beiden Seiten
+  fehlt. Angaben zu AIS stammen von der öffentlichen Projektseite und,
+  abstrahiert und ohne Quelltext, aus einer Durchsicht der noch nicht
+  öffentlichen AIS-Repositorien (freigegeben von Jan Renz).
+
 ### Fixed
 - **Die Common Cartridge lässt sich in Moodle importieren.** Der Export schrieb
   Common Cartridge 1.3. Moodle 4.5 erkennt beim Wiederherstellen nur 1.0 und 1.1
