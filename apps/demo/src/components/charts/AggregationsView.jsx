@@ -9,6 +9,10 @@ import { STUDENTS } from '../../utils/studentData';
 import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import { useKonstanten, useTexte } from '../../i18n';
+import { linksbuendigerTick } from './LinksbuendigerTick';
+
+const DomaenenTick = linksbuendigerTick(150);
+const NamenTick = linksbuendigerTick(120);
 
 // ── Local fallback charts from student data ───────────────────────────────────
 
@@ -111,7 +115,7 @@ const LocalDomainChart = ({ students }) => {
           type="category"
           dataKey="domain"
           width={150}
-          tick={{ fontSize: 11 }}
+          tick={<DomaenenTick />}
           tickLine={false}
           axisLine={false}
         />
@@ -215,7 +219,7 @@ const ExerciseChart = ({ exerciseAggregation }) => {
           type="category"
           dataKey="name"
           width={120}
-          tick={{ fontSize: 11 }}
+          tick={<NamenTick />}
           tickLine={false}
           axisLine={false}
         />

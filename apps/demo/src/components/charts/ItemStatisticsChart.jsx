@@ -7,6 +7,9 @@ import Card from '../common/Card';
 import LoadingSkeleton from '../common/LoadingSkeleton';
 import ErrorMessage from '../common/ErrorMessage';
 import { useTexte } from '../../i18n';
+import { linksbuendigerTick } from './LinksbuendigerTick';
+
+const ItemTick = linksbuendigerTick(90);
 
 // Auf Modulebene, nicht im Render — sonst wird der Tooltip bei jedem
 // Durchlauf als neue Komponente eingehängt.
@@ -115,7 +118,7 @@ const ItemStatisticsChart = ({ level, id }) => {
               dataKey="id"
               width={90}
               stroke="#6b7280"
-              tick={{ fontSize: 11 }}
+              tick={<ItemTick />}
             />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="solutionFrequency" fill="#2563eb" radius={[0, 4, 4, 0]} />

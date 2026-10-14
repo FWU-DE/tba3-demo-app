@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Beispielwerte für jeden Parameter von `/materials`** in der API-Referenz:
+  test, exercise, competence, competenceLevel, subject, domain, kind,
+  language, audience und die ID. Die Werte stammen aus den Demodaten
+  (`tools/material-beispiele.mjs`) und stehen als Auswahl am Feld und als
+  „Beispiele aus den Demodaten“ in der Beschreibung. Vorn steht jeweils „kein
+  Filter“: Swagger trägt sonst das erste Beispiel jedes Feldes ein, und
+  „Execute“ filterte nach allen zugleich, mit leerem Ergebnis.
+  `material-spec:update` ergänzt sie beim nächsten Nachziehen wieder. Ein Test
+  stellt sicher, dass jedes Beispiel im Mock Treffer liefert.
+
+### Fixed
+- Mock `/materials`: Eine Kompetenz-URI (`https://…`) wurde am Doppelpunkt als
+  Präfix gelesen und fand nichts. Präfixe gelten nur noch für `iqbId:`,
+  `nameShort:` und `name:` (sucht im Namen). `subject=de` und `domain=le`
+  treffen jetzt auch die Beispiele, die „Deutsch“ und „Leseverstehen“ führen.
+
+### Changed
+- **Y-Achsen-Beschriftungen auch in der Demoanwendung linksbündig**
+  (Item-Statistik, Aggregationen nach Teilbereich und nach Aufgabe). Lange
+  Namen brechen um (`LinksbuendigerTick.jsx`).
+
 ### Changed
 - **Zwei Zielgruppen, klar gekennzeichnet.** Die Seite wird von Ministerien und
   pädagogischen Instituten gelesen und von Entwickler:innen. Die Startseite ist

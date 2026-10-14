@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync } from 'node:zlib';
 import { load as yamlLaden, dump as yamlSchreiben } from 'js-yaml';
+import { beispieleErgaenzen } from './material-beispiele.mjs';
 
 const BRANCH = 'https://raw.githubusercontent.com/janrenz/tba3/wip/materialien-schnittstelle-entwurf';
 const ENTWURF = `${BRANCH}/docs/entwuerfe/materialien`;
@@ -120,7 +121,7 @@ const kopf = [
 ].join('\n');
 
 const specDatei = join(HIER, '../apps/portal/schnittstelle/material-spec.yml');
-writeFileSync(specDatei, kopf + yamlSchreiben(spec, { lineWidth: 100, noRefs: true }));
+writeFileSync(specDatei, kopf + yamlSchreiben(beispieleErgaenzen(spec), { lineWidth: 100, noRefs: true }));
 console.log(`✓ ${specDatei.split('/').slice(-1)[0]} geschrieben`);
 
 // ── Beispiele als Mock-Antworten ──────────────────────────────────────────────
