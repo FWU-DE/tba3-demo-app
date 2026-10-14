@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Baustein-Katalog neu erhoben (14.10.2026).** Diesmal waren es alle zehn Demos
+  über alle Reiter, nicht nur die Startseiten, dazu die offenen Repositorien
+  seit der letzten Erhebung. Seit dem 15.09. hat sich am Code der
+  Rückmeldungen kaum etwas getan. Der Katalog hatte aber Lücken, die die erste
+  Runde nicht sah:
+  - **26 neue Zuordnungen**, je mit Beleg im Kommentar. Am größten war die Lücke
+    bei kt-D8: Es führte weder Kompetenzstufen noch Lösungshäufigkeiten, obwohl
+    `CompetenceLevelBand` und `TaskBarChart` beides zeichnen. Dazu kommen
+    indibits Reiter „Schulentwicklung“ und „Handlungsfelder“, Notizen und
+    Streudiagramm beim zepf und mehr.
+  - **Fünf neue Bausteine** (38 → 43): Lösungsquote nach Merkmal (indibit),
+    Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Fragebogenskalen
+    (zepf SL) und Netzdiagramm der Teilkompetenzen (zepf EN 8).
+  - indibit hat seine Bibliothek als `indibit-eu/tba3-elements` veröffentlicht;
+    die Quelltext-Verweise zeigen jetzt dorthin. Die alte Repository-Adresse
+    des ISQ verlangt eine Anmeldung; der Hinweis sagt das.
+  - Neue Bilder der Demos. Die Erhebung erkennt wieder React, Vue und Angular,
+    zählt Bilder und ECharts-Flächen. Die erste Erhebung hatte das von Hand
+    ergänzt und die Demos von kompetenztest.de fälschlich als React geführt; es
+    ist Vue.
+
 ### Added
 - **Beispielwerte für jeden Parameter von `/materials`** in der API-Referenz:
   test, exercise, competence, competenceLevel, subject, domain, kind,

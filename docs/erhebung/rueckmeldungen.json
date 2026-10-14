@@ -1,8 +1,9 @@
 {
-  "stand": "2026-09-15T13:00:00.000Z",
+  "stand": "2026-10-14T10:59:54.874Z",
   "befunde": [
     {
       "id": "kt-d3-messwiederholung",
+      "einrichtung": "kt",
       "url": "https://development.tba.i.c.netzkolchose.de/",
       "status": 200,
       "titel": "Ergebnisse",
@@ -26,11 +27,12 @@
       },
       "eigeneElemente": [],
       "bibliotheken": {
-        "React": true
+        "Vue": true
       }
     },
     {
       "id": "kt-d8-lernstand-barometer",
+      "einrichtung": "kt",
       "url": "https://lernstand-barometer.ktest.de/login",
       "status": 200,
       "titel": "Lernstand Barometer",
@@ -50,16 +52,17 @@
       },
       "eigeneElemente": [],
       "bibliotheken": {
-        "React": true
+        "Vue": true
       }
     },
     {
       "id": "kt-m8-kompetenzstand",
+      "einrichtung": "kt",
       "url": "https://kompetenztestde.github.io/kompetenzstand-mathematik",
       "status": 200,
       "titel": "Kompetenzstand-Mathematik",
       "h1": [
-        "Kompetenzstand-Mathematik"
+        "Kompetenzstand-Mathematik: Schülerbericht"
       ],
       "h2": [],
       "reiter": [],
@@ -74,11 +77,12 @@
       },
       "eigeneElemente": [],
       "bibliotheken": {
-        "React": true
+        "Vue": true
       }
     },
     {
       "id": "indibit-klassenrueckmeldung",
+      "einrichtung": "indibit",
       "url": "https://apps.indibit.eu/tba3/class-teacher",
       "status": 200,
       "titel": "TBA3 • Klassenleitung",
@@ -118,10 +122,13 @@
         "app-info-box",
         "app-group-students-table"
       ],
-      "bibliotheken": {}
+      "bibliotheken": {
+        "Angular": true
+      }
     },
     {
       "id": "indibit-schulrueckmeldung",
+      "einrichtung": "indibit",
       "url": "https://apps.indibit.eu/tba3/school-manager",
       "status": 200,
       "titel": "TBA3 • Schulleitung",
@@ -169,10 +176,13 @@
         "app-overview-row",
         "app-competence-bar-chart"
       ],
-      "bibliotheken": {}
+      "bibliotheken": {
+        "Angular": true
+      }
     },
     {
       "id": "indibit-schulaufsicht",
+      "einrichtung": "indibit",
       "url": "https://apps.indibit.eu/tba3/school-supervision",
       "status": 200,
       "titel": "TBA3 • Schulträger",
@@ -210,10 +220,13 @@
         "app-competence-levels-comparison",
         "app-info-box"
       ],
-      "bibliotheken": {}
+      "bibliotheken": {
+        "Angular": true
+      }
     },
     {
       "id": "isq-portal",
+      "einrichtung": "isq",
       "url": "https://tba3.isqberlin.de/",
       "status": 200,
       "titel": "TBA3-Prototyp (ISQ) Tool",
@@ -238,6 +251,7 @@
     },
     {
       "id": "zepf-ma3",
+      "einrichtung": "zepf",
       "url": "https://zepf-rptu.github.io/TBA3/ma",
       "status": 200,
       "titel": "TBA3 – Mathe 3",
@@ -262,6 +276,7 @@
     },
     {
       "id": "zepf-en8",
+      "einrichtung": "zepf",
       "url": "https://zepf-rptu.github.io/TBA3/en",
       "status": 200,
       "titel": "TBA3 – Englisch 8",
@@ -286,6 +301,7 @@
     },
     {
       "id": "zepf-sl",
+      "einrichtung": "zepf",
       "url": "https://zepf-rptu.github.io/TBA3/sl",
       "status": 200,
       "titel": "TBA3 – Schulleitung",

@@ -36,9 +36,9 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 | kompetenztest.de (FSU Jena) | Messwiederholung Deutsch, Klasse 3 | Lehrkraft, Schüler:in | Deutsch | Klasse 3 | [Demo](https://development.tba.i.c.netzkolchose.de/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
 | kompetenztest.de (FSU Jena) | Lernstand-Barometer Deutsch, Klasse 8 | Lehrkraft, Fachkonferenz, Schüler:in | Deutsch | Klasse 8 | [Demo](https://lernstand-barometer.ktest.de/login) · [Code](https://github.com/kompetenztestde/lernstand-barometer) |
 | kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik, Klasse 8 | Schüler:in | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik) |
-| indibit | Klassenrückmeldung | Lehrkraft | Deutsch | Klasse 8 | [Demo](https://apps.indibit.eu/tba3/class-teacher) · [Code](https://github.com/indibit-eu) · [Doku](https://apps.indibit.eu/tba3/docs/) |
-| indibit | Schulrückmeldung | Schulleitung | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-manager) · [Code](https://github.com/indibit-eu) · [Doku](https://apps.indibit.eu/tba3/docs/) |
-| indibit | Schulaufsichtsrückmeldung | Schulaufsicht | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-supervision) · [Code](https://github.com/indibit-eu) · [Doku](https://apps.indibit.eu/tba3/docs/) |
+| indibit | Klassenrückmeldung | Lehrkraft | Deutsch | Klasse 8 | [Demo](https://apps.indibit.eu/tba3/class-teacher) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
+| indibit | Schulrückmeldung | Schulleitung | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-manager) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
+| indibit | Schulaufsichtsrückmeldung | Schulaufsicht | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-supervision) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
 | ISQ Berlin | Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8 | Lehrkraft, Schulleitung, Schulaufsicht, Schüler:in | Deutsch, Mathematik, Englisch, Französisch | Klasse 3, Klasse 8 | [Demo](https://tba3.isqberlin.de/) · [Code](https://git.imp.fu-berlin.de/isq/feedbacksysteme/tbaiii) |
 | zepf (RPTU) | Mathematik, Klasse 3 | Lehrkraft | Mathematik | Klasse 3 | [Demo](https://zepf-rptu.github.io/TBA3/ma) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/) |
 | zepf (RPTU) | Englisch, Klasse 8 | Lehrkraft | Englisch | Klasse 8 | [Demo](https://zepf-rptu.github.io/TBA3/en) · [Code](https://github.com/zepf-RPTU/TBA3) · [Doku](https://zepf-rptu.github.io/TBA3/docs/) |
@@ -47,9 +47,9 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 Was an diesen Verweisen vorläufig ist:
 
 - **Messwiederholung Deutsch, Klasse 3** (kompetenztest.de (FSU Jena)): KT-internes Hosting in Bearbeitung. Entstanden in Zusammenarbeit mit TBA II.
-- **Klassenrückmeldung** (indibit): Der Repositoriumsname folgt mit der Veröffentlichung. Lizenz: MIT.
+- **Klassenrückmeldung** (indibit): Die Komponentenbibliothek ist als tba3-elements veröffentlicht. Lizenz: MIT.
 - **Schulaufsichtsrückmeldung** (indibit): Das Land Hessen setzt für seine Rückmeldungen an die Schulaufsicht auf diesem Entwicklungsstand auf.
-- **Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8** (ISQ Berlin): Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant. Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.
+- **Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8** (ISQ Berlin): Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant, die bisherige Adresse verlangt eine Anmeldung (Stand 14.10.2026). Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.
 
 ## Anzeigebausteine
 
@@ -65,7 +65,7 @@ Wie verteilt sich eine Gruppe über die Kompetenzstufen? Gestapelt, mit dem Mind
 
 Welche Aufgaben sind auffällig? Die Lösungshäufigkeit der Gruppe gegen den Referenzbereich, sortierbar — die Abweichung ist die Information, nicht der absolute Wert.
 
-*Daten:* Aufgaben je Ebene · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* indibit, ISQ Berlin, zepf (RPTU)
+*Daten:* Aufgaben je Ebene · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
 ### Erwartung gegen Ergebnis
 
@@ -107,7 +107,7 @@ Lösungsanteile je Schüler:in und Teilbereich, sortierbar und auswählbar. Die 
 
 Schüler:innen als Punkte in zwei Dimensionen. Zeigt Gruppen und Ausreißer, die in Tabelle und Balken untergehen.
 
-*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-streudiagramm>` · *Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek
+*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-streudiagramm>` · *Genannt von:* zepf (RPTU)
 
 ### Positionsskala mit Zonen
 
@@ -133,6 +133,30 @@ Schulen und Gebiete auf einer Karte, gekoppelt mit Tabelle und Suche. Für die S
 
 *Daten:* Schulen einer Ebene mit Ortsangabe · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
 
+### Lösungsquote nach Merkmal
+
+Wie hängt das Ergebnis mit einem Hintergrundmerkmal zusammen? Die Lösungsquote je Ausprägung (Sozialindex, Geschlecht, Herkunftssprache) neben den Vergleichsgruppen, mit Spannweite. Zeigt Ungleichheit als Verlauf statt als Einzelwert.
+
+*Daten:* Aggregationen nach Kovariaten · *Bibliothek:* noch keiner · *Gefunden bei:* indibit
+
+### Abweichung je Lerngruppe
+
+Wie weit liegt jede Klasse über oder unter dem Wert der Schule? Ein Balken je Klasse um eine Nulllinie. Für die Schulleitung die schnellste Antwort auf die Frage, wo es sich zu reden lohnt.
+
+*Daten:* Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
+### Zwei Gruppen gespiegelt
+
+Zwei Gruppen links und rechts einer Mittelachse, nach Kompetenzstufen oder Punkten — wie eine Bevölkerungspyramide. Macht Unterschiede in der Form der Verteilung sichtbar, nicht nur im Mittelwert.
+
+*Daten:* Kompetenzstufen zweier Lerngruppen · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
+### Netzdiagramm der Teilkompetenzen
+
+Mehrere Teilkompetenzen auf je einer Achse, eine Person gegen Klasse und Vergleichsgruppen. Das Profil ist die Aussage — ob es rund ist oder an einer Stelle einknickt.
+
+*Daten:* Ergebnisse je Teilkompetenz und Person · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+
 ### Kontextmerkmal als Ring
 
 Ein kategoriales Merkmal der Gruppe — sozioökonomischer Status, Teilnahmequote, Geschlecht, Sprache zuhause — als Ring mit Legende, die Mitte trägt die Gesamtzahl oder die mittlere Kategorie. Ergebnisse ohne Zusammensetzung der Gruppe sind nicht einzuordnen; deshalb steht dieser Ring in der Schulrückmeldung viermal nebeneinander.
@@ -153,13 +177,13 @@ Fachlich sinnvolle Gruppierungen — das eigentliche Rückmeldeformat. Ein Eleme
 
 Dieselbe Größe auf mehreren Bezugsebenen nebeneinander: Klasse, Schule, fairer Vergleich mit strukturell ähnlichen Schulen, Bezirk, Land. Ohne Bezugsebene ist ein Ergebnis keine Aussage.
 
-*Daten:* Dieselbe Ressource auf mehreren Ebenen · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* indibit, ISQ Berlin, zepf (RPTU)
+*Daten:* Dieselbe Ressource auf mehreren Ebenen · *Bibliothek:* `<tba3-kompetenzstufen-leiste>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin, zepf (RPTU)
 
 ### Stärken und Entwicklungsbedarfe
 
 Merkmale nach dem Abstand zur Erwartung geordnet — oben abgelesen sind es Stärken, unten Entwicklungsbedarfe. Dieselbe Rechnung, zwei Enden, und keine Rangliste von Personen.
 
-*Daten:* Aufgaben oder Merkmale gegen Referenzwert · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* ISQ Berlin
+*Daten:* Aufgaben oder Merkmale gegen Referenzwert · *Bibliothek:* `<tba3-aufgaben-tabelle>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit, ISQ Berlin
 
 ### Fördergruppen
 
@@ -195,13 +219,19 @@ Der Bericht als nummerierte Schrittfolge statt als Dashboard. Wer nicht täglich
 
 Aus Verteilung, Vergleich und Entwicklung erzeugte Sätze, abhängig von den gesetzten Filtern. Nimmt der Leserin das Ablesen ab — und die Möglichkeit, es anders abzulesen. Deshalb gehört dazu, dass der Satz seine Rechnung nennt.
 
-*Daten:* Die gesetzten Filter und ihre Ergebnisse · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+*Daten:* Die gesetzten Filter und ihre Ergebnisse · *Bibliothek:* noch keiner · *Genannt von:* indibit, ISQ Berlin, zepf (RPTU)
 
 ### Auszeichnungen
 
 Regelbasierte Hervorhebungen — „deutlich über dem Bezirksdurchschnitt", „übertrifft strukturell vergleichbare Schulen". Wirkt nur, solange die Regel offenliegt; sonst ist es eine Rangliste mit freundlichem Namen.
 
-*Daten:* Vergleichswerte plus eine offengelegte Regel · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+*Daten:* Vergleichswerte plus eine offengelegte Regel · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
+
+### Fragebogenskalen neben dem Testergebnis
+
+Selbstwirksamkeit und Unterrichtsqualität aus dem Begleitfragebogen, je Klasse als Boxplot oder gestapelter Balken und im Verlauf. Stellt neben das Testergebnis, wie die Klasse ihren Unterricht und sich selbst sieht.
+
+*Daten:* Fragebogendaten — nicht Teil der Schnittstelle · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
 
 ### Standard-Erreichung
 
@@ -225,7 +255,7 @@ Was die Schüler:in sich zutraut, neben dem, was der Test misst. Die Lücke zwis
 
 Die Aufgabe selbst in einem Überlagerungsfenster, aus der Tabelle heraus geöffnet. Ohne sie ist eine auffällige Lösungshäufigkeit eine Zahl, über die sich nicht entscheiden lässt, ob sie am Können lag oder an der Aufgabe.
 
-*Daten:* Aufgabeninhalt, nicht nur Kennung und Statistik · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+*Daten:* Aufgabeninhalt, nicht nur Kennung und Statistik · *Bibliothek:* noch keiner · *Gefunden bei:* kompetenztest.de (FSU Jena), zepf (RPTU)
 
 ## Rahmen
 
@@ -247,7 +277,7 @@ Ebene, Fach, Jahrgang, Datentyp. Die Auswahl gehört in die Adresszeile, sonst l
 
 Gesetzte Filter, Notizen und Kommentare speichern und wieder aufrufen. Eine Rückmeldung wird selten in einer Sitzung gelesen; ohne Arbeitsstand beginnt jede Konferenz von vorn.
 
-*Daten:* Profil der angemeldeten Person · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin
+*Daten:* Profil der angemeldeten Person · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin, zepf (RPTU)
 
 ### Bericht ausgeben
 
@@ -259,7 +289,7 @@ Eine Fassung, die das Gerät verlässt — an die gesetzten Filter gebunden und,
 
 Tooltips, Glossar, Einführungstouren je Rolle. Datenunabhängig gehalten — bei zepf in eigenen JSON-Dateien —, damit sich der Text ändern lässt, ohne die Auswertung anzufassen.
 
-*Daten:* Keine — bewusst getrennt gehalten · *Bibliothek:* noch keiner · *Genannt von:* ISQ Berlin, zepf (RPTU)
+*Daten:* Keine — bewusst getrennt gehalten · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin, zepf (RPTU)
 
 ### Zweisprachigkeit
 
@@ -293,27 +323,27 @@ Vor dem Export auswählen, was hineinkommt. Ein Bericht, der alles enthält, wir
 
 ## Bilanz
 
-Der Katalog führt **38 Bausteine** in drei Schichten:
-29 aus den Sachberichten, 9 aus den laufenden
+Der Katalog führt **43 Bausteine** in drei Schichten:
+29 aus den Sachberichten, 14 aus den laufenden
 Demos und ihrem Quelltext.
 
 **Was erst die Erhebung am Artefakt gezeigt hat:**
-Kontextmerkmal als Ring, Lernverlauf als Figuren, Standard-Erreichung, Zeugnissätze, Selbsteinschätzung gegen Ergebnis, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Keiner davon steht in einem
+Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm der Teilkompetenzen, Fragebogenskalen neben dem Testergebnis, Kontextmerkmal als Ring, Lernverlauf als Figuren, Standard-Erreichung, Zeugnissätze, Selbsteinschätzung gegen Ergebnis, Aufgabenvorschau, Namen gegen Codes, Glossar mit Suche, Export mit Auswahl. Keiner davon steht in einem
 Sachbericht — was nichts über ihren Wert sagt, aber alles darüber, wie
 vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
 übersieht ein Viertel dessen, was gebaut wurde.
 
 **Was mindestens drei der vier Einrichtungen unabhängig voneinander gebaut haben:**
-Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Materialanbindung, Einzelbericht. Das ist der belastbare Kern einer
+Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Stärken und Entwicklungsbedarfe, Materialanbindung, Einzelbericht, Automatische Hinweise, Erklärtexte. Das ist der belastbare Kern einer
 Rückmeldung — wer eine neue baut, fängt hier an.
 
-**Was noch kein Baustein in `@tba3/bausteine` ist** (17 Einträge):
-Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Export mit Auswahl. Ein Teil davon ist keine
+**Was noch kein Baustein in `@tba3/bausteine` ist** (22 Einträge):
+Gebietskarte, Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm der Teilkompetenzen, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Fragebogenskalen neben dem Testergebnis, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Export mit Auswahl. Ein Teil davon ist keine
 Visualisierung, sondern ein Rahmen und gehört auch nicht in eine
 Visualisierungsbibliothek. Der Rest ist eine Liste offener Arbeit.
 
 **Was die Bibliothek führt, ohne dass ein Sachbericht es nennt**
-(3 Einträge): Erwartung gegen Ergebnis, Mittelwert mit Unsicherheit, Punktwolke.
+(2 Einträge): Erwartung gegen Ergebnis, Mittelwert mit Unsicherheit.
 Das ist kein Vorwurf an die Berichte — sie beschreiben, was die Gruppen
 gefordert haben, nicht alles, was auf dem Schirm steht. Aber es ist der Teil des
 Katalogs, für den der Beleg fehlt, und das soll man sehen können.
