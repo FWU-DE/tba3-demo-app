@@ -1,11 +1,11 @@
 # Integrating media libraries: finding material for a report
 
-Part of the [feasibility study](machbarkeitsstudie.md). Examined in the
+Examined in the
 prototype in the "Learning materials" tab of the demo application, connected
 to the media library MUNDO. The queries against MEM and the sample data date
 from 14 October 2026.
 
-## The result up front
+## Result
 
 - **Technically feasible.** A teacher opens MUNDO from within the demo
   application, selects material and gets it back. It is then attached directly
@@ -114,7 +114,7 @@ then on the application treats them like local material: they appear in the
 list marked "MUNDO" and are included in the PDF export and in the Common
 Cartridge (`.imscc`) for the learning platform.
 
-![List "Assigned materials – Level II" with two materials from the local pool and one entry tagged MUNDO with a link to mundo.schule.](/dokumentation/bilder/mundo-zugewiesen-en.png "A MUNDO hit among the local materials of level II. It is included in both exports, as shown on the page about handing over to the LMS.")
+![List "Assigned materials – Level II" with two materials from the local pool and one entry tagged MUNDO with a link to mundo.schule.](/dokumentation/bilder/mundo-zugewiesen-en.png "A MUNDO hit among the local materials of level II. It is included in both exports.")
 
 In case LTI is not available there is a second tab. There, the teacher enters
 the title, address and description of a material found on mundo.schule by
@@ -123,9 +123,6 @@ hand.
 ![The dialog "MUNDO material search" with the tabs LTI search, Manual and Config. On the left the form for title, URL and description, on the right the list of selected materials with one entry and the button "Take over 1 material".](/dokumentation/bilder/mundo-dialog-en.png "The MUNDO dialog in the “Manual” tab. The selection collects on the right, whether it comes from the LTI search or from the form.")
 
 ### What the prototype simplifies
-
-These points would have to be solved for operation. They do not change the
-answer to the feasibility question:
 
 - **The shared secret is in the browser.** Anyone who opens the page can read
   it. In operation the signature belongs on a server. Better still would be

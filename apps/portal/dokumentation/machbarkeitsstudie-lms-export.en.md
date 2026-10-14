@@ -1,10 +1,10 @@
 # Handing a material collection to the LMS: Common Cartridge and PDF
 
-Part of the [feasibility study](machbarkeitsstudie.md). Examined in the
+Examined in the
 prototype in the "Learning materials" tab of the demo application and with an
 import into Moodle 4.5 on 14 October 2026.
 
-## The result up front
+## Result
 
 - **Feasible, and with no server involved.** A teacher collects material for a
   report, per competence level or per group. The demo application outputs this
@@ -165,8 +165,6 @@ in German and in English:
 
 ![Moodle page "Area of rectangles" with the labels MUNDO (external) and Level II: Minimum standard, the direct link to mundo.schule and the line "Assigned to".](/dokumentation/bilder/lms-moodle-seite-en.png "A material as a page. The link leads to MUNDO; the material itself is not in Moodle.")
 
-Moodle maps the cartridge like this:
-
 | In the cartridge | In Moodle |
 |---|---|
 | Group (`By competence level`) | a line of text at the top of the "General" section |
@@ -174,8 +172,7 @@ Moodle maps the cartridge like this:
 | Material (`webcontent`, HTML) | "Page" activity |
 | LOM title and description | not shown |
 
-Three things stand out. None of them prevents the import; all three would be
-smoothed out before real use:
+To smooth out before real use; none of them prevents the import:
 
 - **Everything ends up in one section.** Moodle does not turn the levels of
   the structure into course sections but into headings within "General".

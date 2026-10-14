@@ -1,17 +1,13 @@
 # Handing over result data for further work: a concept draft using AIS.schule
 
-Part of the [feasibility study](machbarkeitsstudie.md). Unlike the other
-sub-concepts, this one has **no prototype**; nothing was built. The
-page describes which data the reporting API provides, where it could take
-effect in a learning system, and what is missing on both sides. AIS.schule
-serves as the example. Information on AIS comes from the public project site
+No prototype. Information on AIS comes from the public project site
 [ais.schule](https://ais.schule/) and from a review of the AIS repositories,
 which are not yet public, on 14 October 2026. What comes from the repositories
 is **abstracted**: names and structures are simplified and translated, and no
 source code is reproduced. AIS is under development, so things may change
 quickly.
 
-## The result up front
+## Result
 
 - **In substance the two fit together.** VERA provides a diagnosis; AIS aims
   to help teachers with diagnostics, support and lesson planning. Both are
@@ -68,8 +64,7 @@ education schools:
 ## Where results would arrive in AIS (abstracted)
 
 For a handover, three things matter in AIS: how it keeps the learning state,
-how a teacher plans, and what both refer to in subject terms. Simplified, it
-looks like this:
+how a teacher plans, and what both refer to in subject terms.
 
 ```ts
 // Subject model: knowledge components, bundled into skills and domains,
@@ -100,15 +95,11 @@ interface PlanSection {
 }
 ```
 
-This shows where the API's results could connect and where they could not:
-
 | From the report (TBA3) | In AIS | Fit |
 |---|---|---|
 | competence, key idea (today only as a code) | planning scope of kind `standard` | **Good.** Planning already provides for a reference to a standard. What is missing are the identifiers on the TBA3 side and a standard → components mapping in AIS. |
 | the group's level distribution per sub-area | `Standing` per component in the overview | **Medium.** Different granularity: VERA measures sub-areas, AIS keeps fine-grained components. Enough for context next to its own picture (route 2), not for merging. |
 | a person's level I–V | `LearningState.mastery` with `attempts = 0` | **Conceivable as a starting value.** The distinction between "measured" and "only estimated" already exists, and a VERA value clearly belongs to the second kind. |
-
-Four findings from the review add to this:
 
 - **The learning state deliberately has no write path from outside.** An
   application may not set it. The path was closed so that no one can grade
@@ -154,8 +145,6 @@ most:
 | `/groups/{id}/aggregations?aggregation=competence` | results per competence, aggregated | no |
 | the same with `type=students` | the same per student, under a code | yes, pseudonymous |
 | `/schools/…`, `/states/…` | reference values for school and state | no |
-
-The group level looks like this in the demo application:
 
 ![Five tiles for competence levels I to V with number and share of students of the learning group 3a German.](/dokumentation/bilder/lms-stufen-en.png "A learning group's distribution across competence levels, as the API delivers it. Exactly this information, per competence instead of per test, would be the core of a handover.")
 
@@ -250,8 +239,6 @@ rest of the project:
   ]
 }
 ```
-
-Three decisions are built into it:
 
 - **The identifier is an address; the code is just an extra.** `kennung`
   points to the standard in the IQB vocabulary as held by the ontology server
