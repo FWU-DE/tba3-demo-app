@@ -45,17 +45,33 @@ const listen = (wert) => String(wert).split(',').map((t) => t.trim()).filter(Boo
 const passtAufAnhang = (material, pruefung) =>
   (material.attachments ?? []).some(pruefung);
 
+// Die Spezifikation fragt nach Kürzeln („Fachkürzel (z. B. `de`, `ma`)“), die
+// Beispiele des Entwurfs führen Namen („Deutsch“). Beides soll treffen — sonst
+// liefert das Beispiel aus der Referenz eine leere Liste.
+const FACH_KUERZEL = { de: 'Deutsch', ma: 'Mathematik', en: 'Englisch', fr: 'Französisch' };
+const DOMAENEN_KUERZEL = { le: 'Leseverstehen', ho: 'Hörverstehen', rs: 'Rechtschreibung' };
+const passtNamen = (eintrag, wert, kuerzel) => {
+  if (!eintrag) return false;
+  const gesucht = String(wert).toLowerCase();
+  const name = kuerzel[gesucht] ?? wert;
+  return eintrag.name === name || eintrag.id === wert || eintrag.name?.toLowerCase() === gesucht;
+};
+
 const materialFilter = {
   scope: (m, wert) => passtAufAnhang(m, (a) => listen(wert).includes(a.scope)),
   kind: (m, wert) => listen(wert).includes(m.kind),
   language: (m, wert) => m.language === wert,
   audience: (m, wert) => m.audience === wert,
-  subject: (m, wert) => passtAufAnhang(m, (a) => a.subject?.name === wert || a.subject?.id === wert),
-  domain: (m, wert) => passtAufAnhang(m, (a) => a.domain?.name === wert || a.domain?.id === wert),
+  subject: (m, wert) => passtAufAnhang(m, (a) => passtNamen(a.subject, wert, FACH_KUERZEL)),
+  domain: (m, wert) => passtAufAnhang(m, (a) => passtNamen(a.domain, wert, DOMAENEN_KUERZEL)),
 };
 
 // test, exercise, item, competence und competenceLevel zeigen alle auf refId bzw.
-// refName des jeweiligen Scopes; 'iqbId:AB1021' und 'nameShort:Ia' sind erlaubt.
+// refName des jeweiligen Scopes; 'iqbId:AB1021' und 'nameShort:Ia' sind erlaubt,
+// 'name:Leitidee Lesen' sucht nur im Namen. Ein Präfix gilt nur, wenn es eines
+// dieser drei ist — eine Kompetenz-URI („https://…“) enthält ebenfalls einen
+// Doppelpunkt und wurde sonst als Präfix „https“ gelesen und fand nichts.
+const QUALIFIZIERER = new Set(['iqbId', 'nameShort', 'name']);
 for (const [name, scope] of Object.entries({
   test: 'test',
   exercise: 'exercise',
@@ -64,12 +80,14 @@ for (const [name, scope] of Object.entries({
   competenceLevel: 'competence-level',
 })) {
   materialFilter[name] = (m, wert) => {
-    const [qualifizierer, rest] = wert.includes(':') ? [wert.split(':')[0], wert.split(':').slice(1).join(':')] : [null, wert];
-    return passtAufAnhang(m, (a) =>
-      a.scope === scope &&
-      (a.refId === rest || a.refName === rest) &&
-      (!qualifizierer || a.refKind === qualifizierer)
-    );
+    const praefix = wert.split(':')[0];
+    const qualifizierer = wert.includes(':') && QUALIFIZIERER.has(praefix) ? praefix : null;
+    const rest = qualifizierer ? wert.slice(praefix.length + 1) : wert;
+    return passtAufAnhang(m, (a) => {
+      if (a.scope !== scope) return false;
+      if (qualifizierer === 'name') return a.refName === rest;
+      return (a.refId === rest || a.refName === rest) && (!qualifizierer || a.refKind === qualifizierer);
+    });
   };
 }
 

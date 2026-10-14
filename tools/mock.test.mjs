@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { load as yamlLaden } from 'js-yaml';
+import { BEISPIELE, ID_BEISPIEL, KEIN_FILTER } from './material-beispiele.mjs';
 import { describe, it, expect } from 'vitest';
 import { antwortFuer, normalisiereAbfrage, schluessel, stand } from './mock.mjs';
 
@@ -70,6 +73,34 @@ describe('Beispieldaten', () => {
 
 describe('Materialien', () => {
   const materialien = (query) => antwortFuer('/materials', query).daten;
+
+  // Jedes Beispiel der API-Referenz muss in „Try it out“ etwas liefern — ein
+  // vorgeschlagener Wert, der eine leere Liste bringt, sieht aus wie ein Fehler
+  // der Schnittstelle.
+  it.each(Object.entries(BEISPIELE).flatMap(([name, werte]) =>
+    Object.values(werte).map((wert) => [name, wert])))(
+    'das Beispiel %s=%s liefert mindestens ein Material', (name, wert) => {
+      expect(materialien({ [name]: wert }).length).toBeGreaterThan(0);
+    });
+
+  // Die ausgelieferte Referenz trägt die Beispiele tatsächlich — nicht nur das
+  // Modul, aus dem sie beim nächsten `material-spec:update` kämen.
+  it('führt in der API-Referenz für jeden Parameter Beispiele, vorn „kein Filter“', () => {
+    const spec = yamlLaden(readFileSync(new URL('../apps/portal/schnittstelle/material-spec.yml', import.meta.url), 'utf8'));
+    for (const p of spec.paths['/materials'].get.parameters) {
+      const namen = Object.keys(p.examples ?? {});
+      expect(namen.length, p.name).toBeGreaterThan(1);
+      expect(namen[0], p.name).toBe(KEIN_FILTER);
+      expect(p.examples[KEIN_FILTER].value).toBe('');
+    }
+    expect(spec.paths['/materials/{id}'].get.parameters[0].examples).toBeTruthy();
+  });
+
+  it('liefert das Beispiel für /materials/{id}', () => {
+    for (const id of Object.values(ID_BEISPIEL)) {
+      expect(antwortFuer(`/materials/${id}`).daten?.id).toBe(id);
+    }
+  });
 
   it('liefert ohne Filter alle Beispiele des Entwurfs', () => {
     expect(materialien({}).length).toBeGreaterThan(5);
