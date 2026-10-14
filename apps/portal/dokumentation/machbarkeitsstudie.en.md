@@ -5,12 +5,6 @@ reporting API. Alongside it, sub-concepts were developed for what goes
 beyond the API: can an external service be connected, and does that help
 teachers?
 
-Each sub-concept gets its own page, and each page follows the same
-structure. First the question, then the technical implementation in the
-prototype, then an assessment that keeps two things apart: **what is
-technically possible** and **what it is worth in the classroom**. The two
-answers are not always the same.
-
 > **Prototypes, not products.** What was built in the study answers the
 > question *is it possible, and what would it take?*. It is not a
 > recommendation for operation and not part of the API.
@@ -23,5 +17,3 @@ answers are not always the same.
 | [Handing a material collection to the LMS](machbarkeitsstudie-lms-export.md): materials collected for a report go to the learning platform as a Common Cartridge, or to paper as a PDF | Export in the "Learning materials" tab | Feasible, and with no server involved. Moodle imports the cartridge since the export writes Common Cartridge 1.1. It carries the structure and the links, not the materials themselves. |
 | [Handing over result data for further work](machbarkeitsstudie-ergebnisse-weitergeben.md): passing a report's results to a learning system, using AIS.schule as the example | Concept draft, not a prototype | Feasible for group results, with no personal data. It requires resolvable identifiers per competence; individual results first need clarification by the states. |
 | [An assistant that can read the results](demo-rezepte.md#ein-assistent-der-die-auswertung-lesen-kann-der-mcp-server): a language model assembles the queries itself | MCP server in the repository (`mcp-server/`) | Described as a pilot in the demo application recipes (in German), with the open questions for real operation. |
-
-Further sub-concepts will be added here once their page is written.

@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
+- **Die Seiten der Machbarkeitsstudie ohne Meta-Sätze.** Gestrichen ist, was
+  Pfad, Überschrift oder Bildunterschrift schon sagen: „Teil der
+  Machbarkeitsstudie“, wie die Seiten aufgebaut sind, Einleitungen vor Tabellen
+  und Bildern. „Das Ergebnis vorweg“ heißt jetzt „Ergebnis“.
 - **Die Machbarkeitsstudie gliedert sich in Teilkonzepte statt Teilfragen**,
   auf der Landeseite, in den Unterseiten und in beiden Sprachen
   („sub-concepts“).

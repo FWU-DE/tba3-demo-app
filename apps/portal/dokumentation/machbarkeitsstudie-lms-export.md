@@ -1,10 +1,10 @@
 # Materialsammlung an das LMS übergeben: Common Cartridge und PDF
 
-Teil der [Machbarkeitsstudie](machbarkeitsstudie.md). Geprüft am Prototyp im
+Geprüft am Prototyp im
 Reiter „Lernmaterialien“ der Demoanwendung und mit einem Import in Moodle 4.5
 am 14.10.2026.
 
-## Das Ergebnis vorweg
+## Ergebnis
 
 - **Machbar, und zwar ohne Server.** Eine Lehrkraft sammelt zu einer
   Rückmeldung Material, je Kompetenzstufe oder je Gruppe. Diese Sammlung gibt
@@ -165,8 +165,6 @@ Demoanwendung, auf Deutsch wie auf Englisch:
 
 ![Moodle-Textseite „Flächeninhalt von Rechtecken“ mit den Hinweisen MUNDO (extern), Stufe II: Mindeststandard, dem Direktlink zu mundo.schule und der Zeile „Zugeordnet an“.](/dokumentation/bilder/lms-moodle-seite-de.png "Ein Material als Textseite. Der Link führt zu MUNDO; das Material selbst liegt nicht in Moodle.")
 
-Moodle setzt die Cartridge so um:
-
 | In der Cartridge | In Moodle |
 |---|---|
 | Gruppe (`Nach Kompetenzstufe`) | Textzeile oben im Abschnitt „Allgemeines“ |
@@ -174,8 +172,7 @@ Moodle setzt die Cartridge so um:
 | Material (`webcontent`, HTML) | Aktivität „Textseite“ |
 | LOM-Titel und -Beschreibung | werden nicht angezeigt |
 
-Drei Dinge fallen auf. Keines verhindert den Import, alle drei würde man vor
-einem Einsatz glätten:
+Vor einem Einsatz zu glätten, den Import verhindern sie nicht:
 
 - **Alles landet in einem Abschnitt.** Moodle macht aus den Gliederungsebenen
   keine Kursabschnitte, sondern Zwischenüberschriften in „Allgemeines“.

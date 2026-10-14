@@ -1,17 +1,13 @@
 # Ergebnisdaten zur Weiterarbeit übergeben: Konzeptentwurf am Beispiel AIS.schule
 
-Teil der [Machbarkeitsstudie](machbarkeitsstudie.md). Anders als bei den anderen
-Teilkonzepten gibt es hier **keinen Prototyp**; gebaut wurde nichts.
-Die Seite beschreibt, welche Daten die Auswertungsschnittstelle hergibt, wo sie
-in einem Lernsystem weiterwirken könnten und was dafür auf beiden Seiten fehlt.
-Als Beispiel dient AIS.schule. Die Angaben zu AIS stammen von der öffentlichen
+Kein Prototyp. Die Angaben zu AIS stammen von der öffentlichen
 Projektseite [ais.schule](https://ais.schule/) und aus einer Durchsicht der
 AIS-Repositorien am 14.10.2026, die noch nicht öffentlich sind. Was daraus
 stammt, ist **abstrahiert**: Namen und Strukturen sind vereinfacht und auf
 Deutsch übertragen, Quelltext ist nicht wiedergegeben. AIS ist in Entwicklung;
 der Stand kann sich schnell ändern.
 
-## Das Ergebnis vorweg
+## Ergebnis
 
 - **Fachlich passen beide zusammen.** VERA liefert eine Diagnose, AIS will
   Lehrkräften bei Diagnostik, Förderung und Unterrichtsplanung helfen. Beide
@@ -68,8 +64,7 @@ KI-gestützte Lehr- und Lernumgebung für allgemeinbildende Schulen:
 ## Wo Ergebnisse in AIS ankämen (abstrahiert)
 
 Für eine Übergabe zählen in AIS drei Dinge: wie AIS den Lernstand führt, wie
-eine Lehrkraft plant und worauf sich beides fachlich bezieht. Vereinfacht sieht
-das so aus:
+eine Lehrkraft plant und worauf sich beides fachlich bezieht.
 
 ```ts
 // Fachmodell: Wissensbausteine, gebündelt zu Fertigkeiten und Bereichen,
@@ -100,16 +95,11 @@ interface PlanAbschnitt {
 }
 ```
 
-Daraus ergibt sich, wo die Ergebnisse der Schnittstelle andocken könnten und
-wo nicht:
-
 | Aus der Rückmeldung (TBA3) | In AIS | Passung |
 |---|---|---|
 | Kompetenz, Leitidee (heute nur als Kürzel) | Planbezug der Art `standard` | **Gut.** Den Bezug auf einen Standard sieht die Planung schon vor. Es fehlen die Kennungen auf TBA3-Seite und eine Zuordnung Standard → Bausteine in AIS. |
 | Stufenverteilung der Gruppe je Teilbereich | `Einordnung` je Baustein im Überblick | **Mittel.** Andere Körnung: VERA misst Teilbereiche, AIS führt feine Bausteine. Für einen Kontext neben dem eigenen Bild (Weg 2) reicht das, für eine Verrechnung nicht. |
 | Stufe I–V einer Person | `Lernstand.beherrschung` mit `versuche = 0` | **Als Startwert denkbar.** Die Unterscheidung zwischen „gemessen“ und „nur geschätzt“ gibt es schon, und ein VERA-Wert gehört klar zur zweiten Sorte. |
-
-Vier Befunde aus der Durchsicht ergänzen das:
 
 - **Der Lernstand hat mit Absicht keinen Schreibweg von außen.** Eine
   Anwendung darf ihn nicht setzen. Der Weg wurde geschlossen, damit sich
@@ -153,8 +143,6 @@ zählen vor allem diese Antworten:
 | `/groups/{id}/aggregations?aggregation=competence` | Ergebnisse je Kompetenz, verdichtet | nein |
 | dieselben mit `type=students` | dasselbe je Schüler:in, unter einem Code | ja, pseudonym |
 | `/schools/…`, `/states/…` | Vergleichswerte für Schule und Land | nein |
-
-Die Gruppenebene sieht in der Demoanwendung so aus:
 
 ![Fünf Kacheln für die Kompetenzstufen I bis V mit Anzahl und Anteil der Schüler:innen der Lerngruppe 3a Deutsch.](/dokumentation/bilder/lms-stufen-de.png "Die Verteilung einer Lerngruppe auf die Kompetenzstufen, wie die Schnittstelle sie liefert. Genau diese Angabe, je Kompetenz statt je Test, wäre der Kern einer Übergabe.")
 
@@ -249,8 +237,6 @@ Zahlen sind zur Veranschaulichung gesetzt:
   ]
 }
 ```
-
-Drei Entscheidungen stecken darin:
 
 - **Die Kennung ist eine Adresse, das Kürzel nur Beiwerk.** `kennung` zeigt auf
   den Standard im Vokabular des IQB, wie es der Ontologieserver
