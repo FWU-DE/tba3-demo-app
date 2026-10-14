@@ -6,7 +6,10 @@ Request.
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-10-14
+
 ### Added
+- Hilfe-Reiter: MCP-Adresse nur, wenn dort ein Server antwortet; sonst Hinweis und Platzhalter. `tba3_list_materials` in der Werkzeugtabelle.
 - Für Agents und Suchindizes: Demo und Katalog ohne JavaScript lesbar, Markdown-Verweise im Kopf jeder Dokumentseite, `/gemeinsam/konsortium.json`, `sitemap.xml`, `robots.txt`.
 - Alles zweisprachig: englische Fassungen aller Dokumente und der OpenAPI-Spezifikationen, Bausteine folgen der Seitensprache, Demonstrator und Katalog vollständig übersetzt.
 - Teilkonzept „Ein Assistent, der die Auswertung lesen kann“ (MCP), zweisprachig, mit Mockups aus echten Werkzeugaufrufen.

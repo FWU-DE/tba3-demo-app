@@ -382,10 +382,10 @@ Grund, warum das Ganze überhaupt funktioniert: ein Modell, das eine Kennung wie
 `get`-Werkzeuge reichen an die Schnittstelle durch, jedes mit `entityType`,
 `entityId` und dem `type`-Parameter.
 
-Die Hilfe-Ansicht der Demoanwendung führt nur sechs davon auf:
-`tba3_list_materials` fehlt in ihrer Tabelle. Zwei Listen, die auseinanderlaufen
-können, sind eine zu viel — wer den Server erweitert, denkt an die Ansicht
-in `apps/demo/src/components/HelpView.jsx` mit.
+Die Hilfe-Ansicht der Demoanwendung führt dieselben sieben in einer eigenen
+Tabelle. Zwei Listen, die auseinanderlaufen können, sind eine zu viel — wer den
+Server erweitert, denkt an die Ansicht in
+`apps/demo/src/components/HelpView.jsx` mit.
 
 ### Zwei Wege hinein
 
@@ -412,14 +412,14 @@ im selben Container. Das Abbild wird zusätzlich einzeln gebaut
 (`ghcr.io/FWU-DE/tba3-demo-app-mcp`), damit man den Server ohne die Seite
 betreiben kann.
 
-![Der Reiter „Hilfe“ der Demoanwendung: Überschrift „MCP-Server für TBA3-Ergebnisdaten“, darunter ein Kasten „Auf dem Server: MCP-Server in Docker betreiben“ mit dem Beispielaufruf für den Container.](/dokumentation/bilder/mcp-hilfe-de.png "Der Reiter „Hilfe“ der Demoanwendung erklärt die Anbindung. Darunter — hier abgeschnitten — steht die Client-Konfiguration mit einer Adresse, die aus `window.location.origin` gebildet wird: auf der öffentlichen Seite zeigt sie deshalb ins Leere.")
+![Der Reiter „Hilfe“ der Demoanwendung: Überschrift „MCP-Server für TBA3-Ergebnisdaten“, darunter ein Kasten „Auf dem Server: MCP-Server in Docker betreiben“ mit dem Beispielaufruf für den Container.](/dokumentation/bilder/mcp-hilfe-de.png "Der Reiter „Hilfe“ der Demoanwendung erklärt die Anbindung. Darunter — hier abgeschnitten — steht die Client-Konfiguration.")
 
 **Nicht** auf dem öffentlichen Deployment: `vercel.json` kennt keine Route `/mcp`,
-und eine Funktion, die MCP spräche, gibt es dort nicht. Die Hilfe-Ansicht bildet
-die Adresse aber aus `window.location.origin` — auf der öffentlichen Seite zeigt
-sie deshalb eine Adresse, die niemand beantwortet, solange
-`VITE_MCP_HTTP_URL` beim Bauen nicht auf ein echtes Deployment gesetzt wird. Wer
-den Pilot vorführt, führt ihn aus dem Container vor, nicht aus dem Browser.
+und eine Funktion, die MCP spräche, gibt es dort nicht. Die Hilfe-Ansicht fragt
+deshalb beim Öffnen unter `/mcp` derselben Seite nach. Antwortet dort niemand
+(404), sagt sie das und zeigt in den Beispielen eine Platzhalteradresse; im
+Container steht dort die echte. `VITE_MCP_HTTP_URL` legt die Adresse beim Bauen
+fest. Wer den Pilot vorführt, führt ihn aus dem Container vor.
 
 ### Was ein echter Betrieb lösen müsste
 

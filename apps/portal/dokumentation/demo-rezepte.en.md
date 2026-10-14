@@ -376,10 +376,9 @@ reason the whole thing works at all: a model that has to guess an identifier lik
 `8b-mathe` will guess — plausibly and wrongly. The three `get` tools pass through
 to the interface, each with `entityType`, `entityId`, and the `type` parameter.
 
-The demo application's help view lists only six of them: `tba3_list_materials` is
-missing from its table. Two lists that can drift apart are one too many — anyone
-extending the server should also update the view in
-`apps/demo/src/components/HelpView.jsx`.
+The demo application's help view lists the same seven in a table of its own. Two
+lists that can drift apart are one too many — anyone extending the server should
+also update the view in `apps/demo/src/components/HelpView.jsx`.
 
 ### Two ways in
 
@@ -405,14 +404,14 @@ passes `/mcp` through to it, and `TBA3_API_BASE_URL` points by default to the mo
 in the same container. The image is also built separately
 (`ghcr.io/FWU-DE/tba3-demo-app-mcp`) so the server can be run without the site.
 
-![The “Help” tab of the demo application: the MCP server heading, below it a box on running the MCP server in Docker with the example command for the container.](/dokumentation/bilder/mcp-hilfe-en.png "The help tab of the demo application explains how to connect. Below it — cut off here — is the client configuration with an address built from `window.location.origin`: on the public site it therefore points nowhere.")
+![The “Help” tab of the demo application: the MCP server heading, below it a box on running the MCP server in Docker with the example command for the container.](/dokumentation/bilder/mcp-hilfe-en.png "The help tab of the demo application explains how to connect. Below it — cut off here — is the client configuration.")
 
 **Not** on the public deployment: `vercel.json` has no `/mcp` route, and there is
-no function there that would speak MCP. The help view, however, builds the address
-from `window.location.origin` — so on the public site it shows an address nobody
-answers, unless `VITE_MCP_HTTP_URL` is set to a real deployment at build time.
-Anyone demonstrating the pilot demonstrates it from the container, not from the
-browser.
+no function there that would speak MCP. The help view therefore checks `/mcp` on
+the same site when it opens. If nobody answers there (404), it says so and shows a
+placeholder address in the examples; in the container it shows the real one.
+`VITE_MCP_HTTP_URL` fixes the address at build time. Anyone demonstrating the pilot
+demonstrates it from the container.
 
 ### What real operation would have to solve
 

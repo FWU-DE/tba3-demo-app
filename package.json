@@ -1,6 +1,6 @@
 {
   "name": "tba3-showcase",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "TBA3 — Demoanwendung, Komponentenbibliothek und Rückmeldungsbeispiele unter einem Dach",
