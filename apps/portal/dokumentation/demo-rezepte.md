@@ -343,6 +343,10 @@ irgendwann an der falschen Stelle um.
 > sollte, ohne die Fragen im Abschnitt „Was ein echter Betrieb lösen müsste“
 > vorher beantwortet zu haben.
 
+Wie das für Lehrkräfte aussieht, zeigt das Teilkonzept
+[Ein Assistent, der die Auswertung lesen kann](machbarkeitsstudie-assistent.md)
+mit drei Gesprächen als Mockup.
+
 ### Die Idee
 
 Eine Auswertungsschnittstelle beantwortet die Fragen, die jemand beim Entwurf der

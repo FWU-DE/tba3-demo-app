@@ -213,6 +213,12 @@ mit der Maus stehen bleibt. Die Dateien liegen unter
 liegt unter `/dokumentation/<slug>/`, ein relatives `bilder/x.png` zeigte also ein
 Verzeichnis zu tief. `tools/dokumente.test.mjs` prüft beides.
 
+Die Gespräche im Teilkonzept „Assistent“ sind Mockups, aber mit echten Zahlen:
+`tools/assistent-gespraeche.mjs` ruft dafür die Werkzeuge des MCP-Piloten über
+einen MCP-Client gegen den Mock auf. Dafür braucht `docs:bilder` die
+Abhängigkeiten des MCP-Pakets (`npm --prefix mcp-server ci`); fehlen sie, bleiben
+diese Bilder stehen.
+
 Erzeugt werden sie mit `npm run docs:bilder` (`tools/dokumentbilder.mjs`) gegen
 `npm run preview`, nicht von Hand: Oberflächen und erzeugte PDFs veralten, und ein
 veraltetes Bild ist schlimmer als keines, weil niemand ihm ansieht, dass es von
