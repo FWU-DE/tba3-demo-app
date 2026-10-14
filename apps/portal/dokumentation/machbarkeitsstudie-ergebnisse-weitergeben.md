@@ -1,7 +1,7 @@
 # Ergebnisdaten zur Weiterarbeit übergeben: Konzeptentwurf am Beispiel AIS.schule
 
-Teil der [Machbarkeitsstudie](machbarkeitsstudie.md). Anders als die anderen
-Teilfragen ist das **ein Konzeptentwurf, kein Prototyp**.
+Teil der [Machbarkeitsstudie](machbarkeitsstudie.md). Anders als bei den anderen
+Teilkonzepten gibt es hier **keinen Prototyp**; gebaut wurde nichts.
 Die Seite beschreibt, welche Daten die Auswertungsschnittstelle hergibt, wo sie
 in einem Lernsystem weiterwirken könnten und was dafür auf beiden Seiten fehlt.
 Als Beispiel dient AIS.schule. Die Angaben zu AIS stammen von der öffentlichen
@@ -41,7 +41,7 @@ der Stand kann sich schnell ändern.
 ## Die Frage
 
 Eine Rückmeldung ist ein Endpunkt: Die Lehrkraft liest sie, zieht Schlüsse und
-plant danach, meist im Kopf. Die vorigen Teilfragen haben untersucht, wie
+plant danach, meist im Kopf. Die vorigen Teilkonzepte haben untersucht, wie
 *Material* aus der Rückmeldung in die Lernplattform kommt. Hier geht es um die
 *Ergebnisse selbst*: Lassen sie sich an ein System übergeben, das mit ihnen
 weiterarbeitet, etwa indem es Lernpfade vorschlägt oder den Lernstand einer
@@ -318,7 +318,7 @@ Lehrkraft.
   Kürzel und einen Export.
 - **Die Kennungen sind wieder der Hebel.** Ohne sie scheitert die Suche in der
   Mediathek, und ohne sie kann auch ein Lernsystem mit den Ergebnissen nichts
-  anfangen. `competences[].id` zu füllen, nützt allen drei Teilfragen zugleich.
+  anfangen. `competences[].id` zu füllen, nützt allen drei Teilkonzepten zugleich.
 - **Die eigentliche Arbeit liegt im Lernsystem.** Es muss Bildungsstandards auf
   die eigenen Lernziele abbilden. Das ist fachliche, nicht technische Arbeit, und
   sie entscheidet darüber, ob die Vorschläge taugen.

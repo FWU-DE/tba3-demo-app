@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Die Machbarkeitsstudie gliedert sich in Teilkonzepte statt Teilfragen**,
+  auf der Landeseite, in den Unterseiten und in beiden Sprachen
+  („sub-concepts“).
+
 ### Added
 - **Dritte Teilfrage der Machbarkeitsstudie:
   `/dokumentation/machbarkeitsstudie-ergebnisse-weitergeben`**, deutsch und
