@@ -158,6 +158,17 @@ Eine Auslieferung je nach `Accept`-Kopfzeile gibt es bewusst nicht: Cloudflare
 vor tba3.softwarehub.schule ignoriert `Vary` und hielte eine Fassung für alle
 vor. Jede Fassung hat ihre eigene Adresse.
 
+### Releases
+
+Ein Release ist ein Tag `vX.Y.Z` auf `main`: vorher alle Pakete auf dieselbe
+Version (`npm version X.Y.Z --no-git-tag-version --workspaces
+--include-workspace-root`, `mcp-server/package.json` von Hand), im Changelog
+`[Unreleased]` zu `[X.Y.Z] — Datum`. Nach dem Tag: `gh release create` mit dem
+Changelog-Abschnitt. Der Tag baut die Docker-Images
+(`ghcr.io/fwu-de/tba3-demo-app`, `…-mcp`) mit `X.Y.Z`, `X.Y` und `X`; `latest`
+folgt nur `main`. Ein Tag, der ohne Image blieb, lässt sich über „Run workflow“
+mit der Eingabe `tag` nachbauen.
+
 ### Eine Spalte für die ganze Seite
 
 `apps/shared/container.css` führt die Maße, unter `/gemeinsam/container.css`
