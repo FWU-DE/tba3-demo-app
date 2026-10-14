@@ -76,7 +76,34 @@ export const DOKUMENTE = [
       en: 'What a front end does with the responses: hiding names without hiding the results, producing a report that leaves the device — and the MCP pilot from the feasibility study.',
     },
   },
+  {
+    slug: 'machbarkeitsstudie',
+    datei: 'machbarkeitsstudie.md',
+    eigen: true,
+    kurz: { de: 'Machbarkeitsstudie', en: 'Feasibility study' },
+    beschreibung: {
+      de: 'Fragen, die über die Schnittstelle hinausgehen — je eine Seite: was der Prototyp tut, was technisch geht und was es im Unterricht bringt.',
+      en: 'Questions that go beyond the API — one page each: what the prototype does, what is technically possible and what it is worth in the classroom.',
+    },
+  },
+  {
+    slug: 'machbarkeitsstudie-mediatheken',
+    datei: 'machbarkeitsstudie-mediatheken.md',
+    eigen: true,
+    teil: 'machbarkeitsstudie',
+    kurz: { de: 'Mediatheken einbinden', en: 'Integrating media libraries' },
+    beschreibung: {
+      de: 'MUNDO über LTI an die Demoanwendung angebunden: technisch machbar, aber ohne gemeinsame Metadaten keine Suche von der Rückmeldung aus — und was MEM dazwischen leisten kann.',
+      en: 'MUNDO connected to the demo application via LTI: technically feasible, but without shared metadata there is no search starting from the report — and what MEM can contribute in between.',
+    },
+  },
 ];
+
+// Ein Eintrag mit `teil` ist eine Unterseite: er steht nicht als eigene Karte
+// auf der Übersicht, sondern wird von seiner Landeseite aus verlinkt, und der
+// Pfad oben auf der Seite führt über sie zurück. Die Adresse bleibt flach
+// (/dokumentation/<slug>), damit Querverweise wie bei allen anderen funktionieren.
+export const oberseite = (dok) => (dok.teil ? DOKUMENTE.find((d) => d.slug === dok.teil) : null);
 
 const hier = dirname(fileURLToPath(import.meta.url));
 export const ORDNER = join(hier, '../apps/portal/dokumentation');
@@ -246,6 +273,7 @@ ${koerper}
 export function seite(dok, markdown, standDaten = null) {
   const { titel, titelText, inhalt, gliederung } = rendere(markdown);
   const datum = datumsText(standDaten?.abgerufen);
+  const oben = oberseite(dok);
 
   // Ein eigenes Dokument hat kein „abgerufen am“ — es entsteht hier. Die Zeile
   // darf das nicht verschweigen: wer etwas nachträgt, muss wissen, ob
@@ -274,7 +302,9 @@ export function seite(dok, markdown, standDaten = null) {
 
   <nav class="brotkrumen" aria-label="Pfad">
     <a href="/dokumentation">${zweisprachig({ de: 'Dokumentation', en: 'Documentation' })}</a>
-    <span aria-hidden="true">/</span>
+    <span aria-hidden="true">/</span>${oben ? `
+    <a href="${seitenPfad(oben)}">${zweisprachig(oben.kurz)}</a>
+    <span aria-hidden="true">/</span>` : ''}
     <span>${dok.kurz.de}</span>
   </nav>
 
@@ -323,6 +353,7 @@ ${inhalt}
 export function uebersicht(dokumente, standDaten = null) {
   const datum = datumsText(standDaten?.abgerufen);
   const karten = dokumente
+    .filter((dok) => !dok.teil)
     .map((dok) => `
     <a class="karte" href="${seitenPfad(dok)}">
       <p class="quelle">${zweisprachig(dok.eigen

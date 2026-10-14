@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **Machbarkeitsstudie in der Dokumentation.** `/dokumentation/machbarkeitsstudie`
+  ist die Landeseite für die Teilfragen der Studie; jede bekommt eine eigene
+  Unterseite. Die erste, `machbarkeitsstudie-mediatheken`, beschreibt die
+  MUNDO-Anbindung über LTI 1.1 am Prototyp und kommt zu dem Schluss: technisch
+  machbar, aber nur nützlich, wenn die Lehrkraft schon weiß, was sie sucht.
+  Für eine Suche von der Rückmeldung aus fehlen auf beiden Seiten die Metadaten.
+  In den Beispieldaten sind `competences[].id` und `description` nie gefüllt,
+  und MUNDO erschließt Material nicht nach Bildungsstandards. MEM führt die
+  KMK-Bildungsstandards des IQB und löst etwa die Leitideen L1–L5 auf, aber
+  nur, wenn die Fassung bekannt ist, und ohne Verbindung zum Material.
+
+  Unterseiten sind ein neues Feld in `DOKUMENTE`: ein Eintrag mit `teil`
+  bekommt keine eigene Karte auf der Übersicht, und sein Pfad oben auf der Seite
+  führt über die Landeseite zurück. Ein Test stellt sicher, dass die Landeseite
+  jede ihrer Unterseiten verlinkt. Ohne diesen Link wäre die Seite zwar gebaut,
+  aber nicht erreichbar.
+
 ### Changed
 - **Zwölf Rückmeldungsbeispiele statt sechzehn.** Die Liste führte vier Einträge
   mehr, als es Prototypen gibt. Gestrichen sind „Förderblick Lesen“ und
