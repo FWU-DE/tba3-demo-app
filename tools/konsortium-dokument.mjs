@@ -13,12 +13,12 @@
 //
 // Aufruf: node tools/konsortium-dokument.mjs  (bzw. npm run konsortium:doc)
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   BAUSTEINE, EINRICHTUNGEN, FAECHER, QUELLE, RUECKMELDUNGEN, STUFEN, ZIELGRUPPEN,
-  nachSchichten, rueckmeldungenZu,
+  nachSchichten, originaleZu, rueckmeldungenZu,
 } from '../apps/shared/konsortium.js';
 
 export const ZIEL = join(
@@ -27,6 +27,29 @@ export const ZIEL = join(
 );
 
 const de = (paar) => paar.de;
+
+const BILDER = join(dirname(fileURLToPath(import.meta.url)), '../apps/portal/dokumentation/bilder');
+
+/** Bildunterschriften stehen in Anführungszeichen; darin keine weiteren. */
+const titel = (text) => text.replace(/"/g, '“');
+
+/**
+ * Das Original aus der Rückmeldung und der Nachbau aus der Bibliothek, je ein
+ * Absatz und damit je eine Abbildung. Der Nachbau fehlt, solange
+ * `npm run docs:bilder` ihn nicht aufgenommen hat — dann steht nur das Original.
+ */
+function abbildungen(b) {
+  const [original] = originaleZu(b.id);
+  const bilder = [];
+  if (original) {
+    const r = original.rueckmeldung;
+    bilder.push(`![${titel(de(original.alt))}](${original.datei} "${titel(`Original: ${de(EINRICHTUNGEN[r.einrichtung])}, ${de(r.titel)}`)}")`);
+  }
+  if (b.element && existsSync(join(BILDER, `baustein-${b.element}.png`))) {
+    bilder.push(`![Nachbau als <tba3-${b.element}>](/dokumentation/bilder/baustein-${b.element}.png "${titel(`Nachbau: <tba3-${b.element}>, mit Beispieldaten`)}")`);
+  }
+  return bilder.map((bild) => `\n${bild}\n`).join('');
+}
 
 const datum = () =>
   new Date(QUELLE.datum).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -126,7 +149,7 @@ function schichten() {
           ? `*${b.beleg === 'artefakt' ? 'Gefunden bei' : 'Genannt von'}:* ${genannt.join(', ')}`
           : '*Genannt von:* keinem Sachbericht — der Baustein kommt aus der Bibliothek',
       ];
-      return `### ${de(b.name)}\n\n${de(b.zweck)}\n\n${angaben.join(' · ')}\n`;
+      return `### ${de(b.name)}\n\n${de(b.zweck)}\n\n${angaben.join(' · ')}\n${abbildungen(b)}`;
     });
     return `## ${de(kurz)}\n\n${de(beschreibung)}\n\n${eintraege.join('\n')}`;
   }).join('\n');

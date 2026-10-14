@@ -127,9 +127,13 @@ describe('die eingecheckten Kopien', () => {
         bilder.push({ von: datei, quelle });
       }
     }
+    // Die Originale der Bausteine liegen bei den Rückmeldungen, nicht hier.
+    const BEISPIELE = join(ORDNER, '../../beispiele');
     for (const { von, quelle } of bilder) {
-      expect(quelle.startsWith('/dokumentation/'), `${von} → ${quelle}`).toBe(true);
-      const datei = join(ORDNER, quelle.replace('/dokumentation/', ''));
+      expect(/^\/(dokumentation|beispiele\/bilder)\//.test(quelle), `${von} → ${quelle}`).toBe(true);
+      const datei = quelle.startsWith('/beispiele/')
+        ? join(BEISPIELE, quelle.replace('/beispiele/', ''))
+        : join(ORDNER, quelle.replace('/dokumentation/', ''));
       expect(existsSync(datei), `${von} → ${quelle} fehlt`).toBe(true);
     }
   });

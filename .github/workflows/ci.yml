@@ -64,6 +64,7 @@ jobs:
           pruefe /gemeinsam/tba3-leiste.js 200
           pruefe /gemeinsam/sprache.js 200
           pruefe /gemeinsam/konsortium.js 200
+          pruefe /gemeinsam/originale.js 200
           pruefe /groups/3a-deutsch/competence-levels 200
           pruefe /materials 200
           pruefe /groups/gibtsnicht/items 404

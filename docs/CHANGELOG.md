@@ -7,6 +7,8 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Ausschnitte der Originale neben jedem Baustein: Demonstrator, Reiter „Rückmeldeelemente“, Dokument „Bausteine der Rückmeldungen“ (mit Nachbau).
+- Karten im Reiter „Rückmeldeelemente“ verlinken auf den Baustein im Demonstrator.
 - Bausteine Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm; in Katalog, Demonstrator und Demoanwendung.
 - Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht (kompetenztest.de, seit 08.10.2026).

@@ -10,7 +10,7 @@
 
 import { test, expect } from '@playwright/test';
 import { oeffneDemo } from './hilfsmittel.js';
-import { BAUSTEINE, RUECKMELDUNGEN, rueckmeldungenZu } from '../apps/shared/konsortium.js';
+import { BAUSTEINE, ORIGINALE, RUECKMELDUNGEN, rueckmeldungenZu } from '../apps/shared/konsortium.js';
 
 test.describe('Rückmeldungen des Konsortiums', () => {
   test('führt jede Rückmeldung mit ihren Adressen', async ({ page }) => {
@@ -79,6 +79,20 @@ test.describe('Demoanwendung — Rückmeldeelemente', () => {
     const verlauf = page.getByTestId('ohne-daten-verlauf-ueber-messzeitpunkte');
     await expect(verlauf).toBeVisible();
     await expect(verlauf).toContainText(/Erhebungen/);
+  });
+
+  test('zeigt neben jedem Baustein das Original und verlinkt den Nachbau', async ({ page }) => {
+    await oeffneDemo(page, { tab: 'elemente' });
+
+    await expect(page.locator('[data-testid^="original-"]')).toHaveCount(
+      BAUSTEINE.filter((b) => ORIGINALE[b.id] || rueckmeldungenZu(b.id).some((r) => r.bild?.datei)).length,
+    );
+    const original = page.getByTestId('original-gruppen-gegenueberstellung').locator('img').first();
+    await original.scrollIntoViewIfNeeded();
+    await expect(original).toHaveAttribute('src', ORIGINALE['gruppen-gegenueberstellung'][0].datei);
+    await expect.poll(() => original.evaluate((i) => i.naturalWidth)).toBeGreaterThan(0);
+    await expect(page.getByTestId('demonstrator-gruppen-gegenueberstellung'))
+      .toHaveAttribute('href', '/bausteine/#gruppen-pyramide');
   });
 
   test('schränkt den Katalog auf eine Einrichtung ein', async ({ page }) => {
