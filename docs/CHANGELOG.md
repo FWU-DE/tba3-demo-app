@@ -1,467 +1,57 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+Format nach [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Ein Eintrag,
+eine Zeile: was sich geändert hat, nicht warum. Die Begründung steht im Pull
+Request.
 
 ## [Unreleased]
 
 ### Added
-- **Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht** (kompetenztest.de,
-  veröffentlicht am 08.10.2026, nach dem Sachbericht). Aufgenommen nach einem
-  Durchgang durch alle sieben Schritte der Demo mit Demo-Zugang. Acht Bausteine
-  sind zugeordnet, je mit Beleg: geführter Ablauf, Kennzahl mit Vergleich,
-  Vergleichsebenen, Stärken und Entwicklungsbedarfe (Leitideen, Top/Flop-Aufgaben),
-  Lösungshäufigkeit je Aufgabe, Profil-Heatmap (Schüler:innen × Aufgaben),
-  Streubereich (Homogenität der Klasse) und Erklärtexte. Das Bild ist von Hand
-  aus der Demo aufgenommen (`bild.vonHand`), weil die Startseite nur die
-  Anmeldung zeigt; `rueckmeldungen:erheben` überschreibt es nicht. Der bisherige
-  Bericht heißt jetzt wie in der Demo „Schülerbericht“. Alle Zahlen auf der Seite
-  stehen auf 11.
+- Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht (kompetenztest.de, seit 08.10.2026).
+- Baustein-Katalog neu erhoben (14.10.2026): 26 neue Zuordnungen, fünf neue Bausteine (43).
+- Beispielwerte für alle Parameter von `/materials` in der API-Referenz.
+- Machbarkeitsstudie unter `/dokumentation/machbarkeitsstudie`, zweisprachig, mit Grafik:
+  Mediatheken, Materialsammlung an das LMS, Ergebnisdaten an Lernsysteme (AIS.schule).
+- Dokumente mit englischer Fassung (`englisch`) und Unterseiten (`teil`) in `DOKUMENTE`.
+- Zielgruppen-Marken („Ohne Technikkenntnisse“ / „Für Entwickler:innen“) auf Startseite,
+  Bereichen und Dokumentation.
+- Die elf Rückmeldungen des Konsortiums unter `/beispiele`, mit Bildern und Filtern.
+- Technologieagnostischer Katalog `/dokumentation/bausteine-der-rueckmeldungen`.
+- Reiter „Rückmeldeelemente“ in der Demoanwendung.
+- `@tba3/bausteine`: Visualisierungen als Web Component, Vue und React; themebar, Dark Mode;
+  Demonstrator unter `/bausteine`.
+- Bausteine Kontextmerkmal-Ring, Standard-Erreichung, Zeugnissätze und sieben weitere.
+- Rezepte der Demoanwendung: Observer-Modus, PDF-Export, MCP-Server.
+- Abbildungen in Dokumentseiten, erzeugt mit `npm run docs:bilder`.
+- E2E-Tests (Playwright) gegen den ausgelieferten Stand.
+- Design-Tokens aus dem VIDIS Design System; Impressum und Datenschutz im Fuß.
 
 ### Changed
-- Die Karten auf /beispiele überschreiben die Liste mit „Bausteine“ statt
-  „Bausteine laut Sachbericht“. Die Zuordnungen stammen inzwischen auch aus den
-  Erhebungen.
-
-### Changed
-- **Baustein-Katalog neu erhoben (14.10.2026).** Diesmal waren es alle zehn Demos
-  über alle Reiter, nicht nur die Startseiten, dazu die offenen Repositorien
-  seit der letzten Erhebung. Seit dem 15.09. hat sich am Code der
-  Rückmeldungen kaum etwas getan. Der Katalog hatte aber Lücken, die die erste
-  Runde nicht sah:
-  - **26 neue Zuordnungen**, je mit Beleg im Kommentar. Am größten war die Lücke
-    bei kt-D8: Es führte weder Kompetenzstufen noch Lösungshäufigkeiten, obwohl
-    `CompetenceLevelBand` und `TaskBarChart` beides zeichnen. Dazu kommen
-    indibits Reiter „Schulentwicklung“ und „Handlungsfelder“, Notizen und
-    Streudiagramm beim zepf und mehr.
-  - **Fünf neue Bausteine** (38 → 43): Lösungsquote nach Merkmal (indibit),
-    Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Fragebogenskalen
-    (zepf SL) und Netzdiagramm der Teilkompetenzen (zepf EN 8).
-  - indibit hat seine Bibliothek als `indibit-eu/tba3-elements` veröffentlicht;
-    die Quelltext-Verweise zeigen jetzt dorthin. Die alte Repository-Adresse
-    des ISQ verlangt eine Anmeldung; der Hinweis sagt das.
-  - Neue Bilder der Demos. Die Erhebung erkennt wieder React, Vue und Angular,
-    zählt Bilder und ECharts-Flächen. Die erste Erhebung hatte das von Hand
-    ergänzt und die Demos von kompetenztest.de fälschlich als React geführt; es
-    ist Vue.
-
-### Added
-- **Beispielwerte für jeden Parameter von `/materials`** in der API-Referenz:
-  test, exercise, competence, competenceLevel, subject, domain, kind,
-  language, audience und die ID. Die Werte stammen aus den Demodaten
-  (`tools/material-beispiele.mjs`) und stehen als Auswahl am Feld und als
-  „Beispiele aus den Demodaten“ in der Beschreibung. Vorn steht jeweils „kein
-  Filter“: Swagger trägt sonst das erste Beispiel jedes Feldes ein, und
-  „Execute“ filterte nach allen zugleich, mit leerem Ergebnis.
-  `material-spec:update` ergänzt sie beim nächsten Nachziehen wieder. Ein Test
-  stellt sicher, dass jedes Beispiel im Mock Treffer liefert.
+- Startseite nach Zielgruppen geteilt; Bausteine-Seite neu geschrieben.
+- Katalog: sprechende Namen statt technischer.
+- Y-Achsen-Beschriftungen linksbündig (Bausteine, Katalog, Demoanwendung).
+- Common Cartridge als Version 1.1, in Moodle 4.5 importierbar.
+- Machbarkeitsstudie: Teilkonzepte statt Teilfragen, ohne Meta-Sätze.
+- indibit-Quelltext verweist auf `indibit-eu/tba3-elements`.
+- Alle Katalog-Ansichten laufen über `@tba3/bausteine`.
+- Kompetenzstufen mit eigener Beschriftungsfarbe (Kontrast ≥ 4,5).
+- Portal, Rückmeldungen und Dokumentation nutzen die Design-Tokens (VIDIS-Blau).
+- Legende der Kompetenzstufen bricht auf schmalen Schirmen um.
 
 ### Fixed
-- Mock `/materials`: Eine Kompetenz-URI (`https://…`) wurde am Doppelpunkt als
-  Präfix gelesen und fand nichts. Präfixe gelten nur noch für `iqbId:`,
-  `nameShort:` und `name:` (sucht im Namen). `subject=de` und `domain=le`
-  treffen jetzt auch die Beispiele, die „Deutsch“ und „Leseverstehen“ führen.
-
-### Changed
-- **Y-Achsen-Beschriftungen auch in der Demoanwendung linksbündig**
-  (Item-Statistik, Aggregationen nach Teilbereich und nach Aufgabe). Lange
-  Namen brechen um (`LinksbuendigerTick.jsx`).
-
-### Changed
-- **Zwei Zielgruppen, klar gekennzeichnet.** Die Seite wird von Ministerien und
-  pädagogischen Instituten gelesen und von Entwickler:innen. Die Startseite ist
-  jetzt in zwei Bereiche geteilt:
-  - „Ohne Technikkenntnisse“: Rückmeldungen, Demoanwendung, Komponentenkatalog,
-    Machbarkeitsstudie.
-  - „Für Entwickler:innen“: API-Referenz, Dokumentation, Bausteine, Quelltext.
-
-  Dieselbe Marke steht oben auf den Rückmeldungen, dem Katalog, den Bausteinen
-  und der Schnittstelle und auf jeder Karte und Seite der Dokumentation
-  (`zielgruppe` in `DOKUMENTE`, Unterseiten erben sie). Die Navigationsleiste
-  bleibt ungeteilt: „Dokumentation“ enthält beides.
-- **Katalog: sprechende Namen.** Kacheln, Brotkrumen und Tab-Titel nennen, was
-  eine Darstellung zeigt („Aufgaben: erwartet und erreicht“), statt des
-  technischen Namens (`ItemExpectedActualChart`). Der steht klein darunter.
-- **Y-Achsen-Beschriftungen linksbündig**, in den Bausteinen
-  Kompetenzstufen-Leiste, Mittelwert-Vergleich, Perzentilbänder,
-  Erwartet-tatsächlich und Selbsteinschätzung sowie in den Vorschaubildern des
-  Katalogs. Zahlen an Achsen bleiben rechtsbündig.
-- **Bausteine-Seite neu geschrieben**: wofür die Bausteine da sind, für wen,
-  und wie sie sich zum Katalog verhalten. Titel und Beschreibung ohne Jargon.
-
-### Fixed
-- Der Verweis „Referenz-Backend“ auf der Startseite führte auf eine 404 (die
-  Basisadresse des Backends antwortet nicht). Er zeigt jetzt auf dessen
-  Swagger-Oberfläche (`/tba3-api/docs`).
-- Der Katalog lief auf Telefonen 2 px seitlich über (Rastermindestbreite 380 px).
-
-### Added
-- **Grafik auf der Landeseite der Machbarkeitsstudie**, deutsch und englisch:
-  wie Lernstandserhebung, Auswertungsschnittstelle, Rückmeldung, Mediathek,
-  Lernplattform und Lernsystem zusammenhängen, mit MEM dazwischen. Durchgezogen
-  ist, was im Prototyp gebaut ist, gestrichelt, was Konzept ist oder fehlt. SVG
-  unter `bilder/machbarkeitsstudie-bausteine-{de,en}.svg`. Auf schmalen Schirmen
-  behält ein SVG-Schema 620 px und lässt sich seitlich wischen, statt auf
-  unlesbare Schrift zu schrumpfen.
-
-### Changed
-- **Die Seiten der Machbarkeitsstudie ohne Meta-Sätze.** Gestrichen ist, was
-  Pfad, Überschrift oder Bildunterschrift schon sagen: „Teil der
-  Machbarkeitsstudie“, wie die Seiten aufgebaut sind, Einleitungen vor Tabellen
-  und Bildern. „Das Ergebnis vorweg“ heißt jetzt „Ergebnis“.
-- **Die Machbarkeitsstudie gliedert sich in Teilkonzepte statt Teilfragen**,
-  auf der Landeseite, in den Unterseiten und in beiden Sprachen
-  („sub-concepts“).
-
-### Added
-- **Dritte Teilfrage der Machbarkeitsstudie:
-  `/dokumentation/machbarkeitsstudie-ergebnisse-weitergeben`**, deutsch und
-  englisch. Ein Konzeptentwurf, kein Prototyp: Ergebnisse einer Rückmeldung an
-  ein Lernsystem übergeben, am Beispiel AIS.schule. Die Seite beschreibt, welche
-  Antworten der Schnittstelle in Frage kommen, und vier Wege, nach Eignung
-  geordnet. Dazu ein Entwurf für ein Übergabeformat und was auf beiden Seiten
-  fehlt. Angaben zu AIS stammen von der öffentlichen Projektseite und,
-  abstrahiert und ohne Quelltext, aus einer Durchsicht der noch nicht
-  öffentlichen AIS-Repositorien (freigegeben von Jan Renz).
-
-### Fixed
-- **Die Common Cartridge lässt sich in Moodle importieren.** Der Export schrieb
-  Common Cartridge 1.3. Moodle 4.5 erkennt beim Wiederherstellen nur 1.0 und 1.1
-  und meldete „unbekanntes Format“. Nach dem Umstellen brach die Schemaprüfung
-  ab, weil die `<organization>` einen eigenen `<title>` trug statt eines
-  Wurzel-`item`. Jetzt: 1.1, Wurzel-`item`, und Moodle legt aus der
-  unveränderten Datei einen Kurs an (geprüft in Moodle 4.5.4, deutsch und
-  englisch). Dazu waren die Seiten in der Cartridge halb deutsch („Beschreibung“,
-  „Zugeordnet an“) und das LOM-Feld fest auf `de`. Beides folgt jetzt der
-  gewählten Sprache. Eine leere Beschreibung bekommt keine leere Überschrift
-  mehr. Neuer Unit-Test: `commonCartridgeExport.test.js`.
-
-### Added
-- **Zweite Teilfrage der Machbarkeitsstudie:
-  `/dokumentation/machbarkeitsstudie-lms-export`.** Material zu einer
-  Rückmeldung sammeln und als Common Cartridge an die Lernplattform oder als
-  PDF aufs Papier geben, mit dem Moodle-Import, seinen Befunden und Bildern.
-- **Die Machbarkeitsstudie gibt es auf Englisch.** Ein Eintrag in `DOKUMENTE`
-  kann eine zweite Datei mitbringen (`englisch: '<slug>.en.md'`). Beide
-  Fassungen stehen auf derselben Seite und werden über `html[lang]`
-  umgeschaltet; der Hinweis „maintained in German“ entfällt dann. Die Tests
-  prüfen Verweise, Anker und Bilder in beiden Fassungen und dass keine Seite
-  eine `id` doppelt vergibt.
-- **Bilder für die Mediatheken-Seite und die LMS-Seite**, je deutsch und
-  englisch, erzeugt mit `npm run docs:bilder`. Die Moodle-Bilder entstehen nur,
-  wenn `DOCS_MOODLE` auf ein Moodle mit den importierten Kursen zeigt.
-- `data-testid` für Stufenwahl, Auswahl, Zuweisung und Export im Reiter
-  „Lernmaterialien“ sowie für den MUNDO-Dialog.
-
-### Added
-- **Machbarkeitsstudie in der Dokumentation.** `/dokumentation/machbarkeitsstudie`
-  ist die Landeseite für die Teilfragen der Studie; jede bekommt eine eigene
-  Unterseite. Die erste, `machbarkeitsstudie-mediatheken`, beschreibt die
-  MUNDO-Anbindung über LTI 1.1 am Prototyp und kommt zu dem Schluss: technisch
-  machbar, aber nur nützlich, wenn die Lehrkraft schon weiß, was sie sucht.
-  Für eine Suche von der Rückmeldung aus fehlen auf beiden Seiten die Metadaten.
-  In den Beispieldaten sind `competences[].id` und `description` nie gefüllt,
-  und MUNDO erschließt Material nicht nach Bildungsstandards. MEM führt die
-  KMK-Bildungsstandards des IQB und löst etwa die Leitideen L1–L5 auf, aber
-  nur, wenn die Fassung bekannt ist, und ohne Verbindung zum Material.
-
-  Unterseiten sind ein neues Feld in `DOKUMENTE`: ein Eintrag mit `teil`
-  bekommt keine eigene Karte auf der Übersicht, und sein Pfad oben auf der Seite
-  führt über die Landeseite zurück. Ein Test stellt sicher, dass die Landeseite
-  jede ihrer Unterseiten verlinkt. Ohne diesen Link wäre die Seite zwar gebaut,
-  aber nicht erreichbar.
-
-### Changed
-- **Zwölf Rückmeldungsbeispiele statt sechzehn.** Die Liste führte vier Einträge
-  mehr, als es Prototypen gibt. Gestrichen sind „Förderblick Lesen“ und
-  „Aufgaben unter Erwartung“ (Klasse 3), „Schulbericht Deutsch“ und „Meine
-  Ergebnisse Mathematik“ (Klasse 8); übrig bleiben zwei je Fach und
-  Klassenstufe. Von den beiden Einträgen für Schüler:innen bleibt einer stehen —
-  fielen beide weg, verschwände die Zielgruppe aus dem Filter, denn angeboten
-  werden nur Werte, die mindestens einmal vorkommen.
-
-  Die Zahl stand ausgeschrieben in fünf Dateien und in beiden Sprachen. Ein Test
-  hält sie jetzt an der Liste fest: jede Fundstelle in `rueckmeldungen.js`,
-  `apps/beispiele/index.html`, `apps/portal/index.html`, dem README des Bereichs
-  und `CLAUDE.md` muss `RUECKMELDUNGEN.length` entsprechen. Eine falsche Zahl auf
-  der Startseite fällt sonst niemandem auf, der die Liste nicht nachzählt.
-
-### Added
-- **Neun Bausteine, die in keinem Sachbericht stehen.** Der Katalog aus #24 gab
-  wieder, was die vier Einrichtungen über ihre Rückmeldungen *berichtet* haben.
-  Diese Runde hat nachgesehen, was sie *gebaut* haben: alle zehn Demos im
-  Browser geöffnet, die vier offenen Repositorien geklont und ihre
-  Komponentenverzeichnisse gelesen.
-
-  Der Unterschied ist groß. `BirdsResultsView.vue` und `Feather.vue` in der
-  Messwiederholung — jede Schüler:in ein Vogel, dessen Art die Kompetenzstufe
-  trägt, über drei Messzeitpunkte hinweg. `ReportCardHelper.vue` daneben, ein
-  eigener Reiter „Zeugnissätze". `SelfEvaluationPage.vue` im Lernstand-Barometer
-  mit vier Druckansichten: die Selbsteinschätzung neben dem gemessenen
-  Ergebnis. Vier Ringe auf der Übersicht der indibit-Schulrückmeldung, die
-  fragen, wer diese Gruppe überhaupt ist. `MaGlossarySearchModule`,
-  `ItemPreviewOverlay` und `ExportSelectionManager` bei zepf.
-
-  Der Katalog führt jetzt 38 Bausteine, und jeder nennt seinen Beleg:
-  `sachbericht` oder `artefakt`. Die Erhebung hat nebenbei zwei
-  Bibliotheks-Bausteine belegt, die bis dahin ohne Rückmeldung dastanden.
-
-- **Drei davon sind gebaut** — in `@tba3/bausteine`, in allen drei Fassungen,
-  mit Katalog-Ansicht und im Reiter „Rückmeldeelemente" der Demoanwendung:
-
-  `<tba3-kontextmerkmal-ring>` (aus der Schulrückmeldung von indibit) zeigt ein
-  kategoriales Merkmal der Gruppe als Ring. Die Schnittstelle führt die
-  Kovariaten dafür bereits. Bei geordneten Kategorien trägt die Mitte den
-  Median, bei ungeordneten die Gesamtzahl — und die Farben kommen dann aus den
-  Daten, weil die Vorgabe des Bausteins durch die Stufenfarben läuft und eine
-  Rot-nach-Grün-Skala über „männlich, weiblich, divers" eine Rangfolge
-  behaupten würde, die es nicht gibt.
-
-  `<tba3-standard-erreichung>` (ebenfalls indibit) bindet die eine große Zahl an
-  ihre Aufschlüsselung: 80 % über alle Fächer, davon eines bei 55 %, ist kein
-  Ergebnis von 80 %.
-
-  `<tba3-zeugnissaetze>` (aus der Messwiederholung) ist der erste Baustein,
-  dessen Ausgabe Text ist. Er formuliert nicht selbst — die Vorlagen kommen von
-  außen, und jeder Satz nennt die Zahl, aus der er stammt.
-
-- **Die Übersichtsseite zeigt Aufnahmen.** Zu jeder der zehn Rückmeldungen steht
-  jetzt ein Bild der laufenden Demo auf der Karte. Eine Rückmeldung erkennt man
-  an ihrem Bild, nicht an ihrem Namen.
-
-- **Die zehn Rückmeldungen des Konsortiums** unter `/beispiele`, mit Demo-,
-  Quelltext- und Dokumentationsverweis. Bisher standen dort zwölf ausformulierte
-  Platzhalter ohne einen einzigen Link und mit dem Hinweis, verbindlich sei daran
-  nichts — genau dafür waren sie gedacht, und jetzt gibt es das Echte: die
-  Sachberichte der Abschlusssitzung der Steuergruppe vom 15.09.2026 haben zum
-  ersten Mal Repositorien und Demoadressen aller vier entwickelnden
-  Einrichtungen zusammengetragen (kompetenztest.de, indibit, ISQ Berlin, zepf).
-
-  Was dabei nicht passt, ist das alte Datenmodell: eine Rückmeldung hat nicht
-  *ein* Fach und *eine* Zielgruppe. Das Lernstand-Barometer richtet sich an vier
-  Adressatinnen zugleich, das ISQ-Portal deckt vier Fächer und beide
-  Jahrgangsstufen ab, und die Schulrückmeldung von indibit ist fachunabhängig —
-  „das Fach ist Filter, keine inhaltliche Festlegung". Aus den Feldern sind
-  deshalb Listen geworden, und Fach und Klassenstufe sind **offen**: eine leere
-  Liste heißt „gilt für alles". Ohne das wäre die Schulrückmeldung verschwunden,
-  sobald jemand nach Deutsch filtert — der Filter hätte die Aussage des
-  Sachberichts umgedreht. Ein Test hält beides fest.
-
-  Die Einrichtung ist ein vierter Filter. Die Daten sind nach
-  `apps/shared/konsortium.js` umgezogen und werden als
-  `/gemeinsam/konsortium.js` ausgeliefert, weil sie jetzt drei Stellen tragen
-  statt einer.
-
-- **Ein technologieagnostischer Katalog der Bausteine**, erzeugt als
-  `/dokumentation/bausteine-der-rueckmeldungen`. Die zehn Rückmeldungen sind in
-  fünf Technologien gebaut — Vue 3 mit Quasar, Vue 3 mit Pinia, React 19 mit
-  Material-UI, Angular 21 mit ECharts, Vanilla JavaScript mit Tabulator und D3.
-  Nachnutzbar ist daran nicht der Code, sondern der Zuschnitt: 29 Bausteine in
-  drei Schichten — Anzeigebausteine, Rückmeldeelemente, Rahmen. Der Aufbau
-  stammt von indibit und passt auf die anderen drei genauso.
-
-  Die Regel, die den Katalog von einer Behauptung unterscheidet: **zugeordnet
-  ist, was der Sachbericht nennt.** Eine Rückmeldung, die einen Baustein nicht
-  aufzählt, zeigt ihn womöglich trotzdem — sie hat ihn nur nicht berichtet. Zu
-  raten wäre bequemer und wertlos. Sichtbar wird dadurch auch das Gegenteil:
-  fünf Bausteine führt `@tba3/bausteine`, ohne dass ein Bericht sie nennt, und
-  vierzehn Katalogeinträge haben noch keinen Baustein. Beides steht in der
-  Bilanz des Dokuments, statt sich zu verstecken.
-
-  Das Dokument wird aus denselben Daten erzeugt (`npm run konsortium:doc`) und
-  ist trotzdem eingecheckt — der Build erwartet die Datei, und der Stand soll im
-  Diff stehen. `tools/konsortium-dokument.test.mjs` vergleicht beides: wer die
-  Daten ändert und das Erzeugen vergisst, merkt es im Testlauf und nicht beim
-  Lesen.
-
-- **Der Reiter „Rückmeldeelemente" in der Demoanwendung** (`?tab=elemente`).
-  Er zeichnet den Katalog mit den Daten der gewählten Ebene, über
-  `@tba3/bausteine/react` — dasselbe Paket, das ein fremdes Projekt bekommt.
-  Die Ansicht **doppelt mit Absicht**, was andere Reiter schon zeigen: sie ordnet
-  nach der fachlichen Frage statt nach der Ressource der Schnittstelle, und
-  genau dieser Vergleich ist ihr Zweck.
-
-  Beim Abbilden der Antworten auf die Bausteine wurde nichts erfunden, was die
-  Schnittstelle nicht hergibt: der Mittelwert-Vergleich bekommt kein
-  Konfidenzintervall, weil es keins gibt, und der ausgelassene Anteil in der
-  Schüler:innen-Tabelle steht auf 0, weil die Antwort „falsch" nicht von
-  „ausgelassen" trennt. Ein Baustein ohne Datenweg bleibt nicht leer, sondern
-  sagt, woran es liegt — der Verlauf über Messzeitpunkte braucht mehrere
-  Erhebungen, die Schnittstelle kennt eine. Wo es gar keinen Baustein gibt,
-  nennt die Karte den Reiter, der dieselbe Frage sonst beantwortet.
-
-- **Rezepte der Demoanwendung** unter `/dokumentation/demo-rezepte`. Zweiter
-  Eintrag: **der PDF-Export** — die beiden Ausgaben (individuelle Rückmeldung und
-  Materialzuordnung) und was an ihnen entschieden ist. Dass alles im Browser
-  entsteht und kein Byte an einen Dienst geht, ist bei Individualdaten kein
-  Nebeneffekt, sondern der Grund für die Bauweise; dass jsPDF erst beim Klick
-  geladen wird, spart dem ersten Seitenaufruf gut die Hälfte (870 KB Hauptbündel
-  gegen 410 KB nachgeladen); dass jede Zeichenkette durch `safe()` geht, liegt an
-  Helvetica, das Emoji nicht darstellen kann — und daran, dass Wegwerfen aufhört
-  zu taugen, sobald Namen betroffen sind, die nicht in WinAnsi passen. Dazu
-  Seitenumbruch von Hand, QR-Codes vor der Zeichenschleife und die Platzhalter-URL,
-  die die Fußzeile als solche ausweist. Neuer E2E-Test: das Datenblatt liefert eine
-  PDF-Datei mit dem Namen im Dateinamen.
-- Erster Eintrag der Rezepte: **der Observer-Modus** — der Schalter im Kopf der
-  Demoanwendung, der die Namen weichzeichnet und die Ergebnisse stehen lässt, damit
-  Individualergebnisse auf dem Beamer oder in einer Bildschirmfreigabe besprochen
-  werden können. Der Text beschreibt auch, was der Modus *nicht* leistet — der
-  Name steht weiter im DOM, das PDF trägt ihn unverändert, und der Schalter
-  überlebt kein Neuladen —, und wo die Grenze wirklich liegt: beim liefernden
-  System, denn `name` an der Wertegruppe heißt in der Spezifikation
-  „Bezeichnung“ und hat als Beispiel schon `Schüler 1`. Dazu zwei E2E-Tests, die
-  beides prüfen: dass der Name verdeckt ist und dass das Ergebnis daneben noch
-  dasteht.
-- **Drittes Rezept: der MCP-Server** — ausdrücklich als Pilot der
-  Machbarkeitsstudie ausgewiesen, nicht als Empfehlung. Beschrieben sind die
-  sieben Werkzeuge und was hinter ihnen steht, die beiden Transporte (stdio für
-  die Entwicklungsumgebung, Streamable HTTP fürs Deployment, derselbe Kern), und
-  wo der Server läuft: im Docker-Abbild hinter `/mcp`, nicht auf dem öffentlichen
-  Deployment — die Hilfe-Ansicht bildet die Adresse aus `window.location.origin`
-  und zeigt dort deshalb ins Leere, solange `VITE_MCP_HTTP_URL` nicht gesetzt ist.
-  Dazu die Fragen, die ein echter Betrieb vor der ersten Zeile Code beantworten
-  müsste: keine Authentifizierung, kein Aufrufer, `type=students` reicht
-  Individualdaten an ein Sprachmodell weiter, kein Test, zwei eingebaute
-  Datenquellen statt abgefragter.
-- **Abbildungen in den Dokumentseiten.** Ein Bild, das allein in seinem Absatz
-  steht, wird zu einem `<figure>` mit sichtbarer Unterschrift aus dem
-  Markdown-Titel. Die beiden Rezepte zeigen damit, wovon sie reden: die
-  weichgezeichnete Schülerliste und die beiden erzeugten PDFs. Erzeugt werden die
-  Bilder mit `npm run docs:bilder` gegen den ausgelieferten Stand — ein von Hand
-  aufgenommenes Bild veraltet still, und niemand sieht ihm an, dass es von gestern
-  ist. Zwei Tests halten dagegen: jedes Bild muss vorliegen und absolut verlinkt
-  sein (relativ zeigte von `/dokumentation/<slug>/` aus ein Verzeichnis zu tief).
-- **Eigene Dokumente in `/dokumentation`.** Ein Eintrag in `DOKUMENTE` mit
-  `eigen: true` wird hier geschrieben statt aus `indibit-eu/tba3` geholt:
-  `docs:update` fasst ihn nicht an, der Herkunftsverweis zeigt auf dieses
-  Repository, und Seite wie Übersichtskarte sagen das, statt einen „Stand“ zu
-  behaupten, den es nicht gibt. Ohne diese Unterscheidung wäre das Rezept zum
-  Observer-Modus beim nächsten Nachziehen verschwunden — es beschreibt die
-  Oberfläche, nicht die Schnittstelle.
-- **Sieben weitere Bausteine, und alle neun Katalog-Ansichten laufen jetzt über
-  das Paket.** Aus dem Katalog umgezogen sind Schüler-Tabelle (mit Auswahl),
-  Übersichtskarten, Streudiagramm und BISTA-Verteilung; dazu drei, die es nur in
-  der Bibliothek gibt, weil die Schau die Frage gar nicht stellt:
-  Lernstands-Verlauf (mehrere Erhebungen), Aufgaben-Heatmap (Aufgaben gegen
-  Lerngruppen) und Kennzahl-Kachel. Damit zeigt jede Katalog-Ansicht denselben
-  Quelltext, den auch ein fremdes Projekt bekommt — der Quelltext-Link führt
-  entsprechend nach `packages/bausteine/` statt auf eine Kopie im Katalog.
-  `NUR_BAUSTEIN` in `zuordnung.js` hält mit Grund fest, was ohne Ansicht
-  bleibt, und drei Tests halten Zuordnung, Beispieldaten und die drei Fassungen
-  beieinander.
-- **Jede Kompetenzstufe trägt ihre Beschriftungsfarbe selbst**
-  (`--tba3-stufe-1-text` … `--tba3-stufe-5-text`). Eine einzige Inversfarbe
-  reichte nicht: Weiß auf dem Gelb der Stufe 3 hat ein Kontrastverhältnis von
-  2,0, lesbar ist ab 4,5. Wer die Stufenfarben überschreibt, überschreibt die
-  Beschriftung mit — kommt die Farbe als Daten herein, rechnet der Baustein
-  selbst. Neu im Paket: `pruefeThema()` geht jedes Paar durch, an dem ein
-  Baustein Text auf Fläche legt, und sagt, was unter 4,5 bleibt. Zwei Tests
-  lassen sie über die Vorgaben der Bibliothek und über die vier
-  Beispiel-Themen des Demonstrators laufen.
-- **Vorschauen in der Zuordnung auf `/bausteine`**: jede Zeile der Tabelle und
-  jeder Eintrag der Liste darunter zeigt den Baustein in klein — dieselben
-  Daten wie unten, nicht bedienbar und für Vorlesesoftware ausgeblendet. Ein
-  Elementname allein sagt niemandem, was der Baustein zeigt.
-- **E2E-Tests für die Demoanwendung** (Playwright, `npm run e2e`): 47 Tests
-  über Reiter und Deeplinks, Filter — jeweils gegen die Abfrage, die dabei
-  herauskommt —, Schülerliste mit Datenblatt und eigenen Gruppen, Materialien
-  samt Export nach `.imscc` und `.pdf`, Vergleichsauswertung, Sprachwahl,
-  Fehlerfälle und den schmalen Schirm. Gelaufen wird gegen `npm run preview`,
-  also gegen den ausgelieferten Stand, nicht gegen den Dev-Server. Eigener
-  Job in der CI.
-- **`@tba3/bausteine`** — die Visualisierungen als **native Web Component,
-  Vue- und React-Komponente**. Die Web Component ist die eine echte
-  Implementierung (echtes DOM, echte Ereignis-Empfänger, Shadow DOM), Vue und
-  React sind Hüllen darum; der Kern liefert reine Berechnung. Fünf Bausteine:
-  Kompetenzstufen-Leiste, Aufgaben-Tabelle, Mittelwert-Vergleich, erwartete
-  gegen tatsächliche Lösungsquote, Perzentilbänder. Ausgeliefert als reines ESM
-  unter `/bausteine/`, ohne Build einbindbar.
-- Die Bausteine sind **themebar und bringen kein Design mit**: Farben, Schrift
-  und Maße kommen über `--tba3-*`-Variablen mit neutralen Vorgaben. Ein Test
-  verhindert, dass eine Markenfarbe ins Paket rutscht.
-- **Dark Mode in jedem Baustein.** Jede Variable hat eine helle und eine dunkle
-  Vorgabe; ohne Zutun folgt ein Baustein `prefers-color-scheme`, erzwingen
-  lässt sich der Modus über `data-thema`. Die Kompetenzstufen bekommen im
-  Dunklen angehobene Töne, damit sie auf dunklem Grund nicht absaufen.
-- Demonstrator unter `/bausteine`: alle Bausteine in allen drei Fassungen
-  nebeneinander, mit Theme-Umschalter (FWU, neutral, hoher Kontrast, dunkel),
-  Datensatzwechsel und Ereignis-Protokoll.
-- Übersicht **Katalog ↔ Bausteine** auf `/bausteine` — welche Katalog-Ansicht
-  schon über einen Baustein läuft und was den übrigen fehlt. Gegen die
-  Wirklichkeit geprüft von `zuordnung.test.mjs`.
-- Design-Tokens aus dem VIDIS Design System (Figma `HsHyINjx5Ll6uJfzwlBNUn`) als
-  `/gemeinsam/tokens.css`: Farben, Abstandsraster, Typo-Skala, Radien, Schatten
-  und ein einheitlicher Fokusring. Dieselbe Quelle, aus der sich anbieterportal
-  und vidis-portal-new bedienen.
-- Illustration im Aufmacher des Portals: ein Endpunkt der Schnittstelle geht
-  rein, eine Kompetenzstufenverteilung kommt raus. Reines SVG mit
-  CSS-Animation, kein Skript und kein Bild.
-- Impressum und Datenschutz im Fuß von Portal und Rückmeldungen, verlinkt auf
-  softwarehub.schule.
-
-### Changed
-- Die Legende der Kompetenzstufen bricht auf schmalen Schirmen um (zwei, drei
-  und ab 1024 px fünf Spalten). Vorher standen fünf Spalten fest: auf dem
-  Telefon blieben je 52 px, in denen „Unter Mindeststandard" nicht umbrechen
-  kann — der Text lief rechts aus der Seite und zog die ganze Demoanwendung
-  26 px in die Breite.
-- Portal, Rückmeldungen, Dokumentation und die gemeinsame Navigationsleiste
-  nutzen die Design-Tokens statt eigener Paletten. Sichtbarster Unterschied: die
-  Markenfarbe ist jetzt das VIDIS-Blau `#0000c4` statt Tailwind-Standard
-  `#2563eb`.
-- Vier Katalog-Ansichten beziehen ihre Visualisierung aus `@tba3/bausteine/vue`
-  statt aus eigenen `.vue`-Dateien.
-- Zwei Beschriftungen, die im Original am rechten SVG-Rand abgeschnitten wurden
-  (`n=` in der Kompetenzstufen-Leiste, der letzte Legendeneintrag der
-  Perzentilbänder), haben jetzt Platz.
-
-### Fixed
-- **Ein Mittelpunkt ohne alles daneben** stand im Kopf der Materialzuordnung,
-  sobald nach Kompetenzstufe exportiert wurde: die Abschnittsköpfe sind dort
-  keine echten Lerngruppen und haben weder Fach noch Klassenstufe, der
-  Untertitel setzte beide aber unbesehen zusammen. Aufgefallen ist es erst, als
-  die Seite als Abbildung in die Dokumentation sollte.
-- **Heller Text auf heller Seite bei dunkel gestelltem System.** Die Bausteine
-  folgen `prefers-color-scheme`; Katalog und Demonstrator haben aber keinen
-  eigenen Dunkelmodus. Beide setzen jetzt `data-thema` an den Elementen — der
-  einzige Weg, den Modus festzunageln, denn `:host([data-thema])` prüft nur das
-  Element selbst und nicht den Baum darüber. Der Kommentar im Paket behauptete
-  das Gegenteil.
-- **Die Perzentilbänder waren schwarz.** `var(--tba3-_band))` — eine
-  schließende Klammer zu viel in vier Konstanten und zwei Aufrufen. Ein
-  ungültiger Farbwert ist in SVG nicht leer, sondern schwarz; derselbe
-  Tippfehler hatte in der Aufgaben-Tabelle still das Zeilen-Hover
-  ausgeschaltet. Ein Test zählt jetzt die Klammern in jedem Wert, der `var(`
-  enthält.
-- **`/katalog#/percentile-band` war eine weiße Seite.** Ein Endpunkt-Eintrag
-  trug `description` statt `pfad`; `t(undefined)` warf, und Vue riss das Setup
-  der Ansicht ab. `t()` gibt bei fehlendem Pfad jetzt einen leeren Text zurück,
-  statt eine ganze Ansicht mitzunehmen.
-- **`/bausteine` ohne abschließenden Schrägstrich lud nichts.** Die Seite
-  importierte `./demodaten.js` und `./zuordnung.js` relativ; unter `/bausteine`
-  löst der Browser das gegen `/` auf, beide Module kamen als 404 zurück — die
-  Zuordnungstabelle blieb leer und kein einziger Baustein wurde registriert,
-  ohne sichtbare Fehlermeldung. Die Navigationsleiste verweist genau auf diese
-  Form. Jetzt absolut wie der Import daneben, und `e2e/bausteine.spec.js` prüft
-  beide Formen der Adresse.
-- Die Sprachwahl überlebt das erste Rendern der Demoanwendung: `FilterContext`
-  schrieb die Adresszeile aus einem frischen `URLSearchParams` und warf dabei
-  `?lang=` weg. Die nachgeladene Navigationsleiste fiel dadurch auf die
-  Browsersprache zurück und stand in der anderen Sprache da als der Inhalt
-  daneben.
+- Referenz-Backend-Link zeigt auf `/tba3-api/docs` statt auf eine 404.
+- Mock `/materials`: Kompetenz-URIs, `name:`-Präfix, Fach- und Domänenkürzel.
+- Cartridge-Seiten folgen der gewählten Sprache.
+- Katalog läuft auf Telefonen nicht mehr seitlich über.
+- Erhebungsskript erkennt React, Vue und Angular wieder.
+- Perzentilbänder nicht mehr schwarz; `/katalog#/percentile-band` keine weiße Seite mehr.
+- `/bausteine` ohne Schrägstrich lädt.
+- Heller Text auf heller Seite bei dunklem System.
+- Sprachwahl überlebt das erste Rendern der Demoanwendung.
 
 ## [0.1.0] — 2026-05-05
 
 ### Added
-- React 19 + Vite SPA for TBA3 VERA test data visualization
-- Competence level distribution charts (Recharts)
-- Item statistics charts
-- Multi-level navigation (Group / School / State)
-- Filters: subject, grade level, gender, language
-- PDF, ZIP, QR code export
-- LTI OAuth callback (`api/lti-callback.js`)
-- MCP server integration (SSE via nginx proxy at `/mcp`)
-- Docker deployment (main app + MCP server in single image via supervisord)
-- GHCR CI/CD for both Docker images
-- MUNDO educational materials search integration
+- React-19-Anwendung für TBA3-Auswertungsdaten: Kompetenzstufen, Item-Statistik, drei Ebenen, Filter.
+- Export als PDF, ZIP und QR-Code; MUNDO-Anbindung über LTI.
+- MCP-Server; Docker-Abbild mit App und MCP-Server; CI für beide Abbilder.

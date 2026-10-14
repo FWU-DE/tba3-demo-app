@@ -23,7 +23,7 @@ zusammenhängen und welche Fallen schon einmal Geld gekostet haben.
 | `CONTRIBUTING.md` (hier) | der Weg einer Änderung: Ticket, Branch, Commit, PR |
 | [`DEFINITION_OF_DONE.md`](DEFINITION_OF_DONE.md) | die Checkliste, die in jeden PR-Body gehört |
 | [`README.md`](README.md) | was das Projekt ist, für Leute von außen |
-| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | was sich geändert hat, in Prosa |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | was sich geändert hat, eine Zeile je Änderung |
 | [`apps/katalog/AGENTS.md`](apps/katalog/AGENTS.md) | Hinweise speziell für `apps/katalog` |
 | [`packages/bausteine/README.md`](packages/bausteine/README.md) | Kern, Web Component, Vue- und React-Hüllen |
 

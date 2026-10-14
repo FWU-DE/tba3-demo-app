@@ -523,6 +523,8 @@ Beschriftungen.
 
 ## Konventionen
 
+- `docs/CHANGELOG.md`: ein Eintrag, eine Zeile — was sich geändert hat, nicht warum.
+  Begründung und Befunde gehören in den Pull Request.
 - Neue UI-Komponenten bekommen `data-testid`-Attribute.
 - Sichtbarer Text steht nie in der Komponente, sondern in `i18n/texte.js` des
   jeweiligen Bereichs — zweisprachig, sonst fällt die fehlende Übersetzung erst
