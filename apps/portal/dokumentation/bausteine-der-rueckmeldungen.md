@@ -1,6 +1,6 @@
 # Bausteine der Rückmeldungen
 
-Zehn Rückmeldungen, vier Einrichtungen, fünf Technologien — und immer wieder
+Elf Rückmeldungen, vier Einrichtungen, fünf Technologien — und immer wieder
 dieselben Darstellungen unter anderen Namen. Dieses Dokument zieht heraus, was
 sich davon nachnutzen lässt: nicht der Code, sondern der **Zuschnitt**. Welche
 Darstellung beantwortet welche fachliche Frage, und woher nimmt sie ihre Daten?
@@ -29,13 +29,14 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 [Rückmeldungsübersicht](/beispiele) und den Reiter „Rückmeldeelemente" der
 [Demoanwendung](/demo/?tab=elemente).
 
-## Die 10 Rückmeldungen
+## Die 11 Rückmeldungen
 
 | Einrichtung | Rückmeldung | Zielgruppen | Fach | Klasse | Adressen |
 |---|---|---|---|---|---|
 | kompetenztest.de (FSU Jena) | Messwiederholung Deutsch, Klasse 3 | Lehrkraft, Schüler:in | Deutsch | Klasse 3 | [Demo](https://development.tba.i.c.netzkolchose.de/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
 | kompetenztest.de (FSU Jena) | Lernstand-Barometer Deutsch, Klasse 8 | Lehrkraft, Fachkonferenz, Schüler:in | Deutsch | Klasse 8 | [Demo](https://lernstand-barometer.ktest.de/login) · [Code](https://github.com/kompetenztestde/lernstand-barometer) |
-| kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik, Klasse 8 | Schüler:in | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik) |
+| kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik: Schülerbericht, Klasse 8 | Schüler:in | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik) |
+| kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik: Klassenbericht, Klasse 8 | Lehrkraft | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik-klassenbericht) |
 | indibit | Klassenrückmeldung | Lehrkraft | Deutsch | Klasse 8 | [Demo](https://apps.indibit.eu/tba3/class-teacher) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
 | indibit | Schulrückmeldung | Schulleitung | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-manager) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
 | indibit | Schulaufsichtsrückmeldung | Schulaufsicht | fachunabhängig | alle | [Demo](https://apps.indibit.eu/tba3/school-supervision) · [Code](https://github.com/indibit-eu/tba3-elements) · [Doku](https://apps.indibit.eu/tba3/docs/) |
@@ -47,6 +48,7 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 Was an diesen Verweisen vorläufig ist:
 
 - **Messwiederholung Deutsch, Klasse 3** (kompetenztest.de (FSU Jena)): KT-internes Hosting in Bearbeitung. Entstanden in Zusammenarbeit mit TBA II.
+- **Kompetenzstand Mathematik: Klassenbericht, Klasse 8** (kompetenztest.de (FSU Jena)): Nach dem Sachbericht veröffentlicht (08.10.2026) und mit der Erhebung vom 14.10.2026 aufgenommen. In der Demo „Demo-Zugang: Ja“ wählen und anmelden.
 - **Klassenrückmeldung** (indibit): Die Komponentenbibliothek ist als tba3-elements veröffentlicht. Lizenz: MIT.
 - **Schulaufsichtsrückmeldung** (indibit): Das Land Hessen setzt für seine Rückmeldungen an die Schulaufsicht auf diesem Entwicklungsstand auf.
 - **Rollenbasiertes Rückmeldeportal VERA 3 / VERA 8** (ISQ Berlin): Demo erreichbar bis 31.10.2027; Umzug des Repositoriums geplant, die bisherige Adresse verlangt eine Anmeldung (Stand 14.10.2026). Gestaltungsentscheidungen, Architektur- und API-Dokumentation liegen im Repositorium. Fördersystem, Aufgabenempfehlungen und KI-Aufgaben sind als Beta gekennzeichnet.
@@ -83,7 +85,7 @@ Ein Wert je Bezugsgruppe auf einer gemeinsamen Skala, mit Unsicherheitsbereich. 
 
 Wo liegt der mittlere Bereich je Teilbereich — und wo darin steht eine einzelne Schüler:in? Zeigt Streuung statt nur Mittelwert.
 
-*Daten:* Aggregationen je Teilbereich · *Bibliothek:* `<tba3-perzentilbaender>` · *Genannt von:* ISQ Berlin
+*Daten:* Aggregationen je Teilbereich · *Bibliothek:* `<tba3-perzentilbaender>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
 ### Verlauf über Messzeitpunkte
 
@@ -95,7 +97,7 @@ Mehrere Erhebungen als Linie, mit Band und Vergleichslinie. Der einzige Baustein
 
 Aufgaben oder Merkmale gegen Personen oder Lerngruppen, gefärbt nach Abweichung. Das Muster ist die Aussage: eine Zeile, die durchgehend kühl ist, betrifft alle; eine kühle Spalte betrifft eine Person.
 
-*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-aufgaben-heatmap>` · *Genannt von:* indibit
+*Daten:* Aufgaben je Schüler:in · *Bibliothek:* `<tba3-aufgaben-heatmap>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
 
 ### Tabelle je Person
 
@@ -119,7 +121,7 @@ Jede Schüler:in als eigene Marke auf einer durchgehenden Punkteskala, die Kompe
 
 Eine Zahl, ein Bezugswert, ein kleiner Verlauf. Der Einstieg in jede Übersicht — und die Stelle, an der am leichtesten gelogen wird, wenn der Bezugswert fehlt.
 
-*Daten:* Kompetenzstufen oder Aggregationen je Ebene · *Bibliothek:* `<tba3-kennzahl-kachel>` · *Genannt von:* indibit
+*Daten:* Kompetenzstufen oder Aggregationen je Ebene · *Bibliothek:* `<tba3-kennzahl-kachel>` · *Genannt von:* kompetenztest.de (FSU Jena), indibit
 
 ### Übersichtskarten
 

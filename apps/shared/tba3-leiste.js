@@ -18,7 +18,7 @@ import { SPRACHEN, anwenden, beiSprachwechsel, setzeSprache, sprache, text } fro
 
 // Die Reihenfolge ist eine inhaltliche Aussage, keine Gewohnheit:
 // **„Rückmeldungen" steht an zweiter Stelle**, direkt hinter der Übersicht.
-// Dort liegen die zehn echten Anwendungen der vier Einrichtungen — das
+// Dort liegen die elf echten Anwendungen der vier Einrichtungen — das
 // Ergebnis des Projekts. Demoanwendung, Komponenten und Bausteine sind das
 // Werkzeug, mit dem es gebaut wurde, und Werkzeug kommt nach dem Ergebnis.
 //

@@ -1,7 +1,7 @@
 // Die Reihenfolge der Bereiche in der Navigationsleiste.
 //
 // Sie ist eine inhaltliche Aussage und keine Gewohnheit: „Rückmeldungen" steht
-// an zweiter Stelle, weil dort das Ergebnis des Projekts liegt — die zehn
+// an zweiter Stelle, weil dort das Ergebnis des Projekts liegt — die elf
 // Anwendungen der vier Einrichtungen. Alles dazwischen ist Werkzeug.
 //
 // Ohne diesen Test wandert so etwas zurück, und zwar unauffällig: wer einen

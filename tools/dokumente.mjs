@@ -66,8 +66,8 @@ export const DOKUMENTE = [
     // Quelle, sondern ein Ergebnis.
     kurz: { de: 'Bausteine der Rückmeldungen', en: 'Building blocks of the reports' },
     beschreibung: {
-      de: 'Was zehn Rückmeldungen aus vier Einrichtungen gemeinsam haben, technologieagnostisch herausgezogen: Anzeigebausteine, Rückmeldeelemente und der Rahmen drumherum.',
-      en: 'What ten reports from four institutions have in common, extracted independently of technology: display blocks, report elements and the frame around them.',
+      de: 'Was elf Rückmeldungen aus vier Einrichtungen gemeinsam haben, technologieagnostisch herausgezogen: Anzeigebausteine, Rückmeldeelemente und der Rahmen drumherum.',
+      en: 'What eleven reports from four institutions have in common, extracted independently of technology: display blocks, report elements and the frame around them.',
     },
   },
   {

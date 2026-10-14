@@ -172,8 +172,8 @@ export const TEXTE = {
   elemente: {
     titel: { de: 'Rückmeldeelemente des Konsortiums', en: 'Report elements of the consortium' },
     einleitung: {
-      de: 'Zehn Rückmeldungen aus vier Einrichtungen, gebaut in fünf Technologien — und immer wieder dieselben Darstellungen. Hier stehen sie nach der fachlichen Frage geordnet statt nach der Ressource der Schnittstelle, gezeichnet mit den Daten der gewählten Ebene. Was ein anderer Reiter schon zeigt, steht hier noch einmal: der Vergleich ist der Zweck dieser Ansicht.',
-      en: 'Ten reports from four institutions, built in five technologies — and the same displays again and again. Here they are ordered by the question they answer rather than by the API resource, drawn with the data of the selected level. What another tab already shows appears here again: the comparison is the point of this view.',
+      de: 'Elf Rückmeldungen aus vier Einrichtungen, gebaut in fünf Technologien — und immer wieder dieselben Darstellungen. Hier stehen sie nach der fachlichen Frage geordnet statt nach der Ressource der Schnittstelle, gezeichnet mit den Daten der gewählten Ebene. Was ein anderer Reiter schon zeigt, steht hier noch einmal: der Vergleich ist der Zweck dieser Ansicht.',
+      en: 'Eleven reports from four institutions, built in five technologies — and the same displays again and again. Here they are ordered by the question they answer rather than by the API resource, drawn with the data of the selected level. What another tab already shows appears here again: the comparison is the point of this view.',
     },
     einrichtung: { de: 'Einrichtung', en: 'Institution' },
     alleEinrichtungen: { de: 'Alle Einrichtungen', en: 'All institutions' },

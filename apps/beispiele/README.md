@@ -1,6 +1,6 @@
 # Rückmeldungen des Konsortiums
 
-Übersicht der 10 Rückmeldungen, die im Projekt TBA III entstanden sind,
+Übersicht der 11 Rückmeldungen, die im Projekt TBA III entstanden sind,
 ausgeliefert unter `/beispiele`.
 
 Jede Rückmeldung liegt bei ihrer Einrichtung — in einem eigenen Repositorium,

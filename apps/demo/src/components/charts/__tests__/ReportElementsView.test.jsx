@@ -136,8 +136,10 @@ describe('Rückmeldeelemente', () => {
     await waitFor(() => expect(api.getGroupItems).toHaveBeenCalled());
 
     const karte = screen.getByTestId('baustein-gefuehrter-ablauf');
-    // Den geführten Ablauf nennt allein der Kompetenzstand Mathematik.
-    expect(rueckmeldungenZu('gefuehrter-ablauf').map((r) => r.einrichtung)).toEqual(['kt']);
+    // Den geführten Ablauf nennen nur die beiden Berichte des Kompetenzstands
+    // Mathematik — dieselbe Einrichtung, also eine Marke, nicht zwei.
+    expect([...new Set(rueckmeldungenZu('gefuehrter-ablauf').map((r) => r.einrichtung))]).toEqual(['kt']);
+    expect(within(karte).getAllByTestId('traeger-kt')).toHaveLength(1);
     expect(within(karte).getByTestId('traeger-kt')).toBeInTheDocument();
     expect(within(karte).queryByTestId('traeger-isq')).toBeNull();
   });

@@ -1,4 +1,4 @@
-// Erhebt die zehn Rückmeldungen des Konsortiums am Artefakt.
+// Erhebt die elf Rückmeldungen des Konsortiums am Artefakt.
 //
 // Warum ein Werkzeug und kein Einmal-Skript: Der Katalog in
 // `apps/shared/konsortium.js` steht auf zwei Quellen. Die eine sind die
@@ -99,18 +99,23 @@ for (const r of RUECKMELDUNGEN) {
     await seite.waitForTimeout(6000);
     if (!nurBilder) Object.assign(befund, await seite.evaluate(ablesen));
 
-    // 1280×800 ist das Format, das auf einer Übersichtskarte etwas zeigt statt
-    // eine Briefmarke zu sein; die Karte schneidet auf 8:5 zurecht.
-    await seite.setViewportSize({ width: 1280, height: 800 });
-    await seite.waitForTimeout(1200);
-    const png = join(BILDER, `${r.id}.png`);
-    await seite.screenshot({ path: png });
-    try {
-      execFileSync('magick', [png, '-resize', '800x500', '-strip', '-quality', '82',
-        join(BILDER, `${r.id}.jpg`)]);
-      execFileSync('rm', ['-f', png]);
-    } catch {
-      console.warn(`  · magick fehlt — ${r.id}.png bleibt unverkleinert liegen`);
+    // Hinter einer Anmeldung zeigt die Startseite nur das Formular. Solche
+    // Bilder sind von Hand aus der Demo aufgenommen (`bild.vonHand`) und werden
+    // hier nicht überschrieben.
+    if (!r.bild?.vonHand) {
+      // 1280×800 ist das Format, das auf einer Übersichtskarte etwas zeigt statt
+      // eine Briefmarke zu sein; die Karte schneidet auf 8:5 zurecht.
+      await seite.setViewportSize({ width: 1280, height: 800 });
+      await seite.waitForTimeout(1200);
+      const png = join(BILDER, `${r.id}.png`);
+      await seite.screenshot({ path: png });
+      try {
+        execFileSync('magick', [png, '-resize', '800x500', '-strip', '-quality', '82',
+          join(BILDER, `${r.id}.jpg`)]);
+        execFileSync('rm', ['-f', png]);
+      } catch {
+        console.warn(`  · magick fehlt — ${r.id}.png bleibt unverkleinert liegen`);
+      }
     }
   } catch (fehler) {
     befund.fehler = String(fehler).slice(0, 200);
