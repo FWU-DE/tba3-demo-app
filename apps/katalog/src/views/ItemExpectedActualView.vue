@@ -145,6 +145,8 @@ const domains = computed(() => {
     const d = vg.domain?.name ?? vg.domain;
     if (d) seen.add(d);
   }
+  // Ohne Teilbereiche (Mathematik 8: `domain: null`) eine Gesamtzeile.
+  if (!seen.size && rawVGs.value.length) return [null];
   return [...seen];
 });
 
@@ -153,7 +155,7 @@ const classBista = computed(() => estimateClassBista(rawVGs.value));
 const domainCharts = computed(() => {
   if (!domains.value.length) return [];
   return domains.value.map(domain => {
-    const vg = rawVGs.value.find(v => (v.domain?.name ?? v.domain) === domain);
+    const vg = rawVGs.value.find(v => (v.domain?.name ?? v.domain ?? null) === domain);
     if (!vg?.items?.length) return null;
 
     const items = vg.items

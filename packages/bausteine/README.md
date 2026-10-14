@@ -6,7 +6,7 @@ Eine Implementierung, drei Fassungen. Ohne Abhängigkeiten, ohne Design.
 **Demonstrator:** [`/bausteine`](https://tba3.vercel.app/bausteine) — alle
 Bausteine in allen drei Fassungen nebeneinander, mit Theme-Umschalter.
 
-**Woher sie kommen:** zwölf aus der eigenen Schau, sechs aus den Rückmeldungen
+**Woher sie kommen:** zwölf aus der eigenen Schau, zehn aus den Rückmeldungen
 des Konsortiums — herausgezogen aus fremden Anwendungen, nicht erfunden.
 
 ---
@@ -89,6 +89,10 @@ Test fehl.
 | `<tba3-lernverlauf-figuren>` | Personen als Marken über mehrere Messzeitpunkte, Stufen als benannte Zonen | mehrere Erhebungen je Schüler:in | `person-gewaehlt` |
 | `<tba3-selbsteinschaetzung>` | Selbsteinschätzung neben dem gemessenen Ergebnis, die Lücke als Strecke | erhobene Selbsteinschätzung | `zeile-gewaehlt` |
 | `<tba3-glossar>` | Begriffe mit Suche — der einzige Baustein mit Eingabefeld | keine, datenunabhängig | `suche-geaendert`, `begriff-gewaehlt` |
+| `<tba3-merkmal-gradient>` | Lösungsquote je Ausprägung eines Merkmals, mehrere Ebenen nebeneinander | `/…/aggregations?aggregation=gender` | `auspraegung-gewaehlt` |
+| `<tba3-abweichung-je-gruppe>` | Ein Balken je Lerngruppe um den Wert der Schule | `/groups/{id}/competence-levels` | `gruppe-gewaehlt` |
+| `<tba3-gruppen-pyramide>` | Zwei Lerngruppen gespiegelt, je Kompetenzstufe | `/groups/{id}/competence-levels` | `stufe-gewaehlt` |
+| `<tba3-netzdiagramm>` | Profil einer Person über Teilbereiche oder Leitideen | `/groups/{id}/items?type=students` | `reihe-gewaehlt` |
 
 Die letzten drei stammen **nicht aus der Schau**, sondern aus den Rückmeldungen
 des Konsortiums: die Erhebung am Artefakt am 15.09.2026 hat sie in fremden

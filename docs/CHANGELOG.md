@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Bausteine Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm; in Katalog, Demonstrator und Demoanwendung.
 - Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht (kompetenztest.de, seit 08.10.2026).
 - Baustein-Katalog neu erhoben (14.10.2026): 26 neue Zuordnungen, fünf neue Bausteine (43).
@@ -40,6 +41,7 @@ Request.
 - Legende der Kompetenzstufen bricht auf schmalen Schirmen um.
 
 ### Fixed
+- Mathematik 8 (Stufen 1a/1b/2 …) und Englisch/Französisch (GER-Stufen) in Demoanwendung und Katalog: Farben, Kennzahlen, „Keine Daten“.
 - Referenz-Backend-Link zeigt auf `/tba3-api/docs` statt auf eine 404.
 - Mock `/materials`: Kompetenz-URIs, `name:`-Präfix, Fach- und Domänenkürzel.
 - Cartridge-Seiten folgen der gewählten Sprache.

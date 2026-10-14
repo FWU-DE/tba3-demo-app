@@ -79,18 +79,21 @@ const CompetenceLevelsChart = ({ level, id }) => {
           <div className="bg-red-50 rounded-lg p-4">
             <div className="text-sm text-red-600">{t('kompetenzstufenDiagramm.unterStandard')}</div>
             <div className="text-2xl font-bold text-red-900">
-              {formatPercentage(stats.belowStandard)}
+              {stats.ohneStandard ? '—' : formatPercentage(stats.belowStandard)}
             </div>
             <div className="text-xs text-red-500">{t('kompetenzstufenDiagramm.stufeI')}</div>
           </div>
           <div className="bg-green-50 rounded-lg p-4">
             <div className="text-sm text-green-600">{t('kompetenzstufenDiagramm.ueberStandard')}</div>
             <div className="text-2xl font-bold text-green-900">
-              {formatPercentage(stats.aboveStandard)}
+              {stats.ohneStandard ? '—' : formatPercentage(stats.aboveStandard)}
             </div>
             <div className="text-xs text-green-500">{t('kompetenzstufenDiagramm.stufeIVundV')}</div>
           </div>
         </div>
+      )}
+      {stats?.ohneStandard && (
+        <p className="text-sm text-gray-500 -mt-3 mb-6" data-testid="hinweis-ohne-standard">{t('kompetenzstufenDiagramm.ohneStandard')}</p>
       )}
 
       {/* Chart */}

@@ -412,6 +412,116 @@ export const zeugnissatzWerte = (daten, { domaene }) => {
   };
 };
 
+// ── Aus der zweiten Erhebung (14.10.2026) ──────────────────────────────────
+
+/** Die Aggregation nach Geschlecht einer Ebene: { [Ausprägung]: Lösungsquote in % }. */
+const nachMerkmal = (daten, typ) => {
+  const eintrag = aggregate(daten).find((e) => Array.isArray(e.aggregations));
+  if (!eintrag) return null;
+  const werte = {};
+  const n = {};
+  for (const a of eintrag.aggregations.filter((x) => x.type === typ)) {
+    werte[a.value] = prozent(a.descriptiveStatistics?.mean);
+    n[a.value] = a.descriptiveStatistics?.total ?? null;
+  }
+  return Object.keys(werte).length ? { werte, n } : null;
+};
+
+/**
+ * Lösungsquote nach Merkmal: dieselbe Aggregation auf drei Ebenen. Eine Ebene
+ * ohne Daten fällt weg, statt eine Reihe aus Nullen zu zeichnen.
+ */
+export const merkmalGradient = (ebenen, { typ = 'gender', merkmal, auspraegungName }) => {
+  const reihen = ebenen
+    .map(({ id, label, daten }) => ({ id, label, ...nachMerkmal(daten, typ) }))
+    .filter((r) => r.werte);
+  const codes = [...new Set(reihen.flatMap((r) => Object.keys(r.werte)))];
+  // Feste Reihenfolge, wo bekannt, sonst die der Antwort.
+  const ordnung = ['f', 'm', 'd'];
+  const rang = (c) => (ordnung.includes(c) ? ordnung.indexOf(c) : ordnung.length);
+  codes.sort((x, y) => rang(x) - rang(y));
+  return {
+    merkmal,
+    auspraegungen: codes.map((c) => ({ id: c, label: auspraegungName(c) })),
+    reihen,
+  };
+};
+
+/** Anteil ab Regelstandard (Stufe III und darüber) über alle Domänen einer Ebene. */
+const abRegelstandard = (daten) => {
+  const zeile = gesamtZeile(daten, { label: '', farbe: () => null });
+  if (!zeile) return null;
+  return zeile.levels.filter((l) => ['III', 'IV', 'V'].includes(l.nameShort)).reduce((s, l) => s + l.pct, 0);
+};
+
+/**
+ * Abweichung je Lerngruppe: alle Gruppen derselben Schule gegen den Wert der
+ * Schule im selben Fach. Der wird aus den Gruppen zusammengezählt — die
+ * Schulantwort der Schnittstelle führt alle Fächer zugleich und taugt deshalb
+ * nicht als Nulllinie für ein einzelnes Fach.
+ */
+export const abweichungGruppen = (geschwister, { schule }) => ({
+  bezug: {
+    label: schule,
+    wert: abRegelstandard((geschwister ?? []).flatMap(({ daten }) => (Array.isArray(daten) ? daten : []))),
+  },
+  gruppen: (geschwister ?? [])
+    .map(({ id, name, daten }) => ({ id, label: name, wert: abRegelstandard(daten) }))
+    .filter((g) => g.wert !== null),
+});
+
+/** Zwei Gruppen gespiegelt: die gewählte gegen die nächste derselben Schule. */
+export const gruppenPyramide = (geschwister, gewaehlt) => {
+  const liste = (geschwister ?? []).filter((g) => gesamtZeile(g.daten, { label: '', farbe: () => null }));
+  const links = liste.find((g) => g.id === gewaehlt) ?? liste[0];
+  const rechts = liste.find((g) => g !== links);
+  if (!links || !rechts) return null;
+  const seite = (g) => ({
+    label: g.name,
+    stufen: gesamtZeile(g.daten, { label: g.name, farbe: () => null }).levels
+      .map((l) => ({ stufe: l.nameShort, anteil: l.pct })),
+  });
+  return { links: seite(links), rechts: seite(rechts) };
+};
+
+/**
+ * Netzdiagramm: eine Schüler:in gegen den Mittelwert der Lerngruppe, je
+ * Teilbereich die Lösungsquote. Mit weniger als drei Teilbereichen sagt der
+ * Baustein selbst, dass ein Netz keine Fläche mehr ist.
+ */
+export const netzProfil = (datenSchueler, { domaene, leitidee, klasse }) => {
+  const schueler = schuelerZusammenfuehren(datenSchueler);
+  if (!schueler.length) return null;
+  // Die Teilbereiche, wenn es mindestens drei gibt. Sonst die Leitideen:
+  // Mathematik führt keine Teilbereiche, aber an jeder Aufgabe ihre Leitidee.
+  const nachDomaene = (s) => s.domaenen;
+  const nachLeitidee = (s) => {
+    const karte = new Map();
+    for (const it of alleAufgaben(s)) {
+      const l = (it.parameters?.competences ?? []).find((k) => k.type === 'Leitidee')?.name;
+      if (l) karte.set(l, [...(karte.get(l) ?? []), it]);
+    }
+    return karte;
+  };
+  const anzahl = (gruppieren) => new Set(schueler.flatMap((s) => [...gruppieren(s).keys()])).size;
+  const gruppieren = anzahl(nachDomaene) >= 3 || anzahl(nachLeitidee) < 3 ? nachDomaene : nachLeitidee;
+  const beschriften = gruppieren === nachDomaene ? domaene : leitidee;
+  const gruppiert = schueler.map((s) => ({ ...s, gruppen: gruppieren(s) }));
+  const codes = [...new Set(gruppiert.flatMap((s) => [...s.gruppen.keys()]))].sort();
+  const person = gruppiert[0];
+  const werte = (s) => Object.fromEntries(codes.map((c) => [c, quote(s.gruppen.get(c) ?? [])]));
+  const mittelwerte = Object.fromEntries(codes.map((c) => [
+    c, Math.round(mittel(gruppiert.filter((s) => s.gruppen.has(c)).map((s) => quote(s.gruppen.get(c))))),
+  ]));
+  return {
+    achsen: codes.map((c) => ({ id: c, label: beschriften(c) })),
+    reihen: [
+      { id: person.id, label: person.name, werte: werte(person) },
+      { id: 'klasse', label: klasse, werte: mittelwerte },
+    ],
+  };
+};
+
 export default {
   kontextmerkmal,
   standardErreichung,
@@ -428,4 +538,8 @@ export default {
   streuPunkte,
   perzentilBaender,
   gesamtQuote,
+  merkmalGradient,
+  abweichungGruppen,
+  gruppenPyramide,
+  netzProfil,
 };

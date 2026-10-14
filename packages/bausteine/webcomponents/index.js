@@ -35,6 +35,10 @@ import { BAUPLAN as SAETZE, ZeugnissaetzeElement } from './zeugnissaetze.js';
 import { BAUPLAN as FIGUREN, LernverlaufFigurenElement } from './lernverlauf-figuren.js';
 import { BAUPLAN as SELBST, SelbsteinschaetzungElement } from './selbsteinschaetzung.js';
 import { BAUPLAN as GLOSSAR, GlossarElement } from './glossar.js';
+import { BAUPLAN as GRADIENT, MerkmalGradientElement } from './merkmal-gradient.js';
+import { BAUPLAN as ABWEICHUNG, AbweichungJeGruppeElement } from './abweichung-je-gruppe.js';
+import { BAUPLAN as PYRAMIDE, GruppenPyramideElement } from './gruppen-pyramide.js';
+import { BAUPLAN as NETZ, NetzdiagrammElement } from './netzdiagramm.js';
 import { elementKlasse } from './baustein-element.js';
 
 export const PRAEFIX = 'tba3-';
@@ -52,6 +56,7 @@ export const BAUPLAENE = [
   VERLAUF, HEATMAP, KACHEL,
   RING, ERREICHUNG, SAETZE,
   FIGUREN, SELBST, GLOSSAR,
+  GRADIENT, ABWEICHUNG, PYRAMIDE, NETZ,
 ];
 
 /** Elementklassen, nach Elementnamen. */
@@ -74,6 +79,10 @@ export const ELEMENTE = {
   [`${PRAEFIX}${FIGUREN.name}`]: LernverlaufFigurenElement,
   [`${PRAEFIX}${SELBST.name}`]: SelbsteinschaetzungElement,
   [`${PRAEFIX}${GLOSSAR.name}`]: GlossarElement,
+  [`${PRAEFIX}${GRADIENT.name}`]: MerkmalGradientElement,
+  [`${PRAEFIX}${ABWEICHUNG.name}`]: AbweichungJeGruppeElement,
+  [`${PRAEFIX}${PYRAMIDE.name}`]: GruppenPyramideElement,
+  [`${PRAEFIX}${NETZ.name}`]: NetzdiagrammElement,
 };
 
 /**

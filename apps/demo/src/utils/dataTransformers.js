@@ -1,4 +1,5 @@
 import { COMPETENCE_LEVELS } from './constants';
+import { istIqbStufe, stufenFarbe, stufenOrdnung } from './stufen';
 import { uebersetze } from '../i18n';
 
 // Die Beschriftung der Kompetenzstufe hängt an der Sprache, die Farbe nicht.
@@ -28,12 +29,14 @@ export const transformCompetenceLevels = (data) => {
       }
     });
 
-    // Convert to array format for chart
-    return Object.entries(aggregated).map(([level, count]) => ({
+    // Convert to array format for chart — in der Ordnung der Skala, nicht der Antwort
+    return Object.entries(aggregated)
+      .sort(([a], [b]) => stufenOrdnung(a) - stufenOrdnung(b))
+      .map(([level, count]) => ({
       level,
       count,
       percentage: totalStudents > 0 ? count / totalStudents : 0,
-      color: COMPETENCE_LEVELS[level]?.color || '#gray',
+      color: stufenFarbe(level),
       name: stufenName(level),
     }));
   }
@@ -48,7 +51,7 @@ export const transformCompetenceLevels = (data) => {
     level,
     count,
     percentage: total > 0 ? count / total : 0,
-    color: COMPETENCE_LEVELS[level]?.color || '#gray',
+    color: stufenFarbe(level),
     name: stufenName(level),
   }));
 };
@@ -181,6 +184,12 @@ export const calculateSummaryStats = (data) => {
     }, 0);
 
     const mean = total > 0 ? weightedSum / total : 0;
+
+    // Kein Mindeststandard für GER-Stufen (Englisch, Französisch): die
+    // Kennzahlen bleiben leer, statt 0 % zu behaupten.
+    if (!Object.keys(aggregated).some(istIqbStufe)) {
+      return { total, mean: null, belowStandard: null, atStandard: null, aboveStandard: null, ohneStandard: true };
+    }
 
     return {
       total,

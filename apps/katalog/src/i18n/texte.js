@@ -311,6 +311,7 @@ export const TEXTE = {
       lerngruppe: { de: 'Lerngruppe', en: 'Learning group' },
       gruppeWaehlen: { de: 'Gruppe wählen', en: 'Choose a group' },
       keineDaten: { de: 'Keine Daten.', en: 'No data.' },
+      gesamt: { de: 'Gesamt', en: 'Overall' },
       mockHinweis: {
         de: '{fehler} — Läuft der Mock-Server auf localhost:8000?',
         en: '{fehler} — is the mock server running on localhost:8000?',

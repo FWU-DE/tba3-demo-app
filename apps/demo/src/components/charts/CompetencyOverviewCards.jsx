@@ -144,20 +144,20 @@ const CompetencyOverviewCards = ({ chartData, stats, subject = null }) => {
 
         <div className="flex flex-col gap-3 flex-1">
           <div className="flex-1 rounded-lg px-4 py-4 text-white bg-green-500" data-testid="stat-at-or-above">
-            <div className="text-3xl font-bold leading-none">{formatPercentage(atOrAbove, 0)}</div>
+            <div className="text-3xl font-bold leading-none">{stats.ohneStandard ? '—' : formatPercentage(atOrAbove, 0)}</div>
             <div className="text-sm font-medium mt-1.5">{t('uebersicht.abMindeststandard')}</div>
             <div className="text-xs opacity-85 mt-0.5">
-              {t('uebersicht.abMindeststandardZusatz', {
+              {stats.ohneStandard ? t('uebersicht.ohneStandard') : t('uebersicht.abMindeststandardZusatz', {
                 anzahl: formatStudentCount(Math.round(atOrAbove * stats.total)),
               })}
             </div>
           </div>
 
           <div className="flex-1 rounded-lg px-4 py-4 text-white bg-orange-500" data-testid="stat-below-standard">
-            <div className="text-3xl font-bold leading-none">{formatPercentage(belowStandard, 0)}</div>
+            <div className="text-3xl font-bold leading-none">{stats.ohneStandard ? '—' : formatPercentage(belowStandard, 0)}</div>
             <div className="text-sm font-medium mt-1.5">{t('uebersicht.unterMindeststandard')}</div>
             <div className="text-xs opacity-85 mt-0.5">
-              {t('uebersicht.unterMindeststandardZusatz', {
+              {stats.ohneStandard ? t('uebersicht.ohneStandard') : t('uebersicht.unterMindeststandardZusatz', {
                 anzahl: formatStudentCount(Math.round(belowStandard * stats.total)),
               })}
             </div>

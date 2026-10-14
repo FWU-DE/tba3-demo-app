@@ -30,12 +30,16 @@ import {
   aufgabenZeilen, erwartungsPunkte, gesamtQuote, gesamtZeile, heatmapDaten, kennzahlen,
   kontextmerkmal, leisteZeilen, mittelwertZeilen, perzentilBaender, schuelerTabelle,
   standardErreichung, streuPunkte, uebersichtsKarten, zeugnissatzWerte,
+  abweichungGruppen, gruppenPyramide, merkmalGradient, netzProfil,
 } from '../../utils/reportElements';
+import { useAggregations } from '../../hooks/useAggregations';
+import { useGruppenDerSchule } from '../../hooks/useGruppenDerSchule';
 
 // Auf Modulebene: als Objektliteral im Render wären es bei jedem Durchlauf neue
 // Parameter, und der Daten-Hook liefe endlos nach.
 const NUR_GRUPPE = { type: 'group' };
 const NUR_SCHUELER = { type: 'students' };
+const NACH_GESCHLECHT = { aggregation: 'gender' };
 
 /** kompetenzstufen-leiste → KompetenzstufenLeiste */
 const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());
@@ -99,6 +103,20 @@ const zeichnung = (id, q, hilfe) => {
       const werte = zeugnissatzWerte(q.stufen.data, hilfe);
       return werte ? { name: 'zeugnissaetze', ...hilfe.zeugnissaetze(werte) } : null;
     }
+    case 'sozialer-gradient':
+      return { name: 'merkmal-gradient', ...merkmalGradient(q.merkmal, hilfe.merkmal) };
+    case 'abweichung-je-lerngruppe': {
+      const a = abweichungGruppen(q.geschwister.data, { schule: q.geschwister.schule?.name ?? '' });
+      return a.bezug.wert === null ? null : { name: 'abweichung-je-gruppe', titel: hilfe.abRegelstandard, ...a };
+    }
+    case 'gruppen-gegenueberstellung': {
+      const p = gruppenPyramide(q.geschwister.data, q.gruppe);
+      return p ? { name: 'gruppen-pyramide', ...p } : null;
+    }
+    case 'netzdiagramm': {
+      const n = netzProfil(q.schueler.data, hilfe);
+      return n ? { name: 'netzdiagramm', ...n } : null;
+    }
     case 'punktwolke':
       return {
         name: 'streudiagramm',
@@ -115,8 +133,9 @@ const hatInhalt = (gezeichnet) => {
   if (!gezeichnet) return false;
   if (gezeichnet.kacheln) return gezeichnet.kacheln.length > 0;
   if (gezeichnet.ringe) return gezeichnet.ringe.length > 0;
-  const { rows, items, karten, punkte, werte, zeilen, saetze } = gezeichnet;
-  return [rows, items, karten, punkte, werte, zeilen, saetze]
+  if (gezeichnet.links) return true;
+  const { rows, items, karten, punkte, werte, zeilen, saetze, reihen, gruppen, achsen } = gezeichnet;
+  return [rows, items, karten, punkte, werte, zeilen, saetze, reihen, gruppen, achsen]
     .some((liste) => Array.isArray(liste) && liste.length > 0);
 };
 
@@ -155,6 +174,13 @@ const ReportElementsView = () => {
   const ebeneSchule = useCompetenceLevels('school', selectedSchool, NUR_GRUPPE);
   const ebeneLand = useCompetenceLevels('state', selectedState, NUR_GRUPPE);
 
+  // Für die Bausteine aus der zweiten Erhebung: alle Lerngruppen derselben
+  // Schule und die Aggregation nach Geschlecht auf drei Ebenen.
+  const geschwister = useGruppenDerSchule(selectedGroup);
+  const merkmalGruppe = useAggregations('group', selectedGroup, NACH_GESCHLECHT);
+  const merkmalSchule = useAggregations('school', geschwister.schule?.id, NACH_GESCHLECHT);
+  const merkmalLand = useAggregations('state', selectedState, NACH_GESCHLECHT);
+
   const hilfe = useMemo(() => ({
     // Die Domänenkürzel der Schnittstelle haben Namen; fehlt einer, steht das
     // Kürzel da statt „undefined".
@@ -167,6 +193,13 @@ const ReportElementsView = () => {
     sprache: t('elemente.spracheZuhause'),
     geschlechtName: (code) => GENDERS[code] ?? code,
     sprachName: (code) => LANGUAGES[code] ?? code,
+    abRegelstandard: t('elemente.abRegelstandard'),
+    klasse: t('elemente.mittelDerLerngruppe'),
+    leitidee: (code) => t(`elemente.leitideen.${code}`) || code,
+    merkmal: {
+      merkmal: t('elemente.geschlecht'),
+      auspraegungName: (code) => GENDERS[code] ?? code,
+    },
     // Die Vorlagen stehen in i18n, nicht im Baustein: wie über eine Lerngruppe
     // geschrieben wird, ist keine Entscheidung einer Visualisierung.
     zeugnissaetze: (werte) => ({
@@ -186,9 +219,16 @@ const ReportElementsView = () => {
     gesamtZeile(ebeneLand.data, { label: t('seitenleiste.bundesland'), farbe: hilfe.farbe }),
   ].filter(Boolean), [ebeneGruppe.data, ebeneSchule.data, ebeneLand.data, t, hilfe]);
 
-  const q = { stufen, aufgaben, schueler, stufenSchueler, ebenen };
+  const merkmal = useMemo(() => [
+    { id: 'gruppe', label: t('seitenleiste.lerngruppe'), daten: merkmalGruppe.data },
+    { id: 'schule', label: t('seitenleiste.schule'), daten: merkmalSchule.data },
+    { id: 'land', label: t('seitenleiste.bundesland'), daten: merkmalLand.data },
+  ], [merkmalGruppe.data, merkmalSchule.data, merkmalLand.data, t]);
 
-  const laedt = [stufen, aufgaben, schueler, stufenSchueler].some((a) => a.loading);
+  const q = { stufen, aufgaben, schueler, stufenSchueler, ebenen, geschwister, merkmal, gruppe: selectedGroup };
+
+  const laedt = [stufen, aufgaben, schueler, stufenSchueler, geschwister, merkmalGruppe]
+    .some((a) => a.loading);
   const fehler = [stufen, aufgaben, schueler, stufenSchueler].find((a) => a.error);
 
   const schichten = useMemo(() => nachSchichten().map((schicht) => ({

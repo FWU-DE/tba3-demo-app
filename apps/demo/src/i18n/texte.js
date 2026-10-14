@@ -188,6 +188,17 @@ export const TEXTE = {
       en: 'from the library, named by no progress report',
     },
     abMindeststandard: { de: 'ab Mindeststandard', en: 'at or above the minimum standard' },
+    abRegelstandard: { de: 'Anteil ab Regelstandard (Stufe III und darüber)', en: 'Share at or above the regular standard (level III and above)' },
+    mittelDerLerngruppe: { de: 'Mittel der Lerngruppe', en: 'Group average' },
+    // Die Leitideen der Bildungsstandards Mathematik Sek. I (Fassung 2004),
+    // nach denen die Beispieldaten ihre Aufgaben kennzeichnen.
+    leitideen: {
+      L1: { de: 'Zahl', en: 'Number' },
+      L2: { de: 'Messen', en: 'Measurement' },
+      L3: { de: 'Raum und Form', en: 'Space and shape' },
+      L4: { de: 'Funktionaler Zusammenhang', en: 'Functional relationships' },
+      L5: { de: 'Daten und Zufall', en: 'Data and chance' },
+    },
     insgesamt: { de: 'Insgesamt', en: 'Overall' },
     ohneDomaene: { de: 'Ohne Domäne', en: 'No domain' },
     ohneDaten: {
@@ -254,6 +265,7 @@ export const TEXTE = {
       en: 'Competence levels II–V · {anzahl}',
     },
     unterMindeststandard: { de: 'Unter Mindeststandard', en: 'Below minimum standard' },
+    ohneStandard: { de: 'Kein Mindeststandard für Stufen nach dem Referenzrahmen', en: 'No minimum standard for CEFR levels' },
     unterMindeststandardZusatz: {
       de: 'Kompetenzstufe I · {anzahl}',
       en: 'Competence level I · {anzahl}',
@@ -266,6 +278,10 @@ export const TEXTE = {
     gesamt: { de: 'Gesamt', en: 'Total' },
     schuelerinnen: { de: 'Schüler*innen', en: 'Students' },
     unterStandard: { de: 'Unter Standard', en: 'Below standard' },
+    ohneStandard: {
+      de: 'Die Stufen dieses Fachs folgen dem Europäischen Referenzrahmen (A1 bis C1). Ein Mindeststandard ist dafür nicht hinterlegt — er hängt am Bildungsgang —, deshalb bleiben die Anteile leer.',
+      en: 'The levels of this subject follow the Common European Framework (A1 to C1). No minimum standard is defined for them — it depends on the school track — so the shares stay empty.',
+    },
     stufeI: { de: 'Stufe I', en: 'Level I' },
     ueberStandard: { de: 'Über Standard', en: 'Above standard' },
     stufeIVundV: { de: 'Stufe IV & V', en: 'Levels IV & V' },
