@@ -45,6 +45,7 @@ Request.
 - Legende der Kompetenzstufen bricht auf schmalen Schirmen um.
 
 ### Fixed
+- Katalog, Kompetenzübersicht: Englisch zeigt die Verteilung nach dem Referenzrahmen statt „Keine Daten“.
 - Mathematik 8 (Stufen 1a/1b/2 …) und Englisch/Französisch (GER-Stufen) in Demoanwendung und Katalog: Farben, Kennzahlen, „Keine Daten“.
 - Referenz-Backend-Link zeigt auf `/tba3-api/docs` statt auf eine 404.
 - Mock `/materials`: Kompetenz-URIs, `name:`-Präfix, Fach- und Domänenkürzel.

@@ -19,6 +19,10 @@ export const STUFEN = ['I', 'II', 'III', 'IV', 'V'];
 // behalten ihr Kürzel und bekommen eine eigene, geordnete Farbskala.
 export const GER = ['A1', 'A1.1', 'A1.2', 'A2', 'A2.1', 'A2.2', 'B1', 'B1.1', 'B1.2', 'B2', 'B2.1', 'B2.2', 'C1', 'C2'];
 
+/** Rot über Gelb nach Grün, eine Farbe je GER-Stufe — dieselbe Ordnung wie I–V. */
+export const GER_FARBEN = ['#b91c1c', '#dc2626', '#ea580c', '#f97316', '#f59e0b', '#eab308', '#a3a635',
+  '#84cc16', '#4ade80', '#22c55e', '#16a34a', '#15803d', '#0f766e', '#115e59'];
+
 export const istIqbStufe = (kuerzel) => STUFEN.includes(kuerzel);
 
 /** Position in der jeweiligen Skala — zum Sortieren. Unbekanntes ans Ende. */
