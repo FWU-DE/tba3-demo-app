@@ -338,6 +338,11 @@ export const TEXTE = {
         de: 'Schulen mit ähnlicher sozialer Zusammensetzung',
         en: 'Schools with a similar social composition',
       },
+      fairSimuliert: { de: 'Fairer Vergleich (simuliert)', en: 'Fair comparison (simulated)' },
+      fairBerechnung: {
+        de: '<strong>Fairer Vergleich simuliert:</strong> Verteilung der Schule, Anzahlen gewichtet mit I × 1,12 · II × 1,06 · III × 1,00 · IV × 0,94 · V × 0,88. Die Schnittstelle sieht ihn als <code>comparison=faircomparison</code> vor, der Referenzserver liefert ihn noch nicht (<a href="https://github.com/indibit-eu/tba3/issues/56" target="_blank" rel="noreferrer">indibit-eu/tba3#56</a>).',
+        en: '<strong>Fair comparison simulated:</strong> the school distribution, counts weighted by I × 1.12 · II × 1.06 · III × 1.00 · IV × 0.94 · V × 0.88. The interface provides for it as <code>comparison=faircomparison</code>; the reference server does not deliver it yet (<a href="https://github.com/indibit-eu/tba3/issues/56" target="_blank" rel="noreferrer">indibit-eu/tba3#56</a>).',
+      },
       props: {
         rows: {
           de: 'Ein Eintrag pro Ebene (Klasse, Schule, Bundesland). Jeder Eintrag: { label: string, total: number, levels: [{ nameShort, pct }] }',
@@ -671,6 +676,14 @@ export const TEXTE = {
     },
 
     mittelwert: {
+      fairBerechnung: {
+        de: '<strong>Fairer Vergleich:</strong> aus der Schnittstelle über <code>comparison=faircomparison</code>, je Aufgabe die Lösungshäufigkeit der Schulart. Der eigene Mock bildet ihn aus den Aufgabenparametern, der Referenzserver liefert ihn noch nicht (<a href="https://github.com/indibit-eu/tba3/issues/56" target="_blank" rel="noreferrer">indibit-eu/tba3#56</a>).',
+        en: '<strong>Fair comparison:</strong> from the interface via <code>comparison=faircomparison</code>, the solution frequency of the school type per item. Our own mock builds it from the item parameters; the reference server does not deliver it yet (<a href="https://github.com/indibit-eu/tba3/issues/56" target="_blank" rel="noreferrer">indibit-eu/tba3#56</a>).',
+      },
+      kiBerechnung: {
+        de: '<strong>Fehlerbalken der Lerngruppe simuliert:</strong> ± 200 / √n Prozentpunkte. Die Schnittstelle liefert kein Konfidenzintervall.',
+        en: '<strong>Error bar of the learning group simulated:</strong> ± 200 / √n percentage points. The interface provides no confidence interval.',
+      },
       titel: {
         de: 'Mittlere Lösungsquote — Klasse · Schule · Fairer Vergleich · Bundesland',
         en: 'Mean solution rate — class · school · fair comparison · state',

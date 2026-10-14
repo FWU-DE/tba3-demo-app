@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Mock: `comparison=faircomparison` auf `/items`; der Mittelwert-Vergleich im Katalog nutzt ihn statt Schulwert × 0,96.
 - Ausschnitte der Originale neben jedem Baustein: Demonstrator, Reiter „Rückmeldeelemente“, Dokument „Bausteine der Rückmeldungen“ (mit Nachbau).
 - Karten im Reiter „Rückmeldeelemente“ verlinken auf den Baustein im Demonstrator.
 - Bausteine Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm; in Katalog, Demonstrator und Demoanwendung.
@@ -31,6 +32,7 @@ Request.
 - Design-Tokens aus dem VIDIS Design System; Impressum und Datenschutz im Fuß.
 
 ### Changed
+- Katalog: Fehlerbalken und fairer Vergleich der Kompetenzstufen als simuliert gekennzeichnet, mit Rechnung.
 - Startseite nach Zielgruppen geteilt; Bausteine-Seite neu geschrieben.
 - Katalog: sprechende Namen statt technischer.
 - Y-Achsen-Beschriftungen linksbündig (Bausteine, Katalog, Demoanwendung).

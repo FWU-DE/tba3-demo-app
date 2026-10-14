@@ -158,3 +158,32 @@ describe('Materialien', () => {
     expect(daten.title).toBe(erstes.title);
   });
 });
+
+describe('Fairer Vergleich', () => {
+  it('hängt je Wertegruppe eine Wertegruppe mit den Bezugswerten der Schulart an', () => {
+    const ohne = antwortFuer('/groups/3a-deutsch/items').daten;
+    const { daten } = antwortFuer('/groups/3a-deutsch/items', { comparison: 'faircomparison' });
+    const fair = daten.filter((vg) => vg.type === 'faircomparison');
+
+    expect(daten.length).toBe(ohne.length + fair.length);
+    expect(fair.length).toBe(ohne.length);
+    expect(fair[0].covariates).toEqual([{ type: 'schoolType', label: 'Schulart', value: 'primarySchool' }]);
+    const item = fair[0].items[0];
+    expect(item.descriptiveStatistics.mean).toBe(item.parameters.solutionFrequencyPrimarySchool);
+  });
+
+  it('nimmt am Gymnasium dessen Bezugswerte und versteht die Ebenen-Varianten', () => {
+    for (const comparison of ['group-faircomparison', 'state-average,faircomparison']) {
+      const fair = antwortFuer('/groups/8a-deutsch/items', { comparison }).daten.filter((vg) => vg.type === 'faircomparison');
+      expect(fair.length).toBeGreaterThan(0);
+      expect(fair[0].covariates[0].value).toBe('gymnasium');
+    }
+    const schule = antwortFuer('/schools/gym-beispielstadt/items', { comparison: 'school-faircomparison' }).daten;
+    expect(schule.some((vg) => vg.type === 'faircomparison')).toBe(true);
+  });
+
+  it('lässt Kompetenzstufen unverändert — dafür führen die Antworten keinen Bezugswert', () => {
+    const { daten } = antwortFuer('/groups/3a-deutsch/competence-levels', { comparison: 'faircomparison' });
+    expect(daten.some((vg) => vg.type === 'faircomparison')).toBe(false);
+  });
+});

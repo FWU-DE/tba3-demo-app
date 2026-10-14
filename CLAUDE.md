@@ -432,6 +432,13 @@ Die API-Basis kommt in beiden Apps aus `VITE_API_BASE_URL` (Demo:
 `src/services/tba3Api.js`, Katalog: `axios.defaults.baseURL` in `src/main.js`);
 leer bedeutet „gleicher Host".
 
+`comparison=faircomparison` (auch `group-`/`school-faircomparison`) auf `/items`
+hängt eine Wertegruppe `type: 'faircomparison'` an: je Aufgabe die
+Lösungshäufigkeit der Schulart aus `parameters.solutionFrequency…`, die Schulart als
+Kovariate. Die Endpunkt-Referenz sieht den Wert vor, der Referenzserver liefert
+ihn noch nicht (indibit-eu/tba3#56). Für Kompetenzstufen gibt es keinen solchen
+Bezugswert; dort bleibt der faire Vergleich im Katalog simuliert und ausgewiesen.
+
 `/materials` bedient der Mock nicht über hinterlegte Schlüssel, sondern filtert die
 Beispiele des Entwurfs zur Laufzeit (scope, kind, audience, item, competenceLevel …) —
 sonst gäbe „Try it out“ auf jede Anfrage dieselbe Liste zurück.
