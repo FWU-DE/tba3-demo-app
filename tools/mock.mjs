@@ -99,6 +99,52 @@ const materialien = (query) => {
   return alle.filter((m) => aktiv.every(([name, wert]) => materialFilter[name](m, wert)));
 };
 
+// ── Fairer Vergleich (`comparison=faircomparison`) ───────────────────────────
+// Die Endpunkt-Referenz sieht ihn vor, der Referenzserver liefert ihn noch nicht
+// (indibit-eu/tba3#56). Der eigene Mock bildet ihn aus Werten, die schon in den
+// Antworten stehen: jedes Item führt die Lösungshäufigkeit seiner Schulart
+// (`parameters.solutionFrequencyPrimarySchool`, `…Gymnasium`). Die zusätzliche
+// Wertegruppe trägt `type: 'faircomparison'` und die Schulart als Kovariate.
+// Nur für `/items` — für Kompetenzstufen führen die Antworten keinen solchen Wert.
+const FAIRER_VERGLEICH = new Set(['faircomparison', 'group-faircomparison', 'school-faircomparison']);
+
+/** In den Demodaten hängt die Schulart an der Klassenstufe bzw. am Schulnamen. */
+const SCHULART = {
+  grundschule: { feld: 'solutionFrequencyPrimarySchool', wert: 'primarySchool', text: 'Grundschule' },
+  gymnasium: { feld: 'solutionFrequencyGymnasium', wert: 'gymnasium', text: 'Gymnasium' },
+};
+const schulartVon = (pfad) => {
+  if (/^\/groups\/3/.test(pfad) || /^\/schools\/gs-/.test(pfad)) return SCHULART.grundschule;
+  if (/^\/groups\/\d/.test(pfad) || /^\/schools\/gym-/.test(pfad)) return SCHULART.gymnasium;
+  return null;
+};
+
+export const fragtFairenVergleich = (pfad, query) =>
+  /^\/(groups|schools)\/[^/]+\/items$/.test(pfad) &&
+  listen(query.comparison ?? '').some((c) => FAIRER_VERGLEICH.has(c));
+
+/** Je Wertegruppe der Ebene eine Wertegruppe „Fairer Vergleich“ mit den Bezugswerten der Schulart. */
+export const fairerVergleich = (pfad, wertegruppen) => {
+  const schulart = schulartVon(pfad);
+  if (!schulart || !Array.isArray(wertegruppen)) return [];
+  return wertegruppen
+    .filter((vg) => vg.type === 'group' || vg.type === 'school')
+    .map((vg) => ({
+      ...vg,
+      type: 'faircomparison',
+      name: `Fairer Vergleich (${schulart.text})`,
+      covariates: [{ type: 'schoolType', label: 'Schulart', value: schulart.wert }],
+      properties: null,
+      items: (vg.items ?? [])
+        .filter((it) => Number.isFinite(it.parameters?.[schulart.feld]))
+        .map((it) => ({
+          ...it,
+          descriptiveStatistics: { total: null, mean: it.parameters[schulart.feld], frequency: null, standardDeviation: null },
+        })),
+    }))
+    .filter((vg) => vg.items.length > 0);
+};
+
 /**
  * Sucht die passende Antwort. Gibt es die angefragte Parameterkombination
  * nicht, werden die Parameter der Reihe nach fallen gelassen (erst comparison,
@@ -113,6 +159,14 @@ export const antwortFuer = (eingang, query = {}) => {
   if (pfad === '/materials') {
     const daten = materialien(query);
     return daten === undefined ? { daten: null, treffer: 'keiner' } : { daten, treffer: 'genau' };
+  }
+
+  if (fragtFairenVergleich(pfad, query)) {
+    const { comparison, ...ohne } = query;
+    const basis = antwortFuer(pfad, ohne);
+    if (!Array.isArray(basis.daten)) return basis;
+    // Andere Vergleichswerte der Anfrage kennt der Mock nicht; sie fallen weg.
+    return { daten: [...basis.daten, ...fairerVergleich(pfad, basis.daten)], treffer: basis.treffer };
   }
 
   const genau = suche(pfad, query);

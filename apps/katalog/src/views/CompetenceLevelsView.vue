@@ -123,6 +123,8 @@ const groupVGs  = ref([]);
 const schoolVGs = ref([]);
 const stateVGs  = ref([]);
 
+// Simuliert, die Schnittstelle führt keinen fairen Vergleich; die Ansicht
+// weist die Gewichte aus (ansichten.stufen.fairBerechnung).
 // Simulated "Fairer Vergleich" (Standorttyp) data derived from school VGs.
 // Represents the avg. competency distribution of schools with a similar social index.
 // Adjustment factors shift the distribution slightly towards lower levels to simulate
@@ -205,7 +207,7 @@ const domainCharts = computed(() => {
     const rows = [
       gData  && { label: selectedGroup.value.label, ...gData  },
       sData  && { label: 'Schule',                   ...sData  },
-      fData  && { label: 'Fairer Vergleich',          ...fData,  fair: true },
+      fData  && { label: t('ansichten.stufen.fairSimuliert'), ...fData,  fair: true },
       stData && { label: 'Bundesland',                ...stData },
     ].filter(Boolean);
 
@@ -281,6 +283,9 @@ const domainCharts = computed(() => {
           </div>
         </div>
 
+        <p v-if="showFairComparison && !loading" class="berechnung" data-testid="berechnung-stufen"
+          v-html="t('ansichten.stufen.fairBerechnung')" />
+
         <ComponentDocs
           component-name="CompetenceLevelBar"
           :github-file="DOCS.githubFile"
@@ -338,6 +343,7 @@ const domainCharts = computed(() => {
 .fair-toggle-row { display: flex; align-items: center; gap: 8px; }
 .fair-toggle-label { display: flex; align-items: center; gap: 4px; font-size: 0.87rem; color: #0f766e; font-weight: 500; cursor: pointer; }
 .fair-icon { font-size: 1rem; }
+.berechnung { margin: 12px 0 0; font-size: 0.8rem; color: #475569; }
 .fair-hint { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
 
 .charts-grid { display: flex; flex-direction: column; gap: 32px; }

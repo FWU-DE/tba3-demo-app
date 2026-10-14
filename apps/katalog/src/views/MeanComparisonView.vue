@@ -45,14 +45,16 @@ const meanPct = (vgs, domain) => {
 
 onMounted(async () => {
   const [gRes, sRes, stRes] = await Promise.all([
-    axios.get('/groups/3a-deutsch/items'),
+    axios.get('/groups/3a-deutsch/items', { params: { comparison: 'faircomparison' } }),
     axios.get('/schools/gs-musterstadt/items'),
     axios.get('/states/beispielland/items'),
   ]);
+  const gruppe = gRes.data.filter(v => v.type !== 'faircomparison');
+  const fair   = gRes.data.filter(v => v.type === 'faircomparison');
   rows.value = [
-    { label: '3a Deutsch', mean: meanPct(gRes.data, 'le'), n: 25 },
+    { label: '3a Deutsch', mean: meanPct(gruppe, 'le'), n: 25 },
     { label: 'Schule',     mean: meanPct(sRes.data, 'le') },
-    { label: 'Fairer Vergleich', mean: meanPct(sRes.data, 'le') * 0.97, fair: true },
+    { label: 'Fairer Vergleich', mean: meanPct(fair, 'le'), fair: true },
     { label: 'Bundesland', mean: meanPct(stRes.data, 'le') },
   ].filter(r => r.mean != null);
 });
@@ -97,6 +99,7 @@ const error = ref(null);
 const showFairComparison = ref(true);
 
 const groupItems  = ref([]);
+const fairItems   = ref([]);
 const schoolItems = ref([]);
 const stateItems  = ref([]);
 
@@ -106,16 +109,18 @@ const fetchAll = async () => {
   try {
     const g = selectedGroup.value;
     const [gRes, sRes, stRes] = await Promise.all([
-      axios.get(`/groups/${g.id}/items`),
+      axios.get(`/groups/${g.id}/items`, { params: { comparison: 'faircomparison' } }),
       axios.get(`/schools/${g.schoolId}/items`),
       axios.get(`/states/${g.stateId}/items`),
     ]);
-    groupItems.value  = Array.isArray(gRes.data)  ? gRes.data  : [gRes.data];
+    const gruppe = Array.isArray(gRes.data) ? gRes.data : [gRes.data];
+    groupItems.value  = gruppe.filter((vg) => vg.type !== 'faircomparison');
+    fairItems.value   = gruppe.filter((vg) => vg.type === 'faircomparison');
     schoolItems.value = Array.isArray(sRes.data)  ? sRes.data  : [sRes.data];
     stateItems.value  = Array.isArray(stRes.data) ? stRes.data : [stRes.data];
   } catch (e) {
     error.value = e.message;
-    groupItems.value = []; schoolItems.value = []; stateItems.value = [];
+    groupItems.value = []; fairItems.value = []; schoolItems.value = []; stateItems.value = [];
   } finally { loading.value = false; }
 };
 
@@ -161,13 +166,14 @@ const domainCharts = computed(() => {
     const gVg = groupItems.value.find(v => (v.domain?.name ?? v.domain ?? null) === domain);
     const gN = gVg?.items?.length ?? null;
 
-    // Fair comparison: simulate similar-context school avg (slightly below school mean)
-    const fMean = sMean != null ? sMean * 0.96 : null;
+    // Aus der Schnittstelle: `comparison=faircomparison` liefert eine eigene
+    // Wertegruppe mit den Bezugswerten der Schulart.
+    const fMean  = meanForDomain(fairItems.value, domain);
 
     const rows = [
       gMean  != null && { label: selectedGroup.value.label, mean: gMean,  ...ciRange(gMean,  gN), n: gN },
       sMean  != null && { label: 'Schule',                   mean: sMean,  ...ciRange(sMean,  null) },
-      (showFairComparison.value && fMean != null) && { label: 'Fairer Vergleich', mean: fMean, ...ciRange(fMean, null), fair: true },
+      (showFairComparison.value && fMean != null) && { label: t('ansichten.stufen.fairerVergleich'), mean: fMean, ...ciRange(fMean, null), fair: true },
       stMean != null && { label: 'Bundesland',               mean: stMean, ...ciRange(stMean, null) },
     ].filter(Boolean);
 
@@ -244,6 +250,11 @@ const domainCharts = computed(() => {
           </div>
         </div>
 
+        <p v-if="!loading && domainCharts.length" class="berechnung" data-testid="berechnung-mittelwert">
+          <span v-if="showFairComparison" v-html="t('ansichten.mittelwert.fairBerechnung')" />
+          <span v-html="t('ansichten.mittelwert.kiBerechnung')" />
+        </p>
+
         <ComponentDocs
           component-name="MeanComparisonChart"
           :github-file="DOCS.githubFile"
@@ -288,6 +299,7 @@ const domainCharts = computed(() => {
 .fair-toggle-row { display: flex; align-items: center; gap: 8px; }
 .fair-toggle-label { display: flex; align-items: center; gap: 4px; font-size: 0.87rem; color: #0f766e; font-weight: 500; cursor: pointer; }
 .fair-icon { font-size: 1rem; }
+.berechnung { display: flex; flex-direction: column; gap: 4px; margin: 12px 0 0; font-size: 0.8rem; color: #475569; }
 .fair-hint { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
 .charts-grid { display: flex; flex-direction: column; gap: 32px; }
 .chart-wrap { overflow-x: auto; }
