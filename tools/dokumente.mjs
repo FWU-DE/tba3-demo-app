@@ -306,7 +306,7 @@ const datumsText = (iso) => {
   };
 };
 
-const rahmen = ({ titel, beschreibung, koerper, klasse = '' }) => `<!DOCTYPE html>
+const rahmen = ({ titel, beschreibung, koerper, klasse = '', kopf = '' }) => `<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
@@ -315,7 +315,7 @@ const rahmen = ({ titel, beschreibung, koerper, klasse = '' }) => `<!DOCTYPE htm
   <meta name="description" content="${schuetze(beschreibung.de)}" />
   <link rel="stylesheet" href="/gemeinsam/tokens.css" />
   <link rel="stylesheet" href="/gemeinsam/container.css" />
-  <link rel="stylesheet" href="/dokumentation/dokument.css" />
+  <link rel="stylesheet" href="/dokumentation/dokument.css" />${kopf}
 </head>
 <body${klasse ? ` class="${klasse}"` : ''}>
 
@@ -423,6 +423,11 @@ ${en ? `<div lang="de">\n${inhalt}</div>\n<div lang="en">\n${en.inhalt}</div>` :
       en: `${en?.titelText || titelText || dok.kurz.en} — TBA3`,
     },
     beschreibung: dok.beschreibung,
+    // Für Werkzeuge, die eine Seite lesen statt ansehen: dieselbe Seite als Markdown.
+    kopf: [
+      `\n  <link rel="alternate" type="text/markdown" hreflang="de" href="/dokumentation/${dok.datei}" />`,
+      dok.englisch ? `\n  <link rel="alternate" type="text/markdown" hreflang="en" href="/dokumentation/${dok.englisch}" />` : '',
+    ].join(''),
     koerper,
   });
 }

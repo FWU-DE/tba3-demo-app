@@ -27,7 +27,8 @@ Angular-Komponenten im DOM stehen.
 Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 (`npm run konsortium:doc`). Dieselben Daten tragen die
 [Rückmeldungsübersicht](/beispiele) und den Reiter „Rückmeldeelemente" der
-[Demoanwendung](/demo/?tab=elemente).
+[Demoanwendung](/demo/?tab=elemente). Als Daten liegen sie unter
+[/gemeinsam/konsortium.json](/gemeinsam/konsortium.json).
 
 ## Die 11 Rückmeldungen
 

@@ -27,7 +27,8 @@ the DOM.
 This document is generated from `apps/shared/konsortium.js`
 (`npm run konsortium:doc`). The same data drives the
 [report overview](/beispiele) and the “Report elements” tab of the
-[demo application](/demo/?tab=elemente).
+[demo application](/demo/?tab=elemente). As data they are at
+[/gemeinsam/konsortium.json](/gemeinsam/konsortium.json).
 
 ## The 11 reports
 

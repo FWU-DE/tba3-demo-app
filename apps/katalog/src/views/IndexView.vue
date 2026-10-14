@@ -1,4 +1,5 @@
 <script setup>
+import { KOMPONENTEN } from '../komponenten.js';
 import { t, aktuelleSprache } from '../i18n';
 // Woher ein Baustein stammt, steht in den Daten des Konsortiums — nicht hier
 // abgeschrieben. Drei der zwölf Ansichten sind nicht aus dieser Schau
@@ -23,116 +24,8 @@ const herkunft = (baustein) => {
 // Katalog — sonst führte er an dem Code vorbei, der hier tatsächlich zeichnet.
 const GH_BASE = 'https://github.com/FWU-DE/tba3-demo-app/blob/main/packages/bausteine/webcomponents/';
 
-const COMPONENTS = [
-  {
-    name: 'ItemExpectedActualChart',
-    route: '/item-expected-actual',
-    baustein: 'erwartet-tatsaechlich',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups/{id}/items',
-    preview: 'item-expected',
-  },
-  {
-    name: 'MeanComparisonChart',
-    route: '/mean-comparison',
-    baustein: 'mittelwert-vergleich',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups, /schools, /states (items)',
-    preview: 'mean-comparison',
-  },
-  {
-    name: 'BistaDistributionChart',
-    route: '/bista-distribution',
-    baustein: 'bista-verteilung',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: 'index.bistaDaten',
-    preview: 'bista',
-  },
-  {
-    name: 'ContextRing',
-    route: '/context-ring',
-    baustein: 'kontextmerkmal-ring',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups (items?type=students)',
-    preview: 'kontext-ring',
-  },
-  {
-    name: 'StandardAttainment',
-    route: '/standard-attainment',
-    baustein: 'standard-erreichung',
-    tag: 'HTML',
-    tagSeverity: 'secondary',
-    api: '/groups (competence-levels)',
-    preview: 'standard-erreichung',
-  },
-  {
-    name: 'ReportSentences',
-    route: '/report-sentences',
-    baustein: 'zeugnissaetze',
-    tag: 'Text',
-    tagSeverity: 'secondary',
-    api: '/groups (competence-levels)',
-    preview: 'zeugnissaetze',
-  },
-  {
-    name: 'CompetencyOverviewCards',
-    route: '/competency-overview',
-    baustein: 'uebersichtskarten',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups (competence-levels)',
-    preview: 'donut',
-  },
-  {
-    name: 'PercentileBandChart',
-    route: '/percentile-band',
-    baustein: 'perzentilbaender',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups, /schools, /states',
-    preview: 'band',
-  },
-  {
-    name: 'CompetenceLevelBar',
-    route: '/competence-levels',
-    baustein: 'kompetenzstufen-leiste',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups, /schools, /states (competence-levels)',
-    preview: 'stacked',
-  },
-  {
-    name: 'StudentSolutionTable',
-    route: '/student-solution-table',
-    baustein: 'schueler-tabelle',
-    tag: 'Tabelle',
-    tagSeverity: 'secondary',
-    api: '/groups (items?type=students)',
-    preview: 'student-solution',
-  },
-  {
-    name: 'ItemSolutionTable',
-    route: '/item-solution-table',
-    baustein: 'aufgaben-tabelle',
-    tag: 'Tabelle',
-    tagSeverity: 'secondary',
-    api: '/groups, /schools, /states (items)',
-    preview: 'table',
-  },
-  {
-    name: 'StudentScatterPlot',
-    route: '/student-scatter',
-    baustein: 'streudiagramm',
-    tag: 'SVG',
-    tagSeverity: 'info',
-    api: '/groups (items?type=students)',
-    preview: 'scatter',
-  },
-];
+// Die Liste steht in ../komponenten.js — der Build liest sie für die Fassung ohne JavaScript.
+const COMPONENTS = KOMPONENTEN;
 </script>
 
 <template>
