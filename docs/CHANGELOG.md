@@ -7,6 +7,7 @@ Request.
 ## [Unreleased]
 
 ### Added
+- Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - Elfte Rückmeldung: Kompetenzstand Mathematik, Klassenbericht (kompetenztest.de, seit 08.10.2026).
 - Baustein-Katalog neu erhoben (14.10.2026): 26 neue Zuordnungen, fünf neue Bausteine (43).
 - Beispielwerte für alle Parameter von `/materials` in der API-Referenz.
@@ -52,6 +53,7 @@ Request.
 ## [0.1.0] — 2026-05-05
 
 ### Added
+- Teaser der Machbarkeitsstudie mit Grafik auf der Startseite.
 - React-19-Anwendung für TBA3-Auswertungsdaten: Kompetenzstufen, Item-Statistik, drei Ebenen, Filter.
 - Export als PDF, ZIP und QR-Code; MUNDO-Anbindung über LTI.
 - MCP-Server; Docker-Abbild mit App und MCP-Server; CI für beide Abbilder.

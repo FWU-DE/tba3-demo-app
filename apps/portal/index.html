@@ -236,6 +236,23 @@
       border-top: 1px solid var(--linie);
       padding-block: 48px;
     }
+    /* Teaser der Machbarkeitsstudie: Kernaussagen links, die Grafik rechts. */
+    .studie {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px;
+      align-items: center; margin: 8px 0 56px; padding: 28px;
+      border: 1px solid var(--linie); border-radius: var(--radius); background: var(--flaeche);
+      scroll-margin-top: 80px;
+    }
+    .studie h2 { font-size: 24px; font-weight: 650; color: var(--tinte); letter-spacing: -0.015em; margin: 0 0 12px; }
+    .studie ul { margin: 0 0 20px; padding-left: 18px; font-size: 15px; }
+    .studie li { margin-bottom: 8px; }
+    .studie .knopf {
+      display: inline-block; padding: 10px 16px; border-radius: 10px;
+      background: var(--blau); color: #fff; font-weight: 600; font-size: 14.5px; text-decoration: none;
+    }
+    .studie .knopf:hover { background: var(--blau-dunkel); }
+    .studie-bild img { display: block; width: 100%; height: auto; border-radius: 12px; background: #fff; border: 1px solid var(--linie); }
+    @media (max-width: 860px) { .studie { grid-template-columns: 1fr; padding: 20px; } }
     /* Zwei Zielgruppen, zwei Bereiche: jeder trägt oben seine Marke. */
     .bereich { padding-block: 8px 48px; scroll-margin-top: 80px; }
     .schnittstelle { scroll-margin-top: 80px; }
@@ -388,6 +405,31 @@
       <text class="ill-marke" x="336" y="280" text-anchor="middle">V</text>
     </svg>
    </div>
+  </section>
+
+  <section class="studie" id="machbarkeitsstudie" data-testid="teaser-machbarkeitsstudie">
+    <div class="studie-text">
+      <p class="zielgruppe" lang="de">Machbarkeitsstudie</p>
+      <p class="zielgruppe" lang="en">Feasibility study</p>
+      <h2 lang="de">Was über die Rückmeldung hinausgeht</h2>
+      <h2 lang="en">What goes beyond the report</h2>
+      <ul lang="de">
+        <li><strong>Mediatheken:</strong> Material aus MUNDO lässt sich anbinden. Eine Suche von der Rückmeldung aus scheitert an fehlenden Metadaten.</li>
+        <li><strong>Lernplattform:</strong> Gesammeltes Material geht als Common Cartridge nach Moodle oder als PDF aufs Papier.</li>
+        <li><strong>Lernsysteme:</strong> Gruppenergebnisse lassen sich ohne Personenbezug an Systeme wie AIS.schule übergeben.</li>
+      </ul>
+      <ul lang="en">
+        <li><strong>Media libraries:</strong> material from MUNDO can be connected. A search starting from the report fails because metadata is missing.</li>
+        <li><strong>Learning platform:</strong> collected material goes to Moodle as a Common Cartridge or to paper as a PDF.</li>
+        <li><strong>Learning systems:</strong> group results can be handed to systems such as AIS.schule without personal data.</li>
+      </ul>
+      <a class="knopf" href="/dokumentation/machbarkeitsstudie" lang="de">Zur Machbarkeitsstudie →</a>
+      <a class="knopf" href="/dokumentation/machbarkeitsstudie" lang="en">Read the feasibility study →</a>
+    </div>
+    <a class="studie-bild" href="/dokumentation/machbarkeitsstudie" aria-hidden="true" tabindex="-1">
+      <img lang="de" src="/dokumentation/bilder/machbarkeitsstudie-bausteine-de.svg" alt="" loading="lazy" />
+      <img lang="en" src="/dokumentation/bilder/machbarkeitsstudie-bausteine-en.svg" alt="" loading="lazy" />
+    </a>
   </section>
 
   <section class="bereich" id="ohne-technik">
