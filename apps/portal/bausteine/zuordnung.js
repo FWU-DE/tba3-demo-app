@@ -154,6 +154,30 @@ export const NUR_BAUSTEIN = [
     grund:
       'Datenunabhängig: die Begriffe kommen aus der Seite, nicht aus der Auswertung. Aus den drei Glossaren von zepf.',
   },
+  {
+    baustein: 'merkmal-gradient',
+    anzeige: 'Lösungsquote nach Merkmal',
+    grund:
+      'Vergleicht Ausprägungen eines Hintergrundmerkmals über mehrere Ebenen — die Schau zeigt je Ansicht eine Ebene. Aus den Rückmeldungen von indibit (Erhebung 14.10.2026).',
+  },
+  {
+    baustein: 'abweichung-je-gruppe',
+    anzeige: 'Abweichung je Lerngruppe',
+    grund:
+      'Braucht alle Lerngruppen einer Schule zugleich, die Schau zeigt eine. Aus der Schulleitungsrückmeldung des zepf (Erhebung 14.10.2026).',
+  },
+  {
+    baustein: 'gruppen-pyramide',
+    anzeige: 'Zwei Gruppen gespiegelt',
+    grund:
+      'Stellt zwei Lerngruppen gegeneinander, die Schau zeigt eine. Aus der Schulleitungsrückmeldung des zepf (Erhebung 14.10.2026).',
+  },
+  {
+    baustein: 'netzdiagramm',
+    anzeige: 'Netzdiagramm der Teilkompetenzen',
+    grund:
+      'Das Profil einer Person über die Teilbereiche — die Schau ordnet nach Aufgaben und Stufen, nicht nach Personen. Aus der Englisch-Rückmeldung des zepf (Erhebung 14.10.2026).',
+  },
 ];
 
 export const ZAHLEN = {

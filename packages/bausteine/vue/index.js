@@ -87,6 +87,10 @@ export const {
   LernverlaufFiguren,
   Selbsteinschaetzung,
   Glossar,
+  MerkmalGradient,
+  AbweichungJeGruppe,
+  GruppenPyramide,
+  Netzdiagramm,
 } = gebaut;
 
 /** Alle Komponenten, nach Namen. */

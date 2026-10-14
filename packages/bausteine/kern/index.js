@@ -158,3 +158,12 @@ export {
 export {
   NAME as GLOSSAR, STANDARD as glossarStandard, normal, glossar,
 } from './glossar.js';
+
+// ── Aus der zweiten Erhebung (14.10.2026) ──────────────────────────────────
+export { NAME as MERKMAL_GRADIENT, STANDARD as merkmalGradientStandard, gradient } from './merkmal-gradient.js';
+export {
+  NAME as ABWEICHUNG_JE_GRUPPE, STANDARD as abweichungStandard,
+  bewertung as abweichungBewertung, abweichung,
+} from './abweichung-je-gruppe.js';
+export { NAME as GRUPPEN_PYRAMIDE, STANDARD as gruppenPyramideStandard, pyramide } from './gruppen-pyramide.js';
+export { NAME as NETZDIAGRAMM, STANDARD as netzdiagrammStandard, netz } from './netzdiagramm.js';

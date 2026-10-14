@@ -263,6 +263,42 @@ export const DEMODATEN = [
         { label: 'Sprachgebrauch', selbst: 70, gemessen: 66 },
       ],
     },
+    'merkmal-gradient': {
+      titel: 'Lösungsquote nach Geschlecht',
+      merkmal: 'Geschlecht',
+      auspraegungen: [{ id: 'f', label: 'weiblich' }, { id: 'm', label: 'männlich' }],
+      reihen: [
+        { id: 'klasse', label: '3a', werte: { f: 64, m: 57 }, n: { f: 13, m: 12 } },
+        { id: 'schule', label: 'Schule', werte: { f: 60, m: 56 } },
+        { id: 'land', label: 'Land', werte: { f: 58, m: 54 } },
+      ],
+    },
+    'abweichung-je-gruppe': {
+      titel: 'Anteil ab Regelstandard',
+      bezug: { label: 'Schule', wert: 58 },
+      gruppen: [
+        { id: '3a', label: '3a Deutsch', wert: 64, n: 25 },
+        { id: '3b', label: '3b Deutsch', wert: 55, n: 24 },
+        { id: '3c', label: '3c Deutsch', wert: 47, n: 26 },
+      ],
+    },
+    'gruppen-pyramide': {
+      titel: 'Kompetenzstufen im Vergleich',
+      links: { label: '3a Deutsch', stufen: [{ stufe: 'I', anteil: 8 }, { stufe: 'II', anteil: 22 }, { stufe: 'III', anteil: 34 }, { stufe: 'IV', anteil: 24 }, { stufe: 'V', anteil: 12 }] },
+      rechts: { label: '3b Deutsch', stufen: [{ stufe: 'I', anteil: 16 }, { stufe: 'II', anteil: 28 }, { stufe: 'III', anteil: 30 }, { stufe: 'IV', anteil: 18 }, { stufe: 'V', anteil: 8 }] },
+    },
+    netzdiagramm: {
+      titel: 'Profil über die Kompetenzbereiche',
+      achsen: [
+        { id: 'sz', label: 'Sprechen, Zuhören' }, { id: 'sc', label: 'Schreiben' },
+        { id: 'le', label: 'Lesen' }, { id: 'sp', label: 'Sprache untersuchen' },
+      ],
+      reihen: [
+        { id: 'person', label: 'Anna', werte: { sz: 72, sc: 58, le: 81, sp: 49 } },
+        { id: 'klasse', label: '3a', werte: { sz: 63, sc: 55, le: 66, sp: 52 } },
+        { id: 'land', label: 'Land', werte: { sz: 60, sc: 57, le: 62, sp: 55 } },
+      ],
+    },
     glossar: {
       title: 'Begriffe dieser Rückmeldung',
       eintraege: [
@@ -506,6 +542,44 @@ export const DEMODATEN = [
         { label: 'Lesen', selbst: 35, gemessen: 38 },
         { label: 'Zuhören', selbst: 40, gemessen: 42 },
         { label: 'Orthografie', selbst: 30, gemessen: 31 },
+      ],
+    },
+    'merkmal-gradient': {
+      titel: 'Lösungsquote nach Geschlecht',
+      merkmal: 'Geschlecht',
+      auspraegungen: [{ id: 'f', label: 'weiblich' }, { id: 'm', label: 'männlich' }, { id: 'd', label: 'divers' }],
+      reihen: [
+        { id: 'klasse', label: '8b', werte: { f: 52, m: 58, d: 47 }, n: { f: 14, m: 12, d: 1 } },
+        { id: 'schule', label: 'Schule', werte: { f: 54, m: 57 } },
+        { id: 'land', label: 'Land', werte: { f: 51, m: 55, d: 50 } },
+      ],
+    },
+    'abweichung-je-gruppe': {
+      titel: 'Mittlere Lösungsquote',
+      bezug: { label: 'Gymnasium Beispielstadt', wert: 61 },
+      gruppen: [
+        { id: '8a', label: '8a Mathematik', wert: 66, n: 27 },
+        { id: '8b', label: '8b Mathematik', wert: 59, n: 26 },
+        { id: '8c', label: '8c Mathematik', wert: 63, n: 25 },
+        { id: '8d', label: '8d Mathematik', wert: 52, n: 28 },
+      ],
+    },
+    'gruppen-pyramide': {
+      titel: 'Kompetenzstufen im Vergleich',
+      links: { label: '8a Mathematik', stufen: [{ stufe: 'I', anteil: 6 }, { stufe: 'II', anteil: 18 }, { stufe: 'III', anteil: 37 }, { stufe: 'IV', anteil: 26 }, { stufe: 'V', anteil: 13 }] },
+      rechts: { label: '8d Mathematik', stufen: [{ stufe: 'I', anteil: 21 }, { stufe: 'II', anteil: 32 }, { stufe: 'III', anteil: 29 }, { stufe: 'IV', anteil: 14 }, { stufe: 'V', anteil: 4 }] },
+    },
+    netzdiagramm: {
+      titel: 'Profil über die Leitideen',
+      achsen: [
+        { id: 'zo', label: 'Zahl und Operation' }, { id: 'gm', label: 'Größen und Messen' },
+        { id: 'rf', label: 'Raum und Form' }, { id: 'fz', label: 'Funktionaler Zusammenhang' },
+        { id: 'dz', label: 'Daten und Zufall' },
+      ],
+      reihen: [
+        { id: 'person', label: 'Ben', werte: { zo: 68, gm: 41, rf: 77, fz: 52, dz: 60 } },
+        { id: 'klasse', label: '8b', werte: { zo: 59, gm: 50, rf: 62, fz: 48, dz: 56 } },
+        { id: 'land', label: 'Land', werte: { zo: 57, gm: 53, rf: 58, fz: 51, dz: 55 } },
       ],
     },
     glossar: {

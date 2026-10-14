@@ -126,7 +126,7 @@ const DOMAIN_NAMES = { ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebr
 
 // Calculate mean solution rate (%) from a list of item VGs for a given domain
 const meanForDomain = (vgs, domain) => {
-  const vg = vgs.find(v => (v.domain?.name ?? v.domain) === domain);
+  const vg = vgs.find(v => (v.domain?.name ?? v.domain ?? null) === domain);
   if (!vg?.items?.length) return null;
   const total = vg.items.reduce((s, it) => s + (it.descriptiveStatistics?.mean ?? 0), 0);
   return (total / vg.items.length) * 100;
@@ -145,6 +145,8 @@ const domains = computed(() => {
     const d = vg.domain?.name ?? vg.domain;
     if (d) seen.add(d);
   }
+  // Ohne Teilbereiche (Mathematik 8: `domain: null`) eine Gesamtzeile.
+  if (!seen.size && groupItems.value.length) return [null];
   return [...seen];
 });
 
@@ -156,7 +158,7 @@ const domainCharts = computed(() => {
     const stMean = meanForDomain(stateItems.value,  domain);
 
     // Group student count from first matching VG
-    const gVg = groupItems.value.find(v => (v.domain?.name ?? v.domain) === domain);
+    const gVg = groupItems.value.find(v => (v.domain?.name ?? v.domain ?? null) === domain);
     const gN = gVg?.items?.length ?? null;
 
     // Fair comparison: simulate similar-context school avg (slightly below school mean)
@@ -169,7 +171,7 @@ const domainCharts = computed(() => {
       stMean != null && { label: 'Bundesland',               mean: stMean, ...ciRange(stMean, null) },
     ].filter(Boolean);
 
-    return { domain, label: DOMAIN_NAMES[domain] ?? domain, rows };
+    return { domain, label: domain === null ? t('ansichten.gemeinsam.gesamt') : DOMAIN_NAMES[domain] ?? domain, rows };
   });
 });
 </script>

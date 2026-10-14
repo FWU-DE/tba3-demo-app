@@ -92,6 +92,19 @@ describe('Rückmeldeelemente', () => {
     api.getSchoolItems.mockImplementation(itemAntwort);
     api.getStateItems.mockImplementation(itemAntwort);
 
+    // Aggregation nach Geschlecht — für die Lösungsquote nach Merkmal.
+    const merkmalAntwort = (id) => Promise.resolve({
+      data: [{
+        id, type: 'group', aggregations: [
+          { type: 'gender', value: 'f', descriptiveStatistics: { mean: 0.61, total: 12 } },
+          { type: 'gender', value: 'm', descriptiveStatistics: { mean: 0.54, total: 11 } },
+        ],
+      }],
+    });
+    api.getGroupAggregations.mockImplementation(merkmalAntwort);
+    api.getSchoolAggregations.mockImplementation(merkmalAntwort);
+    api.getStateAggregations.mockImplementation(merkmalAntwort);
+
     window.history.replaceState({}, '', '/');
     localStorage.clear();
   });

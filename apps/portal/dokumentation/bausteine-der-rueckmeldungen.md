@@ -139,25 +139,25 @@ Schulen und Gebiete auf einer Karte, gekoppelt mit Tabelle und Suche. Für die S
 
 Wie hängt das Ergebnis mit einem Hintergrundmerkmal zusammen? Die Lösungsquote je Ausprägung (Sozialindex, Geschlecht, Herkunftssprache) neben den Vergleichsgruppen, mit Spannweite. Zeigt Ungleichheit als Verlauf statt als Einzelwert.
 
-*Daten:* Aggregationen nach Kovariaten · *Bibliothek:* noch keiner · *Gefunden bei:* indibit
+*Daten:* Aggregationen nach Kovariaten · *Bibliothek:* `<tba3-merkmal-gradient>` · *Gefunden bei:* indibit
 
 ### Abweichung je Lerngruppe
 
 Wie weit liegt jede Klasse über oder unter dem Wert der Schule? Ein Balken je Klasse um eine Nulllinie. Für die Schulleitung die schnellste Antwort auf die Frage, wo es sich zu reden lohnt.
 
-*Daten:* Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+*Daten:* Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule · *Bibliothek:* `<tba3-abweichung-je-gruppe>` · *Gefunden bei:* zepf (RPTU)
 
 ### Zwei Gruppen gespiegelt
 
 Zwei Gruppen links und rechts einer Mittelachse, nach Kompetenzstufen oder Punkten — wie eine Bevölkerungspyramide. Macht Unterschiede in der Form der Verteilung sichtbar, nicht nur im Mittelwert.
 
-*Daten:* Kompetenzstufen zweier Lerngruppen · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+*Daten:* Kompetenzstufen zweier Lerngruppen · *Bibliothek:* `<tba3-gruppen-pyramide>` · *Gefunden bei:* zepf (RPTU)
 
 ### Netzdiagramm der Teilkompetenzen
 
 Mehrere Teilkompetenzen auf je einer Achse, eine Person gegen Klasse und Vergleichsgruppen. Das Profil ist die Aussage — ob es rund ist oder an einer Stelle einknickt.
 
-*Daten:* Ergebnisse je Teilkompetenz und Person · *Bibliothek:* noch keiner · *Gefunden bei:* zepf (RPTU)
+*Daten:* Ergebnisse je Teilkompetenz und Person · *Bibliothek:* `<tba3-netzdiagramm>` · *Gefunden bei:* zepf (RPTU)
 
 ### Kontextmerkmal als Ring
 
@@ -339,8 +339,8 @@ vollständig eine Projektzusammenfassung sein kann. Wer nur die Berichte liest,
 Verteilung über die Kompetenzstufen, Lösungshäufigkeit je Aufgabe, Verlauf über Messzeitpunkte, Tabelle je Person, Vergleichsebenen, Stärken und Entwicklungsbedarfe, Materialanbindung, Einzelbericht, Automatische Hinweise, Erklärtexte. Das ist der belastbare Kern einer
 Rückmeldung — wer eine neue baut, fängt hier an.
 
-**Was noch kein Baustein in `@tba3/bausteine` ist** (22 Einträge):
-Gebietskarte, Lösungsquote nach Merkmal, Abweichung je Lerngruppe, Zwei Gruppen gespiegelt, Netzdiagramm der Teilkompetenzen, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Fragebogenskalen neben dem Testergebnis, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Export mit Auswahl. Ein Teil davon ist keine
+**Was noch kein Baustein in `@tba3/bausteine` ist** (18 Einträge):
+Gebietskarte, Materialanbindung, Aufgabenbrowser, Einzelbericht, Geführter Ablauf, Automatische Hinweise, Auszeichnungen, Fragebogenskalen neben dem Testergebnis, Rollensichten, Filterleiste, Arbeitsstand, Bericht ausgeben, Erklärtexte, Zweisprachigkeit, Barrierefreiheit, Aufgabenvorschau, Namen gegen Codes, Export mit Auswahl. Ein Teil davon ist keine
 Visualisierung, sondern ein Rahmen und gehört auch nicht in eine
 Visualisierungsbibliothek. Der Rest ist eine Liste offener Arbeit.
 

@@ -96,7 +96,7 @@ describe('Katalog', () => {
   // Ressource, die sie nicht abruft, bleibt die Kachel leer und niemand merkt
   // es — außer hier.
   it('nennt als Quelle nur Ressourcen, die die Demoanwendung kennt', () => {
-    const bekannt = [null, 'competence-levels', 'items', 'items-schueler'];
+    const bekannt = [null, 'competence-levels', 'items', 'items-schueler', 'aggregationen', 'gruppen-der-schule'];
     for (const b of BAUSTEINE) expect(bekannt, b.id).toContain(b.quelle);
     for (const b of BAUSTEINE) {
       if (b.quelle) expect(b.element, `${b.id}: Quelle ohne Baustein`).not.toBeNull();

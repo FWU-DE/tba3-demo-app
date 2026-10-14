@@ -190,6 +190,41 @@ const DATEN = {
       { id: 'fv', begriff: 'Fairer Vergleich', erklaerung: 'Schulen ähnlicher Zusammensetzung.', auch: ['Standorttyp'] },
     ],
   },
+  'merkmal-gradient': {
+    titel: 'Lösungsquote nach Merkmal',
+    merkmal: 'Geschlecht',
+    auspraegungen: [{ id: 'f', label: 'weiblich' }, { id: 'm', label: 'männlich' }, { id: 'd', label: 'divers' }],
+    reihen: [
+      { id: 'klasse', label: '8a', werte: { f: 61, m: 54, d: 50 }, n: { f: 12, m: 11, d: 1 } },
+      { id: 'schule', label: 'Schule', werte: { f: 58, m: 56 } },
+      { id: 'land', label: 'Land', werte: { f: 57, m: 55, d: 52 } },
+    ],
+  },
+  'abweichung-je-gruppe': {
+    titel: 'Anteil ab Regelstandard',
+    bezug: { label: 'Schule', wert: 58 },
+    gruppen: [
+      { id: '3a', label: '3a', wert: 64, n: 25 },
+      { id: '3b', label: '3b', wert: 55, n: 24 },
+      { id: '3c', label: '3c', wert: 47, n: 26 },
+    ],
+  },
+  'gruppen-pyramide': {
+    titel: 'Kompetenzstufen im Vergleich',
+    links: { label: '3a', stufen: [{ stufe: 'I', anteil: 8 }, { stufe: 'II', anteil: 22 }, { stufe: 'III', anteil: 34 }, { stufe: 'IV', anteil: 24 }, { stufe: 'V', anteil: 12 }] },
+    rechts: { label: '3b', stufen: [{ stufe: 'I', anteil: 16 }, { stufe: 'II', anteil: 28 }, { stufe: 'III', anteil: 30 }, { stufe: 'IV', anteil: 18 }, { stufe: 'V', anteil: 8 }] },
+  },
+  netzdiagramm: {
+    titel: 'Profil über die Leitideen',
+    achsen: [
+      { id: 'zo', label: 'Zahl' }, { id: 'gm', label: 'Messen' }, { id: 'rf', label: 'Raum und Form' },
+      { id: 'ms', label: 'Funktionen' }, { id: 'dh', label: 'Daten' },
+    ],
+    reihen: [
+      { id: 'person', label: 'S-07', werte: { zo: 70, gm: 45, rf: 80, ms: 55, dh: 62 } },
+      { id: 'klasse', label: '8a', werte: { zo: 58, gm: 52, rf: 61, ms: 49, dh: 57 } },
+    ],
+  },
 };
 
 const pascal = (name) => name.replace(/(^|-)([a-zäöü])/g, (_, __, c) => c.toUpperCase());

@@ -574,7 +574,8 @@ export const SCHICHTEN = {
  * @property {{de: string, en: string}} daten   Woher kommen die Zahlen — als Ressource, nicht als Endpunkt.
  * @property {string|null} element   Name in @tba3/bausteine, ohne Präfix, oder null
  * @property {string|null} quelle    Welche Ressource die Demoanwendung dafür abruft:
- *                                   'competence-levels' | 'items' | 'items-schueler' | null.
+ *                                   'competence-levels' | 'items' | 'items-schueler' |
+ *                                   'aggregationen' | 'gruppen-der-schule' | null.
  *                                   Nur gesetzt, wo es auch einen Baustein gibt — sonst
  *                                   bliebe die Kachel leer.
  * @property {'sachbericht'|'artefakt'} beleg  Woher die Zuordnung stammt: aus dem
@@ -783,8 +784,8 @@ export const BAUSTEINE = [
       en: 'How does the result relate to a background characteristic? The solution rate per value (social index, gender, home language) next to the comparison groups, with its range. Shows inequality as a gradient instead of a single figure.',
     },
     daten: { de: 'Aggregationen nach Kovariaten', en: 'Aggregations by covariates' },
-    element: null,
-    quelle: null,
+    element: 'merkmal-gradient',
+    quelle: 'aggregationen',
     reiter: 'aggregations',
     beleg: 'artefakt',
   },
@@ -797,8 +798,8 @@ export const BAUSTEINE = [
       en: 'How far is each class above or below the school value? One bar per class around a zero line. For school leadership, the quickest answer to where a conversation is worthwhile.',
     },
     daten: { de: 'Kompetenzstufen oder Lösungsquoten je Lerngruppe und Schule', en: 'Competence levels or solution rates per learning group and school' },
-    element: null,
-    quelle: null,
+    element: 'abweichung-je-gruppe',
+    quelle: 'gruppen-der-schule',
     reiter: 'delta',
     beleg: 'artefakt',
   },
@@ -811,8 +812,8 @@ export const BAUSTEINE = [
       en: 'Two groups to the left and right of a central axis, by competence level or score — like a population pyramid. Makes differences in the shape of the distribution visible, not just in the mean.',
     },
     daten: { de: 'Kompetenzstufen zweier Lerngruppen', en: 'Competence levels of two learning groups' },
-    element: null,
-    quelle: null,
+    element: 'gruppen-pyramide',
+    quelle: 'gruppen-der-schule',
     reiter: 'competence',
     beleg: 'artefakt',
   },
@@ -825,8 +826,8 @@ export const BAUSTEINE = [
       en: 'Several sub-competences, one per axis, a person against the class and comparison groups. The profile is the message — whether it is round or dents in one place.',
     },
     daten: { de: 'Ergebnisse je Teilkompetenz und Person', en: 'Results per sub-competence and person' },
-    element: null,
-    quelle: null,
+    element: 'netzdiagramm',
+    quelle: 'items-schueler',
     reiter: 'students',
     beleg: 'artefakt',
   },

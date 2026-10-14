@@ -164,7 +164,8 @@ onMounted(fetchAll);
 
 // Extract competence level percentages from value groups for a given domain
 const extractLevels = (vgs, domain) => {
-  const vg = vgs.find((v) => v.domain?.name === domain || v.domain === domain);
+  // `domain` ist null, wenn die Antwort keine Teilbereiche führt (Mathematik 8).
+  const vg = vgs.find((v) => (v.domain?.name ?? v.domain ?? null) === domain);
   if (!vg) return null;
   const total = vg.competenceLevels?.reduce((s, cl) => s + (cl.descriptiveStatistics?.frequency ?? 0), 0) ?? 0;
   return {
@@ -178,7 +179,7 @@ const extractLevels = (vgs, domain) => {
 };
 
 const DOMAIN_NAMES = { ho: 'Hörverstehen', le: 'Leseverstehen', sr: 'Sprachgebrauch', ma: 'Mathematik', en: 'Englisch', fr: 'Französisch' };
-const domainLabel = (d) => DOMAIN_NAMES[d] ?? d?.toUpperCase() ?? '';
+const domainLabel = (d) => (d === null ? t('ansichten.gemeinsam.gesamt') : DOMAIN_NAMES[d] ?? d?.toUpperCase() ?? '');
 
 // All unique domains present in the group data
 const domains = computed(() => {
@@ -187,6 +188,8 @@ const domains = computed(() => {
     const d = vg.domain?.name ?? vg.domain;
     if (d) seen.add(d);
   }
+  // Ohne Teilbereiche (Mathematik 8: `domain: null`) eine Gesamtzeile statt „Keine Daten“.
+  if (!seen.size && groupVGs.value.length) return [null];
   return [...seen];
 });
 
