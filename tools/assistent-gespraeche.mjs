@@ -196,14 +196,14 @@ const TEXTE = {
     kopf: 'Assistent',
     verbunden: 'verbunden mit: TBA3-Ergebnisdaten (MCP-Server)',
     werkzeuge: (n) => `${n} ${n === 1 ? 'Abfrage' : 'Abfragen'} an die Auswertungsschnittstelle`,
-    mockup: 'Mockup · Zahlen aus dem Mock über die Werkzeuge des MCP-Piloten',
+    mockup: 'Nachgestelltes Gespräch · Zahlen aus echten Abfragen an die Beispieldaten',
     eingabe: 'Frage stellen …',
   },
   en: {
     kopf: 'Assistant',
     verbunden: 'connected to: TBA3 result data (MCP server)',
     werkzeuge: (n) => `${n} ${n === 1 ? 'query' : 'queries'} to the results interface`,
-    mockup: 'Mockup · figures from the mock via the tools of the MCP pilot',
+    mockup: 'Re-enacted conversation · figures from real queries against the sample data',
     eingabe: 'Ask a question …',
   },
 };

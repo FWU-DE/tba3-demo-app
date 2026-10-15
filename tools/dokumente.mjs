@@ -142,8 +142,8 @@ export const DOKUMENTE = [
     teil: 'machbarkeitsstudie',
     kurz: { de: 'Ein Assistent, der die Auswertung liest', en: 'An assistant that reads the results' },
     beschreibung: {
-      de: 'Ein Sprachmodell stellt über MCP die Abfragen selbst zusammen — drei Gespräche als Mockup mit echten Zahlen, und wo die Grenze liegt.',
-      en: 'A language model assembles the queries itself via MCP — three conversations as mockups with real figures, and where the line is.',
+      de: 'Ein Sprachmodell stellt über MCP die Abfragen selbst zusammen — drei nachgestellte Gespräche mit Zahlen aus echten Abfragen, und wo die Grenze liegt.',
+      en: 'A language model assembles the queries itself via MCP — three re-enacted conversations with figures from real queries, and where the line is.',
     },
   },
 ];

@@ -1,8 +1,8 @@
 # Handing a material collection to the LMS: Common Cartridge and PDF
 
-Examined in the
-prototype in the "Learning materials" tab of the demo application and with an
-import into Moodle 4.5 on 14 October 2026.
+Examined in the prototype in the ["Learning materials" tab](/demo/?tab=materials&lang=en) of the demo application and with an import into Moodle 4.5
+on 14 October 2026. How to get there: in the demo application, open the
+"Learning materials" tab below the overview cards.
 
 ## Result
 
@@ -26,7 +26,7 @@ import into Moodle 4.5 on 14 October 2026.
   permissions there, and it can be read without the application. In return,
   nothing in it can be edited further.
 
-## The question
+## The research question
 
 A report shows where a learning group stands. A selection of material follows
 from it: exercises for the group at level II, support material for level I,
@@ -40,7 +40,7 @@ belongs to which level.
 
 ## Collecting material
 
-Collecting happens in the "Learning materials" tab. It has three modes, and
+Collecting happens in the ["Learning materials" tab](/demo/?tab=materials&lang=en). It has three modes, and
 all three write to the same store from which the export is made.
 
 **By competence level.** The teacher picks a level. The tiles show how many
@@ -74,7 +74,7 @@ end of the tab counts what has been collected and offers the two outputs.
 
 ## Route 1: Common Cartridge for the learning platform
 
-### What a Common Cartridge is
+### What is Common Cartridge?
 
 IMS Common Cartridge is an open standard by 1EdTech (formerly IMS Global) for
 exchanging course content between learning platforms. A cartridge is a ZIP

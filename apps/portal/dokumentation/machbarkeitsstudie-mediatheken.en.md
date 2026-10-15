@@ -1,8 +1,9 @@
 # Integrating media libraries: finding material for a report
 
-Examined in the
-prototype in the "Learning materials" tab of the demo application, connected
-to the media library MUNDO. The queries against MEM and the sample data date
+Examined in the prototype in the ["Learning materials" tab](/demo/?tab=materials&lang=en) of the demo application, connected to the media library
+MUNDO. How to get there: in the demo application, open the "Learning materials"
+tab below the overview cards, choose a competence level and click "Search
+MUNDO". The queries against MEM and the sample data date
 from 14 October 2026.
 
 ## Result
@@ -25,7 +26,7 @@ from 14 October 2026.
   example, the mathematics key ideas L1 to L5. But the link to the material is
   missing there just as it is in the media library.
 
-## The question
+## The research question
 
 A report shows where a learning group stands: how many students are at which
 competence level, which tasks were hard, in which sub-area the group is below
@@ -44,7 +45,7 @@ platform.
 ```
 Demo application                      MUNDO (mundo.schule/lti/)
 ────────────────                      ─────────────────────────
-1. "Search in MUNDO"
+1. "Search MUNDO"
 2. Sign the request (OAuth 1.0a)
 3. Submit form in a popup     ─────▶  MUNDO search interface
                                       4. Teacher searches and selects
@@ -136,7 +137,7 @@ hand.
 - **The assignments live in `localStorage`.** They apply to one device and one
   browser only.
 
-## Why it still achieves little
+## Why the benefit still remains small
 
 The prototype shortens the **second** step: a material the teacher has found
 lands in the right place without copy and paste. It does not shorten the
@@ -220,13 +221,16 @@ in the 2004 and 2022 versions.
 
 The mathematics key ideas of the sample data are all there:
 
-| Code in the report | Concept in MEM | Address |
-|---|---|---|
-| `L1` | Leitidee Zahl (number) | `w3id.org/iqb/bista04-ma-s1/ie/7dd44a45-…` |
-| `L2` | Leitidee Messen (measuring) | `w3id.org/iqb/bista04-ma-s1/ie/3daa740c-…` |
-| `L3` | Leitidee Raum und Form (space and shape) | `w3id.org/iqb/bista04-ma-s1/ie/44130980-…` |
-| `L4` | Leitidee Funktionaler Zusammenhang (functional relationships) | `w3id.org/iqb/bista04-ma-s1/ie/0e22ccfe-…` |
-| `L5` | Leitidee Daten und Zufall (data and chance) | `w3id.org/iqb/bista04-ma-s1/ie/ccabc0a7-…` |
+| Code in the report | Concept in MEM |
+|---|---|
+| `L1` | Leitidee Zahl (number) |
+| `L2` | Leitidee Messen (measuring) |
+| `L3` | Leitidee Raum und Form (space and shape) |
+| `L4` | Leitidee Funktionaler Zusammenhang (functional relationships) |
+| `L5` | Leitidee Daten und Zufall (data and chance) |
+
+Each of these concepts has its own permanent address in MEM under
+`w3id.org/iqb/bista04-ma-s1/`.
 
 So the vocabulary in which report and material could meet already exists. It
 is openly accessible, and it comes from the IQB, which also develops the
@@ -308,4 +312,4 @@ not an assignment.
   directly to an item, a competence or a level, at the place where the test is
   made. Then nothing has to be searched, because the assignment was already
   made when the test was created. The demo application shows this route in the
-  third mode of the "Learning materials" tab, next to the MUNDO route.
+  third mode of the ["Learning materials" tab](/demo/?tab=materials&lang=en), next to the MUNDO route.

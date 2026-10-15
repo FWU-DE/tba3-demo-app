@@ -1,6 +1,6 @@
 # Ergebnisdaten zur Weiterarbeit übergeben: Konzeptentwurf am Beispiel AIS.schule
 
-Kein Prototyp. Die Angaben zu AIS stammen von der öffentlichen
+Für diesen Konzeptentwurf wurde kein Prototyp entwickelt. Die Angaben zu AIS stammen von der öffentlichen
 Projektseite [ais.schule](https://ais.schule/) und aus einer Durchsicht der
 AIS-Repositorien am 14.10.2026, die noch nicht öffentlich sind. Was daraus
 stammt, ist **abstrahiert**: Namen und Strukturen sind vereinfacht und auf
@@ -34,7 +34,7 @@ der Stand kann sich schnell ändern.
   Erprobung bräuchte es also entweder ältere VERA-3-Ergebnisse als Ausgangslage
   nach dem Übergang oder einen späteren Ausbau von AIS auf weitere Jahrgänge.
 
-## Die Frage
+## Die Fragestellung
 
 Eine Rückmeldung ist ein Endpunkt: Die Lehrkraft liest sie, zieht Schlüsse und
 plant danach, meist im Kopf. Die vorigen Teilkonzepte haben untersucht, wie
@@ -55,8 +55,8 @@ KI-gestützte Lehr- und Lernumgebung für allgemeinbildende Schulen:
   **Empfehlungssystem für die Unterrichtsplanung** und einen Editor für
   Lernmaterial.
 - Medienanbieter und die OER-Community können Material einstellen.
-- **„AIS dient nicht der Leistungsbewertung oder Benotung“**, sondern der
-  Lernbegleitung.
+- AIS dient laut Projektseite **nicht der Leistungsbewertung oder Benotung**,
+  sondern der Lernbegleitung.
 - Zum Schuljahr 2026/27 startet ein **Pilot** an ausgewählten Schulen mit
   Material für Deutsch und Mathematik in den Klassen 5 und 6. Die Daten werden
   pseudonymisiert verarbeitet.
@@ -151,9 +151,9 @@ zählen vor allem diese Antworten:
 ### 1. Gruppenergebnis in die Planung
 
 Die Lehrkraft übergibt aus der Rückmeldung das Ergebnis ihrer Klasse. Das
-Lernsystem schlägt daraufhin vor, welche Kompetenzen in den nächsten Wochen
-Vorrang haben und welche Lernpfade oder Materialien für welche Stufe passen.
-Die Lehrkraft nimmt an, ändert oder verwirft.
+Lernsystem macht daraus **Vorschläge**: welche Kompetenzen in den nächsten
+Wochen Vorrang haben und welche Lernpfade oder Materialien für welche Stufe
+passen. Die Lehrkraft nimmt die Vorschläge an, ändert oder verwirft sie.
 
 - **Was TBA3 liefern muss:** je Kompetenz eine auflösbare Kennung, die
   Stufenverteilung und die Lösungshäufigkeit, dazu den Vergleichswert.
@@ -164,11 +164,17 @@ Die Lehrkraft nimmt an, ändert oder verwirft.
 
 ### 2. Gruppenergebnis als Kontext im Überblick
 
-Das Lernsystem zeigt das VERA-Ergebnis neben seinem eigenen Bild vom Lernstand
-der Klasse, ohne es zu verrechnen. Die Lehrkraft sieht dann zum Beispiel, dass
-die Klasse im VERA-Test bei *Messen* schwach war, im Lernsystem aber
-inzwischen aufgeholt hat. Technisch braucht dieser Weg dasselbe wie der erste,
-nur ohne Vorschläge.
+Das Lernsystem zeigt das VERA-Ergebnis nur an, als zusätzliche Information neben
+seiner eigenen Einschätzung des Lernstands. Es macht daraus keine Vorschläge und
+rechnet es nicht in seine Einschätzung ein. Die Lehrkraft sieht dann zum
+Beispiel, dass die Klasse im VERA-Test bei *Messen* schwach war, im Lernsystem
+aber inzwischen aufgeholt hat.
+
+- **Was TBA3 liefern muss:** dieselben Daten wie beim ersten Weg.
+- **Was das Lernsystem bieten muss:** nur eine Stelle, an der es das Ergebnis
+  anzeigt. Die Zuordnung von Bildungsstandards zu eigenen Lernzielen, die der
+  erste Weg für seine Vorschläge braucht, entfällt.
+- **Datenschutz:** kein Personenbezug.
 
 ### 3. Einzelergebnisse als Ausgangslage
 
@@ -180,9 +186,12 @@ ermitteln. Das wäre der größte Gewinn und die höchste Hürde:
   ein Lernsystem unter seinem eigenen Pseudonym. Zusammenführen kann sie nur die
   Lehrkraft, und das am besten im eigenen Browser, sodass weder das Lernsystem
   die Testcodes noch die Schnittstelle die Pseudonyme erfährt.
-- **Eine Testleistung ist kein Lernstand.** Ein VERA-Ergebnis ist eine Messung
-  an einem Tag. Ein Lernsystem sollte es als Schätzung mit Herkunft und Datum
-  führen, die eigene Beobachtungen überschreiben, nicht als festen Wert.
+- **Eine Testleistung ist kein Lernstand.** Ein VERA-Ergebnis zeigt, was ein
+  Kind an einem bestimmten Tag im Test gezeigt hat. Ein Lernsystem sollte es
+  deshalb nur als vorläufige Einschätzung übernehmen und dazu vermerken, dass
+  sie aus VERA stammt und von welchem Testtag. Sobald das Lernsystem eigene
+  Beobachtungen aus den Übungen des Kindes hat, sollten diese die
+  VERA-Einschätzung ablösen.
 - **Die Weitergabe muss erlaubt sein.** Wofür VERA-Ergebnisse verwendet werden
   dürfen, regeln die Länder. Ob eine Weitergabe an ein Lernsystem darunter
   fällt, muss vor jedem Bau geklärt sein.

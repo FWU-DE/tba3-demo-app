@@ -1,6 +1,6 @@
 # Handing over result data for further work: a concept draft using AIS.schule
 
-No prototype. Information on AIS comes from the public project site
+No prototype was developed for this concept draft. Information on AIS comes from the public project site
 [ais.schule](https://ais.schule/) and from a review of the AIS repositories,
 which are not yet public, on 14 October 2026. What comes from the repositories
 is **abstracted**: names and structures are simplified and translated, and no
@@ -33,7 +33,7 @@ quickly.
   VERA 3 results as a starting point after the transition to secondary school,
   or a later extension of AIS to further grades.
 
-## The question
+## The research question
 
 A report is an end point: the teacher reads it, draws conclusions and plans
 accordingly, mostly in their head. The previous sub-concepts examined how
@@ -55,8 +55,8 @@ education schools:
   **recommendation system for lesson planning** and an editor for learning
   material.
 - Media providers and the OER community can publish material.
-- **"AIS is not used for performance assessment or grading"** but for
-  supporting learning.
+- According to the project site, AIS is **not used for performance assessment
+  or grading** but for supporting learning.
 - From the 2026/27 school year a **pilot** runs at selected schools with
   material for German and mathematics in grades 5 and 6. Data is processed
   under pseudonyms.
@@ -153,9 +153,9 @@ most:
 ### 1. Group results into planning
 
 From the report, the teacher hands over their class's result. The learning
-system then suggests which competences should take priority in the coming
-weeks and which learning paths or materials fit which level. The teacher
-accepts, changes or discards.
+system turns it into **suggestions**: which competences should take priority in
+the coming weeks and which learning paths or materials fit which level. The
+teacher accepts, changes or discards the suggestions.
 
 - **What TBA3 has to deliver:** a resolvable identifier per competence, the
   level distribution and the solution frequency, plus the reference value.
@@ -166,11 +166,17 @@ accepts, changes or discards.
 
 ### 2. Group results as context in the overview
 
-The learning system shows the VERA result next to its own picture of the
-class's learning state, without merging the two. The teacher then sees, for
+The learning system only displays the VERA result, as additional information
+next to its own assessment of the learning state. It makes no suggestions from
+it and does not factor it into its assessment. The teacher then sees, for
 example, that the class was weak in *measuring* in the VERA test but has since
-caught up in the learning system. Technically this route needs the same as the
-first, just without suggestions.
+caught up in the learning system.
+
+- **What TBA3 has to deliver:** the same data as for the first route.
+- **What the learning system has to offer:** only a place where it displays the
+  result. The mapping from educational standards to its own learning
+  objectives, which the first route needs for its suggestions, is not needed.
+- **Data protection:** no personal data.
 
 ### 3. Individual results as a starting point
 
@@ -182,9 +188,12 @@ This would be the biggest gain and the highest hurdle:
   by its own pseudonym. Only the teacher can bring them together, preferably in
   their own browser, so that neither the learning system learns the test codes
   nor the API the pseudonyms.
-- **A test result is not a learning state.** A VERA result is a measurement on
-  one day. A learning system should keep it as an estimate with source and
-  date that its own observations override, not as a fixed value.
+- **A test result is not a learning state.** A VERA result shows what a child
+  demonstrated in the test on one particular day. A learning system should
+  therefore take it on only as a provisional assessment and record that it
+  comes from VERA and from which test day. As soon as the learning system has
+  its own observations from the child's exercises, these should replace the
+  VERA assessment.
 - **Passing it on must be permitted.** What VERA results may be used for is
   regulated by the states. Whether passing them to a learning system is covered
   has to be settled before anything is built.
