@@ -1,7 +1,9 @@
 # Mediatheken einbinden: Material zur Rückmeldung finden
 
-Geprüft am Prototyp im
-Reiter „Lernmaterialien“ der Demoanwendung, angebunden ist die Mediathek MUNDO.
+Geprüft am Prototyp im [Reiter „Lernmaterialien“](/demo/?tab=materials) der Demoanwendung, angebunden ist die Mediathek MUNDO.
+So kommt man hin: In der Demoanwendung unter den Übersichtskarten den Reiter
+„Lernmaterialien“ öffnen, eine Kompetenzstufe wählen und dann „MUNDO Suche“
+anklicken.
 Die Abfragen an MEM und an die Beispieldaten stammen vom 14.10.2026.
 
 ## Ergebnis
@@ -24,7 +26,7 @@ Die Abfragen an MEM und an die Beispieldaten stammen vom 14.10.2026.
   löst zum Beispiel die Mathematik-Leitideen L1 bis L5 auf. Die Verbindung zum
   Material fehlt dort aber genauso wie in der Mediathek.
 
-## Die Frage
+## Die Fragestellung
 
 Eine Rückmeldung zeigt, wo eine Lerngruppe steht: wie viele Schüler:innen auf
 welcher Kompetenzstufe liegen, welche Aufgaben schwerfielen, in welchem
@@ -43,7 +45,7 @@ es braucht: an der Stufe, an der Gruppe, im Export für die Lernplattform.
 ```
 Demoanwendung                         MUNDO (mundo.schule/lti/)
 ─────────────                         ─────────────────────────
-1. „In MUNDO suchen“
+1. „MUNDO Suche“
 2. Anfrage signieren (OAuth 1.0a)
 3. Formular im Popup absenden  ─────▶  Suchoberfläche von MUNDO
                                        4. Lehrkraft sucht und wählt
@@ -136,7 +138,7 @@ das man vorher auf mundo.schule gefunden hat.
 - **Die Zuordnungen liegen im `localStorage`.** Sie gelten nur für ein Gerät
   und einen Browser.
 
-## Warum es trotzdem wenig austrägt
+## Warum der Nutzen trotzdem gering bleibt
 
 Der Prototyp verkürzt den **zweiten** Schritt: Ein Material, das die Lehrkraft
 gefunden hat, landet ohne Kopieren und Einfügen an der richtigen Stelle. Den
@@ -226,13 +228,16 @@ Primarstufe bis zur Sekundarstufe II, jeweils in den Fassungen von 2004 und
 
 Die Mathematik-Leitideen der Beispieldaten finden sich dort vollständig:
 
-| Kürzel in der Rückmeldung | Begriff in MEM | Adresse |
-|---|---|---|
-| `L1` | Leitidee Zahl | `w3id.org/iqb/bista04-ma-s1/ie/7dd44a45-…` |
-| `L2` | Leitidee Messen | `w3id.org/iqb/bista04-ma-s1/ie/3daa740c-…` |
-| `L3` | Leitidee Raum und Form | `w3id.org/iqb/bista04-ma-s1/ie/44130980-…` |
-| `L4` | Leitidee Funktionaler Zusammenhang | `w3id.org/iqb/bista04-ma-s1/ie/0e22ccfe-…` |
-| `L5` | Leitidee Daten und Zufall | `w3id.org/iqb/bista04-ma-s1/ie/ccabc0a7-…` |
+| Kürzel in der Rückmeldung | Begriff in MEM |
+|---|---|
+| `L1` | Leitidee Zahl |
+| `L2` | Leitidee Messen |
+| `L3` | Leitidee Raum und Form |
+| `L4` | Leitidee Funktionaler Zusammenhang |
+| `L5` | Leitidee Daten und Zufall |
+
+Jeder dieser Begriffe hat in MEM eine eigene, dauerhafte Adresse unter
+`w3id.org/iqb/bista04-ma-s1/`.
 
 Das Vokabular, in dem sich Rückmeldung und Material treffen könnten, gibt es
 also schon. Es ist offen zugänglich, und es stammt vom IQB, das auch die Tests
@@ -316,4 +321,4 @@ Formulieren der Suche, eine Zuordnung ist es nicht.
   direkt an ein Item, eine Kompetenz oder eine Stufe, und zwar dort, wo der Test
   entsteht. Dann muss nichts gesucht werden, weil die Zuordnung schon beim
   Erstellen des Tests getroffen wurde. Die Demoanwendung zeigt diesen Weg im
-  dritten Modus des Reiters „Lernmaterialien“ neben dem MUNDO-Weg.
+  dritten Modus des [Reiters „Lernmaterialien“](/demo/?tab=materials) neben dem MUNDO-Weg.

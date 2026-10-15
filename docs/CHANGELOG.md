@@ -9,6 +9,9 @@ Request.
 ### Added
 - Docker-Images je Version: ein Tag `vX.Y.Z` taggt `X.Y.Z`, `X.Y` und `X`; Nachbau eines Tags über „Run workflow“.
 
+### Changed
+- Machbarkeitsstudie nach Feedback überarbeitet: Assistenten-Seite neu (Begriffe, Ablauf, Fragestellungen), Links zum Reiter „Lernmaterialien“, klarere Überschriften und Wege zu AIS.
+
 ## [1.0.0] — 2026-10-14
 
 ### Added

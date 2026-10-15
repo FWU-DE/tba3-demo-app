@@ -1,110 +1,138 @@
 # An assistant that can read the results
 
-Prototype: the MCP server in the repository (`mcp-server/`), a pilot. The
-conversations on this page are **mockups**: the questions and wording are
-invented. The figures are real. For every image, the pilot's tools were actually
-called against the demo application's sample data.
+There is a prototype for this sub-concept: an **MCP server** in the repository
+(`mcp-server/`). It does not run on this site but in the Docker image of the
+demo application.
+
+The images on this page show **re-enacted conversations**. We wrote the
+questions and the answer texts. We did not make up the figures in the answers:
+for every image, a script started the MCP server and made exactly the queries an
+assistant would make, against the demo application's sample data. If the
+sample data changes, the figures in the images change with it.
+
+## Terms
+
+- **Language model:** a large language model (LLM) such as the ones behind
+  ChatGPT, Claude or Mistral. It understands a question in natural language and
+  phrases an answer.
+- **Assistant:** the application in which you write with the language model.
+- **MCP (Model Context Protocol):** an open standard through which an assistant
+  can access external data sources.
+- **MCP server:** the program that opens up a data source for the assistant.
+  Ours describes seven **tools** to the language model, that is, seven queries
+  it may make: for example “list the learning groups” or “get the competence
+  levels of a learning group”. Each tool calls the TBA3 results interface.
 
 ## Findings
 
-- **It works technically.** A language model that is told which queries the
-  results interface offers assembles them itself. It answers questions for which
-  nobody built a view.
-- **The benefit lies in questions that cross several queries.** The class
-  against school and state, weak items together with suitable material: in a
-  report that takes several views and the teacher's own reasoning. The
-  assistant does it in one step.
-- **The interface's responses are not unambiguous enough for a model.** For the
-  state, two test booklets come back, with no indication of which one the class
-  took. A person asks. A model guesses, or lists both if told to.
-- **The real hurdle is data protection.** When asked, the pilot passes
-  individual data, including gender and language at home, to the language
-  model. Before anything like this runs in schools, the states have to decide
-  which model may see the data and which data at all.
+- **It works technically.** The language model picks the suitable tools from the
+  seven, calls them and phrases an answer from the figures. Nobody has to build
+  a dedicated view for the question beforehand.
+- **It helps most with questions that need figures from several views.** For
+  example: “How is my class doing compared with the school and the state?” In a
+  report, the teacher has to look up three values and put them side by side.
+  The assistant makes the three queries itself and answers with a table.
+- **The interface's responses are not always unambiguous.** For the state, for
+  instance, it returns two test booklets without saying which one the class
+  took. A person would ask. A language model guesses unless it is explicitly
+  told to give both values.
+- **The biggest hurdle is data protection.** When asked, the prototype passes
+  results of individual children, including gender and language at home, to the
+  language model. Before anything like this is used in schools, the states have
+  to decide which language model may see which data.
 
-## How it fits together
+## How a request works
 
-A report answers the questions that were foreseen when it was designed. “On
-which items was my class below other primary schools, and is there material for
-them?” is not one of them. Building a separate view for every such combination
-never ends.
+![Diagram: The teacher asks in their own words. The assistant, a language model, picks the queries and phrases the answer. The MCP server describes seven tools. The results interface TBA3 returns the figures. The connection between assistant and MCP server is marked red: this is where the data leaves the school if the language model is an external service.](/dokumentation/bilder/assistent-schaubild-en.png "Four parties. Marked red is the stretch on which result data reaches the language model.")
 
-The **Model Context Protocol (MCP)** is an open standard through which an
-assistant can use tools. The MCP server tells it which queries exist and what
-they need. Which of them answer a question is up to the language model.
+1. The teacher asks a question in the assistant, in their own words.
+2. The language model reads the question and the descriptions of the seven
+   tools. It decides which queries it needs.
+3. The MCP server runs these queries against the results interface and returns
+   the figures to the language model.
+4. The language model phrases the answer from the figures.
 
-![Diagram: The teacher asks in their own words. The assistant, a language model, picks the queries and phrases the answer. The MCP server describes seven tools. The results interface TBA3 returns the figures. The connection between assistant and MCP server is marked red: this is where the data leaves the school if the language model is an external service.](/dokumentation/bilder/assistent-schaubild-en.png "Four parties. The critical stretch is between MCP server and language model.")
+A report only answers the questions for which a view was built when it was
+designed. With an assistant, the teacher decides what they want to know, and
+the language model puts together the queries for it.
 
-## Three conversations
+## Three questions
 
-### The class in comparison
+Each question shows a different aspect: what the assistant does well, where it
+runs into limits of the interface, and where data protection has to come in.
 
-![Mockup of an assistant conversation: a teacher asks how their 3a is doing in reading compared with school and state. Below, four tool calls to the results interface, then a table with the shares below the minimum standard and at the standard or above for class, school and two state test booklets. A note says the response does not reveal which booklet the class took.](/dokumentation/bilder/assistent-vergleich-en.png "Mockup. Four queries, one table. The grey box shows what happened in the background.")
+### Class, school and state compared
 
-The assistant first looks up what the class is called in the data, then fetches
-the competence levels for class, school and state. The order matters: **a model
-that has to guess an identifier such as `3a-deutsch` guesses plausibly and
-wrongly.** That is why the pilot has its own lookup tools.
+![Re-enacted conversation: a teacher asks how their 3a is doing in reading compared with school and state. Below, four queries to the results interface, then a table with the shares below the minimum standard and at the standard or above for class, school and two state test booklets. A note says the response does not reveal which booklet the class took.](/dokumentation/bilder/assistent-vergleich-en.png "Re-enacted conversation. The grey box shows the four queries the assistant made.")
 
-The state response contains two test booklets for German in grade 3, and
-nothing in it says which one belongs to this class. In a report this goes
-unnoticed, because the view hard-wires it. An assistant has to disclose it. For
-the interface this means: a value group should say which test it belongs to.
+- **Question:** How is 3a doing in reading, compared with the school and the
+  state?
+- **What the assistant does:** It first looks up the identifier under which the
+  class is listed (`3a-deutsch`). Then it fetches the competence levels for
+  class, school and state and sets them side by side in a table.
+- **What it shows:** The lookup matters. A language model that has to guess an
+  identifier guesses plausibly and wrongly; that is why the prototype has its
+  own lookup tools. In addition, the interface returns two test booklets for the
+  state without saying which one belongs to the class. The interface should
+  therefore state for every result which test it belongs to.
 
-### Weak items and suitable material
+### Difficult items and suitable material
 
-![Mockup: the teacher asks on which maths items 3a was clearly below other primary schools and whether there is material for children at level II. Two tool calls, then a table with three items, their competence level and the solution frequency in 3a compared with primary schools, followed by three materials from “Mathe sicher können”.](/dokumentation/bilder/assistent-material-en.png "Mockup. Item results and material catalogue in one answer.")
+![Re-enacted conversation: the teacher asks on which maths items 3a was clearly below other primary schools and whether there is material for children at level II. Two queries, then a table with three items, their competence level and the solution frequency in 3a compared with primary schools, followed by three materials from “Mathe sicher können”.](/dokumentation/bilder/assistent-material-en.png "Re-enacted conversation. Item results and material catalogue in one answer.")
 
-Here the assistant crosses two sources: **the solution frequency per item**
-with the primary-school reference value every item carries, and **the material
-catalogue**. Whether the material fits the items remains the teacher's
-decision, and the assistant says so.
+- **Question:** On which maths items was 3a clearly below other primary
+  schools, and is there material for the children at level II?
+- **What the assistant does:** It fetches the results per item and compares
+  them with the solution frequency at primary schools that the interface
+  supplies with every item. It then queries the material catalogue for
+  level II material.
+- **What it shows:** Two sources are combined in one answer. Whether the
+  material fits the items is the teacher's decision, and the assistant says so.
+  In the prototype, the material catalogue is built in and contains only
+  mathematics from “Mathe sicher können”. With the material interface
+  (`/materials`), the assistant could query material assigned to exactly one
+  item or competence.
 
-In the pilot, the material catalogue is built in. It contains only mathematics
-from “Mathe sicher können”. With the material interface (`/materials`), the
-assistant could instead query material that is assigned to an item or a
-competence.
+### Individual children: where the line is
 
-### Where the line is
+![Re-enacted conversation: the teacher asks which children in 3a are below the minimum standard in reading. One query with type=students, then a table of three student codes with gender and language at home. A note marked red says that this individual data went to the language model.](/dokumentation/bilder/assistent-grenze-en.png "Re-enacted conversation. The question is obvious; the answer is the problem.")
 
-![Mockup: the teacher asks which children in 3a are below the minimum standard in reading. One tool call with type=students, then a table of three student codes with gender and language at home. A note marked red says that this individual data went to the language model.](/dokumentation/bilder/assistent-grenze-en.png "Mockup. The question is obvious; the answer is the problem.")
-
-This is the question a teacher is most likely to ask. **In the pilot, nothing
-stops the assistant from answering it.** It retrieves the individual data, and
-with it gender and language at home, because the interface returns them.
-Everything a tool returns goes to the language model. If the model runs at an
-external provider, this data leaves the school.
-
-The codes are pseudonyms, not names. Combined with class, gender and language
-at home, they are still easy to match in a class of 25 children.
+- **Question:** Which children in 3a are below the minimum standard in
+  reading?
+- **What the assistant does:** It retrieves the results of individual children.
+  The interface also returns gender and language at home, and the assistant
+  passes both to the language model. In the prototype, nothing stops it.
+- **What it shows:** Everything a query returns ends up with the language model.
+  If the model runs at an external provider, this data leaves the school. The
+  codes are not names, but combined with class, gender and language at home
+  they are easy to match in a class of 25 children.
 
 ## What it is worth in the classroom
 
 - **Questions in one's own words** instead of searching for the right view.
   This helps most when preparing a subject conference or a meeting with the
   school management, where several classes and levels come together.
-- **The queries must be visible.** A figure without a source is worthless in a
-  conversation about learning levels. The grey box in the mockups is not
-  decoration but a precondition.
-- **The assistant does not replace the report.** It answers the questions the
-  report leaves open. Interpretation, meaning what a figure means for teaching,
-  stays with the teacher.
+- **The queries must be visible.** A figure whose source you cannot see is no
+  use in a conversation about learning levels. The grey box in the images is
+  therefore not decoration but a precondition.
+- **The assistant does not replace the report.** It answers questions the report
+  leaves open. What a figure means for teaching is still up to the teacher.
 
 ## What operation would have to settle
 
-- **Which model?** A model run by the state or by a provider under a
-  data-processing agreement, or an external service. This determines which data
-  may go to the model at all.
+- **Which language model?** A model run by the state or by a provider under a
+  data-processing agreement, or a freely available service. This determines
+  which data may go to the model at all.
 - **Which data?** An assistant for group results only is a different decision
-  from one with individual data. The tool should not offer individual data at
-  all until that question is answered.
-- **Who is asking?** The pilot has no sign-in and no roles. It could not
+  from one with results of individual children. The MCP server should not offer
+  individual data at all while this question is open.
+- **Who is asking?** The prototype has no sign-in and no roles. It cannot
   restrict answers to “your class” even if it wanted to.
-- **Unambiguous responses.** Value groups should name test, grade and test
-  booklet, and a directory of learning groups should come from the interface
+- **Unambiguous responses.** Every result should name test, grade and test
+  booklet, and the list of learning groups should come from the interface
   instead of a built-in list.
 
 The technical details are in the
 [demo application recipes](demo-rezepte.md#an-assistant-that-can-read-the-results-the-mcp-server).
-They describe the seven tools, the two transports and operation in
-the container.
+They describe the seven tools, the two transport routes and operation in the
+container.
