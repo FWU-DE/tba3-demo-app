@@ -1,5 +1,5 @@
 # ── Stage 1: Build ────────────────────────────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Frontend ruft API über gleichen Host auf (kein CORS): /tba3-api → Nginx proxy zu apps.indibit.eu
