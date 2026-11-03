@@ -131,7 +131,7 @@ export const RUECKMELDUNGEN = [
     faecher: ['DE'],
     stufen: ['V3'],
     zielgruppen: ['lehrkraft', 'lernende'],
-    demo: 'https://development.tba.i.c.netzkolchose.de/',
+    demo: 'https://kompetenztestde.github.io/report-messwiederholung/',
     code: 'https://github.com/kompetenztestde/report-messwiederholung',
     doku: null,
     hinweis: {
