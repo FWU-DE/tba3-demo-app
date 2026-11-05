@@ -4,7 +4,7 @@
 // Konsortiums, aus denen er stammt. Der erste Eintrag ist das Original, die
 // übrigen zeigen dieselbe Komponente bei einer anderen Einrichtung.
 
-export const ORIGINALE_STAND = '2026-10-14';
+export const ORIGINALE_STAND = '2026-11-05';
 
 export const ORIGINALE = {
   "abweichung-je-lerngruppe": [
@@ -330,8 +330,8 @@ export const ORIGINALE = {
       "breite": 1200,
       "hoehe": 632,
       "alt": {
-        "de": "Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, Herbst 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler",
-        "en": "Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, autumn 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle"
+        "de": "Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, September 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler",
+        "en": "Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, September 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle"
       }
     }
   ],
@@ -458,8 +458,8 @@ export const ORIGINALE = {
       "breite": 1200,
       "hoehe": 681,
       "alt": {
-        "de": "Schüler:innensicht derselben Daten: „Adrian – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über drei Messzeitpunkte",
-        "en": "Student view of the same data: “Adrian – here is your test result” with his own bird and flight path across three measurement points"
+        "de": "Schüler:innensicht derselben Daten: „Abdul Rahman – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über zwei Messzeitpunkte",
+        "en": "Student view of the same data: “Abdul Rahman – here is your test result” with their own bird and flight path across two measurement points"
       }
     }
   ],
@@ -573,7 +573,7 @@ export const ORIGINALE = {
       "breite": 1200,
       "hoehe": 632,
       "alt": {
-        "de": "Lernverlauf einer Schülerin über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund",
+        "de": "Lernverlauf eines einzelnen Kindes über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund",
         "en": "Learning trajectory of one student across three measurement points as a line through the flock, the other students faded in the background"
       }
     },

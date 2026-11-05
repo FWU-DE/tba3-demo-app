@@ -739,8 +739,8 @@
     ],
     "auswahl": ".view-container",
     "alt": {
-      "de": "Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, Herbst 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler",
-      "en": "Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, autumn 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle"
+      "de": "Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, September 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler",
+      "en": "Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, September 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle"
     },
     "notiz": "Startansicht „Grafik“. Die Vögel sind leicht animiert; Positionen innerhalb eines Messzeitpunkts werden zufällig gestreut, das Bild variiert also zwischen Läufen geringfügig."
   },
@@ -1008,8 +1008,8 @@
     "auswahl": ".q-page-container > div",
     "hoehe": 690,
     "alt": {
-      "de": "Schüler:innensicht derselben Daten: „Adrian – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über drei Messzeitpunkte",
-      "en": "Student view of the same data: “Adrian – here is your test result” with his own bird and flight path across three measurement points"
+      "de": "Schüler:innensicht derselben Daten: „Abdul Rahman – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über zwei Messzeitpunkte",
+      "en": "Student view of the same data: “Abdul Rahman – here is your test result” with their own bird and flight path across two measurement points"
     },
     "notiz": "Keine ausdrückliche Rollenwahl; die Lehrkraft wechselt über das Kindsymbol am Namensetikett in die Schüler:innensicht (/schuelerin-detail/…; Direktaufruf lädt nicht). Konfetti-Animation und Lobwort („Super!“, „Genial!“ …) wechseln zufällig. Eine echte Rollenwahl gibt es auf der kt-d8-Anmeldeseite (Lehrer:in / Schüler:in)."
   },
@@ -1262,10 +1262,10 @@
     ],
     "auswahl": ".view-container",
     "alt": {
-      "de": "Lernverlauf einer Schülerin über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund",
+      "de": "Lernverlauf eines einzelnen Kindes über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund",
       "en": "Learning trajectory of one student across three measurement points as a line through the flock, the other students faded in the background"
     },
-    "notiz": "Nach Klick auf die erste Namensschaltfläche (Adrian) wird dessen Flugbahn über die Messzeitpunkte hervorgehoben. Kein Unsicherheitsband und keine eigene Vergleichslinie; der Vergleich ist die blasse Klasse dahinter."
+    "notiz": "Nach Klick auf die erste Namensschaltfläche (Abdul Rahman) wird dessen Flugbahn über die Messzeitpunkte hervorgehoben. Kein Unsicherheitsband und keine eigene Vergleichslinie; der Vergleich ist die blasse Klasse dahinter."
   },
   {
     "baustein": "verlauf-ueber-messzeitpunkte",

@@ -48,7 +48,7 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 
 Was an diesen Verweisen vorläufig ist:
 
-- **Messwiederholung Deutsch, Klasse 3** (kompetenztest.de (FSU Jena)): KT-internes Hosting in Bearbeitung. Entstanden in Zusammenarbeit mit TBA II.
+- **Messwiederholung Deutsch, Klasse 3** (kompetenztest.de (FSU Jena)): Entstanden in Zusammenarbeit mit TBA II.
 - **Kompetenzstand Mathematik: Klassenbericht, Klasse 8** (kompetenztest.de (FSU Jena)): Nach dem Sachbericht veröffentlicht (08.10.2026) und mit der Erhebung vom 14.10.2026 aufgenommen. In der Demo „Demo-Zugang: Ja“ wählen und anmelden.
 - **Klassenrückmeldung** (indibit): Die Komponentenbibliothek ist als tba3-elements veröffentlicht. Lizenz: MIT.
 - **Schulaufsichtsrückmeldung** (indibit): Das Land Hessen setzt für seine Rückmeldungen an die Schulaufsicht auf diesem Entwicklungsstand auf.
@@ -112,7 +112,7 @@ Mehrere Erhebungen als Linie, mit Band und Vergleichslinie. Der einzige Baustein
 
 *Daten:* Mehrere Erhebungen derselben Gruppe · *Bibliothek:* `<tba3-lernstands-verlauf>` · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin, zepf (RPTU)
 
-![Lernverlauf einer Schülerin über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund](/beispiele/bilder/originale/verlauf-ueber-messzeitpunkte.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+![Lernverlauf eines einzelnen Kindes über drei Messzeitpunkte als Linie durch die Vogelschar, die übrigen Schüler:innen blass im Hintergrund](/beispiele/bilder/originale/verlauf-ueber-messzeitpunkte.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
 
 ![Nachbau als <tba3-lernstands-verlauf>](/dokumentation/bilder/baustein-lernstands-verlauf-de.png "Nachbau: <tba3-lernstands-verlauf>, mit Beispieldaten")
 
@@ -238,7 +238,7 @@ Jede Schüler:in als eigene Figur auf einer Fläche aus Messzeitpunkt und Fähig
 
 *Daten:* Mehrere Erhebungen je Schüler:in · *Bibliothek:* `<tba3-lernverlauf-figuren>` · *Gefunden bei:* kompetenztest.de (FSU Jena)
 
-![Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, Herbst 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler](/beispiele/bilder/originale/lernverlauf-figuren.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+![Lehrkraftansicht der Messwiederholung: alle Schüler:innen als Vögel über drei Messzeitpunkte (März 2025, September 2025, März 2026), Kompetenzstufen als Zonen Silben/Möwe, Wort/Fink, Text/Adler](/beispiele/bilder/originale/lernverlauf-figuren.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
 
 ![Nachbau als <tba3-lernverlauf-figuren>](/dokumentation/bilder/baustein-lernverlauf-figuren-de.png "Nachbau: <tba3-lernverlauf-figuren>, mit Beispieldaten")
 
@@ -380,7 +380,7 @@ Kaskadierende Sichten auf dieselbe Datenlage: Schulaufsicht sieht den Bezirk, Sc
 
 *Daten:* Ebene und Rechte der angemeldeten Person · *Bibliothek:* noch keiner · *Genannt von:* kompetenztest.de (FSU Jena), ISQ Berlin
 
-![Schüler:innensicht derselben Daten: „Adrian – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über drei Messzeitpunkte](/beispiele/bilder/originale/rollensichten.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
+![Schüler:innensicht derselben Daten: „Abdul Rahman – hier ist dein Testergebnis“ mit eigenem Vogel und Flugbahn über zwei Messzeitpunkte](/beispiele/bilder/originale/rollensichten.jpg "Original: kompetenztest.de (FSU Jena), Messwiederholung Deutsch, Klasse 3")
 
 ### Filterleiste
 
