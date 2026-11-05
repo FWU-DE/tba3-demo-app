@@ -1,6 +1,6 @@
 {
   "name": "tba3-results-mcp-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MCP server to interact with TBA3 assessment result data",
   "type": "module",
   "main": "index.js",

@@ -6,11 +6,18 @@ Request.
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-11-05
+
 ### Added
 - Docker-Images je Version: ein Tag `vX.Y.Z` taggt `X.Y.Z`, `X.Y` und `X`; Nachbau eines Tags über „Run workflow“.
 
 ### Changed
 - Machbarkeitsstudie nach Feedback überarbeitet: Assistenten-Seite neu (Begriffe, Ablauf, Fragestellungen), Links zum Reiter „Lernmaterialien“, klarere Überschriften und Wege zu AIS.
+- Messwiederholung Deutsch, Klasse 3: Demo auf GitHub Pages bei kompetenztestde; Originale, Kartenbild und Alt-Texte aus der neuen Demo, Hinweis zum Hosting entfernt.
+- Kompetenzstand Mathematik, Schülerbericht: neue Demo- und Repository-Adresse (`kompetenzstand-mathematik-schuelerinnenbericht`).
+
+### Security
+- Docker-Images auf `node:24-alpine` statt `node:20-alpine`.
 
 ## [1.0.0] — 2026-10-14
 
