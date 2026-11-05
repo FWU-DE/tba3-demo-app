@@ -48,7 +48,7 @@ This document is generated from `apps/shared/konsortium.js`
 
 What is provisional about these links:
 
-- **Repeated measurement, German, grade 3** (kompetenztest.de (FSU Jena)): KT-internal hosting in progress. Built in cooperation with TBA II.
+- **Repeated measurement, German, grade 3** (kompetenztest.de (FSU Jena)): Built in cooperation with TBA II.
 - **Competence status, mathematics: class report, grade 8** (kompetenztest.de (FSU Jena)): Published after the progress report (8 Oct 2026) and added with the survey of 14 Oct 2026. In the demo, choose “Demo-Zugang: Ja” and sign in.
 - **Class report** (indibit): The component library is published as tba3-elements. Licence: MIT.
 - **School supervision report** (indibit): The state of Hesse is building its own school supervision reports on this development status.
@@ -238,7 +238,7 @@ Every student as their own figure on a plane of measurement point and ability, t
 
 *Data:* Several measurements per student · *Library:* `<tba3-lernverlauf-figuren>` · *Found at:* kompetenztest.de (FSU Jena)
 
-![Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, autumn 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle](/beispiele/bilder/originale/lernverlauf-figuren.jpg "Original: kompetenztest.de (FSU Jena), Repeated measurement, German, grade 3")
+![Teacher view of the repeated measurement: every student as a bird across three measurement points (March 2025, September 2025, March 2026), competence levels as zones syllables/gull, word/finch, text/eagle](/beispiele/bilder/originale/lernverlauf-figuren.jpg "Original: kompetenztest.de (FSU Jena), Repeated measurement, German, grade 3")
 
 ![Rebuilt as <tba3-lernverlauf-figuren>](/dokumentation/bilder/baustein-lernverlauf-figuren-en.png "Rebuild: <tba3-lernverlauf-figuren>, with sample data")
 
@@ -380,7 +380,7 @@ Cascading views of the same data: supervision sees the district, leadership the 
 
 *Data:* The level and permissions of the signed-in person · *Library:* none yet · *Named by:* kompetenztest.de (FSU Jena), ISQ Berlin
 
-![Student view of the same data: “Adrian – here is your test result” with his own bird and flight path across three measurement points](/beispiele/bilder/originale/rollensichten.jpg "Original: kompetenztest.de (FSU Jena), Repeated measurement, German, grade 3")
+![Student view of the same data: “Abdul Rahman – here is your test result” with their own bird and flight path across two measurement points](/beispiele/bilder/originale/rollensichten.jpg "Original: kompetenztest.de (FSU Jena), Repeated measurement, German, grade 3")
 
 ### Filter bar
 

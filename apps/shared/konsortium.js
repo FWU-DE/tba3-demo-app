@@ -135,8 +135,8 @@ export const RUECKMELDUNGEN = [
     code: 'https://github.com/kompetenztestde/report-messwiederholung',
     doku: null,
     hinweis: {
-      de: 'KT-internes Hosting in Bearbeitung. Entstanden in Zusammenarbeit mit TBA II.',
-      en: 'KT-internal hosting in progress. Built in cooperation with TBA II.',
+      de: 'Entstanden in Zusammenarbeit mit TBA II.',
+      en: 'Built in cooperation with TBA II.',
     },
     technik: {
       de: 'Frontend Vue 3 mit der Komponentenbibliothek Quasar, Backend Django. Entwicklung: netzkolchose.de UG (Jena).',
