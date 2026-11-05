@@ -123,7 +123,7 @@ export const ORIGINALE = {
   "einzelbericht": [
     {
       "rueckmeldung": "kt-m8-kompetenzstand",
-      "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik",
+      "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-schuelerinnenbericht",
       "datei": "/beispiele/bilder/originale/einzelbericht.jpg",
       "breite": 1200,
       "hoehe": 724,

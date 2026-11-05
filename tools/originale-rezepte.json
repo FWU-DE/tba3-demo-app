@@ -271,7 +271,7 @@
   {
     "baustein": "einzelbericht",
     "rueckmeldung": "kt-m8-kompetenzstand",
-    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik",
+    "adresse": "https://kompetenztestde.github.io/kompetenzstand-mathematik-schuelerinnenbericht",
     "schritte": [
       {
         "klick": "button.demo-access-option:has-text('Ja')"

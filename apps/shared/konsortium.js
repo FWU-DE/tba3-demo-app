@@ -208,8 +208,8 @@ export const RUECKMELDUNGEN = [
     faecher: ['MA'],
     stufen: ['V8'],
     zielgruppen: ['lernende'],
-    demo: 'https://kompetenztestde.github.io/kompetenzstand-mathematik',
-    code: 'https://github.com/kompetenztestde/kompetenzstand-mathematik',
+    demo: 'https://kompetenztestde.github.io/kompetenzstand-mathematik-schuelerinnenbericht',
+    code: 'https://github.com/kompetenztestde/kompetenzstand-mathematik-schuelerinnenbericht',
     doku: null,
     hinweis: null,
     technik: {
