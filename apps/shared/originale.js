@@ -325,7 +325,7 @@ export const ORIGINALE = {
   "lernverlauf-figuren": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/lernverlauf-figuren.jpg",
       "breite": 1200,
       "hoehe": 632,
@@ -351,7 +351,7 @@ export const ORIGINALE = {
   "materialanbindung": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/materialanbindung.jpg",
       "breite": 1200,
       "hoehe": 632,
@@ -390,7 +390,7 @@ export const ORIGINALE = {
   "positionsskala-mit-zonen": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/positionsskala-mit-zonen.jpg",
       "breite": 1200,
       "hoehe": 632,
@@ -427,7 +427,7 @@ export const ORIGINALE = {
   "pseudonymisierung": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/pseudonymisierung.jpg",
       "breite": 1200,
       "hoehe": 681,
@@ -453,7 +453,7 @@ export const ORIGINALE = {
   "rollensichten": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/rollensichten.jpg",
       "breite": 1200,
       "hoehe": 681,
@@ -568,7 +568,7 @@ export const ORIGINALE = {
   "verlauf-ueber-messzeitpunkte": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/verlauf-ueber-messzeitpunkte.jpg",
       "breite": 1200,
       "hoehe": 632,
@@ -592,7 +592,7 @@ export const ORIGINALE = {
   "zeugnissaetze": [
     {
       "rueckmeldung": "kt-d3-messwiederholung",
-      "adresse": "https://development.tba.i.c.netzkolchose.de/",
+      "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
       "datei": "/beispiele/bilder/originale/zeugnissaetze.jpg",
       "breite": 1200,
       "hoehe": 641,

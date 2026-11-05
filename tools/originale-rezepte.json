@@ -728,7 +728,7 @@
   {
     "baustein": "lernverlauf-figuren",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -775,7 +775,7 @@
   {
     "baustein": "materialanbindung",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -847,7 +847,7 @@
   {
     "baustein": "positionsskala-mit-zonen",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -933,7 +933,7 @@
   {
     "baustein": "pseudonymisierung",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -984,7 +984,7 @@
   {
     "baustein": "rollensichten",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -1248,7 +1248,7 @@
   {
     "baustein": "verlauf-ueber-messzeitpunkte",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "warteAuf": ".view-container .bird-container"
@@ -1293,7 +1293,7 @@
   {
     "baustein": "zeugnissaetze",
     "rueckmeldung": "kt-d3-messwiederholung",
-    "adresse": "https://development.tba.i.c.netzkolchose.de/",
+    "adresse": "https://kompetenztestde.github.io/report-messwiederholung/",
     "schritte": [
       {
         "klick": "a.q-tab[href$='zeugnissaetze']"

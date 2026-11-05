@@ -34,7 +34,7 @@ This document is generated from `apps/shared/konsortium.js`
 
 | Institution | Report | Audiences | Subject | Grade | Links |
 |---|---|---|---|---|---|
-| kompetenztest.de (FSU Jena) | Repeated measurement, German, grade 3 | Teacher, Student | German | Grade 3 | [Demo](https://development.tba.i.c.netzkolchose.de/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
+| kompetenztest.de (FSU Jena) | Repeated measurement, German, grade 3 | Teacher, Student | German | Grade 3 | [Demo](https://kompetenztestde.github.io/report-messwiederholung/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
 | kompetenztest.de (FSU Jena) | Learning status barometer, German, grade 8 | Teacher, Subject department, Student | German | Grade 8 | [Demo](https://lernstand-barometer.ktest.de/login) · [Code](https://github.com/kompetenztestde/lernstand-barometer) |
 | kompetenztest.de (FSU Jena) | Competence status, mathematics: student report, grade 8 | Student | Mathematics | Grade 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik-schuelerinnenbericht) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik-schuelerinnenbericht) |
 | kompetenztest.de (FSU Jena) | Competence status, mathematics: class report, grade 8 | Teacher | Mathematics | Grade 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik-klassenbericht) |

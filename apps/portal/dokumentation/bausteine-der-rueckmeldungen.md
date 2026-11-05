@@ -34,7 +34,7 @@ Dieses Dokument wird aus `apps/shared/konsortium.js` erzeugt
 
 | Einrichtung | Rückmeldung | Zielgruppen | Fach | Klasse | Adressen |
 |---|---|---|---|---|---|
-| kompetenztest.de (FSU Jena) | Messwiederholung Deutsch, Klasse 3 | Lehrkraft, Schüler:in | Deutsch | Klasse 3 | [Demo](https://development.tba.i.c.netzkolchose.de/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
+| kompetenztest.de (FSU Jena) | Messwiederholung Deutsch, Klasse 3 | Lehrkraft, Schüler:in | Deutsch | Klasse 3 | [Demo](https://kompetenztestde.github.io/report-messwiederholung/) · [Code](https://github.com/kompetenztestde/report-messwiederholung) |
 | kompetenztest.de (FSU Jena) | Lernstand-Barometer Deutsch, Klasse 8 | Lehrkraft, Fachkonferenz, Schüler:in | Deutsch | Klasse 8 | [Demo](https://lernstand-barometer.ktest.de/login) · [Code](https://github.com/kompetenztestde/lernstand-barometer) |
 | kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik: Schülerbericht, Klasse 8 | Schüler:in | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik-schuelerinnenbericht) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik-schuelerinnenbericht) |
 | kompetenztest.de (FSU Jena) | Kompetenzstand Mathematik: Klassenbericht, Klasse 8 | Lehrkraft | Mathematik | Klasse 8 | [Demo](https://kompetenztestde.github.io/kompetenzstand-mathematik-klassenbericht/) · [Code](https://github.com/kompetenztestde/kompetenzstand-mathematik-klassenbericht) |
